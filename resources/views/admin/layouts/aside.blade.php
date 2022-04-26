@@ -83,6 +83,14 @@
                             <span class="pcoded-mcaret"></span>
                         </a>
                     </li>
+                    <li class="">
+                        <a href="/admin/management" class="waves-effect waves-dark">
+                            <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                            <span class="pcoded-mtext"
+                                data-i18n="nav.basic-components.alert">Quản lý Công</span>
+                            <span class="pcoded-mcaret"></span>
+                        </a>
+                    </li>
                     <li class="{{ Request::routeIs('admin-product-trash') ? 'active' : '' }}">
                         <a href="{{ route('admin-product-trash')}} " class="waves-effect waves-dark">
                             <span class="pcoded-micon"><i class="ti-angle-right"></i></span>

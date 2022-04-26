@@ -11,6 +11,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Resources\ProductCollection;
+use App\Http\Controllers\ManagementController;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -39,7 +40,7 @@ Route::post('register', [AuthController::class, 'register'])->name('register');
 Route::get('xac-thuc/{token}/{id}', [AuthController::class, 'verifyTokenEmail'])->name('verify-email-token');
 Route::get('account/verify/{id}', [AuthController::class, 'notifyConfirmEmail'])->name('account-verify');
 Route::get('/logout', [AuthController::class, 'logout'])->name("logout");
-
+Route::get('/admin/management', [ManagementController::class, 'showManagement']);
 Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function() {
     Route::get('', [DashboardController::class, 'index'])->name('dashboard');
     Route::prefix('/product')->group(function() {
