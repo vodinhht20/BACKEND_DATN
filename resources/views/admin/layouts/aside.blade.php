@@ -120,12 +120,12 @@
             </li>
         </ul> --}}
 
-        <div class="pcoded-navigation-label" data-i18n="nav.category.other">Thành Viên</div>
+        <div class="pcoded-navigation-label" data-i18n="nav.category.other">Nhân viên</div>
         <ul class="pcoded-item pcoded-left-item">
             <li class="{{ Request::routeIs('admin-list-user') ? 'active' : '' }}">
                 <a href="{{ route('admin-list-user') }}" class="waves-effect waves-dark">
                     <span class="pcoded-micon"><i class="ti-user"></i><b>FC</b></span>
-                    <span class="pcoded-mtext" data-i18n="nav.form-components.main">Thành Viên</span>
+                    <span class="pcoded-mtext" data-i18n="nav.form-components.main">Nhân viên</span>
                     <span class="pcoded-mcaret"></span>
                 </a>
             </li>
