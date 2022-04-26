@@ -65,7 +65,7 @@
                             </div>
                             <div class="col-sm-3">
                                 <div class="form-group">
-                                    <label class="col-form-label">Phone</label>
+                                    <label class="col-form-label">Số điện thoại</label>
                                     <div class="">
                                         <input type="text" class="form-control data-input" value="{{ old('phone') }}" name="phone" placeholder="+84 329766459">
                                     </div>
@@ -73,7 +73,7 @@
                             </div>
                             <div class="col-sm-3">
                                 <div class="form-group">
-                                    <label class="col-form-label">Avatar</label>
+                                    <label class="col-form-label">Ảnh đại diện</label>
                                     <div class="ellipsis" style="max-width: none !important;margin: 5px 0;">
                                         <input type="file" name="avatar" id="avatar" onchange="loadFile(event)">
                                     </div>
@@ -86,9 +86,47 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-sm-12 col-form-label">Address</label>
+                            <label class="col-sm-12 col-form-label">Địa chỉ thường chú</label>
                             <div class="col-sm-12">
                                 <input type="text" class="form-control data-input" value="{{ old('address') }}" name="address" placeholder="Nhập địa chỉ nhà">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-12 col-form-label">Quê quán</label>
+                            <div class="col-sm-12">
+                                <input type="text" class="form-control data-input" name="address" placeholder="Nhập quê quán">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label class="col-form-label">Người giám hộ</label>
+                                    <div class="">
+                                        <input type="text" class="form-control data-input" name="phone" placeholder="Số điện thoại người giám hộ">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label class="col-form-label">Chức vụ</label>
+                                    <div class="">
+                                        <input type="text" class="form-control data-input" name="phone" placeholder="Chọn chức vụ">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label class="col-form-label">Bằng cấp</label>
+                                    <div class="">
+                                        <input type="text" class="form-control data-input" name="phone" placeholder="Chọn bằng cấp">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-12 col-form-label">Ghi chú</label>
+                            <div class="col-sm-12">
+                                <textarea name="" id="" cols="34" rows="5" placeholder="Nhập ghi chú"></textarea>
                             </div>
                         </div>
                         <div class="form-group row justify-content-center">
