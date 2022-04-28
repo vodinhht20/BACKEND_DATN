@@ -16,7 +16,7 @@
                 </div>
             </div>
             <a href="{{route('home.index')}}">
-                <img class="img-fluid" src="{{asset('frontend')}}/image/logo-3.png" alt="Theme-Logo" width="100"/>
+                <img class="img-fluid" src="{{asset('frontend')}}/image/logo-admin.png" alt="Theme-Logo" width="100"/>
             </a>
             <a class="mobile-options waves-effect waves-light">
                 <i class="ti-more"></i>
