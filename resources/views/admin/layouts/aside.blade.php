@@ -144,6 +144,19 @@
                 </a>
             </li>
         </ul>
+        
+        <!--bắt đầu đơn từ -->
+        <div class="pcoded-navigation-label" data-i18n="nav.category.other">Đơn từ</div>
+        <ul class="pcoded-item pcoded-left-item">
+            <li class="{{ Request::routeIs('admin-list-ticket') ? 'active' : '' }}">
+                <a href="{{ route('admin-list-ticket') }}" class="waves-effect waves-dark">
+                    <span class="pcoded-micon"><i class="ti-ticket"></i><b>FC</b></span>
+                    <span class="pcoded-mtext" data-i18n="nav.form-components.main">Danh sách đơn từ</span>
+                    <span class="pcoded-mcaret"></span>
+                </a>
+            </li>
+        </ul>
+        <!-- kết thúc đơn từ -->
 
         {{-- <div class="pcoded-navigation-label" data-i18n="nav.category.other">Blog</div>
         <ul class="pcoded-item pcoded-left-item">
