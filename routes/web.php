@@ -11,6 +11,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Resources\ProductCollection;
+use App\Http\Controllers\TicketController;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -66,6 +67,9 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function() {
         Route::get('/update/{id}', [UserController::class, 'showFormUpdate'])->name('show-form-update-user');
         Route::post('/update/{id}', [UserController::class, 'updateUser'])->name('post-update-user');
         Route::get('/black-list', [UserController::class, 'blackList'])->name('user-black-list');
+    });
+    Route::prefix('/ticket')->group(function() {
+        Route::get('/', [TicketController::class, 'index'])->name('admin-list-ticket');
     });
     Route::prefix('/role')->group(function() {
         Route::get('/', [RoleController::class, 'index'])->name('admin-role.index');
