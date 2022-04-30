@@ -57,6 +57,7 @@
                                     <th>Chức vụ</th>
                                     <th>Bằng cấp</th>
                                     <th>Ghi chú</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
