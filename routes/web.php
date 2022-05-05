@@ -41,9 +41,11 @@ Route::post('register', [AuthController::class, 'register'])->name('register');
 Route::get('xac-thuc/{token}/{id}', [AuthController::class, 'verifyTokenEmail'])->name('verify-email-token');
 Route::get('account/verify/{id}', [AuthController::class, 'notifyConfirmEmail'])->name('account-verify');
 Route::get('/logout', [AuthController::class, 'logout'])->name("logout");
-Route::get('/admin/management', [ManagementController::class, 'showManagement']);
 Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function() {
     Route::get('', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('/management', [ManagementController::class, 'showManagement']);
+
     Route::prefix('/product')->group(function() {
         Route::get('/export-excel', [ProductController::class, 'exportExcel'])->name('product-export-excel');
         Route::get('/export-csv', [ProductController::class, 'exportCSV'])->name('product-export-csv');
