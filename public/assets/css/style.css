@@ -8459,7 +8459,8 @@ body[themebg-pattern="theme6"] {
   background: rgba(55, 71, 79, 0.5); }
 
 body .pcoded[pcoded-device-type="phone"][vertical-nav-type="expanded"] .pcoded-navbar, body .pcoded[pcoded-device-type="tablet"][vertical-nav-type="expanded"] .pcoded-navbar {
-  position: absolute !important; }
+  /* position: absolute !important;  */
+}
   body .pcoded[pcoded-device-type="phone"][vertical-nav-type="expanded"] .pcoded-navbar .pcoded-item .pcoded-hasmenu > .pcoded-submenu, body .pcoded[pcoded-device-type="tablet"][vertical-nav-type="expanded"] .pcoded-navbar .pcoded-item .pcoded-hasmenu > .pcoded-submenu {
     -webkit-transition: all 0s ease-in !important;
     transition: all 0s ease-in !important; }
