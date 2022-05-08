@@ -95,30 +95,16 @@
             </li>
         </ul>
 
-        {{-- <div class="pcoded-navigation-label" data-i18n="nav.category.forms">Đơn hàng</div>
+        <div class="pcoded-navigation-label" data-i18n="nav.category.forms">Công ty</div>
         <ul class="pcoded-item pcoded-left-item">
-            <li>
-                <a href="chart.html" class="waves-effect waves-dark">
-                    <span class="pcoded-micon"><i class="ti-package"></i><b>FC</b></span>
-                    <span class="pcoded-mtext" data-i18n="nav.form-components.main">Đơn Hàng</span>
+            <li class="{{ Request::routeIs('company.*') ? 'active' : '' }}">
+                <a href="{{ route("company.info") }}" class="waves-effect waves-dark">
+                    <span class="pcoded-micon"><i class="ti-agenda"></i><b>FC</b></span>
+                    <span class="pcoded-mtext" data-i18n="nav.form-components.main">Cài đặt công ty</span>
                     <span class="pcoded-mcaret"></span>
                 </a>
             </li>
-            <li>
-                <a href="map-google.html" class="waves-effect waves-dark">
-                    <span class="pcoded-micon"><i class="ti-money"></i><b>FC</b></span>
-                    <span class="pcoded-mtext" data-i18n="nav.form-components.main">Doanh Thu</span>
-                    <span class="pcoded-mcaret"></span>
-                </a>
-            </li>
-            <li>
-                <a href="map-google.html" class="waves-effect waves-dark">
-                    <span class="pcoded-micon"><i class="ti-harddrives"></i><b>FC</b></span>
-                    <span class="pcoded-mtext" data-i18n="nav.form-components.main">Đơn Hàng Tồn</span>
-                    <span class="pcoded-mcaret"></span>
-                </a>
-            </li>
-        </ul> --}}
+        </ul>
 
         <div class="pcoded-navigation-label" data-i18n="nav.category.other">Thành Viên</div>
         <ul class="pcoded-item pcoded-left-item">

@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use App\Http\Controllers\CompanyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -91,4 +92,9 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function() {
 
 Route::get('login-google', [AuthController::class, 'ggLogin'])->name('login-google');
 Route::get('google/callback', [AuthController::class, 'ggAuthCallback'])->name('callback-google');
+
+
+Route::prefix('/company')->name("company.")->group(function() {
+    Route::get('/info', [CompanyController::class, 'info'])->name("info");
+});
 
