@@ -18,7 +18,7 @@
         content="bootstrap, bootstrap admin template, admin theme, admin dashboard, dashboard template, admin template, responsive" />
     <meta name="author" content="codedthemes" />
     <!-- Favicon icon -->
-    <link rel="icon" href="{{asset('frontend')}}/image/icon_meta.webp" type="image/x-icon">
+    <link rel="icon" href="{{asset('frontend')}}/image/camel-small.png" type="image/x-icon">
     <!-- Google font-->
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,500" rel="stylesheet">
     @include('admin.layouts.style')

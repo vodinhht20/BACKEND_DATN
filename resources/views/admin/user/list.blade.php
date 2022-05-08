@@ -60,7 +60,7 @@
                                     <tr>
                                         <td>{{ $loop->index+1 }}</td>
                                         <td class="text-center">
-                                            <img src="{{ $user->getAvatar() ?: asset('frontend/image/avatar_empty.jfif') }}" alt="" class="avatar_list">
+                                            <img src="https://lh3.googleusercontent.com/a-/AOh14GiJHaBSsAqGvMR7dcgJicEvaGNyAcqjR-mcrNO9wQ=s96-c" alt="" class="avatar_list"> {{-- {{ $user->getAvatar() ?: asset('frontend/image/avatar_empty.jfif') }} --}}
                                             <p class="text-fullname">{{ $user->name }}</p>
                                         </td>
                                         <td>
