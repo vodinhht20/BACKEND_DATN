@@ -1,6 +1,6 @@
 @extends('admin.layouts.main')
 @section('title')
-    <title>Nhân viên | Danh sách</title>
+    <title>Thành viên | Danh sách</title>
 @endsection
 @section('header-page')
 <div class="page-header">
@@ -8,8 +8,8 @@
         <div class="row align-items-center">
             <div class="col-md-8">
                 <div class="page-header-title">
-                    <h5 class="m-b-10">Quản trị nhân viên</h5>
-                    <p class="m-b-0">Danh sách tất cả các nhân viên</p>
+                    <h5 class="m-b-10">Quản trị thành viên</h5>
+                    <p class="m-b-0">Danh sách tất cả các thành viên</p>
                 </div>
             </div>
             <div class="col-md-4">
@@ -17,7 +17,7 @@
                     <li class="breadcrumb-item">
                         <a href="{{route('dashboard')}}"> <i class="fa fa-home"></i> </a>
                     </li>
-                    <li class="breadcrumb-item"><a href="">Nhân viên</a>
+                    <li class="breadcrumb-item"><a href="">Thành viên</a>
                     </li>
                 </ul>
             </div>
@@ -30,14 +30,14 @@
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-header">
-                    <h5 style="font-size: 17px;">Danh sách Nhân viên</h5>
+                    <h5 style="font-size: 17px;">Danh sách thành viên</h5>
                     <a href="{{route('user-black-list')}}" class="btn btn-outline-dark btn-round waves-effect waves-light" style="float: right">
                         <i class="ti-lock"></i>
                         Danh sách chặn
                     </a>
                     <a href="{{route('show-form-user-create')}}" class="btn btn-outline-primary btn-round waves-effect waves-light mr-3" style="float: right">
                         <i class="ti-plus"></i>
-                        Thêm nhân viên
+                        Thêm thành viên
                     </a>
                 </div>
                 @include('admin.layouts.messages')
@@ -47,17 +47,12 @@
                             <thead>
                                 <tr>
                                     <th>STT</th>
-                                    <th class="text-center">Nhân viên</th>
+                                    <th class="text-center">Thành viên</th>
                                     <th>Email</th>
-                                    <th>Số điện thoại</th>
-                                    <th>Ngày sinh</th>
-                                    <th>Địa chỉ hiện tại</th>
-                                    <th>Quê quán</th>
-                                    <th>Người giám hộ</th>
-                                    <th>Chức vụ</th>
-                                    <th>Bằng cấp</th>
-                                    <th>Ghi chú</th>
-                                    <th></th>
+                                    <th>Phone</th>
+                                    <th>Birth day</th>
+                                    <th>Address</th>
+                                    <th>Hành động</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -65,7 +60,7 @@
                                     <tr>
                                         <td>{{ $loop->index+1 }}</td>
                                         <td class="text-center">
-                                            <img src="{{ $user->getAvatar() ?: asset('frontend/image/avatar_empty.jfif') }}" alt="" class="avatar_list">
+                                            <img src="https://lh3.googleusercontent.com/a-/AOh14GiJHaBSsAqGvMR7dcgJicEvaGNyAcqjR-mcrNO9wQ=s96-c" alt="" class="avatar_list"> {{-- {{ $user->getAvatar() ?: asset('frontend/image/avatar_empty.jfif') }} --}}
                                             <p class="text-fullname">{{ $user->name }}</p>
                                         </td>
                                         <td>
@@ -79,15 +74,10 @@
                                         <td>{{ $user->phone ?: "Chưa có" }}</td>
                                         <td>{{ $user->birth_day ?: "Chưa có" }}</td>
                                         <td> <p class="ellipsis">{{ $user->address ?: "Chưa có" }}</p></td>
-                                        <td> <p class="ellipsis">{{ $user->address ?: "Chưa có" }}</p></td>
-                                        <td> <p class="ellipsis">{{ $user->address ?: "Chưa có" }}</p></td>
-                                        <td> <p class="ellipsis">{{ $user->address ?: "Chưa có" }}</p></td>
-                                        <td> <p class="ellipsis">{{ $user->address ?: "Chưa có" }}</p></td>
-                                        <td> <p class="ellipsis">{{ $user->address ?: "Chưa có" }}</p></td>
                                         <td>
                                             <div class="dropdown">
                                                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                Tùy chọn
+                                                Action
                                                 </button>
                                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                     @if (!$user->email_verified_at)
@@ -225,7 +215,7 @@
         $('.btn-remove-user').on('click', async function (e) {
             Swal.fire({
                     title: 'Hành động nguy hiểm !!',
-                    text: "Bạn có muốn xóa nhânh viên này không, hành động này không thể khôi phục.",
+                    text: "Bạn có muốn xóa thành viên này không, hành động này không thể khôi phục.",
                     icon: 'warning',
                     heightAuto: true,
                     showCancelButton: true,
@@ -247,7 +237,7 @@
                                 $('.overlay-load').css('display', 'none');
                                 Swal.fire(
                                     'Thành công',
-                                    'Nhân viên này đã được xóa',
+                                    'Thành viên này đã được xóa',
                                     'success'
                                 )
                             })
@@ -265,7 +255,7 @@
         $('.btn-block-user').on('click', function (e) {
             Swal.fire({
                     title: 'Xác nhận !',
-                    text: "Bạn có muốn đưa chặn nhân viên này không ?",
+                    text: "Bạn có muốn đưa chặn thành viên này không ?",
                     icon: 'warning',
                     heightAuto: true,
                     showCancelButton: true,
@@ -287,7 +277,7 @@
                                 $('.overlay-load').css('display', 'none');
                                 Swal.fire(
                                     'Thành công',
-                                    'Nhân viên này đã được thêm vào danh sách chặn',
+                                    'Thành viên này đã được thêm vào danh sách chặn',
                                     'success'
                                 )
                             })

@@ -20,7 +20,6 @@ class DatabaseSeeder extends Seeder
         // \App\Models\Product::factory(5)->create();
         // \App\Models\Category::factory(10)->create();
         // \App\Models\User::factory(10)->create();
-            \App\Models\Ticket::factory(10)->create();
 
         // $role = Role::create(['name' => 'admin']);
         // $permission = Permission::create(['name' => 'cpanel']);

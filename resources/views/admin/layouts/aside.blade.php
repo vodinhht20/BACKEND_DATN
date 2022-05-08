@@ -83,14 +83,6 @@
                             <span class="pcoded-mcaret"></span>
                         </a>
                     </li>
-                    <li class="">
-                        <a href="/admin/management" class="waves-effect waves-dark">
-                            <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-                            <span class="pcoded-mtext"
-                                data-i18n="nav.basic-components.alert">Quản lý Công</span>
-                            <span class="pcoded-mcaret"></span>
-                        </a>
-                    </li>
                     <li class="{{ Request::routeIs('admin-product-trash') ? 'active' : '' }}">
                         <a href="{{ route('admin-product-trash')}} " class="waves-effect waves-dark">
                             <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
@@ -103,37 +95,23 @@
             </li>
         </ul>
 
-        {{-- <div class="pcoded-navigation-label" data-i18n="nav.category.forms">Đơn hàng</div>
+        <div class="pcoded-navigation-label" data-i18n="nav.category.forms">Công ty</div>
         <ul class="pcoded-item pcoded-left-item">
-            <li>
-                <a href="chart.html" class="waves-effect waves-dark">
-                    <span class="pcoded-micon"><i class="ti-package"></i><b>FC</b></span>
-                    <span class="pcoded-mtext" data-i18n="nav.form-components.main">Đơn Hàng</span>
+            <li class="{{ Request::routeIs('company.*') ? 'active' : '' }}">
+                <a href="{{ route("company.info") }}" class="waves-effect waves-dark">
+                    <span class="pcoded-micon"><i class="ti-agenda"></i><b>FC</b></span>
+                    <span class="pcoded-mtext" data-i18n="nav.form-components.main">Cài đặt công ty</span>
                     <span class="pcoded-mcaret"></span>
                 </a>
             </li>
-            <li>
-                <a href="map-google.html" class="waves-effect waves-dark">
-                    <span class="pcoded-micon"><i class="ti-money"></i><b>FC</b></span>
-                    <span class="pcoded-mtext" data-i18n="nav.form-components.main">Doanh Thu</span>
-                    <span class="pcoded-mcaret"></span>
-                </a>
-            </li>
-            <li>
-                <a href="map-google.html" class="waves-effect waves-dark">
-                    <span class="pcoded-micon"><i class="ti-harddrives"></i><b>FC</b></span>
-                    <span class="pcoded-mtext" data-i18n="nav.form-components.main">Đơn Hàng Tồn</span>
-                    <span class="pcoded-mcaret"></span>
-                </a>
-            </li>
-        </ul> --}}
+        </ul>
 
-        <div class="pcoded-navigation-label" data-i18n="nav.category.other">Nhân viên</div>
+        <div class="pcoded-navigation-label" data-i18n="nav.category.other">Thành Viên</div>
         <ul class="pcoded-item pcoded-left-item">
             <li class="{{ Request::routeIs('admin-list-user') ? 'active' : '' }}">
                 <a href="{{ route('admin-list-user') }}" class="waves-effect waves-dark">
                     <span class="pcoded-micon"><i class="ti-user"></i><b>FC</b></span>
-                    <span class="pcoded-mtext" data-i18n="nav.form-components.main">Nhân viên</span>
+                    <span class="pcoded-mtext" data-i18n="nav.form-components.main">Thành Viên</span>
                     <span class="pcoded-mcaret"></span>
                 </a>
             </li>
@@ -152,19 +130,6 @@
                 </a>
             </li>
         </ul>
-        
-        <!--bắt đầu đơn từ -->
-        <div class="pcoded-navigation-label" data-i18n="nav.category.other">Đơn từ</div>
-        <ul class="pcoded-item pcoded-left-item">
-            <li class="{{ Request::routeIs('admin-list-ticket') ? 'active' : '' }}">
-                <a href="{{ route('admin-list-ticket') }}" class="waves-effect waves-dark">
-                    <span class="pcoded-micon"><i class="ti-ticket"></i><b>FC</b></span>
-                    <span class="pcoded-mtext" data-i18n="nav.form-components.main">Danh sách đơn từ</span>
-                    <span class="pcoded-mcaret"></span>
-                </a>
-            </li>
-        </ul>
-        <!-- kết thúc đơn từ -->
 
         {{-- <div class="pcoded-navigation-label" data-i18n="nav.category.other">Blog</div>
         <ul class="pcoded-item pcoded-left-item">

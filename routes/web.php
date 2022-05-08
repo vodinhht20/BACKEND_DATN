@@ -11,13 +11,12 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Resources\ProductCollection;
-use App\Http\Controllers\ManagementController;
-use App\Http\Controllers\TicketController;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use App\Http\Controllers\CompanyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,11 +40,9 @@ Route::post('register', [AuthController::class, 'register'])->name('register');
 Route::get('xac-thuc/{token}/{id}', [AuthController::class, 'verifyTokenEmail'])->name('verify-email-token');
 Route::get('account/verify/{id}', [AuthController::class, 'notifyConfirmEmail'])->name('account-verify');
 Route::get('/logout', [AuthController::class, 'logout'])->name("logout");
+
 Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function() {
     Route::get('', [DashboardController::class, 'index'])->name('dashboard');
-
-    Route::get('/management', [ManagementController::class, 'showManagement']);
-
     Route::prefix('/product')->group(function() {
         Route::get('/export-excel', [ProductController::class, 'exportExcel'])->name('product-export-excel');
         Route::get('/export-csv', [ProductController::class, 'exportCSV'])->name('product-export-csv');
@@ -71,9 +68,6 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function() {
         Route::post('/update/{id}', [UserController::class, 'updateUser'])->name('post-update-user');
         Route::get('/black-list', [UserController::class, 'blackList'])->name('user-black-list');
     });
-    Route::prefix('/ticket')->group(function() {
-        Route::get('/', [TicketController::class, 'index'])->name('admin-list-ticket');
-    });
     Route::prefix('/role')->group(function() {
         Route::get('/', [RoleController::class, 'index'])->name('admin-role.index');
     });
@@ -98,4 +92,9 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function() {
 
 Route::get('login-google', [AuthController::class, 'ggLogin'])->name('login-google');
 Route::get('google/callback', [AuthController::class, 'ggAuthCallback'])->name('callback-google');
+
+
+Route::prefix('/company')->name("company.")->group(function() {
+    Route::get('/info', [CompanyController::class, 'info'])->name("info");
+});
 
