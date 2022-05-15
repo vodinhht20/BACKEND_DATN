@@ -4,7 +4,7 @@
 @endsection
 @section('style-page')
     <!-- datepicker.css -->
-    <link rel="stylesheet" type="text/css" href="{{asset('frontend')}}/css/datepicker.css">
+    <link rel="stylesheet" type="text/css" href="{{asset('frontend')}}/css/company-info.css">
 @endsection
 @section('header-page')
 <div class="page-header">
@@ -30,7 +30,189 @@
 </div>
 @endsection
 @section('content')
-    <h1>Cai  dat cong ty</h1>
+<div class="company-info">
+    <div class="row">
+        <div class="col-sm-12">
+            <!-- Material tab card start -->
+            <div class="card">
+                <div class="card-header">
+                    <h5>Cài đặt công ty</h5>
+                </div>
+                <div class="card-block">
+                    <!-- Row start -->
+                    <div class="row m-b-30">
+                    </div>
+                    <!-- Row end -->
+                    <!-- Row start -->
+                    <div class="row">
+                        <div class="col-lg-12 col-xl-6">
+                            <ul class="nav nav-tabs md-tabs tabs-left b-none" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#home5" role="tab" aria-expanded="false">
+                                        <i class="ti-layout-media-overlay"></i><br>
+                                        Thông tin <br> công ty</a>
+                                    <div class="slide"></div>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#profile5" role="tab" aria-expanded="false">
+                                        <i class="ti-wallet"></i><br>
+                                        Hệ thống <br> chi nhánh</a>
+                                    <div class="slide"></div>
+                                </li>
+                                {{-- <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#messages5" role="tab" aria-expanded="false">
+                                        <i class="ti-notepad"></i>
+                                        Cơ cấu tở chức</a>
+                                    <div class="slide"></div>
+                                </li> --}}
+                            </ul>
+                            <!-- Tab panes -->
+                            <div class="tab-content tabs-left-content card-block">
+                                <div class="tab-pane" id="home5" role="tabpanel" aria-expanded="false">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h5>Thông tin công ty</h5>
+                                            <div class="card-header-right">
+                                                <ul class="list-unstyled card-option">
+                                                    <li class="nav-item"><i class="fa fa fa-wrench open-card-option"></i><a data-toggle="tab" href="#messages5" role="tab" aria-expanded="false">Cập nhật thông tin công ty</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="card-block table-border-style">
+                                            <div class="table-responsive">
+                                                <table class="table table-hover">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td><i class="ti-mobile"></i> Hotline</td>
+                                                            <td><i class="ti-google"></i> Website</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><i class="ti-email"></i>  Email</td>
+                                                            <td><i class="ti-facebook"></i> Fanpage</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><i class="ti-layout-column4-alt"></i> Mã số thuế</td>
+                                                            <td><i class="ti-home"></i> Trụ sở chính</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><i class="ti-view-list"></i> Mô tả</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="profile5" role="tabpanel" aria-expanded="false">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h5>Hệ thống chi nhánh</h5>
+                                            <div class="card-header-right">
+                                                <ul class="list-unstyled card-option">
+                                                    <li ><i class="fa fa fa-wrench open-card-option"></i><a href="">Thêm chi nhánh</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="card-block table-border-style">
+                                            <div class="table-responsive">
+                                                <table class="table table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>STT</th>
+                                                            <th>Tên chi nhánh</th>
+                                                            <th>Mã chi nhánh</th>
+                                                            <th>Địa chỉ nhánh</th>
+                                                            <th>Hotline</th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>1</td>
+                                                            <td>Chi nhánh Hà Nội</td>
+                                                            <td>CHHN</td>
+                                                            <td>Hà Nội</td>
+                                                            <td>19006186</td>
+                                                            <td><a href=""><i class="ti-trash"></i></a> <a href=""><i style="float: right" class="ti-pencil"></i></a></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>2</td>
+                                                            <td>Chi nhánh TP.HCM</td>
+                                                            <td>CHH</td>
+                                                            <td>TP.HCM</td>
+                                                            <td>19001234</td>
+                                                            <td><a href=""><i class="ti-trash"></i></a> <a href=""><i style="float: right" class="ti-pencil"></i></a></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="messages5" role="tabpanel" aria-expanded="false">
+                                    <div class="col-md-6">
+                                        <div class="card1">
+                                            <div class="card-header">
+                                                <h5>Cập nhật thông tin công ty</h5>
+                                            </div>
+                                            <div class="card-block">
+                                                <form class="form-material" method="post">
+                                                    <div class="form-group form-default">
+                                                        <input type="text" name="name" class="form-control" required="">
+                                                        <span class="form-bar"></span>
+                                                        <label class="float-label">Tên công ty</label>
+                                                    </div>
+                                                    <div class="form-group form-default">
+                                                        <input type="text" name="email" class="form-control" required="">
+                                                        <span class="form-bar"></span>
+                                                        <label class="float-label">Địa chỉ email công ty</label>
+                                                    </div>
+                                                    <div class="form-group form-default">
+                                                        <input type="number" name="hotline" class="form-control" required="">
+                                                        <span class="form-bar"></span>
+                                                        <label class="float-label">Hotline công ty</label>
+                                                    </div>
+                                                    <div class="form-group form-default">
+                                                        <input type="text" name="footer-email" class="form-control" required="" >
+                                                        <span class="form-bar"></span>
+                                                        <label class="float-label">Website công ty</label>
+                                                    </div>
+                                                    <div class="form-group form-default">
+                                                        <input type="text" name="footer-email" class="form-control" required="" >
+                                                        <span class="form-bar"></span>
+                                                        <label class="float-label">Fanpage công ty</label>
+                                                    </div>
+                                                    <div class="form-group form-default">
+                                                        <input type="text" name="footer-email" class="form-control" required="">
+                                                        <span class="form-bar"></span>
+                                                        <label class="float-label">Địa chỉ trụ sở chính công ty</label>
+                                                    </div>
+                                                    <div class="form-group form-default">
+                                                        <input type="text" name="footer-email" class="form-control" required="" maxlength="6">
+                                                        <span class="form-bar"></span>
+                                                        <label class="float-label">Mã số thuế</label>
+                                                    </div>
+                                                    <div class="form-group form-default">
+                                                        <textarea class="form-control" required=""></textarea>
+                                                        <span class="form-bar"></span>
+                                                        <label class="float-label">Mô tả</label>
+                                                    </div>
+                                                    <button class="btn btn-info waves-effect waves-light">Cập nhật</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Row end -->
+                </div>
+            </div>
+            <!-- Material tab card end -->
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('page-script')
