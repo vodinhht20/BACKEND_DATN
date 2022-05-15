@@ -8,8 +8,8 @@
         <div class="row align-items-center">
             <div class="col-md-8">
                 <div class="page-header-title">
-                    <h5 class="m-b-10">Quản trị thành viên</h5>
-                    <p class="m-b-0">Danh sách tất cả các thành viên</p>
+                    <h5 class="m-b-10">Quản trị nhân sự</h5>
+                    <p class="m-b-0">Danh sách tất cả nhân sự</p>
                 </div>
             </div>
             <div class="col-md-4">
@@ -17,7 +17,7 @@
                     <li class="breadcrumb-item">
                         <a href="{{route('dashboard')}}"> <i class="fa fa-home"></i> </a>
                     </li>
-                    <li class="breadcrumb-item"><a href="">Thành viên</a>
+                    <li class="breadcrumb-item"><a href="">Nhân sự</a>
                     </li>
                 </ul>
             </div>
@@ -30,16 +30,97 @@
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-header">
-                    <h5 style="font-size: 17px;">Danh sách thành viên</h5>
+                    <h5 style="font-size: 17px;">Danh sách nhân sự</h5>
                     <a href="{{route('user-black-list')}}" class="btn btn-outline-dark btn-round waves-effect waves-light" style="float: right">
                         <i class="ti-lock"></i>
                         Danh sách chặn
                     </a>
                     <a href="{{route('show-form-user-create')}}" class="btn btn-outline-primary btn-round waves-effect waves-light mr-3" style="float: right">
                         <i class="ti-plus"></i>
-                        Thêm thành viên
+                        Thêm nhân sự
                     </a>
                 </div>
+               <div class="card-header">
+                    <div class="form-group row">
+                        <div class="col-sm-3">
+                            <select name="select" class="form-control">
+                                <option value="opt1">Đang hoạt động</option>
+                                <option value="opt2">Type 2</option>
+                                <option value="opt3">Type 3</option>
+                                <option value="opt4">Type 4</option>
+                                <option value="opt5">Type 5</option>
+                                <option value="opt6">Type 6</option>
+                                <option value="opt7">Type 7</option>
+                                <option value="opt8">Type 8</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <select name="select" class="form-control">
+                                <option value="opt1">Status</option>
+                                <option value="opt2">Type 2</option>
+                                <option value="opt3">Type 3</option>
+                                <option value="opt4">Type 4</option>
+                                <option value="opt5">Type 5</option>
+                                <option value="opt6">Type 6</option>
+                                <option value="opt7">Type 7</option>
+                                <option value="opt8">Type 8</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <select name="select" class="form-control">
+                                <option value="opt1">Tìm kiếm theo tên, email, số...</option>
+                                <option value="opt2">Type 2</option>
+                                <option value="opt3">Type 3</option>
+                                <option value="opt4">Type 4</option>
+                                <option value="opt5">Type 5</option>
+                                <option value="opt6">Type 6</option>
+                                <option value="opt7">Type 7</option>
+                                <option value="opt8">Type 8</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <select name="select" class="form-control">
+                                <option value="opt1">Vai trò</option>
+                                <option value="opt2">Type 2</option>
+                                <option value="opt3">Type 3</option>
+                                <option value="opt4">Type 4</option>
+                                <option value="opt5">Type 5</option>
+                                <option value="opt6">Type 6</option>
+                                <option value="opt7">Type 7</option>
+                                <option value="opt8">Type 8</option>
+                            </select>
+                        </div>
+                    </div>
+               </div>
+               <div class="card-header">
+                <div class="form-group row">
+                    <div class="col-sm-3">
+                        <select name="select" class="form-control">
+                            <option value="opt1">Phòng ban, vị trí</option>
+                            <option value="opt2">Type 2</option>
+                            <option value="opt3">Type 3</option>
+                            <option value="opt4">Type 4</option>
+                            <option value="opt5">Type 5</option>
+                            <option value="opt6">Type 6</option>
+                            <option value="opt7">Type 7</option>
+                            <option value="opt8">Type 8</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-3">
+                        <select name="select" class="form-control">
+                            <option value="opt1">Loại hình nhân sự</option>
+                            <option value="opt2">Type 2</option>
+                            <option value="opt3">Type 3</option>
+                            <option value="opt4">Type 4</option>
+                            <option value="opt5">Type 5</option>
+                            <option value="opt6">Type 6</option>
+                            <option value="opt7">Type 7</option>
+                            <option value="opt8">Type 8</option>
+                        </select>
+                    </div>
+                </div>
+           </div>
+               
                 @include('admin.layouts.messages')
                 <div class="card-block table-border-style" id="data-table">
                     <div class="table-responsive">
@@ -47,12 +128,10 @@
                             <thead>
                                 <tr>
                                     <th>STT</th>
-                                    <th class="text-center">Thành viên</th>
-                                    <th>Email</th>
-                                    <th>Phone</th>
-                                    <th>Birth day</th>
+                                    <th class="text-center">Name</th>
+                                    <th>Contact</th>
+                                    <th>Status</th>
                                     <th>Address</th>
-                                    <th>Hành động</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -64,20 +143,21 @@
                                             <p class="text-fullname">{{ $user->name }}</p>
                                         </td>
                                         <td>
+                                            <p> {{ $user->phone ?: "Chưa có" }}</p>
                                             <p class="ellipsis" width="200">{{ $user->email }}</p>
                                             @if ($user->email_verified_at)
                                                 <label for="" class="label label-success">Đã xác thực email</label>
                                             @else
                                                 <label for="" class="label label-default">Chưa xác thực email</label>
                                             @endif
+                                           
                                         </td>
-                                        <td>{{ $user->phone ?: "Chưa có" }}</td>
                                         <td>{{ $user->birth_day ?: "Chưa có" }}</td>
                                         <td> <p class="ellipsis">{{ $user->address ?: "Chưa có" }}</p></td>
                                         <td>
                                             <div class="dropdown">
-                                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                Action
+                                                <button class="btn btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fa-solid fa-ellipsis m-0"></i>
                                                 </button>
                                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                     @if (!$user->email_verified_at)
@@ -215,7 +295,7 @@
         $('.btn-remove-user').on('click', async function (e) {
             Swal.fire({
                     title: 'Hành động nguy hiểm !!',
-                    text: "Bạn có muốn xóa thành viên này không, hành động này không thể khôi phục.",
+                    text: "Bạn có muốn xóa nhân viên này không, hành động này không thể khôi phục.",
                     icon: 'warning',
                     heightAuto: true,
                     showCancelButton: true,
@@ -237,7 +317,7 @@
                                 $('.overlay-load').css('display', 'none');
                                 Swal.fire(
                                     'Thành công',
-                                    'Thành viên này đã được xóa',
+                                    'Nhân viên này đã được xóa',
                                     'success'
                                 )
                             })
@@ -255,7 +335,7 @@
         $('.btn-block-user').on('click', function (e) {
             Swal.fire({
                     title: 'Xác nhận !',
-                    text: "Bạn có muốn đưa chặn thành viên này không ?",
+                    text: "Bạn có muốn đưa chặn nhân viên này không ?",
                     icon: 'warning',
                     heightAuto: true,
                     showCancelButton: true,
@@ -277,7 +357,7 @@
                                 $('.overlay-load').css('display', 'none');
                                 Swal.fire(
                                     'Thành công',
-                                    'Thành viên này đã được thêm vào danh sách chặn',
+                                    'Nhân viên này đã được thêm vào danh sách chặn',
                                     'success'
                                 )
                             })
