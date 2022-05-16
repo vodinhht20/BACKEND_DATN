@@ -25,7 +25,7 @@
         }
         .select2-container--default .select2-selection--multiple .select2-selection__choice {
             margin-top: 2px !important;
-            background-color: var(--THEME-UI);
+            background-color: var(--ui-blue);
             border: none;
         }
         .select2-container--default .select2-selection--multiple .select2-selection__choice span {

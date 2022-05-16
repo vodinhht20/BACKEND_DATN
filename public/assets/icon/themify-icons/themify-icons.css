@@ -21,6 +21,7 @@
 	/* Better Font Rendering =========== */
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
+	transition: all 0.3s ease-in-out !important;
 }
 
 .ti-wand:before {

@@ -1,4 +1,2 @@
-## PHẦN MỀM QUẢN LÝ NHÂN SỰ CAMEL
-
-**[DEMO](https://quan-ly-nhan-su-camel.herokuapp.com)**
-
+## Memo
+<a href="https://thuc-pham-xanh.herokuapp.com/">Link Demo</a>
