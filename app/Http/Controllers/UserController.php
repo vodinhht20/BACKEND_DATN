@@ -23,6 +23,7 @@ class UserController extends Controller
     public function confirmEmail(Request $request)
     {
         $result = $this->userRepo->confirmEmail($request->id);
+        
         if ($result) {
             $users = $this->userRepo->getAllUserByPublic()->withPath($request->pathname);
             $dataView = view('admin.user._partials.base_table', compact('users'))->render();

@@ -1,6 +1,6 @@
 @extends('admin.layouts.main')
 @section('title')
-    <title>Thành viên | Thêm Mới</title>
+    <title>Thành viên | Sửa thông tin</title>
 @endsection
 @section('header-page')
 <div class="page-header">
@@ -65,12 +65,15 @@
                             </div>
                             <div class="col-sm-3">
                                 <div class="form-group">
-                                    <label class="col-form-label">Phone</label>
+                                    <label class="col-form-label">Số điện thoại</label>
                                     <div class="">
                                         <input type="text" class="form-control data-input" value="{{ $user->phone }}" name="phone" placeholder="+84 329766459">
                                     </div>
                                 </div>
                             </div>
+                            
+                        </div>
+                        <div class="row">
                             <div class="col-sm-3">
                                 <div class="form-group">
                                     <label class="col-form-label">Avatar</label>
