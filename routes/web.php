@@ -96,5 +96,7 @@ Route::get('google/callback', [AuthController::class, 'ggAuthCallback'])->name('
 
 Route::prefix('/company')->name("company.")->group(function() {
     Route::get('/info', [CompanyController::class, 'info'])->name("info");
+    Route::get('/worker', [CompanyController::class, 'worker'])->name("worker");
+
 });
 
