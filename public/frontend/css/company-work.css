@@ -1,0 +1,117 @@
+
+.tabs {
+   
+    position: relative;
+   
+}
+
+
+.tab-item {
+    
+    /* padding: 16px 20px 11px 20px; */
+    max-width: 150px;
+    min-width: 150px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-left: 3px solid transparent;
+    cursor: pointer;
+    transition: all 0.5s ease;
+    text-transform: uppercase;
+    background-color: #fff;
+}
+
+.tab-item:hover {
+    opacity: 1;
+    border-color: rgb(180, 159, 37);
+    height: auto;
+}
+.tabs:hover{
+    
+    color: rgb(180, 159, 37);
+}
+
+.tab-item.active {
+    color: var(--default-cl);
+}
+
+.tab-content {
+    padding: 10px 0;
+    margin-left: 20px;
+    background-color: #fff;
+
+}
+
+.tab-pane {
+    display: none;
+}
+
+.tab-pane.active {
+    display: block;
+   
+}
+.tab-pane{
+    padding-left: 10px;
+}
+/* .select-time{
+    display: none;
+}
+.select-time.active {
+    display: block;
+   
+} */
+.tab-item {
+    
+    font-size: 20px;
+    padding: 12px;
+    text-transform: none;
+    
+    
+}
+.tabs{
+    display: grid;
+    grid-template-rows: 100px 100px;
+    row-gap: 15px;
+    /* color: rgb(180, 159, 37); */
+    
+    text-align: center;
+}
+.grid_wide{
+    display: flex;
+
+    border: 1 solid rgb(56, 53, 53);
+    overflow-x:scroll;
+}
+.content-work-head,.work-head-left{
+    display: flex;
+    padding-left: 10px;
+    
+}
+.table_manager th, .table_manager td {
+    border-collapse: collapse;
+    border: 1px solid rgb(54, 53, 53);
+    height: 70px;
+    width: auto;
+}
+.table_manager tr td{
+    text-align: center;
+}
+.timeworks{
+    display: grid;
+    grid-template-rows: 30px 30px;
+    
+}
+.table_manager th{
+    width: 150px;
+    text-align: center;
+}
+.tab-radio{
+    display: grid;
+    grid-row: 50px 100px;
+}
+.selectday{
+    margin-left: 5px;
+}
+
+input[type="radio"]:checked + label {
+    font-weight: bold;
+}
