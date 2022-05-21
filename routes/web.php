@@ -2,6 +2,7 @@
 
 use App\Exports\ProductExport;
 use App\Http\Controllers\Api\ProductController as ApiProductController;
+use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
@@ -61,6 +62,7 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function() {
         Route::get('/update/{id}', [CategoryController::class, 'showFormUpdate'])->name('show-form-update-category');
         Route::post('/update/{id}', [CategoryController::class, 'update'])->name('post-update-category');
     });
+  
     Route::prefix('/user')->group(function() {
         Route::get('/', [UserController::class, 'index'])->name('admin-list-user');
         Route::get('/create', [UserController::class, 'showFormCreate'])->name('show-form-user-create');
@@ -70,6 +72,9 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function() {
     });
     Route::prefix('/role')->group(function() {
         Route::get('/', [RoleController::class, 'index'])->name('admin-role.index');
+    });
+    Route::prefix('/application')->group(function() {
+        Route::get('/', [ApplicationController::class, 'index'])->name('application-view');
     });
     Route::post('/ajax-add-role-user', [RoleController::class, 'addRole'])->name('ajax-add-role-user');
     Route::post('/ajax-get-role-user', [RoleController::class, 'getRole'])->name('ajax-get-role-user');
