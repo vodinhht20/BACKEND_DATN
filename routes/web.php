@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\TimesheetController;
 
 /*
 |--------------------------------------------------------------------------
@@ -96,7 +97,6 @@ Route::get('google/callback', [AuthController::class, 'ggAuthCallback'])->name('
 
 Route::prefix('/company')->name("company.")->group(function() {
     Route::get('/info', [CompanyController::class, 'info'])->name("info");
-    Route::get('/worker', [CompanyController::class, 'worker'])->name("worker");
-
 });
+Route::get('/timesheet', [TimesheetController::class, 'timesheet'])->name("timesheet");
 
