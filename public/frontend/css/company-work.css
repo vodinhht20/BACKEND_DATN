@@ -109,7 +109,13 @@
     grid-row: 50px 100px;
 }
 .selectday{
-    margin-left: 5px;
+    margin-left: 10px;
+    position: relative;
+}
+.selectday option{
+    position: absolute;
+    
+
 }
 
 input[type="radio"]:checked + label {

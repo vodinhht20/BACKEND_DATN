@@ -1,4 +1,7 @@
 @extends('admin.layouts.main')
+@section('title')
+<title>TimeWorks Manager</title>
+@endsection
 
 @section('style-page')
     <!-- datepicker.css -->
@@ -53,26 +56,17 @@
                 <div class="content-work-head">
                     <div class="work-head-left">
                         <select class="form-control filter-data" style="font-weight:bold">
-                            
-                                <?php
-                                    use Carbon\Carbon;  
-                                    $month = Carbon::now()->monthName;
-                                    $month = Carbon::now()->format('n ');
-                                    $bef_month = Carbon::now()->startOfMonth()->subMonth($month);
-                                    
-                                   
-                                    echo"<option value=''><span>Tháng $month </span></option>";
-                                   
-                                      for ($bef_month=1; $bef_month < $month ; $bef_month++) { 
-                                       
+                                        
+                            <option value=''><span>Tháng {{$month}}</span></option>";
+              
+                            <?php
+                            for ($bef_month=1; $bef_month < $month; $bef_month++) { 
+                                
+                            echo "
+                            <option value=''><span>Tháng $bef_month</span></option>";
+                            }
+                            ?>
 
-                                    echo"<option value=''><span>Tháng $bef_month</span></option>";
-
-                                      }
-
-                                    ?>                                
-                            
-                            
                         </select>
                         <select class="form-control filter-data">
                             <option value="">Chọn phòng ban, vị trí, nhân viên</option>
@@ -108,26 +102,10 @@
                             <tr>
                             <th>Tên nhân viên</th>
                            
-                            <th class='timeworks'>
-                                
-                                <?php
-                                        
-                                        
-                                       
-                                            $month = Carbon::now()->monthName;
-                                            $month = Carbon::now()->format('n');
-                                            $date = Carbon::now($month)->format('n');                                           
-                                            $day = Carbon::now($date)->dayName;
-                                            $day = Carbon::now($date)->format('n'); ;
-                                            $date = Carbon::now($month)->format('d / m'); 
-                                       
-                                                                     
-                                        echo "
-                                        
-                                        <span>Thứ $day  </span>
-                                            <span>$date </span>
-                                        ";
-                                        ?></th>
+                            <th class='timeworks' id="timeworks">
+                                Thứ ...
+                                {{$date}}
+                            </th>
 
                             <th>Công thực tế</th>
                             <th>Công nghỉ phép</th>
@@ -165,10 +143,10 @@
                 <p>Chọn 1 trong 2 cách</p>
                 <div class="tab-radio">
                     <div class="item active">
-                        <input name="check" type="radio"><label for="">Ngày cuối cùng của tháng </label>
+                        <input name="checked" type="radio"><label for="">Ngày cuối cùng của tháng </label>
                     </div>
                     <div class="item" id="actionday">
-                        <input name="check" type="radio"><label for=""> Người dùng tự chọn ngày cố định mỗi tháng</label>
+                        <input name="checked" type="radio"><label for=""> Người dùng tự chọn ngày cố định mỗi tháng</label>
                     </div>
                 </div>
                 <div class="tab-select-time">
@@ -189,7 +167,7 @@
                     </div>
 
                 </div>
-                <button type="submit" style="float:right">Lưu</button>
+                <button type="submit" style="float:right; margin-right:30px">Lưu</button>
             </div>
         </div>
     </div>
@@ -210,22 +188,14 @@ tabs.forEach((tab, index) => {
     };
 })
 </script>
-<script>
-const items = document.querySelectorAll(".item");
-const select-times = document.querySelectorAll(".select-time ");
-
-
-items.forEach((tabb, index) => {
-    const select-time = select-times[index];
-
-    tabb.checked = function() {
-        document.querySelector(".item.active").classList.remove("checked");
-        document.querySelector(".select-time.active").classList.remove("checked");
-        this.classList.add("checked");
-        select-time.classList.add("checked");
-    };
-})
-</script>
+{{-- <script>
+if(document.querySelector('.item').checked) {
+    document.querySelector(".item.active").classList.add("active");
+  
+}else {
+    document.querySelector(".item.active").classList.remove("active");
+}
+</script> --}}
 @endsection
 
 @section('page-script')

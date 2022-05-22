@@ -14,12 +14,21 @@ class CompanyController extends Controller
     public function worker(Request $request)
     {
         
-                                    $carbon= Carbon::now();
-                                    $carbon= Carbon::now(new DateTimeZone('Asia/Ho_Chi_Minh'));
-                                    $carbon = Carbon::now()->daysInMonth;
-                                   
+        $carbon= Carbon::now();
+        $carbon= Carbon::now(new DateTimeZone('Asia/Ho_Chi_Minh'));
+        $carbon = Carbon::now()->daysInMonth;
+        $month = Carbon::now()->monthName;
+        $month = Carbon::now()->format('n ');
+        $date = Carbon::now($month)->format('n');                                           
+        $day = Carbon::now($date)->dayName;
+        $day = Carbon::now($date)->format('n'); ;
+        $date = Carbon::now($month)->format('d / m'); 
+        $bef_month = Carbon::now()->startOfMonth()->subMonth($month);
 
-        return view('admin.company.worker',compact('carbon'));
+        return view('admin.company.worker',compact('month','bef_month','day','date'));
+        
+                                    
+
     }
 }
 ?>
