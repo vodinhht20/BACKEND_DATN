@@ -17,11 +17,6 @@ use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Http\Controllers\CompanyController;
-<<<<<<< Updated upstream
-=======
-use App\Http\Controllers\TimesheetController;
-use Illuminate\Support\Facades\Auth;
->>>>>>> Stashed changes
 
 /*
 |--------------------------------------------------------------------------
