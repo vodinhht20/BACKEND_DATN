@@ -47,12 +47,6 @@
                     Hệ thống <br> chi nhánh</a>
                 <div class="slide"></div>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#" role="tab" aria-expanded="false">
-                    <i class="ti-wallet"></i><br>
-                    Cơ cấu <br> tổ chức</a>
-                <div class="slide"></div>
-            </li>
         </ul>
         <!-- Tab panes -->
         <div class="tab-content tabs-left-content card-block">

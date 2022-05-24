@@ -30,40 +30,36 @@
     </div>
 @endsection
 @section('content')
-<div class="company-info">
-    <div class="tab-pane" id="messages5" role="tabpanel">
-        <div class="col-md-6">
-            <div class="card1">
-                <div class="card-header">
-                    <h5>Thêm chi nhánh</h5>
-                </div>
-                <div class="card-block">
-                    <form class="form-material" method="post">
-                        <div class="form-group form-default">
-                            <input type="text" name="name" class="form-control" required="">
-                            <span class="form-bar"></span>
-                            <label class="float-label">Tên chi nhánh</label>
-                        </div>
-                        <div class="form-group form-default">
-                            <input type="text" name="email" class="form-control" required="">
-                            <span class="form-bar"></span>
-                            <label class="float-label">Mã chi nhánh</label>
-                        </div>
-                        <div class="form-group form-default">
-                            <input type="number" name="hotline" class="form-control" required="">
-                            <span class="form-bar"></span>
-                            <label class="float-label">Địa chỉ chi nhánh</label>
-                        </div>
-                        <div class="form-group form-default">
-                            <input type="text" name="footer-email" class="form-control" required="">
-                            <span class="form-bar"></span>
-                            <label class="float-label">Hotline</label>
-                        </div>
-                        <button class="btn btn-info waves-effect waves-light">Thêm chi nhánh</button>
-                    </form>
-                </div>
+    <div class="company-info">
+        <div class="tab-pane" id="settings5" role="tabpanel">
+            <div class="card-header">
+                <h5>Thêm chi nhánh</h5>
+            </div>
+            <div class="card-block1">
+                <form class="form-material" method="post">
+                    <div class="form-group form-default">
+                        <input type="text" name="name" class="form-control" required="">
+                        <span class="form-bar"></span>
+                        <label class="float-label">Tên chi nhánh</label>
+                    </div>
+                    <div class="form-group form-default">
+                        <input type="text" name="email" class="form-control" required="">
+                        <span class="form-bar"></span>
+                        <label class="float-label">Mã chi nhánh</label>
+                    </div>
+                    <div class="form-group form-default">
+                        <input type="number" name="hotline" class="form-control" required="">
+                        <span class="form-bar"></span>
+                        <label class="float-label">Địa chỉ chi nhánh</label>
+                    </div>
+                    <div class="form-group form-default">
+                        <input type="text" name="footer-email" class="form-control" required="">
+                        <span class="form-bar"></span>
+                        <label class="float-label">Hotline</label>
+                    </div>
+                    <button class="btn btn-info waves-effect waves-light">Thêm chi nhánh</button>
+                </form>
             </div>
         </div>
     </div>
-</div>
 @endsection
