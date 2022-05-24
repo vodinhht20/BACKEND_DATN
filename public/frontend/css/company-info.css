@@ -24,3 +24,11 @@
         width: 84vw;
     }
 }
+
+.card-header:first-child {
+    background-color: #fff;
+}
+
+.company-info .tab-pane{
+    background-color: #fff;
+}

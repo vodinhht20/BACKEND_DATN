@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\WorkerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -96,9 +97,12 @@ Route::get('google/callback', [AuthController::class, 'ggAuthCallback'])->name('
 
 Route::prefix('/company')->name("company.")->group(function() {
     Route::get('/info', [CompanyController::class, 'info'])->name("info");
-    Route::get('/worker', [CompanyController::class, 'worker'])->name("worker");
     Route::get('/updatecompany', [CompanyController::class, 'updatecompany'])->name("updatecompany");
     Route::get('/addbranch', [CompanyController::class, 'addbranch'])->name("addbranch");
     Route::get('/updatebranch', [CompanyController::class, 'updatebranch'])->name("updatebranch");
 
+});
+
+Route::prefix('/worker')->name("worker.")->group(function() {
+    Route::get('/info', [WorkerController::class, 'worker'])->name("info");
 });
