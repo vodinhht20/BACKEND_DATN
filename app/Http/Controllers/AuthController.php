@@ -47,8 +47,9 @@ class AuthController extends Controller
         }
         Auth::login($user, true);
         return $user->hasRole('admin') ? redirect()->route('dashboard') : redirect()->route('home.index');
-        
+
     }
+
     public function showFromRegister() {
         return view("client.auth.register");
 

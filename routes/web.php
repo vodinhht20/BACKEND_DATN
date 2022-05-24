@@ -33,8 +33,8 @@ Route::get('/', [HomeController::class, 'index'])->name("home.index");
 Route::get('/san-pham', [ProductController::class, 'index'])->name("product.index");
 Route::get('/san-pham/{slug}', [ProductController::class, 'showDetail'])->name("product.showDetail");
 Route::get('/tin-tuc', [PostController::class, 'index'])->name("new.index");
-Route::get('/login', [AuthController::class, 'showFormLogin'])->name("login")->middleware('guest');
-Route::post('/login', [AuthController::class, 'login'])->name("post-login")->middleware('guest');
+Route::get('/login', [AuthController::class, 'showFormLogin'])->name("login");
+Route::post('/login', [AuthController::class, 'login'])->name("post-login");
 Route::get('/register', [AuthController::class, 'showFromRegister'])->name("show-form-register");
 Route::post('register', [AuthController::class, 'register'])->name('register');
 Route::get('xac-thuc/{token}/{id}', [AuthController::class, 'verifyTokenEmail'])->name('verify-email-token');
@@ -102,4 +102,3 @@ Route::prefix('/company')->name("company.")->group(function() {
     Route::get('/updatebranch', [CompanyController::class, 'updatebranch'])->name("updatebranch");
 
 });
-
