@@ -3,10 +3,16 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Repositories\UserRepositoryInterface;
 use Illuminate\Http\Request;
 
-class ProductController extends Controller
+class UserController extends Controller
 {
+    public function __construct(UserRepositoryInterface $userRepo)
+    {
+        $this->userRepo = $userRepo;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +20,11 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        $user = $this->userRepo->getAllUserByPublic(15);
+        return response()->json([
+            "status" => "200",
+            "payload" => $user,
+        ]);
     }
 
     /**

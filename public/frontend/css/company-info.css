@@ -1,0 +1,26 @@
+@media(min-width: 1200px){
+    .company-info .tab-content .tab-pane .card{
+        width: 68.1vw;
+    }
+    .company-info .tab-content .tab-pane .card1{
+        width: 67.1vw;
+    }
+    .company-info .tab-content .tab-pane .card-block1{
+        width: 67.1vw;
+    }
+    .company-info .card1{
+        width: 75.1vw;
+    }
+}
+
+@media(max-width: 1200px){
+    .company-info .tab-content .tab-pane .card{
+        width: 84vw;
+    }
+    .company-info .tab-content .tab-pane .card1{
+        width: 84vw;
+    }
+    .company-info .tab-content .tab-pane .card-block1{
+        width: 84vw;
+    }
+}
