@@ -1,6 +1,6 @@
 @extends('admin.layouts.main')
 @section('title')
-    <title>Sản Phẩm | Thêm Mới</title>
+    <title>Setting Company</title>
 @endsection
 @section('style-page')
     <!-- datepicker.css -->
