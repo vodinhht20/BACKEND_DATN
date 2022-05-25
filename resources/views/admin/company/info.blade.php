@@ -1,6 +1,6 @@
 @extends('admin.layouts.main')
 @section('title')
-    <title>Sản Phẩm | Thêm Mới</title>
+    <title>Setting Company</title>
 @endsection
 @section('style-page')
     <!-- datepicker.css -->
@@ -47,18 +47,6 @@
                     Hệ thống <br> chi nhánh</a>
                 <div class="slide"></div>
             </li>
-            {{-- <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#messages5" role="tab">Messages</a>
-                <div class="slide"></div>
-            </li> --}}
-            {{-- <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#settings5" role="tab">Settings</a>
-                <div class="slide"></div>
-            </li> --}}
-            {{-- <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#edit5" role="tab">edit</a>
-                <div class="slide"></div>
-            </li> --}}
         </ul>
         <!-- Tab panes -->
         <div class="tab-content tabs-left-content card-block">
@@ -68,7 +56,7 @@
                         <h5>Thông tin công ty</h5>
                         <div style="display: block;" class="card-header-right">
                             <ul class="list-unstyled card-option">
-                                <li class="nav-item"><i class="fa fa fa-wrench open-card-option"></i><a data-toggle="tab" href="#messages5" role="tab" aria-expanded="false">Cập nhật thông tin công ty</a></li>
+                                <li class="nav-item"><i class="fa fa fa-wrench open-card-option"></i><a href="{{route("company.updatecompany")}}" role="tab">Cập nhật thông tin công ty</a></li>
                             </ul>
                         </div>
                     </div>
@@ -105,7 +93,7 @@
                             <ul class="list-unstyled card-option">
                                 <li class="nav-item">
                                     <i class="fa fa fa-wrench open-card-option"></i>
-                                    <a data-toggle="tab" href="#settings5" role="tab">Thêm chi nhánh</a>
+                                    <a href="{{route("company.addbranch")}}" role="tab">Thêm chi nhánh</a>
                                 </li>
                             </ul>
                         </div>
@@ -130,7 +118,7 @@
                                         <td>CHHN</td>
                                         <td>Hà Nội</td>
                                         <td>19006186</td>
-                                        <td><a href=""><i class="ti-trash"></i></a> <a data-toggle="tab" href="#edit5" role="tab"><i style="float: right" class="ti-pencil"></i></a></td>
+                                        <td><a href=""><i class="ti-trash"></i></a> <a href="{{route("company.updatebranch")}}"><i style="float: right" class="ti-pencil"></i></a></td>
                                     </tr>
                                     <tr>
                                         <td>2</td>
@@ -234,7 +222,7 @@
             </div>
             <div class="tab-pane" id="edit5" role="tabpanel">
                 <div class="card-header">
-                    <h5>Cập nhập chi nhánh</h5>
+                    <h5>Cập nhật chi nhánh</h5>
                 </div>
                 <div class="card-block1">
                     <form class="form-material" method="post">
