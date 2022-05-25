@@ -61,9 +61,9 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function logout()
+    public function logout(Request $request)
     {
-        Auth::logout();
+        JWTAuth::invalidate($request->access_token);
         return response()->json(['message' => 'Successfully logged out']);
     }
 
@@ -78,8 +78,8 @@ class AuthController extends Controller
     {
         return response()->json([
             'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => Auth::guard('api')->factory()->getTTL() * 60
+            // 'token_type' => 'bearer',
+            // 'expires_in' => Auth::guard('api')->factory()->getTTL() * 1
         ]);
     }
 }
