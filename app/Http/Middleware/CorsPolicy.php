@@ -16,6 +16,7 @@ class CorsPolicy
      */
     public function handle(Request $request, Closure $next)
     {
+        if (env('DISABLE_CORS', true)) return $next($request);
         return $next($request)
             ->header('Access-Control-Allow-Origin', config('cors.allowed_origins'))
             ->header('Access-Control-Allow-Methods', '*')
