@@ -34,18 +34,8 @@
     <ul class="nav nav-tabs md-tabs tabs-left b-none" role="tablist">
         <li class="nav-item">
             <a class="nav-link" href="{{route("company.info")}}" role="tab" aria-expanded="false">
-                <i class="ti-layout-media-overlay"></i><br>
-                Thông tin <br> công ty</a>
-        </li>
-        <li class="nav-item active">
-            <a class="nav-link" href="{{route("company.info2")}}" role="tab" aria-expanded="false">
-                <i class="ti-wallet"></i><br>
-                Hệ thống <br> chi nhánh</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="" role="tab" aria-expanded="false">
-                <i class="ti-wallet"></i><br>
-                Cơ cấu <br> tổ chức</a>
+                <i class="ti-agenda"></i><br>
+                Trở lại<br> trang cài đặt</a>
         </li>
     </ul>
     <div class="tab-pane4" id="messages5" role="tabpanel">

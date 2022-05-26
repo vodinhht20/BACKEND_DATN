@@ -90,6 +90,10 @@
         width: 100%;
         align-items: center;
     }
+    .company-info .b-none{
+        display: flex;
+        width: 100%;
+    }
 }
 
 .card-header:first-child {
