@@ -99,6 +99,7 @@ Route::get('/callback/github', [AuthController::class, 'githubCallback'])->name(
 
 Route::prefix('/company')->name("company.")->group(function() {
     Route::get('/info', [CompanyController::class, 'info'])->name("info");
+    Route::get('/info', [CompanyController::class, 'info'])->name("info");
     Route::get('/updatecompany', [CompanyController::class, 'updatecompany'])->name("updatecompany");
     Route::get('/addbranch', [CompanyController::class, 'addbranch'])->name("addbranch");
     Route::get('/updatebranch', [CompanyController::class, 'updatebranch'])->name("updatebranch");
