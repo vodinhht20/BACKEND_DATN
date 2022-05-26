@@ -12,11 +12,6 @@ class CompanyController extends Controller
         return view('admin.company.info');
     }
 
-    public function info2(Request $request)
-    {
-        return view('admin.company.info2');
-    }
-
     public function worker(Request $request)
     {
 
