@@ -33,12 +33,12 @@
 <div class="company-info">
     <div class="col-lg-12 col-xl-6">
         <ul class="nav nav-tabs md-tabs tabs-left b-none" role="tablist">
-            <li class="nav-item active">
+            <li class="nav-item">
                 <a class="nav-link" data-toggle="tab" href="#home5" role="tab" aria-expanded="false">
                     <i class="ti-layout-media-overlay"></i><br>
                     Thông tin <br> công ty</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item active">
                 <a class="nav-link" data-toggle="tab" href="#profile5" role="tab" aria-expanded="false">
                     <i class="ti-wallet"></i><br>
                     Hệ thống <br> chi nhánh</a>
@@ -51,7 +51,7 @@
         </ul>
         <!-- Tab panes -->
         <div class="tab-content tabs-left-content card-block">
-            <div class="tab-pane active" id="home5" role="tabpanel">
+            <div class="tab-pane" id="home5" role="tabpanel">
                 <div class="card">
                     <div class="card-header">
                         <h5>Thông tin công ty</h5>
@@ -86,7 +86,7 @@
                     </div>
                 </div>
             </div>
-            <div class="tab-pane" id="profile5" role="tabpanel">
+            <div class="tab-pane active" id="profile5" role="tabpanel">
                 <div style="overflow-x: auto;" class="card">
                     <div class="card-header">
                         <h5>Hệ thống chi nhánh</h5>

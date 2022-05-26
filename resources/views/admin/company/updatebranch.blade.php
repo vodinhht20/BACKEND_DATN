@@ -31,13 +31,30 @@
 @endsection
 @section('content')
 <div class="company-info">
-    <div class="tab-pane" id="messages5" role="tabpanel">
+    <ul class="nav nav-tabs md-tabs tabs-left b-none" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link" href="{{route("company.info")}}" role="tab" aria-expanded="false">
+                <i class="ti-layout-media-overlay"></i><br>
+                Thông tin <br> công ty</a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="{{route("company.info2")}}" role="tab" aria-expanded="false">
+                <i class="ti-wallet"></i><br>
+                Hệ thống <br> chi nhánh</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="" role="tab" aria-expanded="false">
+                <i class="ti-wallet"></i><br>
+                Cơ cấu <br> tổ chức</a>
+        </li>
+    </ul>
+    <div class="tab-pane4" id="messages5" role="tabpanel">
         <div class="col-md-6">
             <div class="card1">
-                <div class="card-header">
+                <div class="card-header4">
                     <h5>Cập nhật chi nhánh</h5>
                 </div>
-                <div class="card-block">
+                <div class="card-block4">
                     <form class="form-material" method="post">
                         <div class="form-group form-default">
                             <input type="text" name="name" class="form-control" required="">
@@ -50,7 +67,7 @@
                             <label class="float-label">Mã chi nhánh</label>
                         </div>
                         <div class="form-group form-default">
-                            <input type="number" name="hotline" class="form-control" required="">
+                            <input type="text" name="hotline" class="form-control" required="">
                             <span class="form-bar"></span>
                             <label class="float-label">Địa chỉ chi nhánh</label>
                         </div>
