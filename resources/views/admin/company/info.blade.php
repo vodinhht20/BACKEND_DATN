@@ -32,20 +32,21 @@
 @section('content')
 <div class="company-info">
     <div class="col-lg-12 col-xl-6">
-        <div class="sub-title">Left Tab</div>
-        <!-- Nav tabs -->
         <ul class="nav nav-tabs md-tabs tabs-left b-none" role="tablist">
-            <li class="nav-item">
+            <li class="nav-item active">
                 <a class="nav-link" data-toggle="tab" href="#home5" role="tab" aria-expanded="false">
                     <i class="ti-layout-media-overlay"></i><br>
                     Thông tin <br> công ty</a>
-                <div class="slide"></div>
             </li>
             <li class="nav-item">
                 <a class="nav-link" data-toggle="tab" href="#profile5" role="tab" aria-expanded="false">
                     <i class="ti-wallet"></i><br>
                     Hệ thống <br> chi nhánh</a>
-                <div class="slide"></div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#cocau5" role="tab" aria-expanded="false">
+                    <i class="ti-wallet"></i><br>
+                    Cơ cấu <br> tổ chức</a>
             </li>
         </ul>
         <!-- Tab panes -->
@@ -249,6 +250,9 @@
                         <button class="btn btn-info waves-effect waves-light">Cập nhật</button>
                     </form>
                 </div>
+            </div>
+            <div class="tab-pane" id="cocau5" role="tabpanel">
+                <h2>Đang xây dựng rồi!!! Đợi tý</h2>
             </div>
         </div>
     </div>
