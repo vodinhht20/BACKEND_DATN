@@ -16,7 +16,7 @@ class CompanyController extends Controller
     {
 
         $carbon= Carbon::now();
-        $carbon= Carbon::now(new DateTimeZone('Asia/Ho_Chi_Minh'));
+        // $carbon= Carbon::now(new DateTimeZone('Asia/Ho_Chi_Minh'));
         $carbon = Carbon::now()->daysInMonth;
         return view('admin.company.worker',compact('carbon'));
     }
