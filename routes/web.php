@@ -94,6 +94,8 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function() {
 Route::get('login-google', [AuthController::class, 'ggLogin'])->name('login-google');
 Route::get('google/callback', [AuthController::class, 'ggAuthCallback'])->name('callback-google');
 
+Route::get('/login-github', [AuthController::class, 'githubLogin'])->name('login-github');
+Route::get('/callback/github', [AuthController::class, 'githubCallback'])->name('github-Callback');
 
 Route::prefix('/company')->name("company.")->group(function() {
     Route::get('/info', [CompanyController::class, 'info'])->name("info");

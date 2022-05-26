@@ -129,4 +129,28 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
         return redirect()->route('login');
     }
+
+    public function githubLogin(){
+        return Socialite::driver('github')->redirect();
+    }
+    public function githubCallback() {
+        $githubUser = Socialite::driver('github')->user();
+        $user = User::where('email', $githubUser->email)->first();
+        if(isset($user)){
+            $user->avatar = $githubUser->avatar;
+            $user->name = $githubUser->nickname;
+            $user->save();
+        } else {
+            $option = [
+                'email' => $githubUser->email,
+                'fullname' => $githubUser->nickname,
+                'avatar' => $githubUser->avatar,
+                'password' => 'thuc-pham-xanh@123',
+                'email_verified_at' => now(),
+            ];
+            $user = $this->userRepo->register($option);
+        }
+        Auth::login($user);
+        return Auth::user()->hasRole('admin') ? redirect()->route('dashboard') : redirect()->route('home.index');
+    }
 }
