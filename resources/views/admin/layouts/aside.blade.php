@@ -43,8 +43,8 @@
         </ul>
         <div class="pcoded-navigation-label" data-i18n="nav.category.forms">Sản phẩm</div>
         <ul class="pcoded-item pcoded-left-item">
-            <li class="pcoded-hasmenu  {{ 
-                    Request::routeIs('admin-product-list') 
+            <li class="pcoded-hasmenu  {{
+                    Request::routeIs('admin-product-list')
                 || Request::routeIs('admin-product-create')
                 || Request::routeIs('admin-product-update')
                 || Request::routeIs('admin-product-trash')
@@ -101,6 +101,17 @@
                 <a href="{{ route("company.info") }}" class="waves-effect waves-dark">
                     <span class="pcoded-micon"><i class="ti-agenda"></i><b>FC</b></span>
                     <span class="pcoded-mtext" data-i18n="nav.form-components.main">Cài đặt công ty</span>
+                    <span class="pcoded-mcaret"></span>
+                </a>
+            </li>
+        </ul>
+
+        <div class="pcoded-navigation-label" data-i18n="nav.category.other">Bảng công</div>
+        <ul class="pcoded-item pcoded-left-item">
+            <li class="{{ Request::routeIs('timesheet') ? 'active' : '' }}">
+                <a href="{{ route("timesheet") }}" class="waves-effect waves-dark">
+                    <span class="pcoded-micon"><i class="ti-book"></i><b>FC</b></span>
+                    <span class="pcoded-mtext" data-i18n="nav.form-components.main">Bảng công</span>
                     <span class="pcoded-mcaret"></span>
                 </a>
             </li>

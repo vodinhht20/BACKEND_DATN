@@ -1,0 +1,107 @@
+@media(min-width: 1200px){
+    .company-info .tab-content .tab-pane .card{
+        width: 68.1vw;
+    }
+    .company-info .tab-content .tab-pane .card1{
+        width: 67.1vw;
+    }
+    .company-info .tab-content .tab-pane .card-block1{
+        width: 67.1vw;
+    }
+    .company-info .card1{
+        width: 75.1vw;
+    }
+    .company-info .col-xl-6 .b-none li{
+        background-color: #fff;
+        width: 9vw!important;
+        height: 6.42vw;
+        border-radius: 20px;
+        margin-top: 0.8vw!important;
+        margin-right: 1vw!important;
+    }
+    .company-info .col-xl-6 .b-none li.active{
+        border-left: 3px solid var(--ui-outline);
+    }
+    .company-info .col-xl-6 .b-none li:hover{
+        border-left: 3px solid var(--ui-outline);
+    }
+    .company-info .card-block .tab-pane{
+        height: 23.1vw;
+        border-radius: 15px;
+    }
+    .company-info{
+        display: flex;
+    }
+    .company-info .b-none li{
+        background-color: #fff;
+        width: 9vw!important;
+        height: 6.42vw;
+        border-radius: 20px;
+        margin-top: 0.8vw!important;
+        margin-right: 1vw!important;
+    }
+    .company-info .b-none li.active{
+        border-left: 3px solid var(--ui-outline);
+    }
+    .company-info .b-none li:hover{
+        border-left: 3px solid var(--ui-outline);
+    }
+    .company-info .tab-pane1 {
+        border-radius: 10px;
+        width: 87%;
+        background-color: #fff;
+    }
+    .company-info .tab-pane1 .card-header1, .card-block1{
+        width: 87%;
+        margin-top: 1vw;
+    }
+    .company-info .tab-pane3 .card-header3, .card-block3{
+        width: 87%;
+        margin-top: 1vw;
+    }
+    .company-info .tab-pane3{
+        background-color: #fff;
+        border-radius: 10px;
+        width: 87%;
+    }
+    .company-info .tab-pane4 .card-header4, .card-block4{
+        width: 87%;
+        margin-top: 1vw;
+    }
+    .company-info .tab-pane4{
+        background-color: #fff;
+        border-radius: 10px;
+        width: 87%;
+    }
+}
+
+@media(max-width: 1200px){
+    .company-info .tab-content .tab-pane .card{
+        width: 84vw;
+    }
+    .company-info .tab-content .tab-pane .card1{
+        width: 84vw;
+    }
+    .company-info .tab-content .tab-pane .card-block1{
+        width: 84vw;
+    }
+    .company-info .col-xl-6 .b-none{
+        display: flex;
+        width: 100%;
+        align-items: center;
+    }
+    .company-info .b-none{
+        display: flex;
+        width: 100%;
+    }
+}
+
+.card-header:first-child {
+    background-color: #fff;
+}
+
+.company-info .tab-pane{
+    background-color: #fff;
+}
+
+

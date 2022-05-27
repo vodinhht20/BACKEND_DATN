@@ -10,7 +10,7 @@
             <img src="{{asset('frontend')}}/image/banner.jpg" alt="">
         </picture>
     </div>
-    <div class="container">
+    {{-- <div class="container">
         <div class="cartegory-slide-show-home">
             <div class="owl-carousel">
                     @foreach ($categories['all'] as $category)
@@ -23,8 +23,8 @@
                     @endforeach
             </div>
         </div>
-    </div>
-    <div class="container">
+    </div> --}}
+    {{-- <div class="container">
         <div class="box-product-hot">
             <div class="title-product-hot">
                 <img src="{{asset('frontend')}}/image/hostsale.gif" alt="">
@@ -250,6 +250,6 @@
             <h2>Giao hàng miễn phí tận nhà trong vòng 24h</h2>
             <a href="">Tìm hiểu thêm</a>
         </div>
-    </div>
+    </div> --}}
 </main>
 @endsection
