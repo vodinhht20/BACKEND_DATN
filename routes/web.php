@@ -105,3 +105,4 @@ Route::prefix('/company')->name("company.")->group(function () {
     Route::get('/addbranch', [CompanyController::class, 'addbranch'])->name("addbranch");
     Route::get('/updatebranch', [CompanyController::class, 'updatebranch'])->name("updatebranch");
 });
+Route::get('/timesheet', [TimesheetController::class, 'timesheet'])->name("timesheet");
