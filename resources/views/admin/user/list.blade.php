@@ -43,7 +43,7 @@
                <div class="card-header">
                     <div class="form-group row">
                         <div class="col-sm-3">
-                            <select name="select" class="form-control">
+                            <select name="select" class="form-control border">
                                 <option value="opt1">Đang hoạt động</option>
                                 <option value="opt2">Type 2</option>
                                 <option value="opt3">Type 3</option>
@@ -55,7 +55,7 @@
                             </select>
                         </div>
                         <div class="col-sm-3">
-                            <select name="select" class="form-control">
+                            <select name="select" class="form-control border">
                                 <option value="opt1">Status</option>
                                 <option value="opt2">Type 2</option>
                                 <option value="opt3">Type 3</option>
@@ -67,7 +67,7 @@
                             </select>
                         </div>
                         <div class="col-sm-3">
-                            <select name="select" class="form-control">
+                            <select name="select" class="form-control border">
                                 <option value="opt1">Tìm kiếm theo tên, email, số...</option>
                                 <option value="opt2">Type 2</option>
                                 <option value="opt3">Type 3</option>
@@ -79,7 +79,7 @@
                             </select>
                         </div>
                         <div class="col-sm-3">
-                            <select name="select" class="form-control">
+                            <select name="select" class="form-control border">
                                 <option value="opt1">Vai trò</option>
                                 <option value="opt2">Type 2</option>
                                 <option value="opt3">Type 3</option>
@@ -95,7 +95,7 @@
                <div class="card-header">
                 <div class="form-group row">
                     <div class="col-sm-3">
-                        <select name="select" class="form-control">
+                        <select name="select" class="form-control border">
                             <option value="opt1">Phòng ban, vị trí</option>
                             <option value="opt2">Type 2</option>
                             <option value="opt3">Type 3</option>
@@ -107,7 +107,7 @@
                         </select>
                     </div>
                     <div class="col-sm-3">
-                        <select name="select" class="form-control">
+                        <select name="select" class="form-control border">
                             <option value="opt1">Loại hình nhân sự</option>
                             <option value="opt2">Type 2</option>
                             <option value="opt3">Type 3</option>
@@ -127,17 +127,17 @@
                         <table class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th>STT</th>
-                                    <th class="text-center">Name</th>
-                                    <th>Contact</th>
-                                    <th>Status</th>
-                                    <th>Address</th>
+                                    <th class="text-center">STT</th>
+                                    <th class="text-center">Tên</th>
+                                    <th>Thông tin liên lạc</th>
+                                    <th>Địa chỉ</th>
+                                    <th>Trạng thái</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($users as $user)
                                     <tr>
-                                        <td>{{ $loop->index+1 }}</td>
+                                        <td class="text-center">{{ $loop->index+1 }}</td>
                                         <td class="text-center">
                                             <img src="https://lh3.googleusercontent.com/a-/AOh14GiJHaBSsAqGvMR7dcgJicEvaGNyAcqjR-mcrNO9wQ=s96-c" alt="" class="avatar_list"> {{-- {{ $user->getAvatar() ?: asset('frontend/image/avatar_empty.jfif') }} --}}
                                             <p class="text-fullname">{{ $user->name }}</p>
@@ -165,6 +165,7 @@
                                                     @endif
                                                     <a class="dropdown-item change-pass" data-id="{{ $user->id }}" data-name="{{ $user->name }}">Thay đổi mật khẩu</a>
                                                     <a class="dropdown-item" href="{{ route('show-form-update-user', ['id' => $user->id]) }}">Chỉnh sửa thông tin</a>
+                                                    <a class="dropdown-item" href="{{ route('show-info-user', ['id' => $user->id]) }}">Xem chi tiết</a>
                                                     @if ($user->id != Auth::user()->id)
                                                         <a class="dropdown-item btn-block-user" data-id="{{ $user->id }}">Đưa vào danh sách chặn</a>
                                                         <a class="dropdown-item btn-remove-user" data-id="{{ $user->id }}">Xóa bỏ</a>

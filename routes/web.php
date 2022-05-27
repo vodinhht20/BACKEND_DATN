@@ -41,9 +41,9 @@ Route::get('xac-thuc/{token}/{id}', [AuthController::class, 'verifyTokenEmail'])
 Route::get('account/verify/{id}', [AuthController::class, 'notifyConfirmEmail'])->name('account-verify');
 Route::get('/logout', [AuthController::class, 'logout'])->name("logout");
 
-Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function() {
+Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('', [DashboardController::class, 'index'])->name('dashboard');
-    Route::prefix('/product')->group(function() {
+    Route::prefix('/product')->group(function () {
         Route::get('/export-excel', [ProductController::class, 'exportExcel'])->name('product-export-excel');
         Route::get('/export-csv', [ProductController::class, 'exportCSV'])->name('product-export-csv');
         Route::get('/', [ProductController::class, 'listProduct'])->name('admin-product-list');
@@ -54,21 +54,22 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function() {
         Route::get('/trash', [ProductController::class, 'showTrash'])->name('admin-product-trash');
         Route::get('/{id}/preview', [ProductController::class, 'preview'])->name("admin-product-preview");
     });
-    Route::prefix('/category')->group(function() {
+    Route::prefix('/category')->group(function () {
         Route::get('/', [CategoryController::class, 'index'])->name('admin-list-category');
         Route::get('/create', [CategoryController::class, 'showFormCreate'])->name('show-form-create-category');
         Route::post('/create', [CategoryController::class, 'create'])->name('post-create-category');
         Route::get('/update/{id}', [CategoryController::class, 'showFormUpdate'])->name('show-form-update-category');
         Route::post('/update/{id}', [CategoryController::class, 'update'])->name('post-update-category');
     });
-    Route::prefix('/user')->group(function() {
+    Route::prefix('/user')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('admin-list-user');
         Route::get('/create', [UserController::class, 'showFormCreate'])->name('show-form-user-create');
         Route::get('/update/{id}', [UserController::class, 'showFormUpdate'])->name('show-form-update-user');
+        Route::get('/show/{id}', [UserController::class, 'showInfoUser'])->name('show-info-user');
         Route::post('/update/{id}', [UserController::class, 'updateUser'])->name('post-update-user');
         Route::get('/black-list', [UserController::class, 'blackList'])->name('user-black-list');
     });
-    Route::prefix('/role')->group(function() {
+    Route::prefix('/role')->group(function () {
         Route::get('/', [RoleController::class, 'index'])->name('admin-role.index');
     });
     Route::post('/ajax-add-role-user', [RoleController::class, 'addRole'])->name('ajax-add-role-user');
@@ -94,7 +95,6 @@ Route::get('login-google', [AuthController::class, 'ggLogin'])->name('login-goog
 Route::get('google/callback', [AuthController::class, 'ggAuthCallback'])->name('callback-google');
 
 
-Route::prefix('/company')->name("company.")->group(function() {
+Route::prefix('/company')->name("company.")->group(function () {
     Route::get('/info', [CompanyController::class, 'info'])->name("info");
 });
-

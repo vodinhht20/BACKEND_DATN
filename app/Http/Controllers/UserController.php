@@ -19,11 +19,11 @@ class UserController extends Controller
         $users = $this->userRepo->getAllUserByPublic();
         return view('admin.user.list', compact('users'));
     }
-    
+
     public function confirmEmail(Request $request)
     {
         $result = $this->userRepo->confirmEmail($request->id);
-        
+
         if ($result) {
             $users = $this->userRepo->getAllUserByPublic()->withPath($request->pathname);
             $dataView = view('admin.user._partials.base_table', compact('users'))->render();
@@ -76,7 +76,7 @@ class UserController extends Controller
             'email.unique' => 'Email này đã tồn tại, vui lòng nhập mail khác hoặc đăng nhập',
             'email.email' => 'Email không đúng định dạng',
         ]);
-        
+
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
@@ -137,6 +137,16 @@ class UserController extends Controller
         return view('admin.user.update', compact('user'));
     }
 
+    public function showInfoUser($id)
+    {
+        $user = $this->userRepo->find($id);
+        if (!$user) {
+            return abort(404);
+        }
+
+        return view('admin.user.show', compact('user'));
+    }
+
     public function updateUser(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
@@ -149,7 +159,7 @@ class UserController extends Controller
             'email.unique' => 'Email này đã tồn tại vui lòng lựa chọn email khác',
             'email.email' => 'Email không đúng định dạng',
         ]);
-        
+
         if ($validator->fails()) {
             return redirect()->back()->with('message.error', $validator->messages()->first())->withInput();
         }
@@ -180,7 +190,7 @@ class UserController extends Controller
         $user = $this->userRepo->update($id, $option);
 
         if ($user) {
-            return redirect()->route('admin-list-user')->with('message.success','Cập nhật thông tin thành viên thành công !');
+            return redirect()->route('admin-list-user')->with('message.success', 'Cập nhật thông tin thành viên thành công !');
         }
         return redirect()->back()->with('message.error', 'Cập nhật thông tin thành viên thất bại')->withInput();
     }
@@ -192,7 +202,7 @@ class UserController extends Controller
         ], [
             'id.required' => 'Không tìm được thành viên cần xóa vì thiếu ID',
         ]);
-        
+
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
@@ -222,7 +232,7 @@ class UserController extends Controller
         ], [
             'id.required' => 'Không tìm được thành viên cần chặn vì thiếu ID',
         ]);
-        
+
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
@@ -258,7 +268,7 @@ class UserController extends Controller
         ], [
             'id.required' => 'Không thể bỏ chặn thành viên vì thiếu ID',
         ]);
-        
+
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
@@ -281,7 +291,8 @@ class UserController extends Controller
         ], 404);
     }
 
-    protected function storeImage(Request $request, $name = 'image') {
+    protected function storeImage(Request $request, $name = 'image')
+    {
         $path = $request->file($name)->store('public/avatars');
         return substr($path, strlen('public/'));
     }

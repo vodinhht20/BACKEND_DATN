@@ -34,69 +34,64 @@
                 </div>
                 @include('admin.layouts.messages')
                 <div class="card-block">
-                    <form action="{{ route('post-update-user', ['id' => $user->id]) }}" method="POST" id="form-create"  enctype="multipart/form-data">
-                        @csrf
                         <div class="row">
                             <div class="col-sm-3">
                                 <div class="form-group">
                                     <label class="col-form-label">Ảnh đại diện</label>
-                                    <div class="ellipsis" style="max-width: none !important;margin: 5px 0;">
-                                        <input type="file" name="avatar" id="avatar" onchange="loadFile(event)">
-                                    </div>
                                 </div>
                             </div>
                             <div class="col-sm-2">
-                                <div class="col-sm-5">
-                                    <img id="preview_image" src="{{ $user->getAvatar() ?: asset('frontend/image/avatar_empty.jfif') }}"/>
+                                <div class="col-sm-5" style="height: auto; min-height: 100px">
+                                    <img id="preview_image" src="{{ $user->getAvatar() ?: asset('frontend/image/avatar_empty.jfif') }}" height="100px"/>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label class="col-form-label">Họ & Tên<span class="text-danger">*</span></label>
+                                    <label class="col-form-label">Họ & Tên:</label>
                                     <div class="">
-                                        <input type="text" class="form-control data-input" value="{{ $user->name }}" name="name" placeholder="Nhập họ và tên thành viên">
+                                        <p>{{ $user->name }}</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label class="col-form-label">Chứng minh nhân dân<span class="text-danger">*</span></label>
+                                    <label class="col-form-label">Chứng minh nhân dân:</label>
                                     <div class="">
-                                        <input type="text" class="form-control data-input" value="{{ $user->name }}" name="name" placeholder="Nhập số chứng minh thư">
+                                        <p>036482377523</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label class="col-form-label">Email<span class="text-danger">*</span></label>
+                                    <label class="col-form-label">Email:</label>
                                     <div class="">
-                                        <input type="text" class="form-control data-input" value="{{ $user->email }}" name="email" placeholder="Nhập email thành viên">
+                                        <p>{{ $user->email }}</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label class="col-form-label">Trường học<span class="text-danger">*</span></label>
+                                    <label class="col-form-label">Trường học:</label>
                                     <div class="">
-                                        <input type="text" class="form-control data-input" value="{{ $user->name }}" name="name" placeholder="Nhập tên trường học">
+                                        <p>Cao đẳng FPT Polytechnic</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label class="col-form-label">Chuyên ngành<span class="text-danger">*</span></label>
+                                    <label class="col-form-label">Chuyên ngành:</label>
                                     <div class="">
-                                        <input type="text" class="form-control data-input" value="{{ $user->name }}" name="name" placeholder="Nhập chuyên ngành học">
+                                        <p>Thiết kế website</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label class="col-form-label">Năm tốt nghiệp<span class="text-danger">*</span></label>
+                                    <label class="col-form-label">Năm tốt nghiệp:</label>
                                     <div class="">
-                                        <input type="text" class="form-control data-input" value="{{ $user->name }}" name="name" placeholder="Nhập năm tốt nghiệp">
+                                        <p>2022</p>
                                     </div>
                                 </div>
                             </div>
@@ -104,45 +99,42 @@
                         <div class="row">
                             <div class="col-sm-3">
                                 <div class="form-group">
-                                    <label class="col-form-label">Ngày sinh</span></label>
+                                    <label class="col-form-label">Ngày sinh:</label>
                                     <div class="">
-                                        <input type="date" class="form-control data-input" value="{{ $user->birth_day }}" name="birth_day" placeholder="Nhập ngày sinh">
+                                        {{ $user->birth_day }}
                                     </div>
                                 </div>
                             </div>
                             <div class="col-sm-3">
                                 <div class="form-group">
-                                    <label class="col-form-label">Số điện thoại</label>
+                                    <label class="col-form-label">Số điện thoại:</label>
                                     <div class="">
-                                        <input type="text" class="form-control data-input" value="{{ $user->phone }}" name="phone" placeholder="+84 329766459">
+                                       <p>093126213512</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-sm-3">
                                 <div class="form-group">
-                                    <label class="col-form-label">Giới tính</span></label>
+                                    <label class="col-form-label">Giới tính:</label>
                                     <div class="">
-                                        <input type="date" class="form-control data-input" value="{{ $user->birth_day }}" name="birth_day" placeholder="Nhập giới tính">
+                                        <p>Nam</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-sm-3">
-                                    <label class="col-form-label">Phòng ban</label>
-                                    <select name="" id="" class="form-control data-input border">
-                                        <option value="1">Phòng ban</option>
-                                    </select>
+                                    <label class="col-form-label">Phòng ban:</label>
+                                    <p>Developer</p>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-sm-12 col-form-label">Địa chỉ</label>
+                            <label class="col-sm-12 col-form-label">Địa chỉ:</label>
                             <div class="col-sm-12">
-                                <input type="text" class="form-control data-input" value="{{ $user->address }}" name="address" placeholder="Nhập địa chỉ nhà">
+                                <p>16 Trịnh Văn Bô - Nam Từ Liêm - Hà Nội - Việt Nam</p>
                             </div>
                         </div>
                         <div class="form-group row justify-content-center">
-                            <button class="btn btn-primary btn-round waves-effect waves-light ">Cập nhật</button>
+                            <button class="btn btn-primary btn-round waves-effect waves-light ">Chỉnh sửa</button>
                         </div>
-                    </form>
                 </div>
             </div>
         </div>
