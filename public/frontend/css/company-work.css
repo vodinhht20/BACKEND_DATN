@@ -44,6 +44,10 @@
     width: 100px;
     display: inline;
 }
+
+/* .box-section-timesheet .select-time{
+    display: none;
+} */
 .box-section-timesheet .tab-item {
     font-size: 20px;
     padding: 12px;
@@ -62,6 +66,11 @@
     border: 1px solid rgb(54, 53, 53);
     height: 70px;
     width: auto;
+}
+.box-section-timesheet .table th, .table td{
+    border-right: 1px solid #ccc;
+    
+
 }
 .box-section-timesheet .table_manager tr td{
     text-align: center;
@@ -97,10 +106,39 @@
     line-height: 60px;
     padding: 0;
 }
-.box-section-timesheet .table-responsive::-webkit-scrollbar {
+/* .box-section-timesheet .table-responsive::-webkit-scrollbar {
     z-index: 30;
-}
+} */
 .box-section-timesheet th, td {
     height: 80px;
     text-align: center;
+}
+.table-responsive table{
+    overflow-x: scroll;
+}
+@media(min-width: 1200px){
+    .box-section-timesheet .card .tab-pane .row{
+        width: 68.1vw;
+    }
+    .box-section-timesheet .card .tab-pane .task_Manager{
+        width: 67.1vw;
+    }
+    .box-section-timesheet .card .tab-pane .table-border-style{
+        width: 67.1vw;
+    }
+    .box-section-timesheet .card .task_Manager .table-responsive .table{
+        width: 75.1vw;
+    }
+}
+
+@media(max-width: 1200px){
+    .box-section-timesheet .card .tab-pane .row{
+        width: 84vw;
+    }
+    .box-section-timesheet .card .tab-pane .task_Manager{
+        width: 84vw;
+    }
+    .box-section-timesheet .card .tab-pane .table-border-style{
+        width: 84vw;
+    }
 }

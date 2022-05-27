@@ -133,17 +133,16 @@
                 <h2>Cài đặt ngày chốt công</h2>
                 <p>Chọn 1 trong 2 cách</p>
                 <div class="tab-radio">
-                    <div class="item active">
-                        <input name="checked" type="radio"><label for="">Ngày cuối cùng của tháng </label>
+                    <div class="item " >
+                        <input id="item1" type="radio" name="checked"  onchange="checkMe(this.checked)"><label for="">Ngày cuối cùng của tháng </label>
                     </div>
-                    <div class="item" id="actionday">
-                        <input name="checked" type="radio"><label for=""> Người dùng tự chọn ngày cố định mỗi tháng</label>
+                    <div class="item">
+                        <input id="item2" type="radio"  name="checked" onchange="checkMe(this.checked)"><label for=""> Người dùng tự chọn ngày cố định mỗi tháng</label>
                     </div>
                 </div>
-                <div class="tab-select-time">
-                    <div class="select-time active">
-                    </div>
-                    <div class="select-time">
+                <div class="tab-select-time" >
+                    
+                    <div class="select-time" id="contentt" style="display: none" >
                     <label fotab-select-timer="">Chọn ngày chấm công bất kỳ trong tháng</label>
                     <select name=""  class="form-control ml-2">
                         @for ($day = 1; $day <= 31; $day++)
@@ -172,13 +171,23 @@
             this.classList.add("active");
             pane.classList.add("active");
         };
-    })
+    });
 
-// if(document.querySelector('.item').checked) {
-//     document.querySelector(".item.active").classList.add("active");
+    function checkMe(checked) {
+        var cb = document.getElementById("item1");
+        var db = document.getElementById("item2");
+        
+        var content = document.getElementById("contentt");
+        if (db.checked==true) {
+            content.style.display="block";
+            
+        }else{
+            content.style.display="none";
 
-// }else {
-//     document.querySelector(".item.active").classList.remove("active");
-// }
+        } if (cb.checked==true) {
+            content.style.display="none";
+            
+        }
+    }
 </script>
 @endsection
