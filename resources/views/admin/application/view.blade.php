@@ -31,38 +31,39 @@
     <!-- Nav tabs -->
     <ul class="nav nav-tabs md-tabs tabs-left b-none" role="tablist">
         <li class="nav-item">
-            <a class="nav-link active" data-toggle="tab" href="#home5" role="tab">Home</a>
+            <a class="nav-link active" data-toggle="tab" data-target="#application_list"  aria-controls="application_list" aria-expanded="false" role="tab">Danh Sách Đơn Từ</a>
             <div class="slide"></div>
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#profile5" role="tab">Profile</a>
+            <a class="nav-link" data-toggle="tab" data-target="#create_application" aria-controls="create_application" aria-expanded="false" role="tab">Thiết Lập Đơn Từ</a>
             <div class="slide"></div>
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#messages5" role="tab">Messages</a>
+            <a class="nav-link" data-toggle="tab" data-target="#policy" aria-controls="policy" aria-expanded="false" role="tab">Chính Sách nghỉ phép</a>
             <div class="slide"></div>
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#settings5" role="tab">Settings</a>
+            <a class="nav-link" data-toggle="tab" data-target="#procedure" aria-controls="procedure" aria-expanded="false" role="tab">Quy trình</a>
             <div class="slide"></div>
         </li>
     </ul>
     <!-- Tab panes -->
     <div class="tab-content tabs-left-content card-block">
-        <div class="tab-pane active" id="home5" role="tabpanel">
+        <div class="tab-pane active" id="application_list" role="tabpanel">
            @include('admin.application.form')
         </div>
-        <div class="tab-pane" id="profile5" role="tabpanel">
+        <div class="tab-pane" id="create_application" role="tabpanel">
             @include('admin.application.nest')
         </div>
-        <div class="tab-pane" id="messages5" role="tabpanel">
-            <p class="m-0">3. This is Photoshop's version of Lorem IpThis is Photoshop's version of Lorem Ipsum. Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem quis bibendum auctor, nisi elit consequat ipsum, nec sagittis sem nibh id elit. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean mas Cum sociis natoque penatibus et magnis dis.....</p>
+        <div class="tab-pane" id="policy" role="tabpanel">
+            <p >3. This is Photoshop's version of Lorem IpThis is Photoshop's version of Lorem Ipsum. Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem quis bibendum auctor, nisi elit consequat ipsum, nec sagittis sem nibh id elit. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean mas Cum sociis natoque penatibus et magnis dis.....</p>
         </div>
-        <div class="tab-pane" id="settings5" role="tabpanel">
-            <p class="m-0">4.Cras consequat in enim ut efficitur. Nulla posuere elit quis auctor interdum praesent sit amet nulla vel enim amet. Donec convallis tellus neque, et imperdiet felis amet.</p>
+        <div class="tab-pane" id="procedure" role="tabpanel">
+            <p>4.Cras consequat in enim ut efficitur. Nulla posuere elit quis auctor interdum praesent sit amet nulla vel enim amet. Donec convallis tellus neque, et imperdiet felis amet.</p>
         </div>
     </div>
 </div>
+
 @endsection
 
 

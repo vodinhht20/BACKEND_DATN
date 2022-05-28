@@ -1,20 +1,20 @@
 <div class="">
     <!-- Nav tabs -->
-    <ul class="nav nav-tabs default-tab tabs" role="tablist">
-        <li class="nav-item active">
-            <a class="nav-link " data-toggle="tab" data-target="#type" aria-controls="type" aria-expanded="true" role="tab" >Danh Sách Các Loại Đơn</a>
+    <ul class="nav nav-tabs default-tab " role="tablist">
+        <li class="nav-item">
+            <a class="nav-link " data-toggle="tab" data-target="#type2" aria-controls="type" aria-expanded="true" role="tab" >Danh Sách Các Loại Đơn</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#deathline" aria-controls="deathline" aria-expanded="false" role="tab" >Thiết Lập Hạn Chốt Đơn</a>
+            <a class="nav-link" data-toggle="tab" data-target="#deathline2" aria-controls="deathline" aria-expanded="false" role="tab" >Thiết Lập Hạn Chốt Đơn</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#dafuk" aria-controls="dafuk" aria-expanded="false" role="tab" >Thiết lập hạn chốt đơn OT</a>
+            <a class="nav-link" data-toggle="tab" data-target="#dafuk2" aria-controls="dafuk" aria-expanded="false" role="tab" >Thiết lập hạn chốt đơn OT</a>
         </li>
         
     </ul>
     <!-- Tab panes -->
     <div class="tab-content tabs card-block">
-        <div class="tab-pane active" id="type" role="tabpanel">
+        <div class="tab-pane " id="type2" role="tabpanel">
             <div class="card">
                 <div class="card-header">
                     <h5>Zero Configuration</h5>
@@ -65,7 +65,7 @@
                 </div>
             </div>
         </div>
-        <div class="tab-pane" id="deathline" role="tabpanel">
+        <div class="tab-pane" id="deathline2" role="tabpanel">
             <div class="card">
                 <div class="card-header">
                     <h5>Hạn Chốt Đơn</h5>
@@ -86,7 +86,7 @@
                 </div>
             </div>
         </div>
-        <div class="tab-pane" id="dafuk" role="tabpanel">
+        <div class="tab-pane" id="dafuk2" role="tabpanel">
            <div class="card">
                <div class="card-header">
                    <h5>Hạn Chốt Đơn OT</h5>
