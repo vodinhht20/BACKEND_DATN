@@ -29,3 +29,6 @@ Route::middleware('jwt.auth')->group(function () {
     Route::get('users', [UserController::class, 'index']);
     Route::post('logout', [AuthController::class, 'logout']);
 });
+
+Route::get('login-google', [AuthController::class, 'googleLogin']);
+Route::get('google/callback', [AuthController::class, 'googleCallback']);

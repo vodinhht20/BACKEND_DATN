@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Laravel\Socialite\Facades\Socialite;
 use Tymon\JWTAuth\Facades\JWTAuth;
 class AuthController extends Controller
 {
@@ -80,6 +81,38 @@ class AuthController extends Controller
             'access_token' => $token,
             // 'token_type' => 'bearer',
             // 'expires_in' => Auth::guard('api')->factory()->getTTL() * 1
-        ]);
+        ], 200);
+    }
+
+    public function googleLogin()
+    {
+        $redirect_url = env('GOOGLE_REDIRECT_API');
+        $url = Socialite::driver('s2')->redirectUrl($redirect_url)->stateless()->redirect()->getTargetUrl();
+        return response()->json([
+            'status' => 'success',
+            'url' => $url
+        ], 200);
+    }
+
+    public function googleCallback()
+    {
+        $googleUser = Socialite::driver('s2')->stateless()->user();
+        dd($googleUser);
+        $user = User::where('email', $googleUser->email)->first();
+        if ($user) {
+            $token = JWTAuth::fromUser($user);
+            if ($token) {
+                return $this->respondWithToken($token);
+            }
+        } else {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Không tìm thấy tài khoản này'
+           ], 401);
+        }
+        return response()->json([
+            'status' => 'failed',
+            'message' => 'Đã có lỗi xảy ra vui lòng đăng nhập lại !'
+        ], 401);
     }
 }
