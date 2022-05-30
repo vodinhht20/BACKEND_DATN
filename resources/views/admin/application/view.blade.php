@@ -71,35 +71,36 @@
             <a href="{{ route('application-view') }}" class="col-lg-12 col-md-3 col-sm-4 tab-item active">
                 <div class="col-lg-12 col-md-3 col-sm-4 ">
                     <i class=" ti-clipboard"></i>
-                    <p>Bảng công</p>
+                    <p>Danh Sách Đơn Từ</p>
                 </div>
             </a>
-            <div class="col-lg-12 col-md-3 col-sm-4 tab-item">
-                <i class=" ti-settings"></i>
-                <p>Cài đặt ngày chốt công</p>
-            </div>
-            <div class="col-lg-12 col-md-3 col-sm-4 tab-item">
-                <i class=" ti-settings"></i>
-                <p>Cài đặt ngày chốt công</p>
-            </div>
-            <div class="col-lg-12 col-md-3 col-sm-4 tab-item">
-                <i class=" ti-settings"></i>
-                <p>Cài đặt ngày chốt công</p>
-            </div>
+            <a href="{{ route('application-view') }}" class="col-lg-12 col-md-3 col-sm-4 tab-item">
+                <div class="col-lg-12 col-md-3 col-sm-4 ">
+                    <i class=" ti-clipboard"></i>
+                    <p>Danh Sách Đơn Từ</p>
+                </div>
+            </a>
+            <a href="{{ route('application-view') }}" class="col-lg-12 col-md-3 col-sm-4 tab-item">
+                <div class="col-lg-12 col-md-3 col-sm-4 ">
+                    <i class=" ti-clipboard"></i>
+                    <p>Danh Sách Đơn Từ</p>
+                </div>
+            </a>
+            <a href="{{ route('application-view') }}" class="col-lg-12 col-md-3 col-sm-4 tab-item">
+                <div class="col-lg-12 col-md-3 col-sm-4 ">
+                    <i class=" ti-clipboard"></i>
+                    <p>Danh Sách Đơn Từ</p>
+                </div>
+            </a>
         </div>
         <div class="col-md-12 col-lg-10 col-sm-12 card">
             <div class="tab-pane active card-header">
                 @include('admin.application.form')
             </div>
             <div class="tab-pane card-block">
-                @include('admin.application.nest')
+                {{-- @include('admin.application.nest') --}}
             </div>
-            <div class="tab-pane card-block">
-                CÒN TEN 3
-            </div>
-            <div class="tab-pane card-block">
-                CÒN TEN 4
-            </div>
+            
         </div>
     </div>
 @endsection
