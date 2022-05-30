@@ -25,7 +25,7 @@
     </div>
 </div>
 @endsection
-@section('content')
+{{-- @section('content')
 <div class="">
     <div class="sub-title">Left Tab</div>
     <!-- Nav tabs -->
@@ -64,6 +64,72 @@
     </div>
 </div>
 
+@endsection --}}
+@section('content')
+    <div class="box-section-timesheet row">
+        <div class="col-md-12 col-lg-2 col-sm-12 tabs row">
+            <a href="{{ route('application-view') }}" class="col-lg-12 col-md-3 col-sm-4 tab-item active">
+                <div class="col-lg-12 col-md-3 col-sm-4 ">
+                    <i class=" ti-clipboard"></i>
+                    <p>Bảng công</p>
+                </div>
+            </a>
+            <div class="col-lg-12 col-md-3 col-sm-4 tab-item">
+                <i class=" ti-settings"></i>
+                <p>Cài đặt ngày chốt công</p>
+            </div>
+            <div class="col-lg-12 col-md-3 col-sm-4 tab-item">
+                <i class=" ti-settings"></i>
+                <p>Cài đặt ngày chốt công</p>
+            </div>
+            <div class="col-lg-12 col-md-3 col-sm-4 tab-item">
+                <i class=" ti-settings"></i>
+                <p>Cài đặt ngày chốt công</p>
+            </div>
+        </div>
+        <div class="col-md-12 col-lg-10 col-sm-12 card">
+            <div class="tab-pane active card-header">
+                @include('admin.application.form')
+            </div>
+            <div class="tab-pane card-block">
+                @include('admin.application.nest')
+            </div>
+            <div class="tab-pane card-block">
+                CÒN TEN 3
+            </div>
+            <div class="tab-pane card-block">
+                CÒN TEN 4
+            </div>
+        </div>
+    </div>
+@endsection
+
+@section('page-script')
+<script>
+
+    const tabs = document.querySelectorAll(".tab-item");
+    const panes = document.querySelectorAll(".tab-pane");
+    tabs.forEach((tab, index) => {
+        const pane = panes[index];
+
+        tab.onclick = function() {
+            document.querySelector(".tab-item.active").classList.remove("active");
+            document.querySelector(".tab-pane.active").classList.remove("active");
+            this.classList.add("active");
+            pane.classList.add("active");
+        };
+    })
+
+// if(document.querySelector('.item').checked) {
+//     document.querySelector(".item.active").classList.add("active");
+
+// }else {
+//     document.querySelector(".item.active").classList.remove("active");
+// }
+</script>
+@endsection
+@section('style-page')
+    <link rel="stylesheet" href="{{asset('frontend')}}/css/company-work.css">
 @endsection
 
 

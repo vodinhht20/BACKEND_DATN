@@ -4106,6 +4106,7 @@ a[data-toggle="lightbox"] .img-fluid {
 .pcoded .mCSB_container_wrapper {
   margin-right: 0; }
   .pcoded .mCSB_container_wrapper > .mCSB_container {
+    padding-bottom: 50px !important;
     padding-right: 0; }
 .pcoded .mCSB_scrollTools {
   width: 10px; }
