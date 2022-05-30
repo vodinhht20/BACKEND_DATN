@@ -42,6 +42,7 @@
             </div>
             <div class="login-social-network mt-5 mb-5">
                 <a href="{{route('login-google')}}" class="login-google"><img src="{{asset('frontend')}}/image/login-google.png" alt=""></a>
+                <a href="{{route('login-github')}}" class="login-google"><img src="{{asset('frontend')}}/image/login-github.png" alt=""></a>
             </div>
         </div>
 

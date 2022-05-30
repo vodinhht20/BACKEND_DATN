@@ -64,7 +64,8 @@
               
           </div>
           <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 logo ">
-              <img src="{{asset('frontend')}}/image/logo.png" alt="">
+              {{-- <img src="{{asset('frontend')}}/image/logo.png" alt=""> --}}
+              <img src="https://www.polyf.gq/static/media/logo.aff80907a01e38f1beee.png" alt="">
           </div>
           <div class="col-xl-4 col-lg-4 col-md-3 col-sm-12 col-12 box-navbar-rights">
           <div class="header-rights">

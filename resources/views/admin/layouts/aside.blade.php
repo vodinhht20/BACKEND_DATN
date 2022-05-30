@@ -97,7 +97,7 @@
 
         <div class="pcoded-navigation-label" data-i18n="nav.category.forms">Công ty</div>
         <ul class="pcoded-item pcoded-left-item">
-            <li class="{{ Request::routeIs('info') ? 'active' : '' }}">
+            <li class="{{ Request::routeIs('company.*') ? 'active' : '' }}">
                 <a href="{{ route("company.info") }}" class="waves-effect waves-dark">
                     <span class="pcoded-micon"><i class="ti-agenda"></i><b>FC</b></span>
                     <span class="pcoded-mtext" data-i18n="nav.form-components.main">Cài đặt công ty</span>
