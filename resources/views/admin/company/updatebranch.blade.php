@@ -31,7 +31,7 @@
 @endsection
 @section('content')
 <div class="company-info">
-    <ul class="nav nav-tabs md-tabs tabs-left b-none" role="tablist">
+    <ul class="nav nav-tabs md-tabs tabs-left b-none4" role="tablist">
         <li class="nav-item">
             <a class="nav-link" href="{{route("company.info")}}" role="tab" aria-expanded="false">
                 <i class="ti-agenda"></i><br>
