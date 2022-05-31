@@ -44,10 +44,15 @@
         <div class="col-md-12 col-lg-10 col-sm-12 card">
             <div class="tab-pane active card-header">
                 <h4>Quản lí bảng công</h4>
+                <a href="{{route('product-export-excel')}}" class="btn btn-outline-primary btn-round waves-effect waves-light" style="float: right; margin-right: 10px;">
+                    <i class="ti-printer"></i>
+                    Xuất Excel
+                </a>
                 <form action="">
                     <div class="row">
                         <div class="form-group col-lg-12">
                             <input type="text" name="keywords" placeholder="Nhập từ khóa..." id="keywords" filter="keywords" class="form-control filter-data">
+                            
                         </div>
                         <div class="form-group col-lg-4">
                             <input class="form-control" type="month" name="month" max="{{ $currentMonth }}" value="{{ $inpMonth }}" placeholder="Chọn tháng này">
@@ -63,6 +68,9 @@
                     </div>
                 </form>
                 <div class="task_Manager" style="margin-top: 20px">
+                    {{-- <div>
+                        <i class=" ti-circle" style="color: red"></i><p>Đã chấm công</p>
+                    </div> --}}
                     <div>
                         <p>Có <b>3</b> nhân viên trong danh sách</p>
                     </div>
@@ -72,6 +80,7 @@
                                 <thead>
                                     <tr>
                                         <th class="table-align-center text-position">Tên nhân viên</th>
+                                        
                                         @foreach ($formatDates as $date => $dateName)
                                             <th class="{{ $loop->index == 0 ? "pl-index" : ''}}">
                                                 {{$date}}
@@ -154,7 +163,13 @@
                 <button type="submit" class="btn btn-primary btn-sm" style="float:right; margin-right:30px">Lưu</button>
             </div>
         </div>
+        {{-- <div  class=" dataTables_pager">
+          
+            {!!$formatDates->links()!!}
+          
+        </div> --}}
     </div>
+    
 @endsection
 
 @section('page-script')

@@ -44,6 +44,9 @@
     width: 100px;
     display: inline;
 }
+#keywords{
+    width: 70%;
+}
 
 /* .box-section-timesheet .select-time{
     display: none;
@@ -113,6 +116,7 @@
     height: 80px;
     text-align: center;
 }
+
 .table-responsive table{
     overflow-x: scroll;
 }
@@ -123,12 +127,12 @@
     .box-section-timesheet .card .tab-pane .task_Manager{
         width: 67.1vw;
     }
-    .box-section-timesheet .card .tab-pane .table-border-style{
+    /* .box-section-timesheet .card .tab-pane .table-border-style{
         width: 67.1vw;
     }
     .box-section-timesheet .card .task_Manager .table-responsive .table{
         width: 75.1vw;
-    }
+    } */
 }
 
 @media(max-width: 1200px){
@@ -138,7 +142,7 @@
     .box-section-timesheet .card .tab-pane .task_Manager{
         width: 84vw;
     }
-    .box-section-timesheet .card .tab-pane .table-border-style{
+    /* .box-section-timesheet .card .tab-pane .table-border-style{
         width: 84vw;
-    }
+    } */
 }
