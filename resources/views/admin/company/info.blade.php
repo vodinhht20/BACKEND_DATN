@@ -252,7 +252,7 @@
                 </div>
             </div>
             <div class="tab-pane" id="cocau5" role="tabpanel">
-                <h2>Đang xây dựng rồi!!! Đợi tý</h2>
+                <h1>Đang làm!!! Đợi tý</h1>
             </div>
         </div>
     </div>
