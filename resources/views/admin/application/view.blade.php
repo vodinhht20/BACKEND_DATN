@@ -106,7 +106,7 @@
 @endsection
 
 @section('page-script')
-<script>
+{{-- <script>
 
     const tabs = document.querySelectorAll(".tab-item");
     const panes = document.querySelectorAll(".tab-pane");
@@ -127,7 +127,7 @@
 // }else {
 //     document.querySelector(".item.active").classList.remove("active");
 // }
-</script>
+</script> --}}
 @endsection
 @section('style-page')
     <link rel="stylesheet" href="{{asset('frontend')}}/css/company-work.css">
