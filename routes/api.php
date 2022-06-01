@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\TimekeepingController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -29,4 +30,5 @@ Route::post('auth', [AuthController::class, 'isValidToken']);
 
 Route::middleware('jwt.auth')->group(function () {
     Route::get('users', [UserController::class, 'index']);
+    Route::post('checkin', [TimekeepingController::class, 'checkIn']);
 });
