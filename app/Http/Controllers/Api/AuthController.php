@@ -54,6 +54,7 @@ class AuthController extends Controller
 
     public function logout(Request $request): JsonResponse
     {
+        JWTAuth::getToken();
         JWTAuth::invalidate($request->access_token);
         return response()->json(['message' => 'Successfully logged out']);
     }
@@ -103,5 +104,26 @@ class AuthController extends Controller
             'error_code' => 'LOGIN_FAILED',
             'message' => 'Login failed'
         ], 442);
+    }
+
+    public function isValidToken()
+    {
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+    
+            return response()->json([
+                'message' => 'Token đã hết hạn',
+                'error_code' =>  71
+            ], 401);
+    
+        } catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
+    
+            return response()->json([
+                'message' => 'Token không hợp lệ',
+                'error_code' =>  70
+            ], 401);
+    
+        }
     }
 }
