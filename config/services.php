@@ -30,16 +30,10 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
-    // 'google' => [
-    //     'client_id'     => env('GOOGLE_CLIENT_ID'),
-    //     'client_secret' => env('GOOGLE_CLIENT_SECRET'),
-    //     'redirect'      => env('GOOGLE_REDIRECT')
-    // ],
-
-    'google_v2' => [
-        'client_id'     => env('GOOGLE_CLIENT_ID_API'),
-        'client_secret' => env('GOOGLE_CLIENT_SECRET_API'),
-        'redirect'      => env('GOOGLE_REDIRECT_API')
+    'google' => [
+        'client_id'     => env('GOOGLE_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+        'redirect'      => env('GOOGLE_REDIRECT')
     ],
 
     'github' => [

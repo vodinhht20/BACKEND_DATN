@@ -31,4 +31,3 @@ Route::middleware('jwt.auth')->group(function () {
 });
 
 Route::get('login-google', [AuthController::class, 'googleLogin']);
-Route::get('google/callback', [AuthController::class, 'googleCallback']);

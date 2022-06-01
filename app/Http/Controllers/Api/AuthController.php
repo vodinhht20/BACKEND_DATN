@@ -3,32 +3,26 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Repositories\UserRepositoryInterface;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use Laravel\Socialite\Facades\Socialite;
 use Tymon\JWTAuth\Facades\JWTAuth;
 class AuthController extends Controller
 {
 
-    protected $user;
+    protected $userRepo;
     /**
      * Create a new AuthController instance.
      *
      * @return void
      */
-    public function __construct(User $user)
+    public function __construct(UserRepositoryInterface $userRepo)
     {
-        $this->user = $user;
+        $this->userRepo = $userRepo;
     }
 
-    /**
-     * Get a JWT via given credentials.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function login(Request $request)
+    public function login(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'email' => 'required',
@@ -41,8 +35,9 @@ class AuthController extends Controller
             ], 404)->withInput();
         }
         $credentials = request(['email', 'password']);
+        $token = JWTAuth::attempt($credentials);
         try {
-            if (!$token = JWTAuth::attempt($credentials)) {
+            if (!$token) {
              return response()->json([
                 'status' => 'failed',
                 'message' => 'Tài khoản hoặc mật khẩu không chính xác'
@@ -54,65 +49,58 @@ class AuthController extends Controller
                  'message' => 'Đã có lỗi xảy ra'
             ], 500);
         }
-        return $this->respondWithToken($token);
+        return $this->responseAuth($token);
     }
 
-    /**
-     * Log the user out (Invalidate the token).
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function logout(Request $request)
+    public function logout(Request $request): JsonResponse
     {
         JWTAuth::invalidate($request->access_token);
         return response()->json(['message' => 'Successfully logged out']);
     }
 
-    /**
-     * Get the token array structure.
-     *
-     * @param  string $token
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    protected function respondWithToken($token)
+    protected function responseAuth($token): JsonResponse
     {
         return response()->json([
-            'access_token' => $token,
-            // 'token_type' => 'bearer',
-            // 'expires_in' => Auth::guard('api')->factory()->getTTL() * 1
+            'access_token' => $token
         ], 200);
     }
 
-    public function googleLogin()
+    public function googleLogin(Request $request): JsonResponse
     {
-        $redirect_url = env('GOOGLE_REDIRECT_API');
-        $url = Socialite::driver('s2')->redirectUrl($redirect_url)->stateless()->redirect()->getTargetUrl();
-        return response()->json([
-            'status' => 'success',
-            'url' => $url
-        ], 200);
-    }
+        $validator = Validator::make($request->all(), [
+            'client_id' => 'required',
+        ]);
 
-    public function googleCallback()
-    {
-        $googleUser = Socialite::driver('s2')->stateless()->user();
-        dd($googleUser);
-        $user = User::where('email', $googleUser->email)->first();
-        if ($user) {
-            $token = JWTAuth::fromUser($user);
-            if ($token) {
-                return $this->respondWithToken($token);
-            }
-        } else {
+        if ($validator->fails()) {
             return response()->json([
-                'status' => 'failed',
-                'message' => 'Không tìm thấy tài khoản này'
-           ], 401);
+                'error_code' => 'TOKEN REQUIRED',
+                'message' => $validator->messages()->first()
+            ], 403);
         }
+
+        $clientId = $request->input('client_id');
+        $idToken =  config('services.google.client_id');
+        $client = new \Google_Client(['client_id' => $idToken]);
+        $payload = $client->verifyIdToken($clientId);
+
+        if (isset($payload['email'])) {
+            $email = $payload['email'];
+            $user = $this->userRepo->getUserByEmail($email);
+            if ($user) {
+                $token = JWTAuth::fromUser($user);
+                return $this->responseAuth($token);
+            } else {
+                return response()->json([
+                    'error_code' => 'ACCOUNT_NOT_EXIST',
+                    'message' => 'Account does not exist'
+                ], 403);
+            }
+        }
+
         return response()->json([
-            'status' => 'failed',
-            'message' => 'Đã có lỗi xảy ra vui lòng đăng nhập lại !'
-        ], 401);
+            'error_code' => 'LOGIN_FAILED',
+            'message' => 'Login failed',
+            'email' => $payload['email']
+        ], 403);
     }
 }
