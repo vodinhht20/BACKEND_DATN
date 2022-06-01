@@ -68,9 +68,32 @@
                     </div>
                 </form>
                 <div class="task_Manager" style="margin-top: 20px">
-                    {{-- <div>
-                        <i class=" ti-circle" style="color: red"></i><p>Đã chấm công</p>
-                    </div> --}}
+                    <div class="flex" style="display: flex">
+                    <div class="items-center" >
+                        <div class="w-10 h-10 rounded-full" style="background-color: rgb(0, 177, 79);"></div>
+                        <span class="text-grey55">Chấm công đúng giờ</span>
+                    </div>
+                    <div class="items-center">
+                        <div class="w-10 h-10 rounded-full" style="background-color: rgb(255, 159, 10);"></div>
+                        <span class="text-grey55">Đi muộn/ Về sớm/ Quên checkout</span>
+                    </div>
+                    <div class="items-center">
+                        <div class="w-10 h-10 rounded-full" style="background-color: rgb(187, 187, 187);"></div>
+                        <span class="text-grey55">Không chấm công</span>
+                    </div>
+                    <div class="items-center">
+                        <div class="w-10 h-10 rounded-full" style="background-color: rgb(10, 132, 255);"></div>
+                        <span class="text-grey55">Có đơn từ</span>
+                    </div>
+                    <div class="items-center">
+                    <div class="w-10 h-10 rounded-full" style="background-color: rgb(0, 188, 212);"></div>
+                        <span class="text-grey55">Nghỉ lễ</span>
+                    </div>
+                    <div class="items-center">
+                        <div class="w-10 h-10 rounded-full" style="background-color: rgb(255, 69, 58);"></div>
+                        <span class="text-grey55">Có lỗi</span>
+                    </div>
+                </div>
                     <div>
                         <p>Có <b>3</b> nhân viên trong danh sách</p>
                     </div>
@@ -104,7 +127,12 @@
                                     <tr>
                                         <th class="text-position" style="padding: 0;">Trần Trọng Anh</th>
                                         @foreach ($formatDates as $date => $dateName)
-                                            <td class="{{ $loop->index == 0 ? "pl-index" : ''}}">1</td>
+                                            <td class="{{ $loop->index == 0 ? "pl-index" : ''}}">
+                                                <div class="flex-col">
+                                                    <span>1</span>
+                                                    <div class="flex justify-center flex-wrap px-10" style="background-color: rgb(0, 177, 79);"></div>
+                                                </div>
+                                            </td>
                                         @endforeach
                                         <td>1</td>
                                         <td>1</td>
@@ -116,7 +144,8 @@
                                         <td>1</td>
                                         <td>1</td>
                                         <td>1</td>
-                                    </tr>     <tr>
+                                    </tr>    
+                                     {{-- <tr>
                                         <th class="text-position" style="padding: 0;">Trần Trọng Anh</th>
                                         @foreach ($formatDates as $date => $dateName)
                                             <td class="{{ $loop->index == 0 ? "pl-index" : ''}}">1</td>
@@ -131,7 +160,7 @@
                                         <td>1</td>
                                         <td>1</td>
                                         <td>1</td>
-                                    </tr>
+                                    </tr> --}}
                                 </tbody>
                             </table>
                         </div>
