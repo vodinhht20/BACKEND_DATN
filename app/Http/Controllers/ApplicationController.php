@@ -9,6 +9,9 @@ class ApplicationController extends Controller
     public function index(){
         return view('admin.application.view');
     }
+    public function detail(){
+        return view('admin.application.detail');
+    }
     public function nestView(){
         return view('admin.application.viewnest');
     }
@@ -18,4 +21,6 @@ class ApplicationController extends Controller
     public function procedure(){
         return view('admin.application.procedure');
     }
+    
+
 }
