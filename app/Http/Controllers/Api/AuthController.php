@@ -68,7 +68,9 @@ class AuthController extends Controller
     public function googleLogin(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'client_id' => 'required',
+            'token_id' => 'required',
+        ],[
+            'token_id.required' => "token id không được để trống"
         ]);
 
         if ($validator->fails()) {
@@ -78,10 +80,10 @@ class AuthController extends Controller
             ], 403);
         }
 
-        $clientId = $request->input('client_id');
+        $tokenId = $request->input('token_id');
         $idToken =  config('services.google.client_id');
         $client = new \Google_Client(['client_id' => $idToken]);
-        $payload = $client->verifyIdToken($clientId);
+        $payload = $client->verifyIdToken($tokenId);
 
         if (isset($payload['email'])) {
             $email = $payload['email'];
@@ -93,14 +95,13 @@ class AuthController extends Controller
                 return response()->json([
                     'error_code' => 'ACCOUNT_NOT_EXIST',
                     'message' => 'Account does not exist'
-                ], 403);
+                ], 442);
             }
         }
 
         return response()->json([
             'error_code' => 'LOGIN_FAILED',
-            'message' => 'Login failed',
-            'email' => $payload['email']
-        ], 403);
+            'message' => 'Login failed'
+        ], 442);
     }
 }
