@@ -49,7 +49,7 @@ class AuthController extends Controller
                  'message' => 'Đã có lỗi xảy ra'
             ], 500);
         }
-        return $this->responseAuth($token);
+        return $this->responseToken($token);
     }
 
     public function logout(Request $request): JsonResponse
@@ -58,7 +58,7 @@ class AuthController extends Controller
         return response()->json(['message' => 'Successfully logged out']);
     }
 
-    protected function responseAuth($token): JsonResponse
+    protected function responseToken($token): JsonResponse
     {
         return response()->json([
             'access_token' => $token
@@ -88,7 +88,7 @@ class AuthController extends Controller
             $user = $this->userRepo->getUserByEmail($email);
             if ($user) {
                 $token = JWTAuth::fromUser($user);
-                return $this->responseAuth($token);
+                return $this->responseToken($token);
             } else {
                 return response()->json([
                     'error_code' => 'ACCOUNT_NOT_EXIST',
