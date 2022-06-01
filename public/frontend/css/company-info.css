@@ -50,6 +50,8 @@
         border-radius: 10px;
         width: 87%;
         background-color: #fff;
+        margin-left: 1vw;
+
     }
     .company-info .tab-pane1 .card-header1, .card-block1{
         width: 87%;
@@ -63,6 +65,7 @@
         background-color: #fff;
         border-radius: 10px;
         width: 87%;
+        margin-left: 1vw;
     }
     .company-info .tab-pane4 .card-header4, .card-block4{
         width: 87%;
@@ -72,12 +75,18 @@
         background-color: #fff;
         border-radius: 10px;
         width: 87%;
+        margin-left: 1vw;
+    }
+    .md-tabs.tabs-left .nav-item, .md-tabs.tabs-right .nav-item, .tabs-left .nav-item, .tabs-right .nav-item {
+        background-color: #fff;
+        border-radius: 20px;
     }
 }
 
 @media(max-width: 1200px){
     .company-info .tab-content .tab-pane .card{
         width: 84vw;
+        margin-top: 2vw;
     }
     .company-info .tab-content .tab-pane .card1{
         width: 84vw;
@@ -88,11 +97,54 @@
     .company-info .col-xl-6 .b-none{
         display: flex;
         width: 100%;
-        align-items: center;
     }
-    .company-info .b-none{
+    .company-info .col-xl-6 ul li a{
+        background-color: #fff;
+        margin-left: 2vw;
+        border-radius: 20px;
+    }
+    link.active, .md-tabs .nav-link.active:focus, .md-tabs .nav-link.active:hover {
+        background-color: rgb(239, 227, 227);
+        border-radius: 20px;
+    }
+    .company-info .b-none1{
         display: flex;
-        width: 100%;
+        margin: auto;
+        background-color: #fff;
+        width: 30%;
+        border-radius: 20px;
+    }
+    .company-info .tab-pane1 .col-md-6{
+        background-color: #fff;
+        border-radius: 20px;
+        padding:15px;
+        margin-top: 2vw;
+    }
+    .company-info .b-none3{
+        display: flex;
+        margin: auto;
+        background-color: #fff;
+        width: 30%;
+        border-radius: 20px;
+    }
+    .company-info .tab-pane3 .col-md-6{
+        background-color: #fff;
+        border-radius: 20px;
+        padding:15px;
+        margin-top: 2vw;
+    }
+    .company-info .b-none4{
+        display: flex;
+        margin: auto;
+        background-color: #fff;
+        width: 30%;
+        border-radius: 20px;
+    }
+    .company-info .tab-pane4 .col-md-6{
+        background-color: #fff;
+        border-radius: 20px;
+        padding:15px;
+        margin-top: 2vw;
     }
 }
 

@@ -1383,7 +1383,7 @@ a.bg-danger:hover {
 
 .table-responsive {
   display: inline-block;
-  width: 100%;
+  width: 90%;
   overflow-x: auto; }
 
 .table.table-xl td,

@@ -83,4 +83,25 @@ class AuthController extends Controller
             // 'expires_in' => Auth::guard('api')->factory()->getTTL() * 1
         ]);
     }
+
+    public function isValidToken()
+    {
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+    
+            return response()->json([
+                'message' => 'Token đã hết hạn',
+                'error_code' =>  71
+            ], 401);
+    
+        } catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
+    
+            return response()->json([
+                'message' => 'Token không hợp lệ',
+                'error_code' =>  70
+            ], 401);
+    
+        }
+    }
 }
