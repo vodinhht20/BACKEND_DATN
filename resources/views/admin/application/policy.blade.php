@@ -1,114 +1,78 @@
-<div class="">
-    <!-- Nav tabs -->
-    <ul class="nav nav-tabs default-tab " role="tablist">
-        <li class="nav-item">
-            <a class="nav-link " data-toggle="tab" data-target="#type2" aria-controls="type" aria-expanded="true" role="tab" >Danh Sách Các Loại Đơn</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" data-target="#deathline2" aria-controls="deathline" aria-expanded="false" role="tab" >Thiết Lập Hạn Chốt Đơn</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" data-target="#dafuk2" aria-controls="dafuk" aria-expanded="false" role="tab" >Thiết lập hạn chốt đơn OT</a>
-        </li>
-        
-    </ul>
-    <!-- Tab panes -->
-    <div class="tab-content tabs card-block">
-        <div class="tab-pane " id="type2" role="tabpanel">
-            <div class="card">
-                <div class="card-header">
-                    <h5>Zero Configuration</h5>
-                    <span>DataTables has most features enabled by default, so all you need to do to use it with your own ables is to call the construction function: $().DataTable();.</span>
-                </div>
-                <div class="card-block">
-                    <div class="dt-responsive table-responsive">
-                        <table id="simpletable" class="table table-striped table-bordered nowrap">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Position</th>
-                                    <th>Office</th>
-                                    <th>Age</th>
-                                    <th>Start date</th>
-                                    <th>Salary</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Tiger Nixon</td>
-                                    <td>System Architect</td>
-                                    <td>Edinburgh</td>
-                                    <td>61</td>
-                                    <td>2011/04/25</td>
-                                    <td> <label class="switch">
-                                        <input type="checkbox">
-                                        <span class="slider round"></span>
-                                      </label>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Garrett Winters</td>
-                                    <td>Accountant</td>
-                                    <td>Tokyo</td>
-                                    <td>63</td>
-                                    <td>2011/07/25</td>
-                                    <td><label class="switch">
-                                        <input type="checkbox">
-                                        <span class="slider round"></span>
-                                      </label>
-                                    </td>
-                                </tr>
-                               
-                            </tbody>
-                        </table>
-                    </div>
+@extends('admin.layouts.main')
+@section('title')
+    <title>Loại Sản Phẩm | Danh sách</title>
+@endsection
+@section('header-page')
+<div class="page-header">
+    <div class="page-block">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <div class="page-header-title">
+                    <h5 class="m-b-10">Quản Lý ĐƠn Từ</h5>
+                    <p class="m-b-0">Danh sách tất cả các loại đơn từ của bạn</p>
                 </div>
             </div>
-        </div>
-        <div class="tab-pane" id="deathline2" role="tabpanel">
-            <div class="card">
-                <div class="card-header">
-                    <h5>Hạn Chốt Đơn</h5>
-                </div>
-                <div class="card-block">
-                    <p>Hạn chốt đơn vào 3 ngày chốt công</p>
-                    <br>
-                    <span>cài đặt ngày chốt công tại <a href="">đây</a></span>
-                    <br>
-                    <form action="">
-                        <br>
-                        <input type="number">
-                        <br>
-                        <hr>
-                        <br>
-                        <input type="submit" name="" id="">
-                    </form>
-                </div>
+            <div class="col-md-4">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                        <a href="{{route('dashboard')}}"> <i class="fa fa-home"></i> </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="">Loại Sản Phẩm</a>
+                    </li>
+                </ul>
             </div>
         </div>
-        <div class="tab-pane" id="dafuk2" role="tabpanel">
-           <div class="card">
-               <div class="card-header">
-                   <h5>Hạn Chốt Đơn OT</h5>
-               </div>
-               <div class="card-block">
-                   <span>Chỉ Cho Phép duyệt đơn sau ngày đăng ký OT thực tế </span>
-                   <form action="">
-                       <br>
-                       <label class="switch">
-                        <input type="checkbox">
-                        <span class="slider round"></span>
-                      </label>
-                      <br>
-                      <hr>
-                      <br>
-                      <input type="submit" name="" id="">
-
-                   </form>
-               </div>
-               
-           </div>
-        </div>
-        
     </div>
 </div>
+@endsection
+@section('content')
+    <div class="box-section-timesheet row">
+        <div class="col-md-12 col-lg-2 col-sm-12 tabs row">
+            <a href="{{ route('application-view') }}" class="col-lg-12 col-md-3 col-sm-4 tab-item">
+                <div class="col-lg-12 col-md-3 col-sm-4 ">
+                    <i class=" ti-clipboard"></i>
+                    <p>Danh Sách Đơn Từ</p>
+                </div>
+            </a>
+            <a href="{{ route('application-nestView') }}" class="col-lg-12 col-md-3 col-sm-4 tab-item">
+                <div class="col-lg-12 col-md-3 col-sm-4 ">
+                    <i class=" ti-clipboard"></i>
+                    <p>Danh Sách Đơn Từ</p>
+                </div>
+            </a>
+            <a href="{{ route('application-policy') }}" class="col-lg-12 col-md-3 col-sm-4 tab-item active">
+                <div class="col-lg-12 col-md-3 col-sm-4 ">
+                    <i class=" ti-clipboard"></i>
+                    <p>Danh Sách Đơn Từ</p>
+                </div>
+            </a>
+            <a href="{{ route('application-procedure') }}" class="col-lg-12 col-md-3 col-sm-4 tab-item">
+                <div class="col-lg-12 col-md-3 col-sm-4 ">
+                    <i class=" ti-clipboard"></i>
+                    <p>Danh Sách Đơn Từ</p>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-12 col-lg-10 col-sm-12 card">
+            <div class="tab-pane card-header">
+                {{-- @include('admin.application.form') --}}
+            </div>
+            <div class="tab-pane card-block">
+                {{-- @include('admin.application.nest') --}}
+            </div>
+            <div class="tab-pane active card-block">
+                Còn Ten 3
+            </div>
+            <div class="tab-pane card-block">
+               Còn Ten 4
+            </div>
+            
+        </div>
+    </div>
+@endsection
+
+@section('style-page')
+    <link rel="stylesheet" href="{{asset('frontend')}}/css/company-work.css">
+@endsection
+
+

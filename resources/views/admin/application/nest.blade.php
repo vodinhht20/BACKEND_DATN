@@ -1,6 +1,4 @@
 
-
-
 <div class="">
     <!-- Nav tabs -->
     <ul class="nav nav-tabs default-tab tabs" role="tablist">
@@ -74,17 +72,22 @@
                     <h5>Hạn Chốt Đơn</h5>
                 </div>
                 <div class="card-block">
-                    <p>Hạn chốt đơn vào 3 ngày chốt công</p>
-                    <br>
-                    <span>cài đặt ngày chốt công tại <a href="">đây</a></span>
-                    <br>
+                    
                     <form action="">
-                        <br>
-                        <input type="number">
-                        <br>
+                        <div class="form-group">
+                            <p>Hạn chốt đơn vào 3 ngày chốt công</p>
+                        </div>
+                        <div class="form-group">
+                            <label for="">cài đặt ngày chốt công tại <a href="">đây</a></label>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Số ngày sau ngày chốt công</label>
+                            <input type="number" class="form-control">
+                        </div>
                         <hr>
-                        <br>
-                        <input type="submit" name="" id="">
+                        <div class="form-footer" style="text-align: end">
+                            <input type="submit" value="Lưu" class="btn btn-info" name="" id="">
+                        </div>
                     </form>
                 </div>
             </div>
@@ -95,18 +98,20 @@
                    <h5>Hạn Chốt Đơn OT</h5>
                </div>
                <div class="card-block">
-                   <span>Chỉ Cho Phép duyệt đơn sau ngày đăng ký OT thực tế </span>
                    <form action="">
-                       <br>
-                       <label class="switch">
-                        <input type="checkbox">
-                        <span class="slider round"></span>
-                      </label>
-                      <br>
+                        <div class="form-group">
+                            <span>Chỉ Cho Phép duyệt đơn sau ngày đăng ký OT thực tế </span>
+                        </div>
+                        <div class="form-group" >
+                            <label class="switch">
+                                <input type="checkbox" class="value-status" data-id="1" checked="">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
                       <hr>
-                      <br>
-                      <input type="submit" name="" id="">
-
+                      <div class="form-footer" style="text-align: end">
+                        <input type="submit" name="" id="" class="btn btn-info" >
+                      </div>
                    </form>
                </div>
                

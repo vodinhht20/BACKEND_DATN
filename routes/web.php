@@ -76,6 +76,9 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     });
     Route::prefix('/application')->group(function() {
         Route::get('/', [ApplicationController::class, 'index'])->name('application-view');
+        Route::get('/nest', [ApplicationController::class, 'nestView'])->name('application-nestView');
+        Route::get('/policy', [ApplicationController::class, 'policy'])->name('application-policy');
+        Route::get('/procedure', [ApplicationController::class, 'procedure'])->name('application-procedure');
     });
     Route::post('/ajax-add-role-user', [RoleController::class, 'addRole'])->name('ajax-add-role-user');
     Route::post('/ajax-get-role-user', [RoleController::class, 'getRole'])->name('ajax-get-role-user');

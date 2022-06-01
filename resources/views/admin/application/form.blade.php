@@ -5,12 +5,13 @@
     <div class="card-block">
             <div class="main-search morphsearch-search open">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Enter Keyword" style="width: 200px;">
-                    <span class="input-group-append search-btn"><i class="ti-search input-group-text"></i></span>
+                    <input type="text" class="form-control" placeholder="Enter Keyword" style="width: 200px; background: transparent">
+                    <button style="background: none; border: none; margin-left: -30px " > <span class="input-group-append "><i class="ti-search input-group-text"></i></span></button>
+                   
                 </div>
             </div>
            <div class="form-group row">
-            <div class="col-sm-3">
+            <div class="col-sm-2">
                 <select name="" id="" class="form-control">
                     <option value="opt 1">Lựa chọn 1</option>
                     <option value="opt 2"></option>
@@ -68,22 +69,15 @@
                     <td>Edinburgh</td>
                     <td>61</td>
                     <td>2011/04/25</td>
-                    <td> <label class="switch">
-                        <input type="checkbox">
-                        <span class="slider round"></span>
-                      </label>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Garrett Winters</td>
-                    <td>Accountant</td>
-                    <td>Tokyo</td>
-                    <td>63</td>
-                    <td>2011/07/25</td>
-                    <td><label class="switch">
-                        <input type="checkbox">
-                        <span class="slider round"></span>
-                      </label>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-primary" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa-solid fa-ellipsis m-0"></i>
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 20px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                <a class="dropdown-item" href="#">Xem Chi Tiết Đơn</a>
+                            </div>
+                        </div>
                     </td>
                 </tr>
                
