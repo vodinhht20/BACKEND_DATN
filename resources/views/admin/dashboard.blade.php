@@ -33,7 +33,7 @@
             <div class="card-block">
                 <div class="row align-items-center">
                     <div class="col-8">
-                        <h4 class="text-c-purple">{{ $countProduct }}</h4>
+                        <h4 class="text-c-purple">00</h4>
                         <h6 class="text-muted m-b-0">Sản phẩm</h6>
                     </div>
                     <div class="col-4 text-right">
@@ -59,7 +59,7 @@
             <div class="card-block">
                 <div class="row align-items-center">
                     <div class="col-8">
-                        <h4 class="text-c-green">{{ $countProductActive }}</h4>
+                        <h4 class="text-c-green">00</h4>
                         <h6 class="text-muted m-b-0">Sản phẩm đang bán</h6>
                     </div>
                     <div class="col-4 text-right">
@@ -84,7 +84,7 @@
             <div class="card-block">
                 <div class="row align-items-center">
                     <div class="col-8">
-                        <h4 class="text-c-red">{{ $countProductTrash }}</h4>
+                        <h4 class="text-c-red">00</h4>
                         <h6 class="text-muted m-b-0">Thùng rác</h6>
                     </div>
                     <div class="col-4 text-right">
@@ -109,7 +109,7 @@
             <div class="card-block">
                 <div class="row align-items-center">
                     <div class="col-8">
-                        <h4 class="text-c-blue">{{ $countUser }}</h4>
+                        <h4 class="text-c-blue">00</h4>
                         <h6 class="text-muted m-b-0">Thành viên</h6>
                     </div>
                     <div class="col-4 text-right">
