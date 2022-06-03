@@ -43,15 +43,7 @@
         </ul>
         <div class="pcoded-navigation-label" data-i18n="nav.category.forms">Sản phẩm</div>
         <ul class="pcoded-item pcoded-left-item">
-            <li class="pcoded-hasmenu  {{
-                    Request::routeIs('admin-product-list')
-                || Request::routeIs('admin-product-create')
-                || Request::routeIs('admin-product-update')
-                || Request::routeIs('admin-product-trash')
-                || Request::routeIs('admin-list-category')
-                || Request::routeIs('show-form-create-category')
-                || Request::routeIs('show-form-update-category')
-                    ? 'active pcoded-trigger' : '' }}">
+            <li class="pcoded-hasmenu">
                 <a href="javascript:void(0)" class="waves-effect waves-dark">
                     <span class="pcoded-micon"><i class="ti-layout-grid2-alt"></i></span>
                     <span class="pcoded-mtext"
@@ -59,32 +51,32 @@
                     <span class="pcoded-mcaret"></span>
                 </a>
                 <ul class="pcoded-submenu">
-                    <li class="{{ Request::routeIs('admin-product-list') ? 'active' : '' }}">
-                        <a href=" {{route('admin-product-list')}} " class="waves-effect waves-dark">
+                    <li class="">
+                        <a href="" class="waves-effect waves-dark">
                             <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
                             <span class="pcoded-mtext"
                                 data-i18n="nav.basic-components.alert">Danh sách sản phẩm</span>
                             <span class="pcoded-mcaret"></span>
                         </a>
                     </li>
-                    <li class="{{ Request::routeIs('admin-product-create') ? 'active' : '' }}">
-                        <a href="{{ route('admin-product-create')}} " class="waves-effect waves-dark">
+                    <li class="">
+                        <a href="" class="waves-effect waves-dark">
                             <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
                             <span class="pcoded-mtext"
                                 data-i18n="nav.basic-components.breadcrumbs">Thêm sản phẩm</span>
                             <span class="pcoded-mcaret"></span>
                         </a>
                     </li>
-                    <li class="{{ Request::routeIs('admin-list-category') ? 'active' : '' }}">
-                        <a href="{{ route('admin-list-category')}} " class="waves-effect waves-dark">
+                    <li class="">
+                        <a href="" class="waves-effect waves-dark">
                             <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
                             <span class="pcoded-mtext"
                                 data-i18n="nav.basic-components.alert">Loại sản phẩm</span>
                             <span class="pcoded-mcaret"></span>
                         </a>
                     </li>
-                    <li class="{{ Request::routeIs('admin-product-trash') ? 'active' : '' }}">
-                        <a href="{{ route('admin-product-trash')}} " class="waves-effect waves-dark">
+                    <li class="">
+                        <a href="" class="waves-effect waves-dark">
                             <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
                             <span class="pcoded-mtext"
                                 data-i18n="nav.basic-components.alert">Thùng rác</span>

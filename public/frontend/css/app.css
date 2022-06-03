@@ -5,7 +5,7 @@
 }
 
 .header {
-    background-color: #3ba66b;
+    background-color: #051e34;
     padding: 20px 0;
     position: relative;
 }
@@ -404,10 +404,11 @@
     height: 47px;
     bottom: -47px;
     z-index: 9;
+    display: none;
 }
 
 footer {
-    background-color: #3ba66b;
+    background-color: #051e34;
     position: relative;
     color: #fff;
     text-align: center;
@@ -526,6 +527,7 @@ footer::before {
     top: -46px;
     z-index: 9;
     left: 0;
+    display: none;
 }
 
 .banner picture img {
@@ -1666,7 +1668,7 @@ footer::before {
     display: -webkit-box;
     -webkit-box-orient: vertical;
     transition: 0.3s;
-    
+
 }
 .news-board-right .news-item .short-description a h3:hover{
     color: #f3bc46;
@@ -1752,7 +1754,7 @@ footer::before {
     color: #ffff;
 }
 .post-page .similar .list-content  {
-    padding: 10px !important; 
+    padding: 10px !important;
 }
 .post-page .list-content .post-item{
     border: 1px solid #dfd9d9;

@@ -5947,7 +5947,7 @@ table tbody .border-bottom-info td {
   color: #448aff; }
 
 .bg-c-red {
-  background: var(--ui-active); }
+  background: var(--ui-outline); }
 
 .text-c-red {
   color: #ff5252; }
