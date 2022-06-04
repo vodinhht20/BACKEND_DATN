@@ -231,6 +231,7 @@
         } if (cb.checked==true) {
             content.style.display="none";
             
+            
         }
     }
 </script>
