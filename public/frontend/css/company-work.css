@@ -44,9 +44,6 @@
     width: 100px;
     display: inline;
 }
-#keywords{
-    width: 70%;
-}
 
 /* .box-section-timesheet .select-time{
     display: none;
@@ -72,7 +69,7 @@
 }
 .box-section-timesheet .table th, .table td{
     border-right: 1px solid #ccc;
-    
+
 
 }
 .box-section-timesheet .table_manager tr td{
@@ -97,7 +94,7 @@
     vertical-align: inherit !important;
 }
 .box-section-timesheet .pl-index {
-    padding-left: 130px !important;
+    padding-left: 150px !important;
 }
 .box-section-timesheet .text-position {
     position: absolute;
@@ -124,7 +121,7 @@
     width: 10px;
     height: 10px;
     border-radius:9999px;
-    
+
 }
 .items-center{
     display: flex;
