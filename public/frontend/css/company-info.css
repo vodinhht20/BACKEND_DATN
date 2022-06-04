@@ -11,11 +11,82 @@
     .company-info .card1{
         width: 75.1vw;
     }
+    .company-info .col-xl-6 .b-none li{
+        background-color: #fff;
+        width: 9vw!important;
+        height: 6.42vw;
+        border-radius: 20px;
+        margin-top: 0.8vw!important;
+        margin-right: 1vw!important;
+    }
+    .company-info .col-xl-6 .b-none li.active{
+        border-left: 3px solid var(--ui-outline);
+    }
+    .company-info .col-xl-6 .b-none li:hover{
+        border-left: 3px solid var(--ui-outline);
+    }
+    .company-info .card-block .tab-pane{
+        height: 23.1vw;
+        border-radius: 15px;
+    }
+    .company-info{
+        display: flex;
+    }
+    .company-info .b-none li{
+        background-color: #fff;
+        width: 9vw!important;
+        height: 6.42vw;
+        border-radius: 20px;
+        margin-top: 0.8vw!important;
+        margin-right: 1vw!important;
+    }
+    .company-info .b-none li.active{
+        border-left: 3px solid var(--ui-outline);
+    }
+    .company-info .b-none li:hover{
+        border-left: 3px solid var(--ui-outline);
+    }
+    .company-info .tab-pane1 {
+        border-radius: 10px;
+        width: 87%;
+        background-color: #fff;
+        margin-left: 1vw;
+
+    }
+    .company-info .tab-pane1 .card-header1, .card-block1{
+        width: 87%;
+        margin-top: 1vw;
+    }
+    .company-info .tab-pane3 .card-header3, .card-block3{
+        width: 87%;
+        margin-top: 1vw;
+    }
+    .company-info .tab-pane3{
+        background-color: #fff;
+        border-radius: 10px;
+        width: 87%;
+        margin-left: 1vw;
+    }
+    .company-info .tab-pane4 .card-header4, .card-block4{
+        width: 87%;
+        margin-top: 1vw;
+    }
+    .company-info .tab-pane4{
+        background-color: #fff;
+        border-radius: 10px;
+        width: 87%;
+        margin-left: 1vw;
+    }
+    .md-tabs.tabs-left .nav-item, .md-tabs.tabs-right .nav-item, .tabs-left .nav-item, .tabs-right .nav-item {
+        background-color: #fff;
+        border-radius: 20px;
+    }
 }
 
 @media(max-width: 1200px){
     .company-info .tab-content .tab-pane .card{
         width: 84vw;
+        margin-top: 2vw;
     }
     .company-info .tab-content .tab-pane .card1{
         width: 84vw;
@@ -23,4 +94,66 @@
     .company-info .tab-content .tab-pane .card-block1{
         width: 84vw;
     }
+    .company-info .col-xl-6 .b-none{
+        display: flex;
+        width: 100%;
+    }
+    .company-info .col-xl-6 ul li a{
+        background-color: #fff;
+        margin-left: 2vw;
+        border-radius: 20px;
+    }
+    link.active, .md-tabs .nav-link.active:focus, .md-tabs .nav-link.active:hover {
+        background-color: rgb(239, 227, 227);
+        border-radius: 20px;
+    }
+    .company-info .b-none1{
+        display: flex;
+        margin: auto;
+        background-color: #fff;
+        width: 30%;
+        border-radius: 20px;
+    }
+    .company-info .tab-pane1 .col-md-6{
+        background-color: #fff;
+        border-radius: 20px;
+        padding:15px;
+        margin-top: 2vw;
+    }
+    .company-info .b-none3{
+        display: flex;
+        margin: auto;
+        background-color: #fff;
+        width: 30%;
+        border-radius: 20px;
+    }
+    .company-info .tab-pane3 .col-md-6{
+        background-color: #fff;
+        border-radius: 20px;
+        padding:15px;
+        margin-top: 2vw;
+    }
+    .company-info .b-none4{
+        display: flex;
+        margin: auto;
+        background-color: #fff;
+        width: 30%;
+        border-radius: 20px;
+    }
+    .company-info .tab-pane4 .col-md-6{
+        background-color: #fff;
+        border-radius: 20px;
+        padding:15px;
+        margin-top: 2vw;
+    }
 }
+
+.card-header:first-child {
+    background-color: #fff;
+}
+
+.company-info .tab-pane{
+    background-color: #fff;
+}
+
+

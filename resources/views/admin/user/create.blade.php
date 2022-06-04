@@ -37,6 +37,21 @@
                     <form action="" method="POST" id="form-create"  enctype="multipart/form-data">
                         @csrf
                         <div class="row">
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label class="col-form-label">Avatar</label>
+                                    <div class="ellipsis" style="max-width: none !important;margin: 5px 0;">
+                                        <input type="file" name="avatar" id="avatar" onchange="loadFile(event)">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="col-sm-5" style="height: auto; min-height: 100px">
+                                    <img id="preview_image" src="{{ asset('frontend/image/avatar_empty.jfif') }}"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label class="col-form-label">Họ & Tên<span class="text-danger">*</span></label>
@@ -47,9 +62,41 @@
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
+                                    <label class="col-form-label">Chứng minh nhân dân<span class="text-danger">*</span></label>
+                                    <div class="">
+                                        <input type="text" class="form-control data-input" value="{{ old('email') }}" name="email" placeholder="Nhập số chứng minh nhân dân">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
                                     <label class="col-form-label">Email<span class="text-danger">*</span></label>
                                     <div class="">
                                         <input type="text" class="form-control data-input" value="{{ old('email') }}" name="email" placeholder="Nhập email thành viên">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-form-label">Trường học<span class="text-danger">*</span></label>
+                                    <div class="">
+                                        <input type="text" class="form-control data-input" value="{{ old('email') }}" name="email" placeholder="Nhập tên trường học">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-form-label">Chuyên ngành<span class="text-danger">*</span></label>
+                                    <div class="">
+                                        <input type="text" class="form-control data-input" value="{{ old('email') }}" name="email" placeholder="Nhập chuyên ngành học">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-form-label">Năm tốt nghiệp<span class="text-danger">*</span></label>
+                                    <div class="">
+                                        <input type="text" class="form-control data-input" value="{{ old('email') }}" name="email" placeholder="Nhập năm tốt nghiệp">
                                     </div>
                                 </div>
                             </div>
@@ -73,15 +120,20 @@
                             </div>
                             <div class="col-sm-3">
                                 <div class="form-group">
-                                    <label class="col-form-label">Avatar</label>
-                                    <div class="ellipsis" style="max-width: none !important;margin: 5px 0;">
-                                        <input type="file" name="avatar" id="avatar" onchange="loadFile(event)">
+                                    <label class="col-form-label">Giới tính</span></label>
+                                    <div class="">
+                                        <input type="date" class="form-control data-input" value="{{ old('birth_day') }}" name="birth_day" placeholder="Nhập giới tính">
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-2">
-                                <div class="col-sm-5">
-                                    <img id="preview_image" src="{{ asset('frontend/image/avatar_empty.jfif') }}"/>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label class="col-form-label">Phòng ban</label>
+                                    <div class="col-form-label">
+                                        <select name="" id="" class="form-control data-input border">
+                                            <option value="1">Phòng ban</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>

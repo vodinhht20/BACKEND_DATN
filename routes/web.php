@@ -30,8 +30,7 @@ use App\Http\Controllers\TimesheetController;
 |
 */
 
-Route::get('/', [HomeController::class, 'index'])->name("home.index");
-Route::get('/san-pham', [ProductController::class, 'index'])->name("product.index");
+Route::get('/', function (){ return view('index'); })->name("home.index");
 Route::get('/san-pham/{slug}', [ProductController::class, 'showDetail'])->name("product.showDetail");
 Route::get('/tin-tuc', [PostController::class, 'index'])->name("new.index");
 Route::get('/login', [AuthController::class, 'showFormLogin'])->name("login");
@@ -42,34 +41,17 @@ Route::get('xac-thuc/{token}/{id}', [AuthController::class, 'verifyTokenEmail'])
 Route::get('account/verify/{id}', [AuthController::class, 'notifyConfirmEmail'])->name('account-verify');
 Route::get('/logout', [AuthController::class, 'logout'])->name("logout");
 
-Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function() {
+Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('', [DashboardController::class, 'index'])->name('dashboard');
-    Route::prefix('/product')->group(function() {
-        Route::get('/export-excel', [ProductController::class, 'exportExcel'])->name('product-export-excel');
-        Route::get('/export-csv', [ProductController::class, 'exportCSV'])->name('product-export-csv');
-        Route::get('/', [ProductController::class, 'listProduct'])->name('admin-product-list');
-        Route::get('/create', [ProductController::class, 'showFormCreate'])->name('admin-product-create');
-        Route::post('/create', [ProductController::class, 'addProduct'])->name('post-admin-product-create');
-        Route::get('/update/{id}', [ProductController::class, 'showFormUpdate'])->name('admin-product-update');
-        Route::post('/update/{id}', [ProductController::class, 'updateProduct'])->name('post-admin-product-update');
-        Route::get('/trash', [ProductController::class, 'showTrash'])->name('admin-product-trash');
-        Route::get('/{id}/preview', [ProductController::class, 'preview'])->name("admin-product-preview");
-    });
-    Route::prefix('/category')->group(function() {
-        Route::get('/', [CategoryController::class, 'index'])->name('admin-list-category');
-        Route::get('/create', [CategoryController::class, 'showFormCreate'])->name('show-form-create-category');
-        Route::post('/create', [CategoryController::class, 'create'])->name('post-create-category');
-        Route::get('/update/{id}', [CategoryController::class, 'showFormUpdate'])->name('show-form-update-category');
-        Route::post('/update/{id}', [CategoryController::class, 'update'])->name('post-update-category');
-    });
-    Route::prefix('/user')->group(function() {
+    Route::prefix('/user')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('admin-list-user');
         Route::get('/create', [UserController::class, 'showFormCreate'])->name('show-form-user-create');
         Route::get('/update/{id}', [UserController::class, 'showFormUpdate'])->name('show-form-update-user');
+        Route::get('/show/{id}', [UserController::class, 'showInfoUser'])->name('show-info-user');
         Route::post('/update/{id}', [UserController::class, 'updateUser'])->name('post-update-user');
         Route::get('/black-list', [UserController::class, 'blackList'])->name('user-black-list');
     });
-    Route::prefix('/role')->group(function() {
+    Route::prefix('/role')->group(function () {
         Route::get('/', [RoleController::class, 'index'])->name('admin-role.index');
     });
     Route::post('/ajax-add-role-user', [RoleController::class, 'addRole'])->name('ajax-add-role-user');
@@ -78,15 +60,6 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function() {
     Route::post('/ajax-remove-user', [UserController::class, 'ajaxRemove'])->name('ajax-remove-user');
     Route::post('/ajax-block-user', [UserController::class, 'ajaxBlock'])->name('ajax-block-user');
     Route::post('/ajax-un-block-user', [UserController::class, 'ajaxUnBlock'])->name('ajax-un-block-user');
-    Route::post('/ajax-category-change-status', [CategoryController::class, 'ajaxChangeStatus'])->name('ajax-category-change-status');
-    Route::post('/ajax-category-remove', [CategoryController::class, 'ajaxRemoveCategory'])->name('ajax-category-remove');
-    Route::post('/ajax-product-remove', [ProductController::class, 'ajaxRemoveProduct'])->name('ajax-product-remove');
-    Route::post('/ajax-product-change-status', [ProductController::class, 'ajaxChangeStatus'])->name('ajax-product-change-status');
-    Route::post('/ajax-filter-product', [ProductController::class, 'ajaxFilterProduct'])->name('ajax-filter-product');
-    Route::post('/ajax-restore-trash-product', [ProductController::class, 'ajaxRestoreTrash'])->name('ajax-restore-trash-product');
-    Route::post('/ajax-restore-trash-all-product', [ProductController::class, 'ajaxRestoreTrashAll'])->name('ajax-restore-trash-all-product');
-    Route::post('/ajax-delete-trash-product', [ProductController::class, 'ajaxDeleteTrash'])->name('ajax-delete-trash-product');
-    Route::post('/ajax-delete-trash-all-product', [ProductController::class, 'ajaxDeleteTrashAll'])->name('ajax-delete-trash-all-product');
     Route::post('/ajax-user-confirm-email', [UserController::class, 'confirmEmail'])->name('ajax-user-confirm-email');
     Route::post('/ajax-user-change-password', [UserController::class, 'changePasssword'])->name('ajax-user-change-password');
 });
@@ -94,12 +67,13 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function() {
 Route::get('login-google', [AuthController::class, 'ggLogin'])->name('login-google');
 Route::get('google/callback', [AuthController::class, 'ggAuthCallback'])->name('callback-google');
 
+Route::get('/login-github', [AuthController::class, 'githubLogin'])->name('login-github');
+Route::get('/callback/github', [AuthController::class, 'githubCallback'])->name('github-Callback');
 
-Route::prefix('/company')->name("company.")->group(function() {
+Route::prefix('/company')->name("company.")->group(function () {
     Route::get('/info', [CompanyController::class, 'info'])->name("info");
     Route::get('/updatecompany', [CompanyController::class, 'updatecompany'])->name("updatecompany");
     Route::get('/addbranch', [CompanyController::class, 'addbranch'])->name("addbranch");
     Route::get('/updatebranch', [CompanyController::class, 'updatebranch'])->name("updatebranch");
 });
 Route::get('/timesheet', [TimesheetController::class, 'timesheet'])->name("timesheet");
-

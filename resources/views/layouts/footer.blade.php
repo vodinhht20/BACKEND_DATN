@@ -14,7 +14,8 @@
                 </div>
                 <div class="col-lg-4 col-md-6 col-12 about-footer">
                     <div class="logo-footer">
-                        <img src="{{asset('frontend')}}/image/logo.png" alt="">
+                        {{-- <img src="{{asset('frontend')}}/image/logo.png" alt=""> --}}
+                        <img src="https://www.polyf.gq/static/media/logo.aff80907a01e38f1beee.png" alt="">
                     </div>
                     <p>Website thương mại điện tử ND Fresh do ND Group là đơn vị chủ quản, 
                         chịu trách nhiệm và thực hiện các giao dịch liên quan mua sắm sản phẩm hàng hoá tiêu dùng thiết yếu.</p>
@@ -31,7 +32,7 @@
     </div>
     <div class="copyright">
         <div class="container">
-            <p>@ Bản quyền thuộc về vodinh | dinhvvph13024</p>
+            <p>@ Bản quyền thuộc về Polyf | 2022</p>
             <div class="socialNetwork">
                 <a href=""><i class="ti-facebook"></i></a>
                 <a href=""><i class="ti-twitter-alt"></i></a>

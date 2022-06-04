@@ -7,10 +7,10 @@
               </div>
               <div class="navbar_top">
                   <ul>
-                      <li><a href="{{route('home.index')}}">Trang chủ</a></li>
+                      <li><a href="">Trang chủ</a></li>
                       <li><a href="">Giới thiệu</a></li>
-                      <li><a href="{{route('product.index')}}">Sản phẩm</a></li>
-                      <li><a href="{{route('new.index')}}">Tin tức</a></li>
+                      <li><a href="">Sản phẩm</a></li>
+                      <li><a href="">Tin tức</a></li>
                       <li><a href="">Liên hệ</a></li>
                   </ul>
               </div>
@@ -31,7 +31,7 @@
                     </a>
                     <span>User name</span>
                     @endif
-                      
+
                   </div>
                   <div class="navbar_top-search">
                       <form action="/search/" method="get">
@@ -61,10 +61,11 @@
                       <button><i class="ti-search"></i></button>
                   </div>
               </form>
-              
+
           </div>
           <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 logo ">
-              <img src="{{asset('frontend')}}/image/logo.png" alt="">
+              {{-- <img src="{{asset('frontend')}}/image/logo.png" alt=""> --}}
+              <img src="https://www.polyf.gq/static/media/logo.aff80907a01e38f1beee.png" alt="">
           </div>
           <div class="col-xl-4 col-lg-4 col-md-3 col-sm-12 col-12 box-navbar-rights">
           <div class="header-rights">

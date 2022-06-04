@@ -13,10 +13,9 @@
 <!-- am chart export.css -->
 <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
 <!-- Style.css -->
-<link rel="stylesheet" type="text/css" href="{{asset('assets')}}/css/style.css">
+<link rel="stylesheet" type="text/css" href="{{asset('assets')}}/css/style.css?v1.0.1">
 <!-- Select 2 -->
 {{-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" /> --}}
 
 <!-- style custom -->
 <link rel="stylesheet" type="text/css" href="{{asset('frontend')}}/css/admin.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
