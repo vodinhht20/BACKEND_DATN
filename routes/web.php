@@ -2,6 +2,7 @@
 
 use App\Exports\ProductExport;
 use App\Http\Controllers\Api\ProductController as ApiProductController;
+use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
@@ -18,6 +19,7 @@ use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\TimesheetController;
+use Stevebauman\Location\Facades\Location;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,6 +56,13 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::prefix('/role')->group(function () {
         Route::get('/', [RoleController::class, 'index'])->name('admin-role.index');
     });
+    Route::prefix('/application')->group(function() {
+        Route::get('/', [ApplicationController::class, 'index'])->name('application-view');
+        Route::get('/detail', [ApplicationController::class, 'detail'])->name('application-detail');
+        Route::get('/nest', [ApplicationController::class, 'nestView'])->name('application-nestView');
+        Route::get('/policy', [ApplicationController::class, 'policy'])->name('application-policy');
+        Route::get('/procedure', [ApplicationController::class, 'procedure'])->name('application-procedure');
+    });
     Route::post('/ajax-add-role-user', [RoleController::class, 'addRole'])->name('ajax-add-role-user');
     Route::post('/ajax-get-role-user', [RoleController::class, 'getRole'])->name('ajax-get-role-user');
     Route::post('/ajax-create-user', [UserController::class, 'addUser'])->name('ajax-create-user');
@@ -77,3 +86,9 @@ Route::prefix('/company')->name("company.")->group(function () {
     Route::get('/updatebranch', [CompanyController::class, 'updatebranch'])->name("updatebranch");
 });
 Route::get('/timesheet', [TimesheetController::class, 'timesheet'])->name("timesheet");
+Route::get('/test', function(Request $request) {
+    $ip = $request->ip();
+    dump($ip);
+    $position = Location::get($ip);
+    dd($position);
+});
