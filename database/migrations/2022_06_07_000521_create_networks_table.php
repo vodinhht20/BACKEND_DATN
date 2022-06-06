@@ -13,9 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('categories', function (Blueprint $table) {
-            $table->string('image')->nullable();
+        Schema::create('networks', function (Blueprint $table) {
+            $table->id();
+            $table->bigInteger('branch_id')->index();
+            $table->string('name');
+            $table->string('wifi_ip');
             $table->tinyInteger('status')->default(1);
+            $table->softDeletes();
+            $table->timestamps();
         });
     }
 
@@ -26,9 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('categories', function (Blueprint $table) {
-            $table->dropColumn('email_confirm_token_expired_at');
-            $table->dropColumn('status');
-        });
+        Schema::dropIfExists('networks');
     }
 };
