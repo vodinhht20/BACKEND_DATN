@@ -33,4 +33,4 @@ Route::middleware('jwt.auth')->group(function () {
     Route::post('checkin', [TimekeepingController::class, 'checkIn']);
 });
 
-Route::get('login-google', [AuthController::class, 'googleLogin']);
+Route::post('login-google', [AuthController::class, 'googleLogin']);
