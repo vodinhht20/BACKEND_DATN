@@ -27,14 +27,6 @@ Route::get('/', function () {
 Route::post('login', [AuthController::class, 'login']);
 Route::post('logout', [AuthController::class, 'logout']);
 Route::post('auth', [AuthController::class, 'isValidToken']);
-Route::get('mac', function () {
-    // return substr(exec('getmac'), - 0, 17);
-    ob_start();
-    system('getmac');
-    $Content = ob_get_contents();
-    ob_clean();
-    return substr($Content, strpos($Content,'\\')-20, 17);
-});
 
 Route::middleware('jwt.auth')->group(function () {
     Route::get('users', [UserController::class, 'index']);
