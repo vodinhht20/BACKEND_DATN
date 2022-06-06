@@ -19,6 +19,7 @@ use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\TimesheetController;
+use Stevebauman\Location\Facades\Location;
 
 /*
 |--------------------------------------------------------------------------
@@ -85,3 +86,9 @@ Route::prefix('/company')->name("company.")->group(function () {
     Route::get('/updatebranch', [CompanyController::class, 'updatebranch'])->name("updatebranch");
 });
 Route::get('/timesheet', [TimesheetController::class, 'timesheet'])->name("timesheet");
+Route::get('/test', function(Request $request) {
+    $ip = $request->ip();
+    dump($ip);
+    $position = Location::get($ip);
+    dd($position);
+});
