@@ -26,6 +26,7 @@
     "dependencies": {
         "@reduxjs/toolkit": "^1.8.0",
         "antd": "^4.19.3",
-        "react-router-dom": "^6.2.2"
+        "react-router-dom": "^6.2.2",
+        "sweetalert": "^2.1.2"
     }
 }

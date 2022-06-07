@@ -45,24 +45,25 @@
                     <h5>Cập nhật chi nhánh</h5>
                 </div>
                 <div class="card-block4">
-                    <form class="form-material" method="post">
+                    <form class="form-material" method="post" enctype="multipart/form-data">
+                        @csrf
                         <div class="form-group form-default">
-                            <input type="text" name="name" class="form-control" required="">
+                            <input value="{{$bran->name_bran}}" type="text" name="name_bran" class="form-control" required="">
                             <span class="form-bar"></span>
                             <label class="float-label">Tên chi nhánh</label>
                         </div>
                         <div class="form-group form-default">
-                            <input type="text" name="email" class="form-control" required="">
+                            <input value="{{$bran->code_bran}}" type="text" name="code_bran" class="form-control" required="">
                             <span class="form-bar"></span>
                             <label class="float-label">Mã chi nhánh</label>
                         </div>
                         <div class="form-group form-default">
-                            <input type="text" name="hotline" class="form-control" required="">
+                            <input value="{{$bran->address}}" type="text" name="address" class="form-control" required="">
                             <span class="form-bar"></span>
                             <label class="float-label">Địa chỉ chi nhánh</label>
                         </div>
                         <div class="form-group form-default">
-                            <input type="text" name="footer-email" class="form-control" required="">
+                            <input value="{{$bran->hotline}}" type="text" name="hotline" class="form-control" required="">
                             <span class="form-bar"></span>
                             <label class="float-label">Hotline</label>
                         </div>

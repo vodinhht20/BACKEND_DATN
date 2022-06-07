@@ -57,7 +57,11 @@
                         <h5>Thông tin công ty</h5>
                         <div style="display: block;" class="card-header-right">
                             <ul class="list-unstyled card-option">
-                                <li class="nav-item"><i class="fa fa fa-wrench open-card-option"></i><a href="{{route("company.updatecompany")}}" role="tab">Cập nhật thông tin công ty</a></li>
+                                <li class="nav-item"><i class="fa fa fa-wrench open-card-option"></i>
+                                    @foreach ($company as $com)
+                                        <a href="{{route("company.updatecompany",$com->id)}}" role="tab">Sửa thông tin</a>
+                                    @endforeach
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -65,21 +69,24 @@
                         <div class="table-responsive">
                             <table class="table table-hover">
                                 <tbody>
+                                    @foreach ($company as $com)
                                     <tr>
-                                        <td><i class="ti-mobile"></i> Hotline</td>
-                                        <td><i class="ti-google"></i> Website</td>
+                                        <td><i class="ti-mobile"></i> Tên công ty: {{$com->name_company}}</td>
+                                        <td><i class="ti-google"></i> Website: {{$com->website}}</td>
                                     </tr>
                                     <tr>
-                                        <td><i class="ti-email"></i>  Email</td>
-                                        <td><i class="ti-facebook"></i> Fanpage</td>
+                                        <td><i class="ti-email"></i>  Email: {{$com->email}}</td>
+                                        <td><i class="ti-facebook"></i> Fanpage: {{$com->fanpage}}</td>
                                     </tr>
                                     <tr>
-                                        <td><i class="ti-layout-column4-alt"></i> Mã số thuế</td>
-                                        <td><i class="ti-home"></i> Trụ sở chính</td>
+                                        <td><i class="ti-layout-column4-alt"></i> Mã số thuế: {{$com->tax_code}}</td>
+                                        <td><i class="ti-home"></i> Trụ sở chính: {{$com->head_quater}}</td>
                                     </tr>
                                     <tr>
-                                        <td><i class="ti-view-list"></i> Mô tả</td>
+                                        <td><i class="ti-mobile"></i>Hotline: {{$com->hotline}}</td>
+                                        <td><i class="ti-view-list"></i> Mô tả: {{$com->desc}}</td>
                                     </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -104,7 +111,6 @@
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
-                                        <th>STT</th>
                                         <th>Tên chi nhánh</th>
                                         <th>Mã chi nhánh</th>
                                         <th>Địa chỉ nhánh</th>
@@ -113,24 +119,20 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @foreach ($bran as $b)
                                     <tr>
-                                        <td>1</td>
-                                        <td>Chi nhánh Hà Nội</td>
-                                        <td>CHHN</td>
-                                        <td>Hà Nội</td>
-                                        <td>19006186</td>
-                                        <td><a href=""><i class="ti-trash"></i></a> <a href="{{route("company.updatebranch")}}"><i style="float: right" class="ti-pencil"></i></a></td>
+                                        <td>{{$b->name_bran}}</td>
+                                        <td>{{$b->code_bran}}</td>
+                                        <td>{{$b->address}}</td>
+                                        <td>{{$b->hotline}}</td>
+                                        <td><a href="{{route('company.delete',$b->id)}}"><i class="ti-trash"></i></a> <a href="{{route("company.updatebranch", $b->id)}}"><i style="float: right" class="ti-pencil"></i></a></td>
+                                        {{-- <td><form class="delete-form" href="{{route('company.delete',$b->id)}}" method="POST">
+                                            @method('DELETE')
+                                            @csrf
+                                            <i class="ti-trash"></i>
+                                        </form></td> --}}
                                     </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>Chi nhánh TP.HCM</td>
-                                        <td>CHH</td>
-                                        <td>TP.HCM</td>
-                                        <td>19001234</td>
-                                        <td><a href=""><i class="ti-trash"></i></a> 
-                                            <a data-toggle="tab" href="#edit5" role="tab"><i style="float: right" class="ti-pencil"></i></a>
-                                        </td>
-                                    </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
