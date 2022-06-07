@@ -63,9 +63,7 @@ class AuthController extends Controller
     {
         return response()->json([
             'access_token' => $token
-        ], 200)->header('Access-Control-Allow-Origin', '*')
-        ->header('Access-Control-Allow-Methods','*')
-        ->header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+        ], 200);
     }
 
     public function googleLogin(Request $request): JsonResponse
