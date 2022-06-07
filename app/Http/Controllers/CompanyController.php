@@ -49,7 +49,7 @@ class CompanyController extends Controller
         $bran = new BranCompany();
         $bran->fill($request->all());
         $bran -> save();
-        // Alert::success('Success Title', 'Thêm thành công');
+        Alert::success('Success Title', 'Thêm thành công');
         return redirect('company/info');
     }
 

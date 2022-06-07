@@ -115,16 +115,22 @@
                                         <th>Mã chi nhánh</th>
                                         <th>Địa chỉ nhánh</th>
                                         <th>Hotline</th>
+                                        <th>Vĩ độ</th>
+                                        <th>Kinh độ</th>
+                                        <th>Bán kính</th>
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($bran as $b)
                                     <tr>
-                                        <td>{{$b->name_bran}}</td>
-                                        <td>{{$b->code_bran}}</td>
+                                        <td>{{$b->name}}</td>
+                                        <td>{{$b->code_branch}}</td>
                                         <td>{{$b->address}}</td>
                                         <td>{{$b->hotline}}</td>
+                                        <td>{{$b->latitude}}</td>
+                                        <td>{{$b->longtitude}}</td>
+                                        <td>{{$b->radius}}</td>
                                         <td><a href="{{route('company.delete',$b->id)}}"><i class="ti-trash"></i></a> <a href="{{route("company.updatebranch", $b->id)}}"><i style="float: right" class="ti-pencil"></i></a></td>
                                         {{-- <td><form class="delete-form" href="{{route('company.delete',$b->id)}}" method="POST">
                                             @method('DELETE')

@@ -48,12 +48,12 @@
                     <form class="form-material" method="post">
                         @csrf
                         <div class="form-group form-default">
-                            <input type="text" name="name_bran" class="form-control" required="">
+                            <input type="text" name="name" class="form-control" required="">
                             <span class="form-bar"></span>
                             <label class="float-label">Tên chi nhánh</label>
                         </div>
                         <div class="form-group form-default">
-                            <input type="text" name="code_bran" class="form-control" required="">
+                            <input type="text" name="code_branch" class="form-control" required="">
                             <span class="form-bar"></span>
                             <label class="float-label">Mã chi nhánh</label>
                         </div>
@@ -66,6 +66,21 @@
                             <input type="text" name="hotline" class="form-control" required="">
                             <span class="form-bar"></span>
                             <label class="float-label">Hotline</label>
+                        </div>
+                        <div class="form-group form-default">
+                            <input type="text" name="latitude" class="form-control" required="">
+                            <span class="form-bar"></span>
+                            <label class="float-label">Vĩ độ</label>
+                        </div>
+                        <div class="form-group form-default">
+                            <input type="text" name="longtitude" class="form-control" required="">
+                            <span class="form-bar"></span>
+                            <label class="float-label">Kinh độ</label>
+                        </div>
+                        <div class="form-group form-default">
+                            <input type="text" name="radius" class="form-control" required="">
+                            <span class="form-bar"></span>
+                            <label class="float-label">Bán kính</label>
                         </div>
                         <button type="submit"class="btn btn-info waves-effect waves-light">Thêm chi nhánh</button>
                     </form>

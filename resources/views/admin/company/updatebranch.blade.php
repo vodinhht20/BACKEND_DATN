@@ -48,12 +48,12 @@
                     <form class="form-material" method="post" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group form-default">
-                            <input value="{{$bran->name_bran}}" type="text" name="name_bran" class="form-control" required="">
+                            <input value="{{$bran->name}}" type="text" name="name" class="form-control" required="">
                             <span class="form-bar"></span>
                             <label class="float-label">Tên chi nhánh</label>
                         </div>
                         <div class="form-group form-default">
-                            <input value="{{$bran->code_bran}}" type="text" name="code_bran" class="form-control" required="">
+                            <input value="{{$bran->code_branch}}" type="text" name="code_branch" class="form-control" required="">
                             <span class="form-bar"></span>
                             <label class="float-label">Mã chi nhánh</label>
                         </div>
@@ -66,6 +66,21 @@
                             <input value="{{$bran->hotline}}" type="text" name="hotline" class="form-control" required="">
                             <span class="form-bar"></span>
                             <label class="float-label">Hotline</label>
+                        </div>
+                        <div class="form-group form-default">
+                            <input value="{{$bran->latitude}}" type="text" name="latitude" class="form-control" required="">
+                            <span class="form-bar"></span>
+                            <label class="float-label">Vĩ độ</label>
+                        </div>
+                        <div class="form-group form-default">
+                            <input value="{{$bran->longtitude}}" type="text" name="longtitude" class="form-control" required="">
+                            <span class="form-bar"></span>
+                            <label class="float-label">Kinh độ</label>
+                        </div>
+                        <div class="form-group form-default">
+                            <input value="{{$bran->radius}}" type="text" name="radius" class="form-control" required="">
+                            <span class="form-bar"></span>
+                            <label class="float-label">Bán kính</label>
                         </div>
                         <button class="btn btn-info waves-effect waves-light">Cập nhật</button>
                     </form>

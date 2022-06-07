@@ -8,11 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class BranCompany extends Model
 {
     use HasFactory;
-    protected $table = 'bran_company';
+    protected $table = 'branches';
     protected $fillable = [
-        'name_bran',
-        'code_bran',
+        'name',
+        'code_branch',
         'address',
-        'hotline'
+        'hotline',
+        'latitude',
+        'longtitude',
+        'radius'
     ];
 }

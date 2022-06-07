@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ConfixCompany extends Model
 {
     use HasFactory;
-    protected $table = 'confix_company';
+    protected $table = 'companies';
     protected $fillable = [
         'name_company',
         'hotline',
