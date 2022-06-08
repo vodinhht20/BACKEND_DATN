@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Repositories\UserRepositoryInterface;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserController extends Controller
 {
@@ -91,5 +93,25 @@ class UserController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function profile(Request $request){
+        $user = JWTAuth::toUser($request->access_token);
+        return $this->responseUser($user);
+    }
+
+    protected function responseUser($profile): JsonResponse
+    {
+        return response()->json([
+                "email" => $profile->email,
+                "fullname" => $profile->name,
+                "avatar" => $profile->avatar,
+                "gender" => "2",
+                // "birth_day" => $profile->birth_day,
+                "phone" => $profile->phone,
+                "TIN" => "547464564",
+                "id" => $profile->id,
+                'profile' => $profile
+        ], 200);
     }
 }
