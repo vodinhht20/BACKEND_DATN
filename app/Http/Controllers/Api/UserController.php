@@ -107,7 +107,7 @@ class UserController extends Controller
                 "fullname" => $profile->name,
                 "avatar" => $profile->avatar,
                 "gender" => "2",
-                // "birth_day" => $profile->birth_day,
+                "birth_day" => $profile->birth_day,
                 "phone" => $profile->phone,
                 "TIN" => "547464564",
                 "id" => $profile->id,
