@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->string('hotline')->nullable();
             $table->string('latitude')->nullable();
-            $table->string('longtitude')->nullable();
+            $table->string('longitude')->nullable();
             $table->bigInteger('radius')->default(100);
             $table->softDeletes();
             $table->timestamps();

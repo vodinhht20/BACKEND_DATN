@@ -30,7 +30,7 @@ Route::post('auth', [AuthController::class, 'isValidToken']);
 
 Route::middleware('jwt.auth')->group(function () {
     Route::get('users', [UserController::class, 'index']);
-    Route::post('checkin', [TimekeepingController::class, 'checkIn']);
+    Route::post('checkin', [TimekeepingController::class, 'checkIn'])->middleware('checkip');
 });
 
 Route::post('login-google', [AuthController::class, 'googleLogin']);
