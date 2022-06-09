@@ -23,7 +23,6 @@
     <!-- Google font-->
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,500" rel="stylesheet">
     @include('admin.layouts.style')
-    @include('sweetalert::alert')
     @yield('style-page')
     @yield('title')
 </head>

@@ -6,8 +6,6 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\ConfixCompany;
 use App\Models\BranCompany;
-use RealRashid\SweetAlert\Facades\Alert;
-use Illuminate\Support\Facades\Storage;
 
 
 class CompanyController extends Controller
@@ -49,13 +47,11 @@ class CompanyController extends Controller
         $bran = new BranCompany();
         $bran->fill($request->all());
         $bran -> save();
-        Alert::success('Success Title', 'Thêm thành công');
         return redirect('company/info');
     }
 
     public function delete($id){
         BranCompany::find($id)->delete();
-        Alert::success('Xóa thành công');
         return redirect('company/info');
     }
 
