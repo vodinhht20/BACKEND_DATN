@@ -6,10 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Post extends Model
+class Employee extends Model
 {
     use HasFactory, SoftDeletes;
-    protected $table = "posts";
-    protected $with = [''];
-    
+    // protected $guarded = [];
+    protected $table = 'employees';
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
+    }
 }

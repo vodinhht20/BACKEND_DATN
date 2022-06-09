@@ -13,9 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->date('start_discount')->nullable();
-            $table->date('end_discount')->nullable();
+        Schema::create('networks', function (Blueprint $table) {
+            $table->id();
+            $table->bigInteger('branch_id')->index();
+            $table->string('name');
+            $table->string('wifi_ip');
+            $table->tinyInteger('status')->default(1);
+            $table->softDeletes();
+            $table->timestamps();
         });
     }
 
@@ -26,9 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->dropColumn('start_discount');
-            $table->dropColumn('end_discount');
-        });
+        Schema::dropIfExists('networks');
     }
 };

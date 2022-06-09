@@ -13,8 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->bigInteger('view')->default(0);
+        Schema::create('timekeeps', function (Blueprint $table) {
+            $table->id();
+            $table->bigInteger('employee_id')->index();
+            $table->date('date');
+            $table->softDeletes();
+            $table->timestamps();
         });
     }
 
@@ -25,8 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->dropColumn('view');
-        });
+        Schema::dropIfExists('timekeeps');
     }
 };
