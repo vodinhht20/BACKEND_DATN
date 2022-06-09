@@ -11,6 +11,9 @@
     .company-info .card1{
         width: 75.1vw;
     }
+    .table-responsive {
+        width: 100%;
+    }
     .company-info .col-xl-6 .b-none li{
         background-color: #fff;
         width: 9vw!important;
@@ -22,8 +25,19 @@
     .company-info .col-xl-6 .b-none li.active{
         border-left: 3px solid var(--ui-outline);
     }
-    .company-info .col-xl-6 .b-none li:hover{
+    .company-info .col-xl-6 .b-none li a.active{
         border-left: 3px solid var(--ui-outline);
+        border-radius: 15px;
+    }
+    
+    .company-info .col-xl-6 .b-none li a:hover{
+        border-left: 3px solid var(--ui-outline);
+        border-radius: 15px;
+        height: 6.33vw;
+    }
+    .company-info .md-tabs .nav-link.active{
+        border-left: 3px solid var(--ui-outline);
+        height: 6.33vw;
     }
     .company-info .card-block .tab-pane{
         height: 23.1vw;
@@ -39,12 +53,6 @@
         border-radius: 20px;
         margin-top: 0.8vw!important;
         margin-right: 1vw!important;
-    }
-    .company-info .b-none li.active{
-        border-left: 3px solid var(--ui-outline);
-    }
-    .company-info .b-none li:hover{
-        border-left: 3px solid var(--ui-outline);
     }
     .company-info .tab-pane1 {
         border-radius: 10px;
@@ -80,6 +88,15 @@
     .md-tabs.tabs-left .nav-item, .md-tabs.tabs-right .nav-item, .tabs-left .nav-item, .tabs-right .nav-item {
         background-color: #fff;
         border-radius: 20px;
+    }
+    .company-info .b-none1 .nav-item{
+        border-left: 3px solid var(--ui-outline);
+    }
+    .company-info .b-none3 .nav-item{
+        border-left: 3px solid var(--ui-outline);
+    }
+    .company-info .b-none4 .nav-item{
+        border-left: 3px solid var(--ui-outline);
     }
 }
 
@@ -154,6 +171,11 @@
 
 .company-info .tab-pane{
     background-color: #fff;
+}
+
+.md-tabs {
+    height: min-content;
+    border-bottom: none;
 }
 
 

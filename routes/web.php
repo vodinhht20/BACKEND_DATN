@@ -81,9 +81,13 @@ Route::get('/callback/github', [AuthController::class, 'githubCallback'])->name(
 
 Route::prefix('/company')->name("company.")->group(function () {
     Route::get('/info', [CompanyController::class, 'info'])->name("info");
-    Route::get('/updatecompany', [CompanyController::class, 'updatecompany'])->name("updatecompany");
+    Route::get('/updatecompany/{id}', [CompanyController::class, 'updatecompany'])->name("updatecompany");
+    Route::post('/updatecompany/{id}', [CompanyController::class, 'updatecompany1'])->name("updatecompany");
     Route::get('/addbranch', [CompanyController::class, 'addbranch'])->name("addbranch");
-    Route::get('/updatebranch', [CompanyController::class, 'updatebranch'])->name("updatebranch");
+    Route::post('/addbranch', [CompanyController::class, 'addbranch1'])->name("addbranch");
+    Route::get('/updatebranch/{id}', [CompanyController::class, 'updatebranch'])->name("updatebranch");
+    Route::post('/updatebranch/{id}', [CompanyController::class, 'updatebranch1'])->name("updatebranch");
+    Route::get('/delete/{id}', [CompanyController::class, 'delete'])->name("delete");
 });
 Route::get('/timesheet', [TimesheetController::class, 'timesheet'])->name("timesheet");
 Route::get('/test', function(Request $request) {
