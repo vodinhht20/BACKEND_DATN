@@ -120,7 +120,7 @@
                     </div>
                 </div>
            </div>
-               
+
                 @include('admin.layouts.messages')
                 <div class="card-block table-border-style" id="data-table">
                     <div class="table-responsive">
@@ -150,7 +150,7 @@
                                             @else
                                                 <label for="" class="label label-default">Chưa xác thực email</label>
                                             @endif
-                                           
+
                                         </td>
                                         <td>{{ $user->birth_day ?: "Chưa có" }}</td>
                                         <td> <p class="ellipsis">{{ $user->address ?: "Chưa có" }}</p></td>
@@ -191,10 +191,6 @@
 @endsection
 
 @section('page-script')
-<!-- sweetAlert -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-
 <script>
     (function callApi() {
         $('.confirm-email').on('click', function (e) {
