@@ -20,10 +20,6 @@ class EmployeeRepository extends BaseRepository
             return $networks->toArray();
         }
 
-        return response()->json([
-            'message' => 'Checkin thất bại vui lòng kết nối Wifi công ty để điểm danh',
-            'ip' => $request->ip(),
-            'error_code' => 73
-        ]);
+        return [];
     }
 }

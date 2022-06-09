@@ -6,6 +6,7 @@ use App\Repositories\EmployeeRepository;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class CheckAttendanceIP
 {
@@ -23,14 +24,14 @@ class CheckAttendanceIP
      */
     public function handle(Request $request, Closure $next)
     {
-        $currentAdminId = Auth::user()->id;
-        $ipCompanies = $this->employeeRepo->getWifiIPByEmployeeId($currentAdminId);
+        $currentAdminId = JWTAuth::toUser($request->access_token);
+        $ipCompanies = $this->employeeRepo->getWifiIPByEmployeeId($currentAdminId->id);
         if (in_array($request->ip(), $ipCompanies)) {
             return $next($request);
         }
 
         return response()->json([
-            'message' => 'checkin thành công',
+            'message' => 'check in bị từ chối',
             'ip' => $request->ip(),
             'error_code' => 'checkin_access_denied'
         ]);
