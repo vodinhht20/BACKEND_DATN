@@ -55,7 +55,7 @@ class CompanyController extends Controller
 
     public function delete($id){
         BranCompany::find($id)->delete();
-        // Alert::success('Xóa thành công');
+        Alert::success('Xóa thành công');
         return redirect('company/info');
     }
 

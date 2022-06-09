@@ -28,7 +28,7 @@ class TimekeepingController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                "messages" => $validator->messages()->first(),
+                "message" => $validator->messages()->first(),
                 'error_code' => 'field_required'
             ], 404);
         }

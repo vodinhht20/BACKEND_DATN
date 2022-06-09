@@ -32,3 +32,5 @@
 <script type="text/javascript" src="{{asset('frontend')}}/js/validateForm.js"></script>
 
 {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script> --}}
+
+<script src="https://unpkg.com/sweetalert2@7.18.0/dist/sweetalert2.all.js"></script>
