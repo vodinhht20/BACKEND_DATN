@@ -13,9 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('categories', function (Blueprint $table) {
-            $table->string('image')->nullable();
-            $table->tinyInteger('status')->default(1);
+        Schema::table('timekeep_logs', function (Blueprint $table) {
+            $table->string('source')->nullable();
         });
     }
 
@@ -26,9 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('categories', function (Blueprint $table) {
-            $table->dropColumn('email_confirm_token_expired_at');
-            $table->dropColumn('status');
+        Schema::table('timekeep_logs', function (Blueprint $table) {
+            $table->dropColumn('source');
         });
     }
 };

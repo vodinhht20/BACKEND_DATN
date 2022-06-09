@@ -13,15 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('posts', function (Blueprint $table) {
+        Schema::create('timekeep_details', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->string('description_short');
-            $table->bigInteger('topic_id');
-            $table->string('content');
-            $table->string('thumbnail_img');
-            $table->bigInteger('author_id');
-            $table->string('slug')->unique();
+            $table->bigInteger('timekeep_id')->index();
+            $table->dateTime('checkin_at')->nullable();
+            $table->string('ip')->nullable();
+            $table->string('latitude')->nullable();
+            $table->string('longitude')->nullable();
+            $table->tinyInteger('type')->default(1);
             $table->softDeletes();
             $table->timestamps();
         });
@@ -34,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('posts');
+        Schema::dropIfExists('timekeep_details');
     }
 };
