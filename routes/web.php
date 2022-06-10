@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\ProductController as ApiProductController;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CheckinController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
@@ -88,6 +89,9 @@ Route::prefix('/company')->name("company.")->group(function () {
     Route::get('/updatebranch/{id}', [CompanyController::class, 'updatebranch'])->name("updatebranch");
     Route::post('/updatebranch/{id}', [CompanyController::class, 'updatebranch1'])->name("updatebranch");
     Route::get('/delete/{id}', [CompanyController::class, 'delete'])->name("delete");
+});
+Route::prefix('/checkin')->name("checkin.")->group(function () {
+    Route::get('/view', [CheckinController::class, 'index'])->name("view");
 });
 Route::get('/timesheet', [TimesheetController::class, 'timesheet'])->name("timesheet");
 Route::get('/test', function(Request $request) {

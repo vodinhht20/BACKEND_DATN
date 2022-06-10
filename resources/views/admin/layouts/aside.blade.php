@@ -140,7 +140,16 @@
                 </a>
             </li>
         </ul>
-
+        <div class="pcoded-navigation-label" data-i18n="nav.category.forms">Chấm Công</div>
+        <ul class="pcoded-item pcoded-left-item">
+            <li class="{{ Request::routeIs('checkin.*') ? 'active' : '' }}">
+                <a href="{{ route("checkin.view") }}" class="waves-effect waves-dark">
+                    <span class="pcoded-micon"><i class="ti-agenda"></i><b>FC</b></span>
+                    <span class="pcoded-mtext" data-i18n="nav.form-components.main">Cài đặt công ty</span>
+                    <span class="pcoded-mcaret"></span>
+                </a>
+            </li>
+        </ul>
         {{-- <div class="pcoded-navigation-label" data-i18n="nav.category.other">Blog</div>
         <ul class="pcoded-item pcoded-left-item">
             <li>
