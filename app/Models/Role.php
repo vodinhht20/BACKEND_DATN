@@ -12,15 +12,6 @@ class Role extends Model
 
     public function getUser()
     {
-        return $this->belongsToMany('App\Models\User', 'model_has_roles', 'role_id', 'model_id');
+        return $this->belongsToMany('App\Models\Employee', 'model_has_roles', 'role_id', 'model_id');
     }
 }
-
-// public function products() {
-//     return $this->belongsToMany(
-//         Product::class,
-//         'category_product', // bang trung gian
-//         'category_id', // khoa ngoai tuong ung voi model hien tai
-//         'product_id', // khoa ngoai cua bang con lai
-//     );
-// }

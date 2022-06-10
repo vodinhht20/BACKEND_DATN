@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Repositories\EmployeeRepository;
 use App\Repositories\UserRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -10,9 +11,9 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserController extends Controller
 {
-    public function __construct(UserRepositoryInterface $userRepo)
+    public function __construct(private EmployeeRepository $employeeRepo)
     {
-        $this->userRepo = $userRepo;
+        //
     }
 
     /**
@@ -22,10 +23,10 @@ class UserController extends Controller
      */
     public function index()
     {
-        $user = $this->userRepo->getAllUserByPublic(15);
+        $employee = $this->employeeRepo->getAllUserByPublic(15);
         return response()->json([
             "status" => "200",
-            "payload" => $user,
+            "payload" => $employee,
         ]);
     }
 
@@ -96,15 +97,15 @@ class UserController extends Controller
     }
 
     public function profile(Request $request){
-        $user = JWTAuth::toUser($request->access_token);
-        return $this->responseUser($user);
+        $employee = JWTAuth::toUser($request->access_token);
+        return $this->responseUser($employee);
     }
 
     protected function responseUser($profile): JsonResponse
     {
         return response()->json([
                 "email" => $profile->email,
-                "fullname" => $profile->name,
+                "fullname" => $profile->fullname,
                 "avatar" => $profile->avatar,
                 "gender" => "2",
                 "birth_day" => $profile->birth_day,

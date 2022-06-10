@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Repositories\EmployeeRepository;
 use App\Repositories\UserRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -11,15 +12,14 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 class AuthController extends Controller
 {
 
-    protected $userRepo;
     /**
      * Create a new AuthController instance.
      *
      * @return void
      */
-    public function __construct(UserRepositoryInterface $userRepo)
+    public function __construct(EmployeeRepository $employeeRepo)
     {
-        $this->userRepo = $userRepo;
+        $this->employeeRepo = $employeeRepo;
     }
 
     public function login(Request $request): JsonResponse
@@ -88,9 +88,9 @@ class AuthController extends Controller
 
         if (isset($payload['email'])) {
             $email = $payload['email'];
-            $user = $this->userRepo->getUserByEmail($email);
-            if ($user) {
-                $token = JWTAuth::fromUser($user);
+            $employee = $this->employeeRepo->getUserByEmail($email);
+            if ($employee) {
+                $token = JWTAuth::fromUser($employee);
                 return $this->responseToken($token);
             } else {
                 return response()->json([
@@ -111,19 +111,19 @@ class AuthController extends Controller
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
-    
+
             return response()->json([
                 'message' => 'Token đã hết hạn',
                 'error_code' =>  71
             ], 401);
-    
+
         } catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
-    
+
             return response()->json([
                 'message' => 'Token không hợp lệ',
                 'error_code' =>  70
             ], 401);
-    
+
         }
     }
 }

@@ -56,7 +56,7 @@
                                 <div class="form-group">
                                     <label class="col-form-label">Họ & Tên<span class="text-danger">*</span></label>
                                     <div class="">
-                                        <input type="text" class="form-control data-input" value="{{ old('name') }}" name="name" placeholder="Nhập họ và tên thành viên">
+                                        <input type="text" class="form-control data-input" value="{{ old('fullname') }}" name="fullname" placeholder="Nhập họ và tên thành viên">
                                     </div>
                                 </div>
                             </div>
@@ -137,12 +137,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group row">
-                            <label class="col-sm-12 col-form-label">Address</label>
-                            <div class="col-sm-12">
-                                <input type="text" class="form-control data-input" value="{{ old('address') }}" name="address" placeholder="Nhập địa chỉ nhà">
-                            </div>
-                        </div>
                         <div class="form-group row justify-content-center">
                             <button class="btn btn-primary btn-round waves-effect waves-light ">Tạo mới</button>
                         </div>
@@ -169,7 +163,7 @@
 
     const objData = {
       rules: {
-        name: "required",
+        fullname: "required",
         email: {
             required: true,
             email: true
@@ -179,7 +173,7 @@
         }
       },
       messages: {
-        name: `<span class="text-validate">Vui lòng nhập họ và tên</span>`,
+        fullname: `<span class="text-validate">Vui lòng nhập họ và tên</span>`,
         email: {
             required: `<span class="text-validate">Vui lòng nhập email</span>`,
             email: `<span class="text-validate">Vui lòng nhập đúng định dạng email</span>`

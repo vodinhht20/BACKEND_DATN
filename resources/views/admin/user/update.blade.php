@@ -34,7 +34,7 @@
                 </div>
                 @include('admin.layouts.messages')
                 <div class="card-block">
-                    <form action="{{ route('post-update-user', ['id' => $user->id]) }}" method="POST" id="form-create"  enctype="multipart/form-data">
+                    <form action="{{ route('post-update-user', ['id' => $employee->id]) }}" method="POST" id="form-create"  enctype="multipart/form-data">
                         @csrf
                         <div class="row">
                             <div class="col-sm-3">
@@ -47,7 +47,7 @@
                             </div>
                             <div class="col-sm-2">
                                 <div class="col-sm-5">
-                                    <img id="preview_image" src="{{ $user->getAvatar() ?: asset('frontend/image/avatar_empty.jfif') }}"/>
+                                    <img id="preview_image" src="{{ $employee->getAvatar() ?: asset('frontend/image/avatar_empty.jfif') }}"/>
                                 </div>
                             </div>
                         </div>
@@ -56,7 +56,7 @@
                                 <div class="form-group">
                                     <label class="col-form-label">Họ & Tên<span class="text-danger">*</span></label>
                                     <div class="">
-                                        <input type="text" class="form-control data-input" value="{{ $user->name }}" name="name" placeholder="Nhập họ và tên thành viên">
+                                        <input type="text" class="form-control data-input" value="{{ $employee->fullname }}" name="name" placeholder="Nhập họ và tên thành viên">
                                     </div>
                                 </div>
                             </div>
@@ -64,7 +64,7 @@
                                 <div class="form-group">
                                     <label class="col-form-label">Chứng minh nhân dân<span class="text-danger">*</span></label>
                                     <div class="">
-                                        <input type="text" class="form-control data-input" value="{{ $user->name }}" name="name" placeholder="Nhập số chứng minh thư">
+                                        <input type="text" class="form-control data-input" value="{{ $employee->fullname }}" name="fullname" placeholder="Nhập số chứng minh thư">
                                     </div>
                                 </div>
                             </div>
@@ -72,7 +72,7 @@
                                 <div class="form-group">
                                     <label class="col-form-label">Email<span class="text-danger">*</span></label>
                                     <div class="">
-                                        <input type="text" class="form-control data-input" value="{{ $user->email }}" name="email" placeholder="Nhập email thành viên">
+                                        <input type="text" class="form-control data-input" value="{{ $employee->email }}" name="email" placeholder="Nhập email thành viên">
                                     </div>
                                 </div>
                             </div>
@@ -80,7 +80,7 @@
                                 <div class="form-group">
                                     <label class="col-form-label">Trường học<span class="text-danger">*</span></label>
                                     <div class="">
-                                        <input type="text" class="form-control data-input" value="{{ $user->name }}" name="name" placeholder="Nhập tên trường học">
+                                        <input type="text" class="form-control data-input" value="{{ $employee->fullname }}" name="fullname" placeholder="Nhập tên trường học">
                                     </div>
                                 </div>
                             </div>
@@ -88,7 +88,7 @@
                                 <div class="form-group">
                                     <label class="col-form-label">Chuyên ngành<span class="text-danger">*</span></label>
                                     <div class="">
-                                        <input type="text" class="form-control data-input" value="{{ $user->name }}" name="name" placeholder="Nhập chuyên ngành học">
+                                        <input type="text" class="form-control data-input" value="{{ $employee->fullname }}" name="fullname" placeholder="Nhập chuyên ngành học">
                                     </div>
                                 </div>
                             </div>
@@ -96,7 +96,7 @@
                                 <div class="form-group">
                                     <label class="col-form-label">Năm tốt nghiệp<span class="text-danger">*</span></label>
                                     <div class="">
-                                        <input type="text" class="form-control data-input" value="{{ $user->name }}" name="name" placeholder="Nhập năm tốt nghiệp">
+                                        <input type="text" class="form-control data-input" value="{{ $employee->fullname }}" name="fullname" placeholder="Nhập năm tốt nghiệp">
                                     </div>
                                 </div>
                             </div>
@@ -106,7 +106,7 @@
                                 <div class="form-group">
                                     <label class="col-form-label">Ngày sinh</span></label>
                                     <div class="">
-                                        <input type="date" class="form-control data-input" value="{{ $user->birth_day }}" name="birth_day" placeholder="Nhập ngày sinh">
+                                        <input type="date" class="form-control data-input" value="{{ $employee->birth_day }}" name="birth_day" placeholder="Nhập ngày sinh">
                                     </div>
                                 </div>
                             </div>
@@ -114,7 +114,7 @@
                                 <div class="form-group">
                                     <label class="col-form-label">Số điện thoại</label>
                                     <div class="">
-                                        <input type="text" class="form-control data-input" value="{{ $user->phone }}" name="phone" placeholder="+84 329766459">
+                                        <input type="text" class="form-control data-input" value="{{ $employee->phone }}" name="phone" placeholder="+84 329766459">
                                     </div>
                                 </div>
                             </div>
@@ -122,7 +122,7 @@
                                 <div class="form-group">
                                     <label class="col-form-label">Giới tính</span></label>
                                     <div class="">
-                                        <input type="date" class="form-control data-input" value="{{ $user->birth_day }}" name="birth_day" placeholder="Nhập giới tính">
+                                        <input type="date" class="form-control data-input" value="{{ $employee->birth_day }}" name="birth_day" placeholder="Nhập giới tính">
                                     </div>
                                 </div>
                             </div>
@@ -131,12 +131,6 @@
                                     <select name="" id="" class="form-control data-input border">
                                         <option value="1">Phòng ban</option>
                                     </select>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-12 col-form-label">Địa chỉ</label>
-                            <div class="col-sm-12">
-                                <input type="text" class="form-control data-input" value="{{ $user->address }}" name="address" placeholder="Nhập địa chỉ nhà">
                             </div>
                         </div>
                         <div class="form-group row justify-content-center">
@@ -162,7 +156,7 @@
 
     const objData = {
       rules: {
-        name: "required",
+        fullname: "required",
         email: {
             required: true,
             email: true
@@ -172,7 +166,7 @@
         }
       },
       messages: {
-        name: `<span class="text-validate">Vui lòng nhập họ và tên</span>`,
+        fullname: `<span class="text-validate">Vui lòng nhập họ và tên</span>`,
         email: {
             required: `<span class="text-validate">Vui lòng nhập email</span>`,
             email: `<span class="text-validate">Vui lòng nhập đúng định dạng email</span>`

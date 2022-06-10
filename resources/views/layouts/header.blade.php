@@ -24,7 +24,7 @@
                         <a href="">
                             <img src="{{Auth::user()->getAvatar() ?? asset('frontend/image/avatar_empty.jfif')}}" alt="">
                         </a>
-                        <span>{{Auth::user()->name}}</span>
+                        <span>{{Auth::user()->fullname}}</span>
                     @else
                     <a href="">
                         <img src="{{asset('frontend')}}/image/avatar_empty.jfif" alt="">
