@@ -138,4 +138,9 @@ class EmployeeRepository extends BaseRepository
         }
         return false;
     }
+
+    public function getMaxId(): int
+    {
+        return $this->model->max('id');
+    }
 }

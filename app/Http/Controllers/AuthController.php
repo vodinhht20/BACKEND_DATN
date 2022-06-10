@@ -6,6 +6,7 @@ use App\Events\UserRegisted;
 use App\Models\Employee;
 use App\Repositories\EmployeeRepository;
 use App\Repositories\UserRepositoryInterface;
+use App\Service\EmployeeService;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -14,7 +15,11 @@ use Log;
 
 class AuthController extends Controller
 {
-    public function __construct(private EmployeeRepository $employeeRepo) {
+    public function __construct(
+        private EmployeeRepository $employeeRepo,
+        private EmployeeService $employeeService
+    )
+    {
         //
     }
     public function showFormLogin() {
@@ -51,10 +56,11 @@ class AuthController extends Controller
     }
 
     public function showFromRegister() {
-        return view("client.auth.register");
-
+        return redirect()->route('show-form-register')->with('message.error', 'Tính năng đăng ký đang phát triển. Vui lòng đăng nhập !');
+        // return view("client.auth.register");
     }
     public function register(Request $request) {
+        return redirect()->route('show-form-register')->with('message.error', 'Tính năng đăng ký đang phát triển. Vui lòng đăng nhập !');
         $validator = Validator::make($request->all(), [
             'fullname' => 'required|max:255',
             'email' => 'required|email|unique:users',
@@ -91,20 +97,24 @@ class AuthController extends Controller
         $employee = Employee::where('email', $ggUser->email)->first();
         if(isset($employee)){
             $employee->avatar = $ggUser->avatar;
-            $employee->fullname = $ggUser->fullname;
+            $employee->fullname = $ggUser->name;
             $employee->save();
-        } else {
-            $option = [
-                'email' => $ggUser->email,
-                'fullname' => $ggUser->fullname,
-                'avatar' => $ggUser->avatar,
-                'password' => 'thuc-pham-xanh@123',
-                'email_verified_at' => now(),
-            ];
-            $employee = $this->employeeRepo->register($option);
+
+            Auth::login($employee);
+            return Auth::user()->hasRole('admin') ? redirect()->route('dashboard') : redirect()->route('home.index');
         }
-        Auth::login($employee);
-        return Auth::user()->hasRole('admin') ? redirect()->route('dashboard') : redirect()->route('home.index');
+        // else {
+        //     $option = [
+        //         'email' => $ggUser->email,
+        //         'fullname' => $ggUser->name,
+        //         'avatar' => $ggUser->avatar,
+        //         'employee_code' => $this->employeeService->makeEmployeeCode(),
+        //         'password' => 'thuc-pham-xanh@123',
+        //         'email_verified_at' => now(),
+        //     ];
+        //     $employee = $this->employeeRepo->register($option);
+        // }
+        return redirect()->route('login')->with('message.error', 'Không tìm thấy tài khoản của bạn trên hệ thống');
     }
     public function notifyConfirmEmail($id) {
         $employee = $this->employeeRepo->find($id);
@@ -140,17 +150,19 @@ class AuthController extends Controller
             $employee->avatar = $githubUser->avatar;
             $employee->fullname = $githubUser->nickname;
             $employee->save();
-        } else {
-            $option = [
-                'email' => $githubUser->email,
-                'fullname' => $githubUser->nickname,
-                'avatar' => $githubUser->avatar,
-                'password' => 'thuc-pham-xanh@123',
-                'email_verified_at' => now(),
-            ];
-            $employee = $this->employeeRepo->register($option);
+            Auth::login($employee);
+            return Auth::user()->hasRole('admin') ? redirect()->route('dashboard') : redirect()->route('home.index');
         }
-        Auth::login($employee);
-        return Auth::user()->hasRole('admin') ? redirect()->route('dashboard') : redirect()->route('home.index');
+        // else {
+        //     $option = [
+        //         'email' => $githubUser->email,
+        //         'fullname' => $githubUser->nickname,
+        //         'avatar' => $githubUser->avatar,
+        //         'password' => 'thuc-pham-xanh@123',
+        //         'email_verified_at' => now(),
+        //     ];
+        //     $employee = $this->employeeRepo->register($option);
+        // }
+        return redirect()->route('login')->with('message.error', 'Không tìm thấy tài khoản của bạn trên hệ thống');
     }
 }
