@@ -31,8 +31,8 @@ class WirteTimekeepLog
     {
         try {
             $timekeepOption = $event->timekeep;
-            $timekeep = $this->timekeepRepo->getTimekeepByDate($timekeepOption['date']);
-            if (!$timekeep) {
+            $timekeep = $this->timekeepRepo->getTimekeepByDate($timekeepOption['date'], $timekeepOption['employee_id']);
+            if (!count($timekeep) > 0) {
                 $timekeep = $this->timekeepRepo->create($timekeepOption);
             }
             $timekeepOption['timekeep_id'] = $timekeep->id;

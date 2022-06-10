@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Events\HandleCheckIn;
 use App\Http\Controllers\Controller;
+use App\Models\Employee;
 use App\Repositories\TimekeepRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -46,20 +47,20 @@ class TimekeepingController extends Controller
             'source' => $request->header('User-Agent')
         ];
         DB::beginTransaction();
+        $result = null;
         try {
             $result = $this->timekeepRepo->checkin($options);
             DB::commit();
-        } catch (\Exception $ex) {
-            \Log::error($ex->getMessage());
+        } catch (\Exception $e) {
+            $message = '[' . date('Y-m-d H:i:s') . '] Error message \'' . $e->getMessage() . '\'' . ' in ' . $e->getFile() . ' line ' . $e->getLine();
+            \Log::error($message);
             DB::rollBack();
         }
         $options['status'] = $result ? config('timekeep.status.success') : config('timekeep.status.failed');
         event(new HandleCheckIn($options));
         if ($result) {
             return response()->json([
-                'message' => 'checkin thành công',
-                'ip' => $request->ip(),
-                'error_code' => 80
+                'message' => 'checkin thành công'
             ]);
         }
         return response()->json([
@@ -68,4 +69,11 @@ class TimekeepingController extends Controller
             'error_code' => 'checkin_access_denied'
         ]);
     }
+
+    // public function getDataCheckin(Employee $employee,string $date): array
+    // {
+    //     $employeeId = $employee->id;
+    //     $timekeep = $this->getTimekeepByDate();
+    //     return [];
+    // }
 }
