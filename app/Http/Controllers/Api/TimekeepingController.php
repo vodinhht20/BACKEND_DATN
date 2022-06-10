@@ -33,9 +33,9 @@ class TimekeepingController extends Controller
                 'error_code' => 'field_required'
             ], 404);
         }
-
         $currentDate = Carbon::now();
         $currentAdminId = Auth::user()->id;
+        dd ($this->timekeepRepo->dataCheckinByDay("2022-06-08", $currentAdminId));
         $options = [
             'ip' => $request->ip(),
             'latitude' => $request->input('latitude', null),
@@ -57,7 +57,7 @@ class TimekeepingController extends Controller
             DB::rollBack();
         }
         $options['status'] = $result ? config('timekeep.status.success') : config('timekeep.status.failed');
-        event(new HandleCheckIn($options));
+        // event(new HandleCheckIn($options));
         if ($result) {
             return response()->json([
                 'message' => 'checkin thành công'
@@ -69,11 +69,4 @@ class TimekeepingController extends Controller
             'error_code' => 'checkin_access_denied'
         ]);
     }
-
-    // public function getDataCheckin(Employee $employee,string $date): array
-    // {
-    //     $employeeId = $employee->id;
-    //     $timekeep = $this->getTimekeepByDate();
-    //     return [];
-    // }
 }
