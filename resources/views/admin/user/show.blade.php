@@ -57,41 +57,9 @@
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label class="col-form-label">Chứng minh nhân dân:</label>
-                                    <div class="">
-                                        <p>036482377523</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
                                     <label class="col-form-label">Email:</label>
                                     <div class="">
                                         <p>{{ $employee->email }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-form-label">Trường học:</label>
-                                    <div class="">
-                                        <p>Cao đẳng FPT Polytechnic</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-form-label">Chuyên ngành:</label>
-                                    <div class="">
-                                        <p>Thiết kế website</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-form-label">Năm tốt nghiệp:</label>
-                                    <div class="">
-                                        <p>2022</p>
                                     </div>
                                 </div>
                             </div>
@@ -101,7 +69,7 @@
                                 <div class="form-group">
                                     <label class="col-form-label">Ngày sinh:</label>
                                     <div class="">
-                                        {{ $employee->birth_day }}
+                                        {{ $employee->birth_day ? $employee->birth_day : "Chưa cập nhật"}}
                                     </div>
                                 </div>
                             </div>
@@ -109,7 +77,7 @@
                                 <div class="form-group">
                                     <label class="col-form-label">Số điện thoại:</label>
                                     <div class="">
-                                       <p>093126213512</p>
+                                        {{ $employee->phone ? $employee->phone : "Chưa cập nhật"}}
                                     </div>
                                 </div>
                             </div>
@@ -117,7 +85,7 @@
                                 <div class="form-group">
                                     <label class="col-form-label">Giới tính:</label>
                                     <div class="">
-                                        <p>Nam</p>
+                                        <p>{{getGender($employee->gender)}}</p>
                                     </div>
                                 </div>
                             </div>

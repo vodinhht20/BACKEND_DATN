@@ -12,10 +12,14 @@ use Spatie\Permission\Traits\HasRoles;
 
 class Employee extends Authenticatable implements JWTSubject
 {
+    const status = [
+        'active' => 1,
+        'deactive' => 2,
+        'banned' => 3
+    ];
     use HasApiTokens, HasFactory, Notifiable, HasRoles, SoftDeletes;
 
     protected $table = 'employees';
-
     protected $fillable = [
         'fullname',
         'email',
