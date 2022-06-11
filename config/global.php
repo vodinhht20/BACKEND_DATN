@@ -2,8 +2,12 @@
 
 return [
     'employeeStatus' => [
-        'active' => 1,
-        'deactive' => 2,
-        'banned' => 3
+        'Active' => 1,
+        'Deactive' => 2,
+        'Banned' => 3
+    ],
+    'gender' => [
+        'Nam' => 1,
+        'Nữ' => 2
     ],
 ];

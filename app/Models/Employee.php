@@ -22,12 +22,19 @@ class Employee extends Authenticatable implements JWTSubject
     protected $table = 'employees';
     protected $fillable = [
         'fullname',
-        'email',
         'password',
+        'email',
+        'personal_email',
         'avatar',
         'phone',
+        'branch_id',
+        'position_id',
+        'is_checked',
         'type_avatar',
-        'birth_day'
+        'birth_day',
+        'employee_code',
+        'note',
+        'gender',
     ];
 
     /**

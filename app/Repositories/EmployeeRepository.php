@@ -30,6 +30,11 @@ class EmployeeRepository extends BaseRepository
         $employee->fullname = $arrData['fullname'];
         $employee->email = $arrData['email'];
         $employee->password= bcrypt($arrData['password']);
+        $employee->employee_code = $arrData['employee_code'];
+        $employee->branch_id = $arrData['branch_id'];
+        $employee->position_id = $arrData['position_id'];
+        $employee->gender = $arrData['gender'];
+
         if (isset($arrData['avatar'])) {
             $employee->avatar = $arrData['avatar'];
         }
@@ -44,6 +49,9 @@ class EmployeeRepository extends BaseRepository
         }
         if (isset($arrData['type_avatar'])) {
             $employee->type_avatar = $arrData['type_avatar'];
+        }
+        if (isset($arrData['note'])) {
+            $employee->note = $arrData['note'];
         }
         $employee->save();
         return $employee;
