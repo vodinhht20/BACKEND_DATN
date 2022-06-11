@@ -20,11 +20,11 @@ class UserRegisted
      *
      * @return void
      */
-    public $user;
-    
-    public function __construct($user)
+    public $employee;
+
+    public function __construct($employee)
     {
-        $this->user = $user;
+        $this->employee = $employee;
     }
 
     /**

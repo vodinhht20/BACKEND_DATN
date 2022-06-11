@@ -2,23 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Repositories\EmployeeRepository;
 use App\Repositories\RoleRepositoryInterface;
-use App\Repositories\UserRepositoryInterface;
 use Illuminate\Http\Request;
 use Validator;
 
 class RoleController extends Controller
 {
 
-    public function __construct(RoleRepositoryInterface $roleRepo, UserRepositoryInterface $userRepo)
+    public function __construct(private RoleRepositoryInterface $roleRepo, private EmployeeRepository $employeeRepo)
     {
-        $this->roleRepo = $roleRepo;
-        $this->userRepo = $userRepo;
+        //
     }
     public function index() {
         $roles = $this->roleRepo->getAll()->load('getUser');
-        $users = $this->userRepo->getAll();
-        return view('admin.role.index', compact('roles', 'users'));
+        $employees = $this->employeeRepo->getAll();
+        return view('admin.role.index', compact('roles', 'employees'));
     }
 
     public function addRole(Request $request)
@@ -38,7 +37,7 @@ class RoleController extends Controller
         }
         $optionRoles = $request->role_name;
         $modelId = $request->model_id;
-        $result = $this->userRepo->changeRole($optionRoles, $modelId);
+        $result = $this->employeeRepo->changeRole($optionRoles, $modelId);
         if (!$result) {
             return response()->json([
                 "messages" => 'Không thể thiết lập role cho user này'
@@ -54,7 +53,7 @@ class RoleController extends Controller
 
     public function getRole(Request $request)
     {
-        $roleByUser = $this->userRepo->getRoleByUser($request->model_id);
+        $roleByUser = $this->employeeRepo->getRoleByUser($request->model_id);
         return response()->json([
             'success' => true,
             'model_id' => $request->model_id,

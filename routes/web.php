@@ -10,7 +10,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\EmployeeController;
 use App\Http\Resources\ProductCollection;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -45,13 +45,13 @@ Route::get('/logout', [AuthController::class, 'logout'])->name("logout");
 
 Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('', [DashboardController::class, 'index'])->name('dashboard');
-    Route::prefix('/user')->group(function () {
-        Route::get('/', [UserController::class, 'index'])->name('admin-list-user');
-        Route::get('/create', [UserController::class, 'showFormCreate'])->name('show-form-user-create');
-        Route::get('/update/{id}', [UserController::class, 'showFormUpdate'])->name('show-form-update-user');
-        Route::get('/show/{id}', [UserController::class, 'showInfoUser'])->name('show-info-user');
-        Route::post('/update/{id}', [UserController::class, 'updateUser'])->name('post-update-user');
-        Route::get('/black-list', [UserController::class, 'blackList'])->name('user-black-list');
+    Route::prefix('/employee')->group(function () {
+        Route::get('/', [EmployeeController::class, 'index'])->name('admin-list-user');
+        Route::get('/create', [EmployeeController::class, 'showFormCreate'])->name('show-form-user-create');
+        Route::get('/update/{id}', [EmployeeController::class, 'showFormUpdate'])->name('show-form-update-user');
+        Route::get('/show/{id}', [EmployeeController::class, 'showInfoUser'])->name('show-info-user');
+        Route::post('/update/{id}', [EmployeeController::class, 'updateUser'])->name('post-update-user');
+        Route::get('/black-list', [EmployeeController::class, 'blackList'])->name('user-black-list');
     });
     Route::prefix('/role')->group(function () {
         Route::get('/', [RoleController::class, 'index'])->name('admin-role.index');
@@ -65,12 +65,12 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     });
     Route::post('/ajax-add-role-user', [RoleController::class, 'addRole'])->name('ajax-add-role-user');
     Route::post('/ajax-get-role-user', [RoleController::class, 'getRole'])->name('ajax-get-role-user');
-    Route::post('/ajax-create-user', [UserController::class, 'addUser'])->name('ajax-create-user');
-    Route::post('/ajax-remove-user', [UserController::class, 'ajaxRemove'])->name('ajax-remove-user');
-    Route::post('/ajax-block-user', [UserController::class, 'ajaxBlock'])->name('ajax-block-user');
-    Route::post('/ajax-un-block-user', [UserController::class, 'ajaxUnBlock'])->name('ajax-un-block-user');
-    Route::post('/ajax-user-confirm-email', [UserController::class, 'confirmEmail'])->name('ajax-user-confirm-email');
-    Route::post('/ajax-user-change-password', [UserController::class, 'changePasssword'])->name('ajax-user-change-password');
+    Route::post('/ajax-create-user', [EmployeeController::class, 'addUser'])->name('ajax-create-user');
+    Route::post('/ajax-remove-user', [EmployeeController::class, 'ajaxRemove'])->name('ajax-remove-user');
+    Route::post('/ajax-block-user', [EmployeeController::class, 'ajaxBlock'])->name('ajax-block-user');
+    Route::post('/ajax-un-block-user', [EmployeeController::class, 'ajaxUnBlock'])->name('ajax-un-block-user');
+    Route::post('/ajax-user-confirm-email', [EmployeeController::class, 'confirmEmail'])->name('ajax-user-confirm-email');
+    Route::post('/ajax-user-change-password', [EmployeeController::class, 'changePasssword'])->name('ajax-user-change-password');
 });
 
 Route::get('login-google', [AuthController::class, 'ggLogin'])->name('login-google');
