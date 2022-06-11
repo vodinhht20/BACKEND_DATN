@@ -116,7 +116,7 @@ class EmployeeController extends Controller
         }
 
         if (isset($request->note)) {
-            $option['phone'] = $request->phone;
+            $option['note'] = $request->note;
         }
 
         if ($request->hasFile('avatar')) {
@@ -145,11 +145,12 @@ class EmployeeController extends Controller
     public function showFormUpdate($id)
     {
         $employee = $this->employeeRepo->find($id);
+        $branchs = Branch::all();
         if (!$employee) {
             return abort(404);
         }
 
-        return view('admin.user.update', compact('employee'));
+        return view('admin.user.update', compact('employee','branchs'));
     }
 
     public function showInfoUser($id)
