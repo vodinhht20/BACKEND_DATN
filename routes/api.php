@@ -30,8 +30,11 @@ Route::post('auth', [AuthController::class, 'isValidToken']);
 
 Route::middleware('jwt.auth')->group(function () {
     Route::get('users', [UserController::class, 'index']);
-    Route::post('checkin', [TimekeepingController::class, 'checkIn'])->middleware('checkip');
     Route::get('profile', [UserController::class, 'profile']);
+    Route::prefix('checkin')->group(function () {
+        Route::post('', [TimekeepingController::class, 'checkIn'])->middleware('checkip');
+        Route::get('data-checkin', [TimekeepingController::class, 'getCurrentDataCheckin']);
+    });
 });
 
 Route::post('login-google', [AuthController::class, 'googleLogin']);

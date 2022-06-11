@@ -9,5 +9,7 @@ return [
     'status' => [
         'success' => 1,
         'failed' => 0
-    ]
+    ],
+    'already_checkin' => 1
+
 ];

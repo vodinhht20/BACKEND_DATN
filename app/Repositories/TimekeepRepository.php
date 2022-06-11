@@ -5,6 +5,8 @@ use App\Models\Employee;
 use App\Models\Timekeep;
 use App\Models\TimekeepDetail;
 use App\Repositories\BaseRepository;
+use App\Service\TimesheetService;
+use Carbon\Carbon;
 
 class TimekeepRepository extends BaseRepository
 {
@@ -32,15 +34,36 @@ class TimekeepRepository extends BaseRepository
             ->first();
     }
 
-    public function dataCheckinByDay(string $date, $employeeId)
+    public function dataCheckinByDay(string $date, $employeeId): array
     {
+        $type = 0;
+        $checkin = null;
+        $checkout = null;
+        $workingTime = 0.0;
         $timekeep = $this->getTimekeepByDate($date, $employeeId);
         $timekeepDetailRepo = app(TimekeepDetailRepository::class);
+        $timesheetService = app(TimesheetService::class);
+
         if ($timekeep) {
             $timekeepInDay = $timekeepDetailRepo->timekeepInDay($timekeep->id);
-            dd($timekeepInDay);
-            return $timekeepInDay;
+            if ($timekeepInDay && $timekeepInDay->first_time) {
+                $checkin = Carbon::parse($timekeepInDay->first_time);
+            }
+            if ($timekeepInDay && $timekeepInDay->last_time) {
+                $checkout = Carbon::parse($timekeepInDay->last_time);
+            }
+            $workingTime = $timesheetService->getDifferentHours($checkin, $checkout);
         }
-        return [];
+
+        if ($checkin && $checkout) {
+            $type = config('timekeep.already_checkin');
+        }
+        return [
+            'type' => $type,
+            'checkin' => $checkin ? $checkin->format('H:i') : null,
+            'checkout' => $checkout ? $checkout->format('H:i') : null,
+            'working_time' => $workingTime,
+            'date' => $date
+        ];
     }
 }

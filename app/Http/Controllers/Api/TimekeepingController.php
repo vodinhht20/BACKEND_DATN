@@ -35,7 +35,6 @@ class TimekeepingController extends Controller
         }
         $currentDate = Carbon::now();
         $currentAdminId = Auth::user()->id;
-        dd ($this->timekeepRepo->dataCheckinByDay("2022-06-08", $currentAdminId));
         $options = [
             'ip' => $request->ip(),
             'latitude' => $request->input('latitude', null),
@@ -46,6 +45,7 @@ class TimekeepingController extends Controller
             'checkin_at' => $currentDate,
             'source' => $request->header('User-Agent')
         ];
+
         DB::beginTransaction();
         $result = null;
         try {
@@ -57,16 +57,30 @@ class TimekeepingController extends Controller
             DB::rollBack();
         }
         $options['status'] = $result ? config('timekeep.status.success') : config('timekeep.status.failed');
-        // event(new HandleCheckIn($options));
+        event(new HandleCheckIn($options));
+
         if ($result) {
+            $dataCheckinByDay = $this->timekeepRepo->dataCheckinByDay($currentDate->format('Y-m-d'), $currentAdminId);
             return response()->json([
-                'message' => 'checkin thành công'
+                'status' => 'success',
+                'data' => $dataCheckinByDay
             ]);
         }
+
         return response()->json([
-            'message' => 'Checkin thất bại vui lòng kết nối Wifi công ty để điểm danh',
+            'message' => 'Checkin thất bại. Vui lòng liên hệ bộ phận kỹ thuật để được hỗ trợ',
             'ip' => $request->ip(),
-            'error_code' => 'checkin_access_denied'
+            'error_code' => 'checkin_failed'
+        ]);
+    }
+
+    public function getCurrentDataCheckin(Request $request)
+    {
+        $currentAdminId = Auth::user()->id;
+        $currentDate = Carbon::now()->format('Y-m-d');
+        $dataCheckin = $this->timekeepRepo->dataCheckinByDay($currentDate, $currentAdminId);
+        return response()->json([
+            'data' => $dataCheckin
         ]);
     }
 }
