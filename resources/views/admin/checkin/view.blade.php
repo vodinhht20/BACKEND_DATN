@@ -39,7 +39,7 @@
     </div>
     <div class="col-md-12 col-lg-10 col-sm-12 card">
         <div class="tab-pane active card-header">
-            conf ten 1
+            còn ten 1
         </div>
         <div class="tab-pane card-block">
             @include('admin.checkin.mobilecheck')

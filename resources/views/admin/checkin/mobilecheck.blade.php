@@ -15,35 +15,7 @@
     <!-- Tab panes -->
     <div class="tab-content tabs card-block" style="width: 100%">
         <div class="tab-pane active" id="type" role="tabpanel">
-                    <p style="text-transform: uppercase; font-weight: 700">Có .... Loại Đơn Từ</p>
-                    <div class="dt-responsive table-responsive">
-                        <table id="simpletable" class="table table-striped table-bordered nowrap">
-                            <thead>
-                                <tr>
-                                    <th>STT</th>
-                                    <th>Tên Loại Đơn</th>
-                                    <th >Mô Tả</th>
-                                    <th>Quy Định tạo đơn</th>
-                                    <th>Trạng Thái Áp Dụng</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                               
-                                <tr>
-                                    <td>Tiger Nixon</td>
-                                    <td>System Architect</td>
-                                    <td>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sapiente assumenda quia voluptatem debitis nisi quos optio,<br> odio culpa blanditiis hic fugiat cum deleniti ipsum at sequi dolore alias unde laborum.</td>
-                                    <td>2011/04/25</td>
-                                    <td> <label class="switch">
-                                        <input type="checkbox">
-                                        <span class="slider round"></span>
-                                      </label>
-                                    </td>
-                                </tr>
-                               
-                            </tbody>
-                        </table>
-                    </div>
+            @include('admin.checkin.wifilist')
         </div>
         <div class="tab-pane" id="deathline" role="tabpanel">
                     <h5>Hạn Chốt Đơn</h5>
