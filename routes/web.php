@@ -96,3 +96,20 @@ Route::get('/test', function(Request $request) {
     $position = Location::get($ip);
     dd($position);
 });
+
+Route::get('/test', function(Request $request) {
+    return view('test');
+});
+Route::post('/test', function(Request $request) {
+    $fileNameDriver = 'document1';
+    $path = $request->file('file')->store('public/avatars');
+    $d = Storage::disk('google')->put($fileNameDriver, $path); // đẩy file lên driver
+    // dd($d);
+    $contents = collect(Storage::disk('google')->listContents('/', false)); // lấy ra tên file
+    $linkDriver = $contents ->where('type', '=', 'file')
+                            ->where('filename', '=', pathinfo($fileNameDriver, PATHINFO_FILENAME))
+                            ->where('extension', '=', pathinfo($fileNameDriver, PATHINFO_EXTENSION))
+                            ->first();
+
+    // dd($linkDriver);
+});
