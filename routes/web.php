@@ -19,6 +19,7 @@ use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\TimesheetController;
+use Illuminate\Support\Facades\Storage;
 use Stevebauman\Location\Facades\Location;
 
 /*
@@ -101,15 +102,31 @@ Route::get('/test', function(Request $request) {
     return view('test');
 });
 Route::post('/test', function(Request $request) {
-    $fileNameDriver = 'document1';
-    $path = $request->file('file')->store('public/avatars');
-    $d = Storage::disk('google')->put($fileNameDriver, $path); // đẩy file lên driver
-    // dd($d);
-    $contents = collect(Storage::disk('google')->listContents('/', false)); // lấy ra tên file
-    $linkDriver = $contents ->where('type', '=', 'file')
-                            ->where('filename', '=', pathinfo($fileNameDriver, PATHINFO_FILENAME))
-                            ->where('extension', '=', pathinfo($fileNameDriver, PATHINFO_EXTENSION))
-                            ->first();
+    // $fileRequest = $request->file('file');
+    // $getNameFile = $fileRequest->getClientOriginalName();
+    // $getContent = $fileRequest->get();
+    // // $path = $fileRequest->store('public/avatars');
+    // Storage::disk('google')->put($getNameFile, $getContent); // đẩy file lên driver
+    dd(Storage::disk('google')->get('/document'));
+    // dd(Storage::disk('google')->get('document/CM-001', false));
+    // $contents = collect(Storage::disk('google')->get('/', false)); // lấy ra tên file
+    // $linkDriver = $contents ->where('type', '=', 'file')
+    //                         ->where('filename', '=', pathinfo($getNameFile, PATHINFO_FILENAME))
+    //                         ->where('extension', '=', pathinfo($getNameFile, PATHINFO_EXTENSION))
+    //                         ->first();
 
     // dd($linkDriver);
+
+    // $client = new \Google\Client();
+    // $client->setClientId('518528243088-2cun7q90pl9r4toeqg49orus56pbpoji.apps.googleusercontent.com');
+    // $client->setClientSecret('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');
+    // $client->refreshToken('1//04blByinuRG5qCgYIARAAGAQSNwF-L9IrfX6xSZjTfn_3A5MDxj34knzIarkWDyQufFt0cqvUgsFSBQ5VTArGgogJ-TxLFNiML1A');
+
+    // // variant 1
+    // $service = new \Google\Service\Drive($client);
+    // $adapter = new \Masbug\Flysystem\GoogleDriveAdapter($service, 'document');
+    // $driver = new \League\Flysystem\Filesystem($adapter);
+    // $fs=  new \Illuminate\Filesystem\FilesystemAdapter($driver, $adapter);
+    // dd($fs->getAdapter()->getService()->teamdrives->listTeamdrives());
+    // List specific folder contents
 });
