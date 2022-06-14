@@ -102,12 +102,17 @@ Route::get('/test', function(Request $request) {
     return view('test');
 });
 Route::post('/test', function(Request $request) {
-    // $fileRequest = $request->file('file');
-    // $getNameFile = $fileRequest->getClientOriginalName();
-    // $getContent = $fileRequest->get();
-    // // $path = $fileRequest->store('public/avatars');
-    // Storage::disk('google')->put($getNameFile, $getContent); // đẩy file lên driver
+    $fileRequest = $request->file('file');
+    $getNameFile = $fileRequest->getClientOriginalName();
+    $getContent = $fileRequest->get();
+    Storage::disk('google')->put($getNameFile, $getContent);
+
+
+    // lấy ra đường dẫn
     dd(Storage::disk('google')->get('/document'));
+
+
+
     // dd(Storage::disk('google')->get('document/CM-001', false));
     // $contents = collect(Storage::disk('google')->get('/', false)); // lấy ra tên file
     // $linkDriver = $contents ->where('type', '=', 'file')

@@ -52,7 +52,7 @@ class AppServiceProvider extends ServiceProvider
                 $client->refreshToken($config['refreshToken']);
 
                 $service = new Drive($client);
-                $adapter = new GoogleDriveAdapter($service, '/document/CM-001', $options);
+                $adapter = new GoogleDriveAdapter($service, '/document', $options);
                 $driver = new Filesystem($adapter);
 
                 return new FilesystemAdapter($driver, $adapter);
