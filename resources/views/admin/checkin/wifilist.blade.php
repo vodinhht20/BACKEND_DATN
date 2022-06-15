@@ -31,12 +31,10 @@
         <table id="simpletable" class="table table-striped table-bordered nowrap ">
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Position</th>
-                    <th>Office</th>
-                    <th>Age</th>
-                    <th>Start date</th>
-                    <th>Salary</th>
+                    <th>STT</th>
+                    <th>Tên WIFI</th>
+                    <th>IP</th>
+                    <th>Trạng Thái Hoạt Động</th>
                 </tr>
             </thead>
             <tbody>
@@ -49,14 +47,29 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Modal title</h4>
+                <h4 class="modal-title">THÊM MỚI WIFI</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <p>Default Modal</p>
-                <p>This is Photoshop's version of Lorem IpThis is Photoshop's version of Lorem Ipsum. Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem quis bibendum auctor, nisi elit consequat ipsum, nec sagittis sem nibh id elit.</p>
+                <div class="form-group">
+                    <label for="">Tên Wifi</label>
+                    <input type="text" class="form-control"  name="" id="">
+                </div>
+                <div class="form-group">
+                    <label for="">IP</label>
+                    <input type="text" class="form-control"  name="" id="">
+                </div>
+                <div class="form-group">
+                    <label for="">ip hiện tại của bạn là : ........... <a href="">Dùng IP này</a></label>
+                    <hr>
+                    <label for="">Trạng thái hoạt động</label>
+                    <br>
+                    <input type="radio" name="" id=""> <label for="">On</label>
+                    <br>
+                    <input type="radio" name="" id=""> <label for="">Off</label>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
