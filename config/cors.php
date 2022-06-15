@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => [env('DOMAIN_FRONTEND', 'https://www.polyf.gq')],
+    'allowed_origins' => [env('DOMAIN_FRONTEND', 'http://localhost:3000')],
 
     'allowed_origins_patterns' => [],
 
@@ -29,6 +29,6 @@ return [
 
     'max_age' => 0,
 
-    'supports_credentials' => true,
+    'supports_credentials' => false,
 
 ];
