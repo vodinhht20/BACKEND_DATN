@@ -16,9 +16,8 @@ class CorsPolicy
      */
     public function handle(Request $request, Closure $next)
     {
-        if (env('DISABLE_CORS', true)) return $next($request);
+        // if (env('DISABLE_CORS', true)) return $next($request);
         $domainFrontend = config('cors.allowed_origins');
-        dd($domainFrontend);
         return $next($request)
             ->header('Access-Control-Allow-Origin', $domainFrontend) //[ 'http://localhost:3000', 'http://127.0.1:3000']
             ->header('Access-Control-Allow-Methods', '*')
