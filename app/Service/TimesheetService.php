@@ -16,4 +16,26 @@ class TimesheetService {
         }
         return $arrDate;
     }
+
+    /**
+    * @param Carbon|null $firstTime
+    * @param Carbon|null $lastTime
+    * @return float
+    */
+    public function getDifferentHours(Carbon $firstTime = null, Carbon $lastTime = null): float
+    {
+        $differentHours = 0;
+        try {
+            if (!$firstTime) {
+                return $differentHours;
+            }
+            if ($lastTime) {
+                $differentHours = round($firstTime->floatDiffInHours($lastTime), 1);
+            }
+        } catch (\Exception $e) {
+            $message = '[' . date('Y-m-d H:i:s') . '] Error message \'' . $e->getMessage() . '\'' . ' in ' . $e->getFile() . ' line ' . $e->getLine();
+            \Log::error($message);
+        }
+        return $differentHours;
+    }
 }

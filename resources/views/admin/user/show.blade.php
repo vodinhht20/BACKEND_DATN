@@ -42,7 +42,7 @@
                             </div>
                             <div class="col-sm-2">
                                 <div class="col-sm-5" style="height: auto; min-height: 100px">
-                                    <img id="preview_image" src="{{ $user->getAvatar() ?: asset('frontend/image/avatar_empty.jfif') }}" height="100px"/>
+                                    <img id="preview_image" src="{{ $employee->getAvatar() ?: asset('frontend/image/avatar_empty.jfif') }}" height="100px"/>
                                 </div>
                             </div>
                         </div>
@@ -51,7 +51,7 @@
                                 <div class="form-group">
                                     <label class="col-form-label">Họ & Tên:</label>
                                     <div class="">
-                                        <p>{{ $user->name }}</p>
+                                        <p>{{ $employee->fullname }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -67,7 +67,7 @@
                                 <div class="form-group">
                                     <label class="col-form-label">Email:</label>
                                     <div class="">
-                                        <p>{{ $user->email }}</p>
+                                        <p>{{ $employee->email }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -101,7 +101,7 @@
                                 <div class="form-group">
                                     <label class="col-form-label">Ngày sinh:</label>
                                     <div class="">
-                                        {{ $user->birth_day }}
+                                        {{ $employee->birth_day }}
                                     </div>
                                 </div>
                             </div>
@@ -154,7 +154,7 @@
 
     const objData = {
       rules: {
-        name: "required",
+        fullname: "required",
         email: {
             required: true,
             email: true
@@ -164,7 +164,7 @@
         }
       },
       messages: {
-        name: `<span class="text-validate">Vui lòng nhập họ và tên</span>`,
+        fullname: `<span class="text-validate">Vui lòng nhập họ và tên</span>`,
         email: {
             required: `<span class="text-validate">Vui lòng nhập email</span>`,
             email: `<span class="text-validate">Vui lòng nhập đúng định dạng email</span>`

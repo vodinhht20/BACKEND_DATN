@@ -6,7 +6,7 @@
                 <img class="img-80 img-radius" src="{{ Auth::user()->getAvatar() ?? asset('frontend/image/avatar_empty.jfif') }}"
                     alt="User-Profile-Image">
                 <div class="user-details">
-                    <span id="more-details">{{ Auth::user()->name }}<i class="fa fa-caret-down"></i></span>
+                    <span id="more-details">{{ Auth::user()->fullname }}<i class="fa fa-caret-down"></i></span>
                 </div>
             </div>
 

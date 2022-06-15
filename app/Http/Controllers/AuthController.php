@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Events\UserRegisted;
-use App\Models\User;
+use App\Models\Employee;
+use App\Repositories\EmployeeRepository;
 use App\Repositories\UserRepositoryInterface;
+use App\Service\EmployeeService;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -13,9 +15,12 @@ use Log;
 
 class AuthController extends Controller
 {
-    protected $userRepo;
-    public function __construct(UserRepositoryInterface $userRepo) {
-        $this->userRepo = $userRepo;
+    public function __construct(
+        private EmployeeRepository $employeeRepo,
+        private EmployeeService $employeeService
+    )
+    {
+        //
     }
     public function showFormLogin() {
         return view("client.auth.login");
@@ -34,27 +39,28 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->with('message.error', $validator->messages()->first())->withInput();
         }
-        $user = $this->userRepo->checkPassword($request->email, $request->password);
-        if ($user) {
-            if (!$user->email_verified_at) {
+        $employee = $this->employeeRepo->checkPassword($request->email, $request->password);
+        if ($employee) {
+            if (!$employee->email_verified_at) {
                 return redirect()->back()->with('message.error', 'Tài khoản chưa được xác thực email, vui lòng xác thực để đăng nhập !')->withInput();
             }
-            if (!$user->role == 0) {
+            if (!$employee->role == 0) {
                 return redirect()->back()->with('message.error', 'Tài khoản của bạn không có quyền truy cập, vui lòng liên hệ quản trị viên để được hỗ trợ !')->withInput();
             }
         } else {
             return redirect()->back()->with('message.error', 'Tài khoản hoặc mật khẩu không chính xác !')->withInput();
         }
-        Auth::login($user, true);
-        return $user->hasRole('admin') ? redirect()->route('dashboard') : redirect()->route('home.index');
+        Auth::login($employee, true);
+        return $employee->hasRole('admin') ? redirect()->route('dashboard') : redirect()->route('home.index');
 
     }
 
     public function showFromRegister() {
-        return view("client.auth.register");
-
+        return redirect()->route('show-form-register')->with('message.error', 'Tính năng đăng ký đang phát triển. Vui lòng đăng nhập !');
+        // return view("client.auth.register");
     }
     public function register(Request $request) {
+        return redirect()->route('show-form-register')->with('message.error', 'Tính năng đăng ký đang phát triển. Vui lòng đăng nhập !');
         $validator = Validator::make($request->all(), [
             'fullname' => 'required|max:255',
             'email' => 'required|email|unique:users',
@@ -76,10 +82,10 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => $request->password,
         ];
-        $user = $this->userRepo->register($data);
-        if ($user) {
-            event(new UserRegisted($user));
-            return redirect()->route('account-verify',['id' => $user->id]);
+        $employee = $this->employeeRepo->register($data);
+        if ($employee) {
+            event(new UserRegisted($employee));
+            return redirect()->route('account-verify',['id' => $employee->id]);
         }
         return redirect()->back()->with('message.error', "Đăng ký thất bại. Vui lòng thử lại !")->withInput();
     }
@@ -88,37 +94,41 @@ class AuthController extends Controller
     }
     public function ggAuthCallback() {
         $ggUser = Socialite::driver('google')->user();
-        $user = User::where('email', $ggUser->email)->first();
-        if(isset($user)){
-            $user->avatar = $ggUser->avatar;
-            $user->name = $ggUser->name;
-            $user->save();
-        } else {
-            $option = [
-                'email' => $ggUser->email,
-                'fullname' => $ggUser->name,
-                'avatar' => $ggUser->avatar,
-                'password' => 'thuc-pham-xanh@123',
-                'email_verified_at' => now(),
-            ];
-            $user = $this->userRepo->register($option);
+        $employee = Employee::where('email', $ggUser->email)->first();
+        if(isset($employee)){
+            $employee->avatar = $ggUser->avatar;
+            $employee->fullname = $ggUser->name;
+            $employee->save();
+
+            Auth::login($employee);
+            return Auth::user()->hasRole('admin') ? redirect()->route('dashboard') : redirect()->route('home.index');
         }
-        Auth::login($user);
-        return Auth::user()->hasRole('admin') ? redirect()->route('dashboard') : redirect()->route('home.index');
+        // else {
+        //     $option = [
+        //         'email' => $ggUser->email,
+        //         'fullname' => $ggUser->name,
+        //         'avatar' => $ggUser->avatar,
+        //         'employee_code' => $this->employeeService->makeEmployeeCode(),
+        //         'password' => 'thuc-pham-xanh@123',
+        //         'email_verified_at' => now(),
+        //     ];
+        //     $employee = $this->employeeRepo->register($option);
+        // }
+        return redirect()->route('login')->with('message.error', 'Không tìm thấy tài khoản của bạn trên hệ thống');
     }
     public function notifyConfirmEmail($id) {
-        $user = $this->userRepo->find($id);
-        if ($user && !$user->email_verified_at) {
-            return view('client.auth.notifyConfirmEmail',['email' => $user->email]);
+        $employee = $this->employeeRepo->find($id);
+        if ($employee && !$employee->email_verified_at) {
+            return view('client.auth.notifyConfirmEmail',['email' => $employee->email]);
         }
         return redirect()->route('home.index');
     }
 
     public function verifyTokenEmail($token, $id) {
-        $user = $this->userRepo->find($id);
-        if ($user && $user->email_confirm_token == $token) {
-            $user->email_verified_at = now();
-            $user->save();
+        $employee = $this->employeeRepo->find($id);
+        if ($employee && $employee->email_confirm_token == $token) {
+            $employee->email_verified_at = now();
+            $employee->save();
             return redirect()->route('login')->with('message.success', 'Xác thực email thành công vui lòng đăng nhập');
         }
         return redirect()->route('home.index');
@@ -135,22 +145,24 @@ class AuthController extends Controller
     }
     public function githubCallback() {
         $githubUser = Socialite::driver('github')->user();
-        $user = User::where('email', $githubUser->email)->first();
-        if(isset($user)){
-            $user->avatar = $githubUser->avatar;
-            $user->name = $githubUser->nickname;
-            $user->save();
-        } else {
-            $option = [
-                'email' => $githubUser->email,
-                'fullname' => $githubUser->nickname,
-                'avatar' => $githubUser->avatar,
-                'password' => 'thuc-pham-xanh@123',
-                'email_verified_at' => now(),
-            ];
-            $user = $this->userRepo->register($option);
+        $employee = Employee::where('email', $githubUser->email)->first();
+        if(isset($employee)){
+            $employee->avatar = $githubUser->avatar;
+            $employee->fullname = $githubUser->nickname;
+            $employee->save();
+            Auth::login($employee);
+            return Auth::user()->hasRole('admin') ? redirect()->route('dashboard') : redirect()->route('home.index');
         }
-        Auth::login($user);
-        return Auth::user()->hasRole('admin') ? redirect()->route('dashboard') : redirect()->route('home.index');
+        // else {
+        //     $option = [
+        //         'email' => $githubUser->email,
+        //         'fullname' => $githubUser->nickname,
+        //         'avatar' => $githubUser->avatar,
+        //         'password' => 'thuc-pham-xanh@123',
+        //         'email_verified_at' => now(),
+        //     ];
+        //     $employee = $this->employeeRepo->register($option);
+        // }
+        return redirect()->route('login')->with('message.error', 'Không tìm thấy tài khoản của bạn trên hệ thống');
     }
 }

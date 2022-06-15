@@ -104,8 +104,8 @@
                                     <div class=""><label class="col-form-label">Lựa chọn thành viên</label> <span class="ti-pencil" title="Chỉnh sửa"></span></div>
                                     <select name="model_id" id="model_id" class="form-control" disabled>
                                         <option value="0">-- Lựa chọn thành viên --</option>
-                                        @foreach ($users as $user)
-                                            <option value="{{ $user->id }}">[{{ $user->id }}] {{ $user->name }}</option>
+                                        @foreach ($employees as $employee)
+                                            <option value="{{ $employee->id }}">[{{ $employee->id }}] {{ $employee->fullname }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -138,12 +138,12 @@
                     </div>
                     <div class="card-block scroll-overflow">
                         @if (count($role->getUser) > 0)
-                            @foreach ($role->getUser as $user)
+                            @foreach ($role->getUser as $employee)
                                 <div class="align-middle m-b-30">
-                                    <img src="{{ $user->getAvatar() ?: asset('frontend/image/avatar_empty.jfif') }}" class="img-radius img-40 align-top m-r-15">
+                                    <img src="{{ $employee->getAvatar() ?: asset('frontend/image/avatar_empty.jfif') }}" class="img-radius img-40 align-top m-r-15">
                                     <div class="d-inline-block">
-                                        <h6>{{ $user->name }}</h6>
-                                        <p class="text-muted m-b-0">{{ $user->email }}</p>
+                                        <h6>{{ $employee->name }}</h6>
+                                        <p class="text-muted m-b-0">{{ $employee->email }}</p>
                                     </div>
                                 </div>
                             @endforeach
@@ -175,9 +175,9 @@
             confirmButtonText: 'Lựa chọn',
             html: `<select name="model_id" id="select_user" class="form-control select2">
                         <option value=""></option>
-                        @foreach ($users as $user)
-                            @if(Auth::user()->id != $user->id)
-                                <option value="{{ $user->id }}">[{{ $user->id }}] {{ $user->name }}</option>
+                        @foreach ($employees as $employee)
+                            @if(Auth::user()->id != $employee->id)
+                                <option value="{{ $employee->id }}">[{{ $employee->id }}] {{ $employee->fullname }}</option>
                             @endif
                         @endforeach
                     </select>`,

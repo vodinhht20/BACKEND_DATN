@@ -4,6 +4,7 @@ namespace App\Listeners;
 
 use App\Events\UserRegisted;
 use App\Mail\TokenVerifyEmail;
+use App\Repositories\EmployeeRepository;
 use App\Repositories\UserRepositoryInterface;
 use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -19,9 +20,9 @@ class SendEmailVerifyToken implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(UserRepositoryInterface $userRepo)
+    public function __construct(private EmployeeRepository $employeeRepo)
     {
-        $this->userRepo = $userRepo;
+        //
     }
 
     /**
@@ -35,12 +36,12 @@ class SendEmailVerifyToken implements ShouldQueue
         try {
             $token = hash('sha256', Str::random(60));
             $option = [
-                'id' => $event->user->id,
+                'id' => $event->employee->id,
                 'email_confirm_token' => $token,
             ];
-            $this->userRepo->updateTokenVerifyEmail($option);
-            $mailable = new TokenVerifyEmail($token,$event->user->id);
-            Mail::to($event->user->email)->send($mailable);
+            $this->employeeRepo->updateTokenVerifyEmail($option);
+            $mailable = new TokenVerifyEmail($token,$event->employee->id);
+            Mail::to($event->employee->email)->send($mailable);
         } catch (Exception $e) {
             Log::error("Không thể gửi mail \ Error message" . $e->getMessage() . '\'' . ' in ' . $e->getFile() . ' line ' . $e->getLine());
         }

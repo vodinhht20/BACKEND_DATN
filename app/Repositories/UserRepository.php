@@ -27,9 +27,6 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         if (isset($arrData['phone'])) {
             $user->phone = $arrData['phone'];
         }
-        if (isset($arrData['address'])) {
-            $user->address = $arrData['address'];
-        }
         if (isset($arrData['birth_day'])) {
             $user->birth_day = $arrData['birth_day'];
         }

@@ -2,31 +2,31 @@
 
 namespace App\Http\Controllers;
 
-use App\Repositories\UserRepositoryInterface;
+use App\Repositories\EmployeeRepository;
 use Illuminate\Http\Request;
 use \Illuminate\Support\Str;
 use Validator;
 
-class UserController extends Controller
+class EmployeeController extends Controller
 {
-    public function __construct(UserRepositoryInterface $userRepo)
+    public function __construct(private EmployeeRepository $employeeRepo)
     {
-        $this->userRepo = $userRepo;
+        //
     }
 
     public function index()
     {
-        $users = $this->userRepo->getAllUserByPublic();
-        return view('admin.user.list', compact('users'));
+        $employees = $this->employeeRepo->getAllUserByPublic();
+        return view('admin.user.list', compact('employees'));
     }
 
     public function confirmEmail(Request $request)
     {
-        $result = $this->userRepo->confirmEmail($request->id);
+        $result = $this->employeeRepo->confirmEmail($request->id);
 
         if ($result) {
-            $users = $this->userRepo->getAllUserByPublic()->withPath($request->pathname);
-            $dataView = view('admin.user._partials.base_table', compact('users'))->render();
+            $employees = $this->employeeRepo->getAllUserByPublic()->withPath($request->pathname);
+            $dataView = view('admin.user._partials.base_table', compact('employees'))->render();
             return response()->json([
                 "success" => true,
                 "data" => $dataView
@@ -46,7 +46,7 @@ class UserController extends Controller
                 "message" => "Vui lòng nhập đầy đủ các trường"
             ], 404);
         }
-        $result = $this->userRepo->changePasssword($request->password, $request->id);
+        $result = $this->employeeRepo->changePasssword($request->password, $request->id);
         if ($result) {
             return response()->json([
                 "success" => true,
@@ -67,11 +67,11 @@ class UserController extends Controller
     public function addUser(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|max:255',
+            'fullname' => 'required|max:255',
             'email' => 'required|email|unique:users',
         ], [
-            'name.required' => 'Họ và Tên không được để trống',
-            'name.max' => 'Họ và Tên không được quá 255 ký tự',
+            'fullname.required' => 'Họ và Tên không được để trống',
+            'fullname.max' => 'Họ và Tên không được quá 255 ký tự',
             'email.required' => 'Email không được để trống',
             'email.unique' => 'Email này đã tồn tại, vui lòng nhập mail khác hoặc đăng nhập',
             'email.email' => 'Email không đúng định dạng',
@@ -86,7 +86,7 @@ class UserController extends Controller
 
         $passWord = Str::random(12);
         $option = [
-            'fullname' => $request->name,
+            'fullname' => $request->fullname,
             'email' => $request->email,
             'password' => $passWord,
             'email_verified_at' => now()
@@ -100,19 +100,15 @@ class UserController extends Controller
             $option['phone'] = $request->phone;
         }
 
-        if (isset($request->address)) {
-            $option['address'] = $request->address;
-        }
-
         if ($request->hasFile('avatar')) {
             $urlImage = $this->storeImage($request, 'avatar');
             $option['avatar'] = $urlImage;
             $option['type_avatar'] = 1;
         }
 
-        $user = $this->userRepo->register($option);
+        $employee = $this->employeeRepo->register($option);
 
-        if ($user) {
+        if ($employee) {
             return response()->json([
                 'success' => true,
                 'data' => [
@@ -129,32 +125,32 @@ class UserController extends Controller
 
     public function showFormUpdate($id)
     {
-        $user = $this->userRepo->find($id);
-        if (!$user) {
+        $employee = $this->employeeRepo->find($id);
+        if (!$employee) {
             return abort(404);
         }
 
-        return view('admin.user.update', compact('user'));
+        return view('admin.user.update', compact('employee'));
     }
 
     public function showInfoUser($id)
     {
-        $user = $this->userRepo->find($id);
-        if (!$user) {
+        $employee = $this->employeeRepo->find($id);
+        if (!$employee) {
             return abort(404);
         }
 
-        return view('admin.user.show', compact('user'));
+        return view('admin.user.show', compact('employee'));
     }
 
     public function updateUser(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|max:255',
+            'fullname' => 'required|max:255',
             'email' => 'required|email|unique:users,email,' . $id,
         ], [
-            'name.required' => 'Họ và Tên không được để trống',
-            'name.max' => 'Họ và Tên không được quá 255 ký tự',
+            'fullname.required' => 'Họ và Tên không được để trống',
+            'fullname.max' => 'Họ và Tên không được quá 255 ký tự',
             'email.required' => 'Email không được để trống',
             'email.unique' => 'Email này đã tồn tại vui lòng lựa chọn email khác',
             'email.email' => 'Email không đúng định dạng',
@@ -165,7 +161,7 @@ class UserController extends Controller
         }
 
         $option = [
-            'name' => $request->name,
+            'fullname' => $request->fullname,
             'email' => $request->email,
         ];
 
@@ -177,19 +173,15 @@ class UserController extends Controller
             $option['phone'] = $request->phone;
         }
 
-        if (isset($request->address)) {
-            $option['address'] = $request->address;
-        }
-
         if ($request->hasFile('avatar')) {
             $urlImage = $this->storeImage($request, 'avatar');
             $option['avatar'] = $urlImage;
             $option['type_avatar'] = 1;
         }
 
-        $user = $this->userRepo->update($id, $option);
+        $employee = $this->employeeRepo->update($id, $option);
 
-        if ($user) {
+        if ($employee) {
             return redirect()->route('admin-list-user')->with('message.success', 'Cập nhật thông tin thành viên thành công !');
         }
         return redirect()->back()->with('message.error', 'Cập nhật thông tin thành viên thất bại')->withInput();
@@ -210,10 +202,10 @@ class UserController extends Controller
             ], 404);
         }
 
-        $result = $this->userRepo->delete($request->id);
+        $result = $this->employeeRepo->delete($request->id);
         if ($result) {
-            $users = $this->userRepo->getAllUserByPublic();
-            $viewData = view('admin.user._partials.base_table', compact('users'))->render();
+            $employees = $this->employeeRepo->getAllUserByPublic();
+            $viewData = view('admin.user._partials.base_table', compact('employees'))->render();
             return response()->json([
                 'data' => $viewData,
                 'success' => true
@@ -240,10 +232,10 @@ class UserController extends Controller
             ], 404);
         }
 
-        $result = $this->userRepo->blockUser($request->id);
+        $result = $this->employeeRepo->blockUser($request->id);
         if ($result) {
-            $users = $this->userRepo->getAllUserByPublic();
-            $viewData = view('admin.user._partials.base_table', compact('users'))->render();
+            $employees = $this->employeeRepo->getAllUserByPublic();
+            $viewData = view('admin.user._partials.base_table', compact('employees'))->render();
             return response()->json([
                 'data' => $viewData,
                 'success' => true
@@ -257,8 +249,8 @@ class UserController extends Controller
 
     public function blackList()
     {
-        $users = $this->userRepo->getUserBlock();
-        return view('admin.user.black_list', compact('users'));
+        $employees = $this->employeeRepo->getUserBlock();
+        return view('admin.user.black_list', compact('employees'));
     }
 
     public function ajaxUnBlock(Request $request)
@@ -276,10 +268,10 @@ class UserController extends Controller
             ], 404);
         }
 
-        $result = $this->userRepo->unBlockUser($request->id);
+        $result = $this->employeeRepo->unBlockUser($request->id);
         if ($result) {
-            $users = $this->userRepo->getUserBlock();
-            $viewData = view('admin.user._partials.black_table', compact('users'))->render();
+            $employees = $this->employeeRepo->getUserBlock();
+            $viewData = view('admin.user._partials.black_table', compact('employees'))->render();
             return response()->json([
                 'data' => $viewData,
                 'success' => true

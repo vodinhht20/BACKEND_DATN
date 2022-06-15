@@ -72,7 +72,7 @@
                 <li class="user-profile header-notification">
                     <a href="#!" class="waves-effect waves-light">
                         <img src="{{Auth::user()->getAvatar() ?? asset('frontend/image/avatar_empty.jfif')}}" class="img-radius" alt="User-Profile-Image">
-                        <span>{{Auth::user()->name}}</span>
+                        <span>{{Auth::user()->fullname}}</span>
                         <i class="ti-angle-down"></i>
                     </a>
                     <ul class="show-notification profile-notification">

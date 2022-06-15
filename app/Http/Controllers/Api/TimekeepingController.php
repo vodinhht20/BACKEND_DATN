@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Events\HandleCheckIn;
 use App\Http\Controllers\Controller;
+use App\Models\Employee;
 use App\Repositories\TimekeepRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -32,7 +33,6 @@ class TimekeepingController extends Controller
                 'error_code' => 'field_required'
             ], 404);
         }
-
         $currentDate = Carbon::now();
         $currentAdminId = Auth::user()->id;
         $options = [
@@ -45,27 +45,42 @@ class TimekeepingController extends Controller
             'checkin_at' => $currentDate,
             'source' => $request->header('User-Agent')
         ];
+
         DB::beginTransaction();
+        $result = null;
         try {
             $result = $this->timekeepRepo->checkin($options);
             DB::commit();
-        } catch (\Exception $ex) {
-            \Log::error($ex->getMessage());
+        } catch (\Exception $e) {
+            $message = '[' . date('Y-m-d H:i:s') . '] Error message \'' . $e->getMessage() . '\'' . ' in ' . $e->getFile() . ' line ' . $e->getLine();
+            \Log::error($message);
             DB::rollBack();
         }
         $options['status'] = $result ? config('timekeep.status.success') : config('timekeep.status.failed');
         event(new HandleCheckIn($options));
+
         if ($result) {
+            $dataCheckinByDay = $this->timekeepRepo->dataCheckinByDay($currentDate->format('Y-m-d'), $currentAdminId);
             return response()->json([
-                'message' => 'checkin thành công',
-                'ip' => $request->ip(),
-                'error_code' => 80
+                'status' => 'success',
+                'data' => $dataCheckinByDay
             ]);
         }
+
         return response()->json([
-            'message' => 'Checkin thất bại vui lòng kết nối Wifi công ty để điểm danh',
+            'message' => 'Checkin thất bại. Vui lòng liên hệ bộ phận kỹ thuật để được hỗ trợ',
             'ip' => $request->ip(),
-            'error_code' => 'checkin_access_denied'
+            'error_code' => 'checkin_failed'
+        ]);
+    }
+
+    public function getCurrentDataCheckin(Request $request)
+    {
+        $currentAdminId = Auth::user()->id;
+        $currentDate = Carbon::now()->format('Y-m-d');
+        $dataCheckin = $this->timekeepRepo->dataCheckinByDay($currentDate, $currentAdminId);
+        return response()->json([
+            'data' => $dataCheckin
         ]);
     }
 }
