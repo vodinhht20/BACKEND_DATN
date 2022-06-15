@@ -91,25 +91,24 @@ Route::prefix('/company')->name("company.")->group(function () {
     Route::get('/delete/{id}', [CompanyController::class, 'delete'])->name("delete");
 });
 Route::get('/timesheet', [TimesheetController::class, 'timesheet'])->name("timesheet");
-Route::get('/test', function(Request $request) {
-    $ip = $request->ip();
-    dump($ip);
-    $position = Location::get($ip);
-    dd($position);
-});
+// Route::get('/test', function(Request $request) {
+//     $ip = $request->ip();
+//     dump($ip);
+//     $position = Location::get($ip);
+//     dd($position);
+// });
 
 Route::get('/test', function(Request $request) {
     return view('test');
 });
 Route::post('/test', function(Request $request) {
     $fileRequest = $request->file('file');
-    $getNameFile = $fileRequest->getClientOriginalName();
+    $getNameFile = date('Y-m-d H:i').$fileRequest->getClientOriginalName();
     $getContent = $fileRequest->get();
     Storage::disk('google')->put($getNameFile, $getContent);
 
-
     // lấy ra đường dẫn
-    dd(Storage::disk('google')->get('/document'));
+    dd(Storage::disk('google'));
 
 
 
@@ -134,4 +133,30 @@ Route::post('/test', function(Request $request) {
     // $fs=  new \Illuminate\Filesystem\FilesystemAdapter($driver, $adapter);
     // dd($fs->getAdapter()->getService()->teamdrives->listTeamdrives());
     // List specific folder contents
+});
+
+
+Route::get('list', function() {
+    $dir = '/';
+    $recursive = false; // Có lấy file trong các thư mục con không?
+    $contents = collect(Storage::disk('google')->listContents($dir, $recursive));
+    return $contents->where('type', '=', 'file');
+});
+
+Route::get('get', function() {
+    $filename = '1W5GndP2oU2fLVJv424uh3s92MpVzr0xV';
+    $dir = '/';
+    $recursive = false; // Có lấy file trong các thư mục con không?
+    $contents = collect(Storage::disk('google')->listContents($dir, $recursive));
+    $file = $contents
+        ->where('type', '=', 'file')
+        ->where(function($val) use ($filename){
+            return $val['extraMetadata']['id'] == $filename;
+        })
+        ->first(); // có thể bị trùng tên file với nhau!
+    $rawData = Storage::disk('google')->get($file['path']);
+    $name = $file['path'];
+    return response($rawData, 200)
+        ->header('Content-Type', $file['mime_type'])
+        ->header('Content-Disposition', "attachment; filename=$name");
 });
