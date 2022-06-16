@@ -2,6 +2,9 @@
   .structure .tabs-left {
     margin-top: 2vw;
   }
+  .structure {
+    display: flex;
+  } 
 
   .structure .tabs-left li.active {
     border-left: 3px solid var(--ui-outline);
@@ -34,9 +37,7 @@
   border-color: #e3e5ef;
 }
 
-.structure {
-  display: flex;
-}
+
 
 .treeview .btn-default:hover {
   background-color: #f7faea;
@@ -208,4 +209,21 @@
 
 .treeview--mapview ul li:after {
   content: unset;
+}
+
+@media(max-width: 1200px){
+  .structure .nav-tabs{
+    display: flex;
+    width: 100%;
+  }
+  .structure .nav-tabs li{
+    background-color: #fff;
+    border-radius: 15px;
+  }
+  .structure .nav-tabs .btn-item{
+    margin-left: 2vw;
+  }
+  .structure .tabs-left li.active {
+    border-top: 4px solid var(--ui-outline);
+}
 }
