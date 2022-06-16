@@ -32,7 +32,7 @@ use Stevebauman\Location\Facades\Location;
 |
 */
 
-Route::get('/', function (){ return view('index'); })->name("home.index");
+Route::get('', function (){ return view('index'); })->name("home.index");
 Route::get('/san-pham/{slug}', [ProductController::class, 'showDetail'])->name("product.showDetail");
 Route::get('/tin-tuc', [PostController::class, 'index'])->name("new.index");
 Route::get('/login', [AuthController::class, 'showFormLogin'])->name("login");
