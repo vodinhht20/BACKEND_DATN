@@ -91,12 +91,6 @@ Route::prefix('/company')->name("company.")->group(function () {
     Route::get('/delete/{id}', [CompanyController::class, 'delete'])->name("delete");
 });
 Route::get('/timesheet', [TimesheetController::class, 'timesheet'])->name("timesheet");
-// Route::get('/test', function(Request $request) {
-//     $ip = $request->ip();
-//     dump($ip);
-//     $position = Location::get($ip);
-//     dd($position);
-// });
 
 Route::get('/test', function(Request $request) {
     return view('test');
@@ -109,30 +103,6 @@ Route::post('/test', function(Request $request) {
 
     // lấy ra đường dẫn
     dd(Storage::disk('google'));
-
-
-
-    // dd(Storage::disk('google')->get('document/CM-001', false));
-    // $contents = collect(Storage::disk('google')->get('/', false)); // lấy ra tên file
-    // $linkDriver = $contents ->where('type', '=', 'file')
-    //                         ->where('filename', '=', pathinfo($getNameFile, PATHINFO_FILENAME))
-    //                         ->where('extension', '=', pathinfo($getNameFile, PATHINFO_EXTENSION))
-    //                         ->first();
-
-    // dd($linkDriver);
-
-    // $client = new \Google\Client();
-    // $client->setClientId('518528243088-2cun7q90pl9r4toeqg49orus56pbpoji.apps.googleusercontent.com');
-    // $client->setClientSecret('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');
-    // $client->refreshToken('1//04blByinuRG5qCgYIARAAGAQSNwF-L9IrfX6xSZjTfn_3A5MDxj34knzIarkWDyQufFt0cqvUgsFSBQ5VTArGgogJ-TxLFNiML1A');
-
-    // // variant 1
-    // $service = new \Google\Service\Drive($client);
-    // $adapter = new \Masbug\Flysystem\GoogleDriveAdapter($service, 'document');
-    // $driver = new \League\Flysystem\Filesystem($adapter);
-    // $fs=  new \Illuminate\Filesystem\FilesystemAdapter($driver, $adapter);
-    // dd($fs->getAdapter()->getService()->teamdrives->listTeamdrives());
-    // List specific folder contents
 });
 
 
@@ -159,4 +129,19 @@ Route::get('get', function() {
     return response($rawData, 200)
         ->header('Content-Type', $file['mime_type'])
         ->header('Content-Disposition', "attachment; filename=$name");
+});
+
+Route::get('delete', function() {
+    $filename = '1TJYM3ap3SS2DkMmB7b9rzokxw8K9geeu';
+    $dir = '/';
+    $recursive = false; // Có lấy file trong các thư mục con không?
+    $contents = collect(Storage::disk('google')->listContents($dir, $recursive));
+    $file = $contents
+        ->where('type', '=', 'file')
+        ->where(function($val) use ($filename){
+            return $val['extraMetadata']['id'] == $filename;
+        })
+        ->first(); // có thể bị trùng tên file với nhau!
+    Storage::disk('google')->restore($file['path']);
+    return 'File was deleted from Google Drive';
 });
