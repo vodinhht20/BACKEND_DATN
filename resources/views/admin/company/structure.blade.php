@@ -49,7 +49,7 @@
                     Cơ cấu <br> tổ chức</a>
             </li>
         </ul>
-        <div style="overflow-x:auto;" class="treeview js-treeview">
+        <div class="treeview js-treeview">
             <ul>
                 <li>
                     <div class="treeview__level" data-level="A">
