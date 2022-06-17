@@ -30,16 +30,16 @@
     <div class="col-md-12 col-lg-2 col-sm-12 tabs row">
         <div class="col-lg-12 col-md-3 col-sm-4 tab-item active">
             <i class=" ti-clipboard"></i>
-            <p>Bảng công</p>
+            <p>Hình Thức Chấm Công</p>
         </div>
         <div class="col-lg-12 col-md-3 col-sm-4 tab-item">
             <i class=" ti-settings"></i>
-            <p>Cài đặt ngày chốt công</p>
+            <p>Chấm Công Bằng Điện Thoại</p>
         </div>
     </div>
     <div class="col-md-12 col-lg-10 col-sm-12 card">
-        <div class="tab-pane active card-header">
-            còn ten 1
+        <div class="tab-pane active ">
+            @include('admin.checkin.checkinlist')
         </div>
         <div class="tab-pane card-block">
             @include('admin.checkin.mobilecheck')
