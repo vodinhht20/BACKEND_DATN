@@ -1,43 +1,19 @@
+<!--====== Jquery js ======-->
+<script src="{{asset('frontend/index')}}/assets/js/vendor/jquery-1.12.4.min.js"></script>
+<script src="{{asset('frontend/index')}}/assets/js/vendor/modernizr-3.7.1.min.js"></script>
 
-<script src="{{asset('frontend')}}/bootstrap/js/jquery-3.6.0.min.js"></script>
-<script src="{{asset('frontend')}}/bootstrap/js/bootstrap.min.js"></script>
-
-<script src="{{asset('frontend')}}/owlcarousel/owl.carousel.min.js"></script>
-<script src="{{asset('frontend')}}/js/main.js"></script>
+<!--====== Bootstrap js ======-->
+<script src="{{asset('frontend/index')}}/assets/js/popper.min.js"></script>
+<script src="{{asset('frontend/index')}}/assets/js/bootstrap.min.js"></script>
 
 
-<script>
-    var qSelectAll = document.querySelectorAll.bind(document);
-    var qSelect = document.querySelector.bind(document);
-    
-    qSelectAll('.select-mass div').forEach(element => {
-            element.addEventListener('click', function(e) {
-                qSelectAll('.select-mass div').forEach(element => {
-                    element.classList.remove('active');
-                });
-                element.classList.add('active');
-            })
-    });
+<!--====== WOW js ======-->
+<script src="{{asset('frontend/index')}}/assets/js/wow.min.js"></script>
 
-    qSelectAll('.quantity .input button').forEach((element,index) => {
-        element.addEventListener('click', function(e) {
-            var inpValue = qSelect('.quantity .input input').value;
-            var error = qSelect('.quantity .error');
-            if (index==0) {
-                if (inpValue < 99) {
-                    error.innerHTML = "";
-                    qSelect('.quantity .input input').value = ++inpValue;
-                } else {
-                    error.innerHTML = "* Đã đạt số lượng tối đa.";
-                }
-            } else {
-                if (inpValue > 1) {
-                    error.innerHTML = "";
-                    qSelect('.quantity .input input').value = --inpValue;
-                } else {
-                    error.innerHTML = "* Tối thiểu phải lớn hơn 0.";
-                }
-            }
-        });
-    });
-</script>
+
+<!--====== Scrolling Nav js ======-->
+<script src="{{asset('frontend/index')}}/assets/js/jquery.easing.min.js"></script>
+<script src="{{asset('frontend/index')}}/assets/js/scrolling-nav.js"></script>
+
+<!--====== Main js ======-->
+<script src="{{asset('frontend/index')}}/assets/js/main.js"></script>
