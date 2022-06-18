@@ -37,12 +37,12 @@
                 <i class="ti-layout-media-overlay"></i><br>
                 Thông tin <br> công ty</a>
         </li>
-        <li class="nav-item active">
+        <li class="nav-item btn-item active">
             <a class="nav-link" href="{{ route('company.branchs') }}" role="tab" aria-expanded="false">
                 <i class="ti-wallet"></i><br>
                 Hệ thống <br> chi nhánh</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item btn-item">
             <a class="nav-link" href="{{ route('company.structure') }}" role="tab" aria-expanded="false">
                 <i class="ti-wallet"></i><br>
                 Cơ cấu <br> tổ chức</a>
