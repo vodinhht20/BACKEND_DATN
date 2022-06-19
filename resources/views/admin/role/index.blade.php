@@ -72,7 +72,7 @@
             <div class="col-md-8">
                 <div class="page-header-title">
                     <h5 class="m-b-10">Quản trị thành viên</h5>
-                    {{-- <p class="m-b-0">Phân quyền truy cập cho thành viên</p> --}}
+                    <p class="m-b-0">Phân quyền truy cập cho thành viên</p>
                 </div>
             </div>
             <div class="col-md-4">

@@ -209,3 +209,6 @@ a {
 	border-radius: 10px;
 	background-color:#b3c5cc;
 }
+.align-middle-td td {
+  vertical-align: middle;
+}

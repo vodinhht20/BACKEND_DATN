@@ -109,6 +109,17 @@
             </li>
         </ul>
 
+        <div class="pcoded-navigation-label" data-i18n="nav.category.forms">Cài đặt lịch</div>
+        <ul class="pcoded-item pcoded-left-item">
+            <li class="{{ Request::routeIs('schedule.*') ? 'active' : '' }}">
+                <a href="{{ route("schedule-calender-index") }}" class="waves-effect waves-dark">
+                    <span class="pcoded-micon"><i class="ti-calendar"></i><b>FC</b></span>
+                    <span class="pcoded-mtext" data-i18n="nav.form-components.main">Lịch làm việc</span>
+                    <span class="pcoded-mcaret"></span>
+                </a>
+            </li>
+        </ul>
+
         <div class="pcoded-navigation-label" data-i18n="nav.category.other">Thành Viên</div>
         <ul class="pcoded-item pcoded-left-item">
             <li class="{{ Request::routeIs('admin-list-user') ? 'active' : '' }}">

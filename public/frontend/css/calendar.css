@@ -1,0 +1,51 @@
+.box-section-calendar .unset-boder{
+    border: unset !important;
+}
+
+.box-section-calendar .border-bottom {
+    border-bottom: 1px solid #ddd;
+}
+.box-section-calendar .nav-tab-calendar {
+    width: 500px;
+}
+.box-section-calendar .nav-link i{
+    margin-right: 10px;
+    font-size: 17px;
+}
+.box-section-calendar .table-responsive {
+    width: 100%;
+}
+.box-section-calendar .label-blur {
+    min-width: 25px;
+    color: #b1b1b1;
+    display: inline-block;
+}
+.box-section-calendar .shift-title {
+    font-size: 15px;
+}
+.box-section-calendar .dropdown .btn-show-more {
+    background-color: #448aff;
+    color: #fff;
+    padding: 0 15px;
+    padding-top: 3px;
+    font-size: 16px;
+}
+.box-section-calendar .dropdown .btn-show-more i{
+    margin: unset;
+}
+.box-section-calendar .content-line {
+    display: flex;
+    align-items: center;
+}
+.box-section-calendar .content-line i {
+    font-size: 18px;
+    min-width: 25px;
+    color: #b1b1b1;
+    display: inline-block;
+}
+.box-section-calendar .mx-input {
+    height: 35px;
+}
+.box-section-calendar .interval-day .mx-datepicker {
+    width: 100% !important;
+}
