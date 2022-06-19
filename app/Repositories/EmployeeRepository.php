@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Repositories;
 
 use App\Repositories\BaseRepository;
@@ -25,11 +26,12 @@ class EmployeeRepository extends BaseRepository
         return [];
     }
 
-    public function register($arrData = []){
+    public function register($arrData = [])
+    {
         $employee = new $this->model;
         $employee->fullname = $arrData['fullname'];
         $employee->email = $arrData['email'];
-        $employee->password= bcrypt($arrData['password']);
+        $employee->password = bcrypt($arrData['password']);
         $employee->employee_code = $arrData['employee_code'];
         $employee->branch_id = $arrData['branch_id'];
         $employee->position_id = $arrData['position_id'];
@@ -57,7 +59,8 @@ class EmployeeRepository extends BaseRepository
         return $employee;
     }
 
-    public function updateTokenVerifyEmail ($arrData = []) {
+    public function updateTokenVerifyEmail($arrData = [])
+    {
         $employee = $this->find($arrData['id']);
         $employee->email_confirm_token = $arrData['email_confirm_token'];
         $employee->save();
@@ -88,10 +91,11 @@ class EmployeeRepository extends BaseRepository
         return false;
     }
 
-    public function changePasssword($newPass, $id){
+    public function changePasssword($newPass, $id)
+    {
         $employee = $this->model->find($id);
         if ($employee) {
-            $employee->password= bcrypt($newPass);
+            $employee->password = bcrypt($newPass);
             $employee->save();
             return $employee;
         }

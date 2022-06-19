@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Branch;
+use App\Models\Employee;
 use App\Repositories\EmployeeRepository;
 use Illuminate\Http\Request;
 use \Illuminate\Support\Str;
 use Validator;
+use App\Models\Attribute;
+use Illuminate\Database\Eloquent\Builder;
 
 class EmployeeController extends Controller
 {
@@ -63,25 +66,23 @@ class EmployeeController extends Controller
     public function showFormCreate()
     {
         $branchs = Branch::all();
-        return view('admin.user.create',compact('branchs'));
+        return view('admin.user.create', compact('branchs'));
     }
 
     public function addUser(Request $request)
     {
+        $branchCode = Branch::find($request->branch)->code_branch;
         $validator = Validator::make($request->all(), [
             'fullname' => 'required|max:255',
             'email' => 'required|email|unique:users',
-            'personal_email' =>'required|email|unique:users',
             'employee_code' => 'required',
-
-
         ], [
             'fullname.required' => 'Họ và Tên không được để trống',
             'fullname.max' => 'Họ và Tên không được quá 255 ký tự',
             'email.required' => 'Email không được để trống',
             'email.unique' => 'Email này đã tồn tại, vui lòng nhập mail khác hoặc đăng nhập',
             'email.email' => 'Email không đúng định dạng',
-            'personal_email.required'=> "Email này đã tồn tại, vui lòng nhập mail khác hoặc đăng nhập",
+            'personal_email.required' => "Email này đã tồn tại, vui lòng nhập mail khác hoặc đăng nhập",
             'personal_email.email' => 'Email không đúng định dạng',
         ]);
 
@@ -97,7 +98,7 @@ class EmployeeController extends Controller
             'fullname' => $request->fullname,
             'email' => $request->email,
             'personal_email' => $request->personal_email,
-            'employee_code' => $request->employee_code,
+            'employee_code' => $branchCode,
             'password' => $passWord,
             'status' => $request->status,
             'gender' => $request->gender,
@@ -150,12 +151,16 @@ class EmployeeController extends Controller
             return abort(404);
         }
 
-        return view('admin.user.update', compact('employee','branchs'));
+        return view('admin.user.update', compact('employee', 'branchs'));
     }
 
     public function showInfoUser($id)
     {
-        $employee = $this->employeeRepo->find($id);
+        $employee = Employee::with('positions', 'branch')->find($id);
+        // $employee_attributes = $employee->attributes->load('attribute');
+        // dd($employee_attributes->attribute);
+
+        // dd($employee);
         if (!$employee) {
             return abort(404);
         }
