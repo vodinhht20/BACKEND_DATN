@@ -33,18 +33,32 @@ class TimekeepingController extends Controller
                 'error_code' => 'field_required'
             ], 404);
         }
+
         $currentDate = Carbon::now();
         $currentAdminId = Auth::user()->id;
+        $latitude = (float)$request->latitude;
+        $longitude = (float)$request->longitude;
         $options = [
             'ip' => $request->ip(),
-            'latitude' => $request->input('latitude', null),
-            'longitude' => $request->input('longitude', null),
+            'latitude' => $latitude,
+            'longitude' => $longitude,
             'type' => config('timekeep.type.checkin'),
             'date' => $currentDate->format('Y-m-d'),
             'employee_id' => $currentAdminId,
             'checkin_at' => $currentDate,
             'source' => $request->header('User-Agent')
         ];
+
+        $isLocaionInBranch = $this->timekeepRepo->isLocaionInBranch($longitude, $latitude, $currentAdminId);
+        if (!$isLocaionInBranch) {
+            $options['status'] = config('timekeep.status.failed');
+            event(new HandleCheckIn($options));
+            return response()->json([
+                'message' => 'Checkin thất bại. Bạn không thể chấm công ở địa điểm này',
+                'ip' => $request->ip(),
+                'error_code' => 'checkin_failed'
+            ]);
+        }
 
         DB::beginTransaction();
         $result = null;

@@ -12,9 +12,18 @@ class CompanyController extends Controller
 {
     public function info(Request $request)
     {
-        $bran = BranCompany::OrderBy('id', 'asc')->paginate(5);
         $company = ConfixCompany::OrderBy('id', 'asc')->paginate(5);
-        return view('admin.company.info', compact('company', 'bran'));
+        return view('admin.company.info', compact('company'));
+    }
+
+    public function branchs(){
+        $bran = BranCompany::OrderBy('id', 'asc')->paginate(5);
+        return view('admin.company.branchs', compact('bran'));
+    }
+
+    public function structure(Request $request)
+    {
+        return view('admin.company.structure');
     }
 
     public function worker(Request $request)
@@ -47,12 +56,12 @@ class CompanyController extends Controller
         $bran = new BranCompany();
         $bran->fill($request->all());
         $bran -> save();
-        return redirect('company/info');
+        return redirect('company/branchs');
     }
 
     public function delete($id){
         BranCompany::find($id)->delete();
-        return redirect('company/info');
+        return redirect('company/branchs');
     }
 
     public function updatebranch($id){
@@ -64,7 +73,7 @@ class CompanyController extends Controller
         $bran = BranCompany::find($id);
         $bran -> fill($request->all());
         $bran -> save();
-        return redirect('company/info');
+        return redirect('company/branchs');
     }
 }
 ?>

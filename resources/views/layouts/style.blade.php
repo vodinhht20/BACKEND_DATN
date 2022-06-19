@@ -1,8 +1,17 @@
-<link rel="stylesheet" href="{{asset('frontend')}}/css/app.css?v1.0.2">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
-    integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
-<link rel="stylesheet" href="{{asset('frontend')}}/themify-icons/themify-icons.css">
-<link rel="stylesheet" href="{{asset('frontend')}}/bootstrap/css/bootstrap.min.css">
-<link rel="stylesheet" href="{{asset('frontend')}}/owlcarousel/assets/owl.carousel.min.css">
-<link rel="stylesheet" href="{{asset('frontend')}}/owlcarousel/assets/owl.theme.default.min.css">
+<!--====== Favicon Icon ======-->
+<link rel="icon" href="{{asset('frontend')}}/image/camel-small.png" type="image/x-icon">
+        
+<!--====== Animate CSS ======-->
+<link rel="stylesheet" href="{{asset('frontend/index')}}/assets/css/animate.css">
+    
+<!--====== lineicons CSS ======-->
+<link rel="stylesheet" href="{{asset('frontend/index')}}/assets/css/lineicons.css">
+    
+<!--====== Bootstrap CSS ======-->
+<link rel="stylesheet" href="{{asset('frontend/index')}}/assets/css/bootstrap.min.css">
 
+<!--====== Default CSS ======-->
+<link rel="stylesheet" href="{{asset('frontend/index')}}/assets/css/default.css">
+
+<!--====== Style CSS ======-->
+<link rel="stylesheet" href="{{asset('frontend/index')}}/assets/css/style.css">

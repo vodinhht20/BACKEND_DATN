@@ -1,0 +1,64 @@
+@media(min-width: 1200px) {
+  .branchs .tabs-left {
+    margin-top: 2vw;
+  }
+
+  .branchs .tabs-left li.active {
+    border-left: 3px solid var(--ui-outline);
+  }
+
+
+  .branchs .tabs-left li {
+    background-color: #fff;
+    width: 9vw !important;
+    height: 6.42vw;
+    border-radius: 20px;
+    margin-top: 0.8vw !important;
+    margin-right: 1vw !important;
+  }
+
+  .branchs .tabs-left li a:hover {
+    border-left: 3px solid var(--ui-outline);
+    border-radius: 15px;
+    height: 6.33vw;
+  }
+
+  .branchs .tabs-left .nav-link.active {
+    border-left: 3px solid var(--ui-outline);
+    height: 6.33vw;
+    border-radius: 15px;
+  }
+
+  .branchs .tab-pane {
+    margin-top: 2.8vw;
+    margin-left: 2vw;
+  }
+
+  .table-responsive {
+    width: 100%;
+  }
+
+  .branchs {
+    display: flex;
+  }
+}
+
+@media(max-width: 1200px) {
+  .md-tabs {
+    width: 100%;
+    display: flex;
+  }
+  .md-tabs .nav-item{
+    border-radius: 15px;
+    background-color: #fff;
+  }
+  .branchs .tab-pane{
+    margin-top: 2.8vw;
+  }
+  .branchs .nav-tabs .btn-item{
+    margin-left: 2vw;
+  }
+  .branchs .tabs-left li.active {
+    border-top: 4px solid var(--ui-outline);
+}
+}
