@@ -31,17 +31,27 @@
 @endsection
 @section('content')
 <div class="company-info">
-    <ul class="nav nav-tabs md-tabs tabs-left b-none4" role="tablist">
+    <ul class="nav nav-tabs md-tabs tabs-left b-none" role="tablist">
         <li class="nav-item">
-            <a class="nav-link" href="{{route("company.info")}}" role="tab" aria-expanded="false">
-                <i class="ti-agenda"></i><br>
-                Trở lại<br> trang cài đặt</a>
+            <a class="nav-link" href="{{ route('company.info') }}" role="tab" aria-expanded="false">
+                <i class="ti-layout-media-overlay"></i><br>
+                Thông tin <br> công ty</a>
+        </li>
+        <li class="nav-item btn-item active">
+            <a class="nav-link" href="{{ route('company.branchs') }}" role="tab" aria-expanded="false">
+                <i class="ti-wallet"></i><br>
+                Hệ thống <br> chi nhánh</a>
+        </li>
+        <li class="nav-item btn-item">
+            <a class="nav-link" href="{{ route('company.structure') }}" role="tab" aria-expanded="false">
+                <i class="ti-wallet"></i><br>
+                Cơ cấu <br> tổ chức</a>
         </li>
     </ul>
     <div class="tab-pane4" id="messages5" role="tabpanel">
         <div class="col-md-6">
-            <div class="card1">
-                <div class="card-header4">
+            <div class="card">
+                <div class="card-header">
                     <h5>Cập nhật chi nhánh</h5>
                 </div>
                 <div class="card-block4">

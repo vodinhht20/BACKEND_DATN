@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Branch;
+use App\Models\Employee;
 use App\Repositories\EmployeeRepository;
 use Illuminate\Http\Request;
 use \Illuminate\Support\Str;
 use Validator;
+use App\Models\Attribute;
+use Illuminate\Database\Eloquent\Builder;
 
 class EmployeeController extends Controller
 {
@@ -61,20 +65,25 @@ class EmployeeController extends Controller
 
     public function showFormCreate()
     {
-        return view('admin.user.create');
+        $branchs = Branch::all();
+        return view('admin.user.create', compact('branchs'));
     }
 
     public function addUser(Request $request)
     {
+        $branchCode = Branch::find($request->branch)->code_branch;
         $validator = Validator::make($request->all(), [
             'fullname' => 'required|max:255',
             'email' => 'required|email|unique:users',
+            'employee_code' => 'required',
         ], [
             'fullname.required' => 'Họ và Tên không được để trống',
             'fullname.max' => 'Họ và Tên không được quá 255 ký tự',
             'email.required' => 'Email không được để trống',
             'email.unique' => 'Email này đã tồn tại, vui lòng nhập mail khác hoặc đăng nhập',
             'email.email' => 'Email không đúng định dạng',
+            'personal_email.required' => "Email này đã tồn tại, vui lòng nhập mail khác hoặc đăng nhập",
+            'personal_email.email' => 'Email không đúng định dạng',
         ]);
 
         if ($validator->fails()) {
@@ -88,7 +97,14 @@ class EmployeeController extends Controller
         $option = [
             'fullname' => $request->fullname,
             'email' => $request->email,
+            'personal_email' => $request->personal_email,
+            'employee_code' => $branchCode,
             'password' => $passWord,
+            'status' => $request->status,
+            'gender' => $request->gender,
+            'branch_id' => $request->branch,
+            'position_id' => $request->position,
+            'is_checked' => $request->is_checked,
             'email_verified_at' => now()
         ];
 
@@ -98,6 +114,10 @@ class EmployeeController extends Controller
 
         if (isset($request->phone)) {
             $option['phone'] = $request->phone;
+        }
+
+        if (isset($request->note)) {
+            $option['note'] = $request->note;
         }
 
         if ($request->hasFile('avatar')) {
@@ -126,16 +146,21 @@ class EmployeeController extends Controller
     public function showFormUpdate($id)
     {
         $employee = $this->employeeRepo->find($id);
+        $branchs = Branch::all();
         if (!$employee) {
             return abort(404);
         }
 
-        return view('admin.user.update', compact('employee'));
+        return view('admin.user.update', compact('employee', 'branchs'));
     }
 
     public function showInfoUser($id)
     {
-        $employee = $this->employeeRepo->find($id);
+        $employee = Employee::with('positions', 'branch')->find($id);
+        // $employee_attributes = $employee->attributes->load('attribute');
+        // dd($employee_attributes->attribute);
+
+        // dd($employee);
         if (!$employee) {
             return abort(404);
         }

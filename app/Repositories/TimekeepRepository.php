@@ -5,6 +5,7 @@ use App\Models\Employee;
 use App\Models\Timekeep;
 use App\Models\TimekeepDetail;
 use App\Repositories\BaseRepository;
+use App\Service\TimekeepService;
 use App\Service\TimesheetService;
 use Carbon\Carbon;
 
@@ -34,6 +35,13 @@ class TimekeepRepository extends BaseRepository
             ->first();
     }
 
+    /**
+     * Hàm lấy ra dữ liệu chấm công
+     *
+     * @param string $date
+     * @param integer $employeeId
+     * @return array
+     */
     public function dataCheckinByDay(string $date, $employeeId): array
     {
         $type = 0;
@@ -65,5 +73,27 @@ class TimekeepRepository extends BaseRepository
             'working_time' => $workingTime,
             'date' => $date
         ];
+    }
+
+    /**
+     * Hàm kiểm tra xem vị trí có nằm chi nhánh không
+     *
+     * @param integer $longitude
+     * @param integer $latitude
+     * @param integer $employeeId
+     * @return boolean
+     */
+    public function isLocaionInBranch($longitude, $latitude, $employeeId): bool
+    {
+        $timekeepService = new TimekeepService();
+        $employee = Employee::with('branch')->find($employeeId);
+        $branch = $employee->branch;
+        if ($branch) {
+            $rootLongitude = (float)$branch->longtitude;
+            $rootLatitude = (float)$branch->latitude;
+            $radius = (float)$branch->radius;
+            return $timekeepService->isLocationInRadius($rootLongitude, $rootLatitude, $longitude, $latitude, $radius);
+        }
+        return false;
     }
 }

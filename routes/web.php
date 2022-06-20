@@ -33,7 +33,9 @@ use Stevebauman\Location\Facades\Location;
 |
 */
 
-Route::get('/', function (){ return view('index'); })->name("home.index");
+Route::get('/', function () {
+    return view('index');
+})->name("home.index");
 Route::get('/san-pham/{slug}', [ProductController::class, 'showDetail'])->name("product.showDetail");
 Route::get('/tin-tuc', [PostController::class, 'index'])->name("new.index");
 Route::get('/login', [AuthController::class, 'showFormLogin'])->name("login");
@@ -57,7 +59,7 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::prefix('/role')->group(function () {
         Route::get('/', [RoleController::class, 'index'])->name('admin-role.index');
     });
-    Route::prefix('/application')->group(function() {
+    Route::prefix('/application')->group(function () {
         Route::get('/', [ApplicationController::class, 'index'])->name('application-view');
         Route::get('/detail', [ApplicationController::class, 'detail'])->name('application-detail');
         Route::get('/nest', [ApplicationController::class, 'nestView'])->name('application-nestView');
@@ -89,8 +91,11 @@ Route::prefix('/company')->name("company.")->group(function () {
     Route::get('/updatebranch/{id}', [CompanyController::class, 'updatebranch'])->name("updatebranch");
     Route::post('/updatebranch/{id}', [CompanyController::class, 'updatebranch1'])->name("updatebranch");
     Route::get('/delete/{id}', [CompanyController::class, 'delete'])->name("delete");
+    Route::get('/structure', [CompanyController::class, 'structure'])->name("structure");
+    Route::get('/branchs', [CompanyController::class, 'branchs'])->name("branchs");
 });
 Route::get('/timesheet', [TimesheetController::class, 'timesheet'])->name("timesheet");
+<<<<<<< HEAD
 
 Route::get('/test', function(Request $request) {
     return view('test');
@@ -145,3 +150,11 @@ Route::get('delete', function() {
     Storage::disk('google')->restore($file['path']);
     return 'File was deleted from Google Drive';
 });
+=======
+Route::get('/test', function (Request $request) {
+    $ip = $request->ip();
+    dump($ip);
+    $position = Location::get($ip);
+    dd($position);
+});
+>>>>>>> c61c5680a7f0b34d055841fbc14ae3efc7ca7462

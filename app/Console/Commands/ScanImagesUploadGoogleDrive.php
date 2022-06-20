@@ -28,6 +28,7 @@ class ScanImagesUploadGoogleDrive extends Command
      */
     public function handle()
     {
+        \Log::debug('Đã chạy '.date('Y-m-d H:i'));
         // $imageStorage = Storage::get('public/avatars/'.'CM001_dsflsjljlfsjldfjfdjs_2022-06-11.png');
         
         $dataFake = [
@@ -43,7 +44,7 @@ class ScanImagesUploadGoogleDrive extends Command
                 $basename = explode('_', $file['basename']);
                 foreach ($dataFake as $value) {
                     if ($basename['0'] == $value['id'] && $value['status'] == 0) {
-                        \Log::debug('Upload tự động'.date('Y-m-d H:i'));
+                        \Log::debug('Upload tự động thành công'.date('Y-m-d H:i'));
                         Storage::disk('google')->put($value['image'], Storage::get('public/'.$path));
                         unlink(storage_path('app/public/'.$path));
                     }
