@@ -1,6 +1,7 @@
 <?php
 namespace App\Repositories;
 
+use App\Models\Employee;
 use App\Repositories\BaseRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -54,7 +55,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
 
     public function getAllUserByPublic($take = 10)
     {
-        return $this->model->where('status', 1)->whereNotIn('id', [Auth::user()->id])->orderBy('updated_at', 'desc')->paginate($take);
+        return $this->model->where('status', Employee::status['active'])->whereNotIn('id', [Auth::user()->id])->orderBy('updated_at', 'desc')->paginate($take);
     }
 
     public function confirmEmail($id)
