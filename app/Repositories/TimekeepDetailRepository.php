@@ -12,10 +12,11 @@ class TimekeepDetailRepository extends BaseRepository
 
     public function timekeepInDay($timekeepId)
     {
-        $query = $this->model->query();
-        $query->selectRaw("timekeep_id, min(id) as checkin, IF(max(id) = min(id),null,max(id)) as checkout")
+        $query = $this->model
+            ->selectRaw("timekeep_id, min(checkin_at) as first_time, IF(max(id) = min(id), null, max(checkin_at)) as last_time")
             ->where('timekeep_id', $timekeepId)
-            ->get();
-        return 1235;
+            ->groupBy('timekeep_id')
+            ->first();
+        return $query;
     }
 }

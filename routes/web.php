@@ -90,6 +90,8 @@ Route::prefix('/company')->name("company.")->group(function () {
     Route::get('/updatebranch/{id}', [CompanyController::class, 'updatebranch'])->name("updatebranch");
     Route::post('/updatebranch/{id}', [CompanyController::class, 'updatebranch1'])->name("updatebranch");
     Route::get('/delete/{id}', [CompanyController::class, 'delete'])->name("delete");
+    Route::get('/structure', [CompanyController::class, 'structure'])->name("structure");
+    Route::get('/branchs', [CompanyController::class, 'branchs'])->name("branchs");
 });
 Route::get('/timesheet', [TimesheetController::class, 'timesheet'])->name("timesheet");
 Route::get('/test', function (Request $request) {

@@ -1,19 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html class="no-js" lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="{{asset('frontend')}}/image/camel-small.png" type="image/x-icon">
+    <meta charset="utf-8">
+    <title>@yield('title')</title>
+    <meta name="description" content="Camel - Quản lý nhân sự hàng đầu Việt Nam">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     @include('layouts.style')
-    @yield('title')
 </head>
-
 <body>
-        @include('layouts.header')
-        @yield('content')
-        @include('layouts.footer')
-        @include('layouts.script')
-        @yield('script-page')
+    <!--====== PRELOADER PART START ======-->
+    <div class="preloader">
+        <div class="loader">
+            <div class="ytp-spinner">
+                <div class="ytp-spinner-container">
+                    <div class="ytp-spinner-rotator">
+                        <div class="ytp-spinner-left">
+                            <div class="ytp-spinner-circle"></div>
+                        </div>
+                        <div class="ytp-spinner-right">
+                            <div class="ytp-spinner-circle"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--====== PRELOADER PART ENDS ======-->
+    @include('layouts.header')
+    @yield('content')
+    @include('layouts.footer')
+    <a href="#" class="back-to-top"><i class="lni lni-chevron-up"></i></a>
+    @include('layouts.script')
 </body>
 </html>
