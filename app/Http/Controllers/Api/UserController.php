@@ -142,10 +142,10 @@ class UserController extends Controller
         $employee = JWTAuth::toUser($request->access_token);
 
         $validator = Validator::make($request->all(), [
-            'avatar' => 'required|mimes:jpeg,jpg,png,gif|max:1000',
+            'avatar' => 'required|mimes:jpeg,jpg,png,gif|max:10000',
         ],[
             'avatar.required' => 'Vui lòng chọn file',
-            'avatar.max' => 'File của bạn vượt quá 1MB',
+            'avatar.max' => 'File của bạn vượt quá 10MB',
             'avatar.mimes' => 'File bạn chọn không phải file ảnh',
         ]);
 
