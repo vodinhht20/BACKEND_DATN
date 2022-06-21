@@ -7,6 +7,7 @@ use App\Repositories\EmployeeRepository;
 use App\Repositories\UserRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserController extends Controller
@@ -114,5 +115,24 @@ class UserController extends Controller
                 "id" => $profile->id,
                 'profile' => $profile
         ], 200);
+    }
+
+    protected function changePasssword(Request $request){
+        $employee = JWTAuth::toUser($request->access_token);
+        if (Hash::check($request->password_old, $employee->password)) { 
+            $employee->fill([
+                'password' => Hash::make($request->password_new)
+            ])->save();
+            
+            return response()->json([
+                'error_code' => 'success',
+                'message' => 'Thay đổi mật khẩu thành công!'
+            ], 200);
+        }
+
+        return response()->json([
+            'error_code' => 'error',
+            'message' => 'Mật khẩu cũ không đúng!'
+        ], 403);
     }
 }

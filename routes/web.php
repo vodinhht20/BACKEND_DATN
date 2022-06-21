@@ -56,7 +56,7 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::prefix('/role')->group(function () {
         Route::get('/', [RoleController::class, 'index'])->name('admin-role.index');
     });
-    Route::prefix('/application')->group(function() {
+    Route::prefix('/application')->group(function () {
         Route::get('/', [ApplicationController::class, 'index'])->name('application-view');
         Route::get('/detail', [ApplicationController::class, 'detail'])->name('application-detail');
         Route::get('/nest', [ApplicationController::class, 'nestView'])->name('application-nestView');
@@ -92,7 +92,7 @@ Route::prefix('/company')->name("company.")->group(function () {
     Route::get('/branchs', [CompanyController::class, 'branchs'])->name("branchs");
 });
 Route::get('/timesheet', [TimesheetController::class, 'timesheet'])->name("timesheet");
-Route::get('/test', function(Request $request) {
+Route::get('/test', function (Request $request) {
     $ip = $request->ip();
     dump($ip);
     $position = Location::get($ip);

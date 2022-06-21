@@ -31,6 +31,7 @@ Route::post('auth', [AuthController::class, 'isValidToken']);
 Route::middleware('jwt.auth')->group(function () {
     Route::get('users', [UserController::class, 'index']);
     Route::get('profile', [UserController::class, 'profile']);
+    Route::post('change-password', [UserController::class, 'changePasssword']);
     Route::prefix('checkin')->group(function () {
         Route::post('', [TimekeepingController::class, 'checkIn'])->middleware('checkip');
         Route::get('data-checkin', [TimekeepingController::class, 'getCurrentDataCheckin']);
