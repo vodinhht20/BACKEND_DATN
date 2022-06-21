@@ -29,9 +29,12 @@ Route::post('logout', [AuthController::class, 'logout']);
 Route::post('auth', [AuthController::class, 'isValidToken']);
 
 Route::middleware('jwt.auth')->group(function () {
+    //user
     Route::get('users', [UserController::class, 'index']);
     Route::get('profile', [UserController::class, 'profile']);
     Route::post('change-password', [UserController::class, 'changePasssword']);
+    Route::post('update-avatar', [UserController::class, 'updateAvatar']);
+    //user
     Route::prefix('checkin')->group(function () {
         Route::post('', [TimekeepingController::class, 'checkIn'])->middleware('checkip');
         Route::get('data-checkin', [TimekeepingController::class, 'getCurrentDataCheckin']);
