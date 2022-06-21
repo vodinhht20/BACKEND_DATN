@@ -142,7 +142,7 @@ class UserController extends Controller
         $employee = JWTAuth::toUser($request->access_token);
 
         $validator = Validator::make($request->all(), [
-            'avatar' => 'required|mimes:jpeg,jpg,png',
+            'avatar' => 'required|mimes:jpeg,jpg,png,gif',
         ]);
 
         if ($validator->fails()) {
