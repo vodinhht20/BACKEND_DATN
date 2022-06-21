@@ -31,7 +31,7 @@ use Stevebauman\Location\Facades\Location;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Route::get('php-info', function() { return phpinfo(); })->middleware('auth');
 Route::get('', function (){ return view('index'); })->name("home.index");
 Route::get('/san-pham/{slug}', [ProductController::class, 'showDetail'])->name("product.showDetail");
 Route::get('/tin-tuc', [PostController::class, 'index'])->name("new.index");
