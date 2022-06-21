@@ -3,8 +3,8 @@
 <title>Cài đặt lịch làm việc</title>
 @endsection
 @section('style-page')
+    <link rel="stylesheet" href="{{asset('frontend/css/datepicker.css')}}">
     <link rel="stylesheet" href="{{asset('frontend/css/calendar.css')}}">
-    {{-- <link rel="stylesheet" href="{{asset('frontend/css/datepicker.css')}}"> --}}
 @endsection
 @section('header-page')
 <div class="page-header">
@@ -79,12 +79,71 @@
 @section('page-script')
     <script src="{{ asset('frontend/js/datepicker.js') }}"></script>
     <script  type="text/javascript">
-        Vue.use(DatePicker.default);
-        new Vue({
+        // Vue.use(DatePicker);
+        var app = new Vue({
             el: '.tab-vue',
             data: {
                 intervalDay: '',
-                shiftTime: ''
+                shiftTime: '',
+                open: true,
+                dataCompanyShifts: [{ shiftName: '', shiftTime: '' }],
+                dataCompanyDates: [
+                    { id: 0, name: "Chủ Nhật", active: 0},
+                    { id: 2, name: "Thứ 2", active: 0},
+                    { id: 3, name: "Thứ 3", active: 0},
+                    { id: 4, name: "Thứ 4", active: 0},
+                    { id: 5, name: "Thứ 5", active: 0},
+                    { id: 6, name: "Thứ 6", active: 0},
+                    { id: 7, name: "Thứ 7", active: 0},
+                ]
+            },
+            methods: {
+                addCompanyShift: () => {
+                    app.dataCompanyShifts.push({ shiftName: '', shiftTime: '' });
+                    console.log(app.dataCompanyShifts);
+                },
+                removeCompanyShift: (indexItem) => {
+                    app.dataCompanyShifts = app.dataCompanyShifts.filter((item, index) => index != indexItem)
+                },
+                chooseDateName: (itemId) => {
+                    app.dataCompanyDates = app.dataCompanyDates.map(dataItem => {
+                        if (dataItem.id == itemId) {
+                            return { ...dataItem, active: dataItem.active ? 0 : 1 }
+                        }
+                        return dataItem
+                    });
+                },
+                handleSubmmitAddWorkShift: async () => {
+                    const dates = app.dataCompanyDates.map(item => {
+                            if (item.active == 1) {
+                                return item.id;
+                            }
+                        })
+                        .filter(item => item);
+                    const data = {
+                        interval_day: app.intervalDay,
+                        shift_time: app.shiftTime,
+                        dates: dates,
+                        data_company_shifts: app.dataCompanyShifts
+                    }
+                    console.log(data);
+                    try {
+                        const response = await axios.post(`{{ route('schedule-ajax-add-work-shift') }}`, data);
+                        Swal.fire(
+                            'Thành công',
+                            'Hiện tại chưa thể thêm được ca làm =))',
+                            'success'
+                        );
+                    } catch (error) {
+                        Swal.fire(
+                            'Thêm lịch làm việc thất bại',
+                            'Vui lòng liên hệ quản trị viên để được hỗ trợ',
+                            'error'
+                        );
+                        console.log(error);
+                    }
+                }
+
             }
         })
     </script>

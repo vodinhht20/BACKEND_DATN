@@ -66,6 +66,7 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     });
     Route::prefix('/schedule')->group(function () {
         Route::get('/calender', [ScheduleWorkController::class, 'calendar'])->name('schedule-calender-index');
+        Route::post('/ajax-add-work-shift', [ScheduleWorkController::class, 'ajaxAddWorkShift'])->name('schedule-ajax-add-work-shift');
     });
     Route::post('/ajax-add-role-user', [RoleController::class, 'addRole'])->name('ajax-add-role-user');
     Route::post('/ajax-get-role-user', [RoleController::class, 'getRole'])->name('ajax-get-role-user');

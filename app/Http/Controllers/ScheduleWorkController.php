@@ -10,4 +10,9 @@ class ScheduleWorkController extends Controller
     {
         return view('admin.schedule.calendar');
     }
+
+    public function ajaxAddWorkShift(Request $request)
+    {
+        return response()->json($request->all());
+    }
 }

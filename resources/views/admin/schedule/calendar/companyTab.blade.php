@@ -157,35 +157,33 @@
                 </div>
                 <div class="form-group">
                     <label for="recipient-name" class="col-form-label">Ca làm việc</label>
-                    <div>
-                        <div class="row mt-2">
-                            <div class="col-10 row" style="margin: unset; grid-column-gap: 10px; align-items: center;">
-                                <input type="text" class="form-control col-5" name="shiftName[]" placeholder="Tên ca làm">
-                                <date-picker v-model="shiftTime" lang="vn" type="time" format="hh:mm" value-type="format" range placeholder="Select time"></date-picker>
-                                <input type="hidden" class="form-control col-6" v-value="shiftTime" placeholder="Chọn ngày">
+                    <div v-for="(companyShift, index) in dataCompanyShifts" class="company-shift">
+                        <div class="row mt-2 align-items-center">
+                            <div class="col-11 row" style="margin: unset; grid-column-gap: 10px; align-items: center;">
+                                <input type="text" class="form-control col-5" v-model="companyShift.shiftName" placeholder="Tên ca làm">
+                                <date-picker v-model="companyShift.shiftTime" lang="vn" type="time" range placeholder="Select time" format="HH:mm" value-type="format"></date-picker>
                             </div>
-                            <div class="col-2"><i class="ti-close"></i></div>
+                            <div class="col-1 btn-remote btn-remove" v-if="dataCompanyShifts.length > 1  && dataCompanyShifts.length != index+1" @click="removeCompanyShift(index)"><i class="ti-close"></i></div>
+                            <div class="col-1 btn-remote btn-add" v-else @click="addCompanyShift"><i class="ti-plus"></i></div>
                         </div>
-                        <div class="row mt-2">
-                            <div class="col-10 row" style="margin: unset; grid-column-gap: 10px; align-items: center;">
-                                <input type="text" class="form-control col-5" placeholder="Tên ca làm">
-                                <date-picker v-model="shiftTime" lang="vn" type="time" format="hh:mm" value-type="format" range placeholder="Select time"></date-picker>
-                                <input type="hidden" class="form-control col-6" v-value="shiftTime" placeholder="Chọn ngày">
-                            </div>
-                            <div class="col-2"><i class="ti-plus"></i></div>
-                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-form-label">Ngày áp dụng trong tuần</label>
+                    <div class="box-day-name">
+                        <span :class="dataCompanyDate.active ? 'item-day-name active' : 'item-day-name' " v-for="dataCompanyDate in dataCompanyDates" @click="chooseDateName(dataCompanyDate.id)">@{{ dataCompanyDate.name }}</span>
                     </div>
                 </div>
                 <div class="form-group interval-day">
                     <label class="col-form-label">Thời gian hiệu lực</label>
-                    <date-picker v-model="intervalDay" lang="vn" value-type="hh:mm" range value-type="format" format="MM-DD-YYYY" name="interval-day"></date-picker>
+                    <date-picker v-model="intervalDay" lang="vn" range value-type="format" format="MM-DD-YYYY"></date-picker>
                     <input type="hidden" v-if="intervalDay" :value="intervalDay">
                 </div>
               </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
+          <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Hủy bỏ</button>
+          <button type="button" class="btn btn-primary btn-sm" @click="handleSubmmitAddWorkShift()">Lưu lại</button>
         </div>
       </div>
     </div>

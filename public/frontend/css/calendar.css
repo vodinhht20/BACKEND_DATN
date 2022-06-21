@@ -49,3 +49,54 @@
 .box-section-calendar .interval-day .mx-datepicker {
     width: 100% !important;
 }
+.company-shift .mx-datepicker-range{
+    width: 55%;
+}
+.box-section-calendar .btn-remote {
+    padding: unset;
+}
+.box-section-calendar .btn-remote i {
+    font-size: 13px;
+    border-radius: 50%;
+    padding: 5px;
+    color: #fff;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.box-section-calendar .btn-remote i:hover {
+    opacity: 0.8;
+}
+.box-section-calendar .btn-remove i {
+    background-color: rgb(230, 27, 27);
+    opacity: 0.8;
+}
+.box-section-calendar .btn-add i {
+    background-color: rgb(9, 173, 31);
+    opacity: 0.8;
+}
+.box-section-calendar .box-day-name {
+    display: flex;
+    grid-column-gap: 10px;
+}
+.box-section-calendar .box-day-name .item-day-name {
+    padding: 5px 15px;
+    color: #11c15b;
+    border: 1px solid #11c15b !important;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: 0.2s;
+    cursor: pointer;
+}
+.box-section-calendar .box-day-name .item-day-name:hover {
+    opacity: 0.8;
+}
+.box-section-calendar .box-day-name .active {
+    background-color: #11c15b;
+    color: #fff;
+}
+.mx-datepicker-popup {
+    z-index: 9999999999;
+}
+.box-section-calendar .mx-input-wrapper  input{
+    text-align: center;
+}
