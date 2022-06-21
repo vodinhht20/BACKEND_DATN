@@ -7,6 +7,8 @@ use App\Repositories\EmployeeRepository;
 use App\Repositories\UserRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserController extends Controller
@@ -114,5 +116,68 @@ class UserController extends Controller
                 "id" => $profile->id,
                 'profile' => $profile
         ], 200);
+    }
+
+    protected function changePasssword(Request $request){
+        $employee = JWTAuth::toUser($request->access_token);
+        if (Hash::check($request->password_old, $employee->password)) { 
+            $employee->fill([
+                'password' => Hash::make($request->password_new)
+            ])->save();
+            
+            return response()->json([
+                'error_code' => 'success',
+                'message' => 'Thay đổi mật khẩu thành công!'
+            ], 200);
+        }
+
+        return response()->json([
+            'error_code' => 'error',
+            'message' => 'Mật khẩu cũ không đúng!'
+        ], 403);
+    }
+
+    public function updateAvatar(Request $request): JsonResponse
+    {
+        $employee = JWTAuth::toUser($request->access_token);
+
+        $validator = Validator::make($request->all(), [
+            'avatar' => 'required|mimes:jpeg,jpg,png,gif|max:10000',
+        ],[
+            'avatar.required' => 'Vui lòng chọn file',
+            'avatar.max' => 'File của bạn vượt quá 10MB',
+            'avatar.mimes' => 'File bạn chọn không phải file ảnh',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $validator->messages()->first()
+            ], 403);
+        }
+
+        if ($request->hasFile('avatar')) { 
+            $urlImage = $this->storeImage($request, 'avatar');
+            $employee->fill([
+                'avatar' => $urlImage
+            ])->save();
+            
+            return response()->json([
+                'error_code' => 'success',
+                'message' => 'update avatar thành công!',
+                'image_links' => $urlImage
+            ], 200);
+        }
+
+        return response()->json([
+            'error_code' => 'error',
+            'message' => 'update avatar thất bại!'
+        ], 403);
+    }
+
+    protected function storeImage(Request $request, $name = 'image')
+    {
+        $path = $request->file($name)->store('public/avatars');
+        return substr($path, strlen('public/'));
     }
 }
