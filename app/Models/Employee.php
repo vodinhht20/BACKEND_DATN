@@ -10,6 +10,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
+
 class Employee extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles, SoftDeletes;
@@ -79,4 +80,10 @@ class Employee extends Authenticatable implements JWTSubject
     {
         return $this->belongsTo(Branch::class);
     }
+    public function timekeep()
+    {
+        return $this->hasMany(Timekeep::class, 'employee_id','id');
+    }
+
+
 }

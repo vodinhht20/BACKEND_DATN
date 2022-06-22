@@ -99,16 +99,16 @@
                         </div>
                     </div>
                     <div>
-                        <p>Có <b>3</b> nhân viên trong danh sách</p>
+                        <p>Có <b>...</b> nhân viên trong danh sách</p>
                     </div>
                     <div class="table-border-style">
                         <div class="table-responsive scrollbar-custom">
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
-                                        <th class="table-align-center text-position">Tên nhân viên</th>
+                                        <th>Tên nhân viên</th>
                                         @foreach ($formatDates as $date => $dateName)
-                                            <th class="{{ $loop->index == 0 ? "pl-index" : ''}}">
+                                            <th class="tabletimekeeps">
                                                 {{$date}}
                                                 <br/>
                                                 {{$dateName}}
@@ -127,29 +127,65 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    {{-- @foreach ($newTimekeeps as $newTimekeep)
+                                    {{var_dump($newTimekeep["worktime"])}}
+                                    @endforeach
+                                    {{die;}} --}}
+                                    @foreach($employ as $employes)
                                     <tr>
-                                        <th class="text-position" style="padding: 0;">Trần Trọng Anh</th>
-                                        @foreach ($formatDates as $date => $dateName)
-                                            <td class="{{ $loop->index == 0 ? "pl-index" : ''}}">
-                                                <div class="flex-col">
-                                                    <span>1</span>
-                                                    <div class="flex justify-center flex-wrap px-10" style="background-color: rgb(0, 177, 79);"></div>
-                                                </div>
-                                            </td>
+                                        <td>{{$employes->fullname}}</td>
+                                        @foreach ($formatDates as $date)
+                                        
+                                        @foreach($newTimekeeps as $newTimekeep )
+                                        @if ($newTimekeep["worktime"] >= 8 )
+                                        <td class="tabletimekeeps">
+                                            <div class="flex-col">
+                                                
+                                                <span>1</span>
+                                                <div class="flex justify-center flex-wrap px-10" style="background-color: rgb(0, 177, 79);"></div>
+                                            </div>
+                                        </td>
+                                        @endif
+                                        
+                                        @if($newTimekeep["worktime"] == 0)
+                                        <td class="tabletimekeeps">
+                                            <div class="flex-col">
+                                                <span>0</span>
+                                                <div class="flex justify-center flex-wrap px-10" style="background-color: rgb(187, 187, 187);"></div>
+                                            </div>
+                                        </td>
+                                        @endif
+                                        @if($newTimekeep["worktime"]>0.0 && $newTimekeep["worktime"] <8)
+                                        <td class="tabletimekeeps">
+                                            <div class="flex-col">
+                                                
+                                                <span>0.5</span>
+                                                <div class="flex justify-center flex-wrap px-10" style="background-color: rgb(255, 159, 10);"></div>
+                                            </div>
+                                        </td>
+                                        @endif
+                                        @endforeach
                                         @endforeach
                                         <td>1</td>
                                         <td>1</td>
                                         <td>1</td>
                                         <td>1</td>
                                         <td>1</td>
-                                        <td>40</td>
                                         <td>1</td>
                                         <td>1</td>
                                         <td>1</td>
                                         <td>1</td>
+                                        <td>1</td>
+                                        
                                     </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
+                        </div>
+                        <div  class=" dataTables_pager" style="margin-top: 30px">
+
+                            {!!$employ->links()!!}
+                
                         </div>
                     </div>
                 </div>
@@ -179,11 +215,7 @@
                 <button type="submit" class="btn btn-primary btn-sm" style="float:right; margin-right:30px">Lưu</button>
             </div>
         </div>
-        {{-- <div  class=" dataTables_pager">
-
-            {!!$formatDates->links()!!}
-
-        </div> --}}
+ 
     </div>
 
 @endsection
