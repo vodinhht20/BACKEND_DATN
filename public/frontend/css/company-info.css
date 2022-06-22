@@ -33,22 +33,22 @@
     }
 
     .company-info .col-xl-6 .b-none li.active {
-        border-left: 3px solid var(--ui-outline);
+        border-left: 4px solid var(--ui-outline);
     }
 
     .company-info .col-xl-6 .b-none li a.active {
-        border-left: 3px solid var(--ui-outline);
+        border-left: 4px solid var(--ui-outline);
         border-radius: 15px;
     }
 
     .company-info .col-xl-6 .b-none li a:hover {
-        border-left: 3px solid var(--ui-outline);
+        border-left: 4px solid var(--ui-outline);
         border-radius: 15px;
         height: 6.33vw;
     }
 
     .company-info .md-tabs .nav-link.active {
-        border-left: 3px solid var(--ui-outline);
+        border-left: 4px solid var(--ui-outline);
         height: 6.33vw;
     }
 
@@ -119,23 +119,23 @@
     }
 
     .company-info .b-none1 .nav-item {
-        border-left: 3px solid var(--ui-outline);
+        border-left: 4px solid var(--ui-outline);
     }
 
     .company-info .b-none3 .nav-item {
-        border-left: 3px solid var(--ui-outline);
+        border-left: 4px solid var(--ui-outline);
     }
 
     .company-info .b-none4 .nav-item {
-        border-left: 3px solid var(--ui-outline);
+        border-left: 4px solid var(--ui-outline);
     }
 
     .company-info .tabs-left li.active {
-        border-left: 3px solid var(--ui-outline);
+        border-left: 4px solid var(--ui-outline);
     }
 
     .company-info .tabs-left li a:hover {
-        border-left: 3px solid var(--ui-outline);
+        border-left: 4px solid var(--ui-outline);
         border-radius: 15px;
         height: 6.33vw;
     }

@@ -30,7 +30,6 @@
     </div>
 @endsection
 @section('content')
-    
     <div class="structure" translate="no">
         <ul class="nav nav-tabs md-tabs tabs-left b-none" role="tablist">
             <li class="nav-item">
@@ -53,70 +52,97 @@
             <ul>
                 <li>
                     <div class="treeview__level" data-level="A">
-                        <span class="level-title">Bịp</span>
+                        <span class="level-title">Tổng giám đốc</span>
                         <div class="treeview__level-btns">
                             <div class="btn btn-default btn-sm level-add"><span class="fa fa-times text-danger"></span>
                             </div>
                             <div class="btn btn-default btn-sm level-remove in"><span
                                     class="fa fa-trash text-danger"></span></div>
-                            <div class="btn btn-default btn-sm level-same in"><span>Thêm bịp cấp ngang bằng</span></div>
-                            <div class="btn btn-default btn-sm level-sub in"><span>Thêm bịp cấp thấp</span></div>
+                            <div class="btn btn-default btn-sm level-same in"><span>Thêm chức danh</span></div>
+                            <div class="btn btn-default btn-sm level-sub in"><span>Thêm cấp dưới</span></div>
                         </div>
                     </div>
                     <ul>
                         <li>
                             <div class="treeview__level" data-level="B">
-                                <span class="level-title">Bịp Bịp</span>
+                                <span class="level-title">Giám đốc</span>
                                 <div class="treeview__level-btns">
                                     <div class="btn btn-default btn-sm level-add"><span class="fa fa-plus"></span></div>
                                     <div class="btn btn-default btn-sm level-remove"><span
                                             class="fa fa-trash text-danger"></span></div>
-                                    <div class="btn btn-default btn-sm level-same"><span>Thêm bịp cấp ngang bằng</span></div>
-                                    <div class="btn btn-default btn-sm level-sub"><span>Thêm bịp cấp thấp</span></div>
+                                    <div class="btn btn-default btn-sm level-same"><span>Thêm chức danh</span></div>
+                                    <div class="btn btn-default btn-sm level-sub"><span>Thêm phòng ban</span></div>
                                 </div>
                             </div>
+
                             <ul>
-                                <li>
-                                    <div class="treeview__level" data-level="C">
-                                        <span class="level-title">Bịp Bịp Bịp</span>
-                                        <div class="treeview__level-btns">
-                                            <div class="btn btn-default btn-sm level-add"><span
-                                                    class="fa fa-plus"></span></div>
-                                            <div class="btn btn-default btn-sm level-remove"><span
-                                                    class="fa fa-trash text-danger"></span></div>
-                                            <div class="btn btn-default btn-sm level-same"><span>Thêm bịp cấp ngang bằng</span></div>
-                                            <div class="btn btn-default btn-sm level-sub"><span>Thêm bịp cấp thấp</span></div>
-                                        </div>
-                                    </div>
-                                    <ul>
-                                        <li>
-                                            <div class="treeview__level" data-level="D">
-                                                <span class="level-title">Bịp Bịp Bịp Bịp</span>
-                                                <div class="treeview__level-btns">
-                                                    <div class="btn btn-default btn-sm level-add"><span
-                                                            class="fa fa-plus"></span></div>
-                                                    <div class="btn btn-default btn-sm level-remove"><span
-                                                            class="fa fa-trash text-danger"></span></div>
-                                                    <div class="btn btn-default btn-sm level-same"><span>Thêm bịp cấp ngang bằng</span></div>
-                                                    <div class="btn btn-default btn-sm level-sub"><span>Thêm bịp cấp thấp</span>
-                                                    </div>
+                                @foreach ($departments as $dpm)
+                                    <li>
+                                        <div class="treeview__level" data-level="C">
+                                            <span class="level-title">{{ $dpm->name }}</span>
+                                            <div class="treeview__level-btns">
+                                                <div class="btn btn-default btn-sm level-add"><span
+                                                        class="fa fa-plus"></span></div>
+                                                <div class="btn btn-default btn-sm level-remove"><span
+                                                        class="fa fa-trash text-danger"></span></div>
+                                                <div class="btn btn-default btn-sm level-same"><span>Thêm chức danh</span>
+                                                </div>
+                                                <div class="btn btn-default btn-sm level-sub"><span>Thêm cấp dưới</span>
                                                 </div>
                                             </div>
-                                            <ul>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li>
+                                        </div>
+                                        <ul>
+                                            <li>
+                                                <div class="treeview__level" data-level="D">
+                                                    <span class="level-title">Trưởng phòng</span>
+                                                    <div class="treeview__level-btns">
+                                                        <div class="btn btn-default btn-sm level-add">
+                                                            <span class="fa fa-plus"></span>
+                                                        </div>
+                                                        <div class="btn btn-default btn-sm level-remove"><span
+                                                                class="fa fa-trash text-danger"></span></div>
+                                                        <div class="btn btn-default btn-sm level-same"><span>Thêm chức
+                                                                danh</span></div>
+                                                        <div class="btn btn-default btn-sm level-sub"><span>Thêm cấp
+                                                                dưới</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <ul>
+                                                    <li>
+                                                        <div class="treeview__level" data-level="D">
+                                                            <span class="level-title">Nhân viên</span>
+                                                            <div class="treeview__level-btns">
+                                                                {{-- <div class="btn btn-default btn-sm level-add">
+                                                                    <span class="fa fa-plus"></span>
+                                                                </div> --}}
+                                                                <div class="btn btn-default btn-sm level-remove"><span
+                                                                        class="fa fa-trash text-danger"></span></div>
+                                                                {{-- <div class="btn btn-default btn-sm level-same"><span>Thêm chức
+                                                                        danh</span></div>
+                                                                <div class="btn btn-default btn-sm level-sub"><span>Thêm cấp
+                                                                        dưới</span>
+                                                                </div> --}}
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                @endforeach
+                                {{-- <li>
                                     <div class="treeview__level" data-level="C">
-                                        <span class="level-title">Bịp Bịp Bịp</span>
+                                        <span class="level-title">Phòng gì?</span>
                                         <div class="treeview__level-btns">
-                                            <div class="btn btn-default btn-sm level-add"><span
-                                                    class="fa fa-plus"></span></div>
+                                            <div class="btn btn-default btn-sm level-add"><span class="fa fa-plus"></span>
+                                            </div>
                                             <div class="btn btn-default btn-sm level-remove"><span
                                                     class="fa fa-trash text-danger"></span></div>
-                                            <div class="btn btn-default btn-sm level-same"><span>Thêm bịp cấp ngang bằng</span></div>
-                                            <div class="btn btn-default btn-sm level-sub"><span>Thêm bịp cấp thấp</span></div>
+                                            <div class="btn btn-default btn-sm level-same"><span>Thêm chức danh</span>
+                                            </div>
+                                            <div class="btn btn-default btn-sm level-sub"><span>Thêm cấp dưới</span>
+                                            </div>
                                         </div>
                                     </div>
                                     <ul>
@@ -124,30 +150,32 @@
                                 </li>
                                 <li>
                                     <div class="treeview__level" data-level="C">
-                                        <span class="level-title">Bịp Bịp Bịp</span>
+                                        <span class="level-title">Phòng gì?</span>
                                         <div class="treeview__level-btns">
-                                            <div class="btn btn-default btn-sm level-add"><span
-                                                    class="fa fa-plus"></span></div>
+                                            <div class="btn btn-default btn-sm level-add"><span class="fa fa-plus"></span>
+                                            </div>
                                             <div class="btn btn-default btn-sm level-remove"><span
                                                     class="fa fa-trash text-danger"></span></div>
-                                            <div class="btn btn-default btn-sm level-same"><span>Thêm bịp cấp ngang bằng</span></div>
-                                            <div class="btn btn-default btn-sm level-sub"><span>Thêm bịp cấp thấp</span></div>
+                                            <div class="btn btn-default btn-sm level-same"><span>Thêm chức danh</span>
+                                            </div>
+                                            <div class="btn btn-default btn-sm level-sub"><span>Thêm cấp dưới</span>
+                                            </div>
                                         </div>
                                     </div>
                                     <ul>
                                     </ul>
-                                </li>
+                                </li> --}}
                             </ul>
                         </li>
                         <li>
                             <div class="treeview__level" data-level="B">
-                                <span class="level-title">Bịp Bịp</span>
+                                <span class="level-title">Giám đốc</span>
                                 <div class="treeview__level-btns">
                                     <div class="btn btn-default btn-sm level-add"><span class="fa fa-plus"></span></div>
                                     <div class="btn btn-default btn-sm level-remove"><span
                                             class="fa fa-trash text-danger"></span></div>
-                                    <div class="btn btn-default btn-sm level-same"><span>Thêm bịp cấp ngang bằng</span></div>
-                                    <div class="btn btn-default btn-sm level-sub"><span>Thêm bịp cấp thấp</span></div>
+                                    <div class="btn btn-default btn-sm level-same"><span>Thêm chức danh</span></div>
+                                    <div class="btn btn-default btn-sm level-sub"><span>Thêm cấp dưới</span></div>
                                 </div>
                             </div>
                             <ul>
@@ -163,9 +191,10 @@
                     <span class="level-title">Thêm</span>
                     <div class="treeview__level-btns">
                         <div class="btn btn-default btn-sm level-add"><span class="fa fa-plus"></span></div>
-                        <div class="btn btn-default btn-sm level-remove"><span class="fa fa-trash text-danger"></span></div>
-                        <div class="btn btn-default btn-sm level-same"><span>Thêm Bịp cấp ngang bằng</span></div>
-                        <div class="btn btn-default btn-sm level-sub"><span>Thêm Bịp cấp thấp</span></div>
+                        <div class="btn btn-default btn-sm level-remove"><span class="fa fa-trash text-danger"></span>
+                        </div>
+                        <div class="btn btn-default btn-sm level-same"><span>Thêm chức danh</span></div>
+                        <div class="btn btn-default btn-sm level-sub"><span>Thêm cấp dưới</span></div>
                     </div>
                 </div>
                 <ul>
@@ -175,7 +204,9 @@
     </div>
 @endsection
 
-<script src="https://cpwebassets.codepen.io/assets/common/stopExecutionOnTimeout-1b93190375e9ccc259df3a57c1abc0e64599724ae30d7ea4c6877eb615f89387.js"></script>
+<script
+src="https://cpwebassets.codepen.io/assets/common/stopExecutionOnTimeout-1b93190375e9ccc259df3a57c1abc0e64599724ae30d7ea4c6877eb615f89387.js">
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script id="rendered-js">
     $(function() {
@@ -247,4 +278,6 @@
     });
     //# sourceURL=pen.js
 </script>
-<script src="https://cpwebassets.codepen.io/assets/editor/iframe/iframeRefreshCSS-4793b73c6332f7f14a9b6bba5d5e62748e9d1bd0b5c52d7af6376f3d1c625d7e.js"></script>
+<script
+src="https://cpwebassets.codepen.io/assets/editor/iframe/iframeRefreshCSS-4793b73c6332f7f14a9b6bba5d5e62748e9d1bd0b5c52d7af6376f3d1c625d7e.js">
+</script>
