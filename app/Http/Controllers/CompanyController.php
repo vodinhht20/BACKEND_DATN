@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\ConfixCompany;
 use App\Models\BranCompany;
+use App\Models\Structure;
 
 
 class CompanyController extends Controller
@@ -23,7 +24,8 @@ class CompanyController extends Controller
 
     public function structure(Request $request)
     {
-        return view('admin.company.structure');
+        $departments = Structure::OrderBy('id', 'asc')->paginate(5);
+        return view('admin.company.structure', compact('departments'));
     }
 
     public function worker(Request $request)
