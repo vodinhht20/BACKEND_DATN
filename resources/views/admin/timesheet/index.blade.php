@@ -127,17 +127,11 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {{-- @foreach ($newTimekeeps as $newTimekeep)
-                                    {{var_dump($newTimekeep["worktime"])}}
-                                    @endforeach
-                                    {{die;}} --}}
-                                    @foreach($employ as $employes)
+                                   
+                                    @foreach ($newTimekeeps as $newTimekeep )
                                     <tr>
-                                        <td>{{$employes->fullname}}</td>
-                                        @foreach ($formatDates as $date)
-                                        
-                                        @foreach($newTimekeeps as $newTimekeep )
-                                        @if ($newTimekeep["worktime"] >= 8 )
+                                        <td>{{$newTimekeep['employee']->fullname}}</td>
+                                    
                                         <td class="tabletimekeeps">
                                             <div class="flex-col">
                                                 
@@ -145,27 +139,6 @@
                                                 <div class="flex justify-center flex-wrap px-10" style="background-color: rgb(0, 177, 79);"></div>
                                             </div>
                                         </td>
-                                        @endif
-                                        
-                                        @if($newTimekeep["worktime"] == 0)
-                                        <td class="tabletimekeeps">
-                                            <div class="flex-col">
-                                                <span>0</span>
-                                                <div class="flex justify-center flex-wrap px-10" style="background-color: rgb(187, 187, 187);"></div>
-                                            </div>
-                                        </td>
-                                        @endif
-                                        @if($newTimekeep["worktime"]>0.0 && $newTimekeep["worktime"] <8)
-                                        <td class="tabletimekeeps">
-                                            <div class="flex-col">
-                                                
-                                                <span>0.5</span>
-                                                <div class="flex justify-center flex-wrap px-10" style="background-color: rgb(255, 159, 10);"></div>
-                                            </div>
-                                        </td>
-                                        @endif
-                                        @endforeach
-                                        @endforeach
                                         <td>1</td>
                                         <td>1</td>
                                         <td>1</td>

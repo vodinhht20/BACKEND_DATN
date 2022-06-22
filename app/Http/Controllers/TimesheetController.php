@@ -20,7 +20,12 @@ class TimesheetController extends Controller
         $rootTimekeeps = Timekeep::with(['timekeepdetail' => function ($q) {
             $q->select('timekeep_id', 'checkin_at');
 
-        }])->get();
+        },
+        'employee'
+        ])->GroupBy('employee.id')
+        ->get();
+
+
 
         $worktime = null;
         
@@ -39,19 +44,21 @@ class TimesheetController extends Controller
                 $checkoutFormat = $checkoutFormat == $checkinFormat ? null : $checkoutFormat;
                 $worktime = $this->timesheetService->getDifferentHours($checkinCarbon,$checkoutCarbon);
             }
-            $newTimekeeps->push([
+           
+            $newTimekeeps[]=([
                 'id' => $timekeep->id,
-                'employee_id' => $timekeep->employee_id,
+                'employee' => $timekeep->employee,
                 'date' => $timekeep->date,
                 'checkin' => $checkinFormat,
                 'checkout' => $checkoutFormat,
                 'worktime' => $worktime
                 
             ]);
-            
+    
 
         
         }
+        
         // dd($newTimekeeps);
 
         // $timeSheets = $this->timekeepRepo->dataCheckinByDay("2022-06-13", 1);
@@ -59,7 +66,7 @@ class TimesheetController extends Controller
         $monthYear = Carbon::createFromFormat("Y-m", $inpMonth);
         $formatDates = $this->timesheetService->getDayByMonth($monthYear);
         $currentMonth = Carbon::now()->format('Y-m');
-
+      
         $employ = Employee::with('timekeep')
         ->OrderBy('id', 'asc')
         ->paginate(5);
@@ -68,6 +75,7 @@ class TimesheetController extends Controller
 
         
     }
+    
 
 
 }
