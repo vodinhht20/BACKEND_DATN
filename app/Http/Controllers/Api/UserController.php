@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Repositories\EmployeeRepository;
 use App\Repositories\UserRepositoryInterface;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -108,8 +109,8 @@ class UserController extends Controller
         return response()->json([
                 "email" => $profile->email,
                 "fullname" => $profile->fullname,
-                "avatar" => $profile->avatar,
-                "gender" => "2",
+                "avatar" => mb_substr($profile->avatar, 0, 4) == "http" ? $profile->avatar : env('SERVER_STORAGE').$profile->avatar,
+                "gender" => "$profile->gender",
                 "birth_day" => $profile->birth_day,
                 "phone" => $profile->phone,
                 "TIN" => "547464564",
@@ -173,6 +174,50 @@ class UserController extends Controller
             'error_code' => 'error',
             'message' => 'update avatar thất bại!'
         ], 403);
+    }
+
+    public function updateProfile(Request $request): JsonResponse
+    {
+        $employee = JWTAuth::toUser($request->access_token);
+        $validator = Validator::make($request->all(), [
+            'TIN' => 'required',
+            'birth_day' => 'required',
+            'fullname' => 'required',
+            'gender' => 'required',
+            'phone' => ['required', 'digits:10'],
+        ],[
+            'TIN.required' => 'Mã số thuế không được để trống',
+            'birth_day.required' => 'Ngày sinh không được để trống',
+            'fullname.required' => 'Họ tên không được để trống',
+            'gender.required' => 'Giới tính không được để trống',
+            'phone.required' => 'Số điện thoại không được để trống',
+            'phone.digits' => 'Số điện thoại bạn nhập không đúng',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $validator->messages()->first()
+            ], 403);
+        }
+
+        if ($request->all()) {
+            
+            $employee->fill([
+                'TIN' => $request->TIN,
+                'birth_day' => Carbon::create($request->birth_day)->toDateString(),
+                'fullname' => $request->fullname,
+                'gender' => $request->gender,
+                'phone' => $request->phone,
+            ])->save();
+            
+            return response()->json([
+                'error_code' => 'success',
+                'message' => 'update thông tin thành công!',
+            ], 200);
+        }
+
+        
     }
 
     protected function storeImage(Request $request, $name = 'image')
