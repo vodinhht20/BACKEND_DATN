@@ -79,15 +79,13 @@
 @section('page-script')
     <script src="{{ asset('frontend/js/datepicker.js') }}"></script>
     <script  type="text/javascript">
-        // Vue.use(DatePicker);
         var app = new Vue({
             el: '.tab-vue',
             data: {
                 intervalDay: '',
-                shiftTime: '',
-                open: true,
-                dataCompanyShifts: [{ shiftName: '', shiftTime: '' }],
-                dataCompanyDates: [
+                workShiftName: '',
+                dataWorkShifts: [{ shiftName: '', shiftTime: '' }],
+                dataWorkShiftDays: [
                     { id: 0, name: "Chủ Nhật", active: 0},
                     { id: 2, name: "Thứ 2", active: 0},
                     { id: 3, name: "Thứ 3", active: 0},
@@ -98,15 +96,14 @@
                 ]
             },
             methods: {
-                addCompanyShift: () => {
-                    app.dataCompanyShifts.push({ shiftName: '', shiftTime: '' });
-                    console.log(app.dataCompanyShifts);
+                addWorkShift: () => {
+                    app.dataWorkShifts.push({ shiftName: '', shiftTime: '' });
                 },
-                removeCompanyShift: (indexItem) => {
-                    app.dataCompanyShifts = app.dataCompanyShifts.filter((item, index) => index != indexItem)
+                removeWorkShift: (indexItem) => {
+                    app.dataWorkShifts = app.dataWorkShifts.filter((item, index) => index != indexItem)
                 },
                 chooseDateName: (itemId) => {
-                    app.dataCompanyDates = app.dataCompanyDates.map(dataItem => {
+                    app.dataWorkShiftDays = app.dataWorkShiftDays.map(dataItem => {
                         if (dataItem.id == itemId) {
                             return { ...dataItem, active: dataItem.active ? 0 : 1 }
                         }
@@ -114,7 +111,7 @@
                     });
                 },
                 handleSubmmitAddWorkShift: async () => {
-                    const dates = app.dataCompanyDates.map(item => {
+                    const days = app.dataWorkShiftDays.map(item => {
                             if (item.active == 1) {
                                 return item.id;
                             }
@@ -122,9 +119,9 @@
                         .filter(item => item);
                     const data = {
                         interval_day: app.intervalDay,
-                        shift_time: app.shiftTime,
-                        dates: dates,
-                        data_company_shifts: app.dataCompanyShifts
+                        work_shift_name: app.workShiftName,
+                        days: days,
+                        work_shifts: app.dataWorkShifts
                     }
                     console.log(data);
                     try {
