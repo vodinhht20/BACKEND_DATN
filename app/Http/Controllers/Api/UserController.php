@@ -109,11 +109,11 @@ class UserController extends Controller
         return response()->json([
                 "email" => $profile->email,
                 "fullname" => $profile->fullname,
-                "avatar" => mb_substr($profile->avatar, 0, 4) == "http" ? $profile->avatar : env('SERVER_STORAGE').$profile->avatar,
+                "avatar" => $profile->getAvatar(),
                 "gender" => "$profile->gender",
                 "birth_day" => $profile->birth_day,
                 "phone" => $profile->phone,
-                "TIN" => "547464564",
+                "employee_code" => $profile->employee_code,
                 "id" => $profile->id,
                 'profile' => $profile
         ], 200);
@@ -141,7 +141,6 @@ class UserController extends Controller
     public function updateAvatar(Request $request): JsonResponse
     {
         $employee = JWTAuth::toUser($request->access_token);
-
         $validator = Validator::make($request->all(), [
             'avatar' => 'required|mimes:jpeg,jpg,png,gif|max:10000',
         ],[
@@ -157,10 +156,11 @@ class UserController extends Controller
             ], 403);
         }
 
-        if ($request->hasFile('avatar')) { 
+        try {
             $urlImage = $this->storeImage($request, 'avatar');
             $employee->fill([
-                'avatar' => $urlImage
+                'avatar' => $urlImage,
+                'type_avatar' => 1
             ])->save();
             
             return response()->json([
@@ -168,30 +168,30 @@ class UserController extends Controller
                 'message' => 'update avatar thành công!',
                 'image_links' => $urlImage
             ], 200);
+        } catch (\Exception $e) {
+            $message = '[' . date('Y-m-d H:i:s') . '] Error message \'' . $e->getMessage() . '\'' . ' in ' . $e->getFile() . ' line ' . $e->getLine();
+            \Log::error($message);
+            return response()->json([
+                'error_code' => 'error',
+                'message' => 'update avatar thất bại!'
+            ], 403);
         }
-
-        return response()->json([
-            'error_code' => 'error',
-            'message' => 'update avatar thất bại!'
-        ], 403);
     }
 
     public function updateProfile(Request $request): JsonResponse
     {
         $employee = JWTAuth::toUser($request->access_token);
         $validator = Validator::make($request->all(), [
-            'TIN' => 'required',
             'birth_day' => 'required',
             'fullname' => 'required',
             'gender' => 'required',
-            'phone' => ['required', 'digits:10'],
+            'phone' => 'required|regex:/[0-9]{10}/',
         ],[
-            'TIN.required' => 'Mã số thuế không được để trống',
             'birth_day.required' => 'Ngày sinh không được để trống',
             'fullname.required' => 'Họ tên không được để trống',
             'gender.required' => 'Giới tính không được để trống',
             'phone.required' => 'Số điện thoại không được để trống',
-            'phone.digits' => 'Số điện thoại bạn nhập không đúng',
+            'phone.regex' => 'Số điện thoại bạn nhập không đúng',
         ]);
 
         if ($validator->fails()) {
@@ -201,23 +201,17 @@ class UserController extends Controller
             ], 403);
         }
 
-        if ($request->all()) {
-            
-            $employee->fill([
-                'TIN' => $request->TIN,
-                'birth_day' => Carbon::create($request->birth_day)->toDateString(),
-                'fullname' => $request->fullname,
-                'gender' => $request->gender,
-                'phone' => $request->phone,
-            ])->save();
-            
-            return response()->json([
-                'error_code' => 'success',
-                'message' => 'update thông tin thành công!',
-            ], 200);
-        }
-
+        $employee->fill([
+            'birth_day' => Carbon::create($request->birth_day)->toDateString(),
+            'fullname' => $request->fullname,
+            'gender' => $request->gender,
+            'phone' => $request->phone,
+        ])->save();
         
+        return response()->json([
+            'error_code' => 'success',
+            'message' => 'update thông tin thành công!',
+        ], 200);
     }
 
     protected function storeImage(Request $request, $name = 'image')
