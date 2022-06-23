@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\TimekeepingController;
 use App\Http\Controllers\Api\UserController;
@@ -31,6 +32,7 @@ Route::post('auth', [AuthController::class, 'isValidToken']);
 Route::middleware('jwt.auth')->group(function () {
     //user
     Route::get('users', [UserController::class, 'index']);
+    Route::get('banner', [HomeController::class, 'banner']);
     Route::get('profile', [UserController::class, 'profile']);
     Route::post('change-password', [UserController::class, 'changePasssword']);
     Route::post('update-avatar', [UserController::class, 'updateAvatar']);
