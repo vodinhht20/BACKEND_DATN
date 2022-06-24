@@ -161,7 +161,7 @@
 @endsection
 
 @section('page-script')
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="{{ asset('frontend/js/select2.min.js') }}"></script>
 
 <script>
 
@@ -221,7 +221,6 @@
         $('#select_role').select2({
             placeholder: "Lựa chọn quyền",
         });
-
     });
     $('#form-add-role').on('submit', function(e) {
         e.preventDefault();

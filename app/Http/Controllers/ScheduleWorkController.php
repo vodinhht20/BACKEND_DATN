@@ -2,19 +2,32 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Position;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Repositories\ScheduleWorkRepository;
+use App\Repositories\WorkScheduleRepository;
+use App\Repositories\WorkShiftRepository;
+use Carbon\Carbon;
+
 class ScheduleWorkController extends Controller
 {
-    public function __construct(private ScheduleWorkRepository $scheduleWorkRepo)
+    public function __construct(
+        private WorkScheduleRepository $workScheduleRepo,
+        private WorkShiftRepository $workShiftRepo
+    )
     {
         //
     }
 
     public function calendar(Request $request)
     {
-        return view('admin.schedule.calendar');
+        $options = [
+            'with' => ['workShift']
+        ];
+        $workSchedules = $this->workScheduleRepo->query($options)->get();
+        $positions = Position::all();
+        $departments = Department::all();
+        return view('admin.schedule.calendar', compact('workSchedules'));
     }
 
     public function ajaxAddWorkShift(Request $request)
@@ -38,14 +51,32 @@ class ScheduleWorkController extends Controller
             ], 442);
         }
 
-        $options = [
-            'work_shift_name' => $request->input('work_shift_name'),
-            'work_shifts' => $request->input('work_shifts', []),
-            'days' => $request->input('days', []),
-            'interval_day' => $request->input('interval_day', []),
-        ];
+        try {
+            $intervalDay = $request->interval_day;
+            $workScheduleOptions = [
+                'name' => $request->work_shift_name,
+                'days' => $request->days,
+                'allow_from' => $intervalDay[0],
+                'allow_to' => $intervalDay[1],
+            ];
 
-        $scheduleWorks = $this->scheduleWorkRepo->customizeCreate($options);
-        dd($scheduleWorks);
+            $workSchedule = $this->workScheduleRepo->customizeCreate($workScheduleOptions);
+            $workShiftOptions = [
+                'work_schedule_id' => $workSchedule->id,
+                'work_shifts' => $request->work_shifts,
+            ];
+            $this->workShiftRepo->createMultiple($workShiftOptions);
+
+            return response()->json([
+                'message' => "Thêm ca làm thành công !"
+            ], 200);
+        } catch (\Exception $e) {
+            $message = '[' . date('Y-m-d H:i:s') . '] Error message \'' . $e->getMessage() . '\'' . ' in ' . $e->getFile() . ' line ' . $e->getLine();
+            \Log::error($message);
+            return response()->json([
+                'error_code' => 'exception_error',
+                'message' => $validator->messages()->first()
+            ], 442);
+        }
     }
 }

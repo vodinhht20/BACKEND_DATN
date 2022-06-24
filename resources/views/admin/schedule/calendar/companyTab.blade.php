@@ -39,152 +39,57 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Lịch làm việc hằng ngày</td>
-                        <td>
-                            <h5 class="shift-title">Ca Sáng</h5>
-                            <div class="content-line mt-2">
-                                <i class="ti-timer"></i>
-                                <span class="label label-inverse-primary">08:00 - 12:00</span>
-                            </div>
-                            <div class="content-line mt-2">
-                                <i class="ti-calendar"></i>
-                                <span>
-                                    <label class="label label-inverse-success">Thứ 2</label>
-                                    <label class="label label-inverse-success">Thứ 3</label>
-                                    <label class="label label-inverse-success">Thứ 4</label>
-                                </span>
-                            </div>
-                        </td>
-                        <td>
-                            <div>
-                                <span class="label-blur">Từ</span>
-                                <span>
-                                    26/04/2022
-                                </span>
-                            </div>
-                            <div class="mt-2">
-                                <span class="label-blur">Đến</span>
-                                <span>
-                                    26/04/2022
-                                </span>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="dropdown">
-                                <button class="btn btn-sm btn-show-more" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Xem thêm">
-                                    <i class="ti-more-alt"></i>
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item" href="">Xem chi tiết</a>
-                                    <a class="dropdown-item" href="">Chỉnh sửa lịch làm việc</a>
-                                    <a class="dropdown-item" href="">Xóa lịch làm việc</a>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>Lịch làm việc hằng ngày</td>
-                        <td>
-                            <h5 class="shift-title">Ca Sáng</h5>
-                            <div class="time mt-2">
-                                <div class="label-blur">
-                                    <i class="ti-timer"></i>
-                                </div>
-                                <span class="label label-inverse-primary">08:00 - 12:00</span>
-                            </div>
-                            <div class="weekday mt-2">
-                                <div class="label-blur">
+                    @foreach ($workSchedules as $workSchedule)
+                        <tr>
+                            <td>#{{ $workSchedule->id }}</td>
+                            <td>{{ $workSchedule->name }}</td>
+                            <td>
+                                @foreach ($workSchedule->workShift as $workShiftItem)
+                                    <div class="content-line mt-2">
+                                        <i class="ti-timer"></i>
+                                        <strong>{{ $workShiftItem->name }}</strong>
+                                        <span class="label label-inverse-primary ml-2">{{ \Carbon\Carbon::createFromFormat('H:i:s', $workShiftItem->work_from)->format('H:i')  }} - {{ \Carbon\Carbon::createFromFormat('H:i:s', $workShiftItem->work_to)->format('H:i') }}</span>
+                                    </div>
+                                @endforeach
+                                <div class="content-line mt-2">
                                     <i class="ti-calendar"></i>
+                                    <span>
+                                        @foreach ($workSchedule->days as $day)
+                                            <label class="label label-inverse-success">{{ config("date.days.$day") }}</label>
+                                        @endforeach
+                                    </span>
                                 </div>
-                                <span>
-                                    <label class="label label-inverse-info">Thứ 2</label>
-                                    <label class="label label-inverse-info">Thứ 3</label>
-                                    <label class="label label-inverse-info">Thứ 4</label>
-                                </span>
-                            </div>
-                        </td>
-                        <td>
-                            <div>
-                                <span class="label-blur">Từ</span>
-                                <span>
-                                    26/04/2022
-                                </span>
-                            </div>
-                            <div class="mt-2">
-                                <span class="label-blur">Đến</span>
-                                <span>
-                                    26/04/2022
-                                </span>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="dropdown">
-                                <button class="btn btn-sm btn-show-more" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Xem thêm">
-                                    <i class="ti-more-alt"></i>
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item" href="">Xem chi tiết</a>
-                                    <a class="dropdown-item" href="">Chỉnh sửa lịch làm việc</a>
-                                    <a class="dropdown-item" href="">Xóa lịch làm việc</a>
+                            </td>
+                            <td>
+                                <div>
+                                    <span class="label-blur">Từ</span>
+                                    <span>
+                                        {{ $workSchedule->allow_from }}
+                                    </span>
                                 </div>
-                            </div>
-                        </td>
-                    </tr>
+                                <div class="mt-2">
+                                    <span class="label-blur">Đến</span>
+                                    <span>
+                                        {{ $workSchedule->allow_to }}
+                                    </span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-show-more" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Xem thêm">
+                                        <i class="ti-more-alt"></i>
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item" href="">Xem chi tiết</a>
+                                        <a class="dropdown-item" href="">Chỉnh sửa lịch làm việc</a>
+                                        <a class="dropdown-item" href="">Xóa lịch làm việc</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>
-    </div>
-</div>
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Thêm ca làm việc cho công ty</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-            <form>
-                <div class="form-group">
-                  <label for="recipient-name" class="col-form-label">Tên lịch làm việc</label>
-                  <input type="text" class="form-control" v-model="workShiftName">
-                </div>
-                <div class="form-group">
-                    <label for="recipient-name" class="col-form-label">Ca làm việc</label>
-                    <div v-for="(workshift, index) in dataWorkShifts" class="company-shift">
-                        <div class="row mt-2 align-items-center">
-                            <div class="col-11 row" style="margin: unset; grid-column-gap: 10px; align-items: center;">
-                                <input type="text" class="form-control col-5" v-model="workshift.shiftName" placeholder="Tên ca làm">
-                                <date-picker v-model="workshift.shiftTime" lang="vn" type="time" range placeholder="Select time" format="HH:mm" value-type="format"></date-picker>
-                            </div>
-                            <div class="col-1 btn-remote btn-remove" v-if="dataWorkShifts.length > 1  && dataWorkShifts.length != index+1" @click="removeWorkShift(index)"><i class="ti-close"></i></div>
-                            <div class="col-1 btn-remote btn-add" v-else @click="addWorkShift"><i class="ti-plus"></i></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-form-label">Ngày áp dụng trong tuần</label>
-                    <div class="box-day-name">
-                        <span :class="dataWorkShiftDay.active ? 'item-day-name active' : 'item-day-name' " v-for="dataWorkShiftDay in dataWorkShiftDays" @click="chooseDateName(dataWorkShiftDay.id)">@{{ dataWorkShiftDay.name }}</span>
-                    </div>
-                </div>
-                <div class="form-group interval-day">
-                    <label class="col-form-label">Thời gian hiệu lực</label>
-                    <date-picker v-model="intervalDay" lang="vn" range value-type="format" format="MM-DD-YYYY"></date-picker>
-                    <input type="hidden" v-if="intervalDay" :value="intervalDay">
-                </div>
-              </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Hủy bỏ</button>
-          <button type="button" class="btn btn-primary btn-sm" @click="handleSubmmitAddWorkShift()">Lưu lại</button>
-        </div>
-      </div>
     </div>
 </div>
