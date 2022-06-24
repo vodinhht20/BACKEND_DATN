@@ -4,7 +4,7 @@
   }
 
   .branchs .tabs-left li.active {
-    border-left: 3px solid var(--ui-outline);
+    border-left: 4px solid var(--ui-outline);
   }
 
 
@@ -18,13 +18,13 @@
   }
 
   .branchs .tabs-left li a:hover {
-    border-left: 3px solid var(--ui-outline);
+    border-left: 4px solid var(--ui-outline);
     border-radius: 15px;
     height: 6.33vw;
   }
 
   .branchs .tabs-left .nav-link.active {
-    border-left: 3px solid var(--ui-outline);
+    border-left: 4px solid var(--ui-outline);
     height: 6.33vw;
     border-radius: 15px;
   }
@@ -40,6 +40,10 @@
 
   .branchs {
     display: flex;
+  }
+
+  .branchs .tab-pane .card{
+    width: 94%;
   }
 }
 
