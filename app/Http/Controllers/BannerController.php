@@ -3,44 +3,44 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Banners;
+use App\Models\Banner;
 use Illuminate\Support\Facades\Auth;
 
 
 class BannerController extends Controller
 {
     public function info(Request $request){
-        $banner = Banners::OrderBy('id', 'asc')->paginate(99);
+        $banner = Banner::OrderBy('id', 'asc')->paginate(10);
         return view('admin.banner.info', compact('banner'));
     }
 
-    public function addbanner(){
+    public function addBannerForm(){
         // $ban = User::find();
         return view('admin.banner.add');
     }
 
-    public function addbanner1(Request $request){
-        $banner = new Banners();
-        $banner->admin_id = Auth::user()->fullname;
+    public function addBanner(Request $request){
+        $banner = new Banner();
+        $banner->admin_id = Auth::user()->id;
         $banner->fill($request->all());
         $banner-> save();
         return redirect('banner/info');
     }
 
-    public function updatebanner($id){
-        $banner = Banners::find($id);
+    public function updateBannerForm($id){
+        $banner = Banner::find($id);
         return view('admin.banner/update', compact('banner'));
     }
 
-    public function updatebanner1(Request $request, $id){
-        $banner = Banners::find($id);
+    public function updateBanner(Request $request, $id){
+        $banner = Banner::find($id);
         $banner->fill($request->all());
         $banner-> save();
         return redirect('banner/info');
     }
 
     public function delete($id){
-        Banners::find($id)->delete();
+        Banner::find($id)->delete();
         return redirect('banner/info');
     }
 }
