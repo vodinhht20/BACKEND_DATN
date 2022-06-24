@@ -97,6 +97,16 @@
                 </a>
             </li>
         </ul>
+        <div class="pcoded-navigation-label" data-i18n="nav.category.forms">Banner</div>
+        <ul class="pcoded-item pcoded-left-item">
+            <li class="{{ Request::routeIs('banner.*') ? 'active' : '' }}">
+                <a href="{{ route("banner.info") }}" class="waves-effect waves-dark">
+                    <span class="pcoded-micon"><i class="ti-agenda"></i><b>FC</b></span>
+                    <span class="pcoded-mtext" data-i18n="nav.form-components.main">Quản lý banner</span>
+                    <span class="pcoded-mcaret"></span>
+                </a>
+            </li>
+        </ul>
 
         <div class="pcoded-navigation-label" data-i18n="nav.category.other">Bảng công</div>
         <ul class="pcoded-item pcoded-left-item">
