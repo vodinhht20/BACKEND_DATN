@@ -11,7 +11,7 @@
         <div class="col-md-6">
             <div style="width: 189%;" class="card">
                 <div class="card-header">
-                    <h5>Thêm banner</h5>
+                    <h5>Update banner</h5>
                 </div>
                 <div class="card-block">
                     <div class="card-block">

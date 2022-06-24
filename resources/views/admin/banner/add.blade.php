@@ -8,8 +8,8 @@
 @endsection
 @section('content')
     <div class="banner-info">
-        <div class="col-md-6">
-            <div style="width: 189%;" class="card">
+        <div class="col-md-12">
+            <div style="width: 100%;" class="card">
                 <div class="card-header">
                     <h5>Thêm banner</h5>
                 </div>
@@ -22,36 +22,30 @@
                                 <span class="form-bar"></span>
                                 <label class="float-label">Name</label>
                             </div>
-                            <div class="form-group form-default">
+                            {{-- <div class="form-group form-default">
                                 <input type="text" name="image" class="form-control" required="">
                                 <span class="form-bar"></span>
-                                <label class="float-label">Image</label>
+                                <label class="float-label">Link image online</label>
+                            </div> --}}
+                            <div class="form-group form-default">
+                                <input type="file" name="image" class="form-control" required="">
+                                <span class="form-bar"></span>
                             </div>
                             <div class="form-group form-default">
                                 <input type="text" name="links" class="form-control" required="">
                                 <span class="form-bar"></span>
-                                <label class="float-label">Link blog</label>
+                                <label class="float-label">Link sự kiện</label>
                             </div>
                             <div class="form-group form-default">
+                                <label class="float-label">From at</label>
                                 <input type="date" name="from_at" class="form-control" required="">
                                 <span class="form-bar"></span>
-                                <label class="float-label">From at</label>
                             </div>
                             <div class="form-group form-default">
                                 <input type="date" name="to_at" class="form-control" required="">
                                 <span class="form-bar"></span>
                                 <label class="float-label">To at</label>
                             </div>
-                            <div class="form-group form-default">
-                                <input type="number" name="type" class="form-control" required="" min="0" max="1">
-                                <span class="form-bar"></span>
-                                <label class="float-label">Type (0: nếu upload từ máy, 1: nếu upload bằng link ảnh)</label>
-                            </div>
-                            {{-- <div class="form-group form-default">
-                                <input type="text" name="admin_id" class="form-control" required="">
-                                <span class="form-bar"></span>
-                                <label class="float-label">Người up</label>
-                            </div> --}}
                             <button type="submit"class="btn btn-info waves-effect waves-light">Thêm banner</button>
                         </form>
                     </div>

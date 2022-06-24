@@ -15,15 +15,19 @@ class BannerController extends Controller
     }
 
     public function addBannerForm(){
-        // $ban = User::find();
         return view('admin.banner.add');
     }
 
     public function addBanner(Request $request){
         $banner = new Banner();
         $banner->admin_id = Auth::user()->id;
+        if ($request->hasFile('image')) {
+            $urlImage = $this->storeImage($request, 'image');
+            $banner->image = $urlImage;
+            $banner->type = 0;
+        }
         $banner->fill($request->all());
-        $banner-> save();
+        $banner->save();
         return redirect('banner/info');
     }
 
@@ -42,5 +46,11 @@ class BannerController extends Controller
     public function delete($id){
         Banner::find($id)->delete();
         return redirect('banner/info');
+    }
+
+    protected function storeImage(Request $request, $name = 'image')
+    {
+        $path = $request->file($name)->store('public/images');
+        return substr($path, strlen('public/'));
     }
 }

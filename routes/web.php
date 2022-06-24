@@ -98,9 +98,9 @@ Route::prefix('/company')->name("company.")->group(function () {
 Route::prefix('/banner')->name("banner.")->group(function () {
     Route::get('/info', [BannerController::class, 'info'])->name("info");
     Route::get('/addbanner', [BannerController::class, 'addBannerForm'])->name("addbanner");
-    Route::post('/addbanner', [BannerController::class, 'addBanner'])->name("addbanner");
+    Route::post('/addbanner', [BannerController::class, 'addBanner']);
     Route::get('/updatebanner/{id}', [BannerController::class, 'updateBannerForm'])->name("updatebanner");
-    Route::post('/updatebanner/{id}', [BannerController::class, 'updateBanner'])->name("updatebanner");
+    Route::post('/updatebanner/{id}', [BannerController::class, 'updateBanner']);
     Route::get('/delete/{id}', [BannerController::class, 'delete'])->name("delete");
 });
 

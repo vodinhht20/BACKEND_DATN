@@ -44,13 +44,14 @@
                                     <td>{{$b->links}}</td>
                                     <td>{{$b->from_at}}</td>
                                     <td>{{$b->to_at}}</td>
-                                    <td>{{$b->type == 0 ? 'up từ máy' : 'up = link'}}</td>
-                                    <td>{{$b->admin_id}}</td>
+                                    <td>{{$b->checkLink()}}</td>
+                                    <td>{{$b->author->fullname}}</td>
                                     <td><a href="{{route('banner.delete',$b->id)}}"><i class="ti-trash"></i></a> <a href="{{route("banner.updatebanner", $b->id)}}"><i style="float: right" class="ti-pencil"></i></a></td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
+                    {{ $banner->links() }}
                 </div>
             </div>
         </div>

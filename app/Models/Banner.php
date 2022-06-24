@@ -27,8 +27,16 @@ class Banner extends Model
         return $this->image;
     }
 
-    // public function Employee()
-    // {
-    //     return $this->belongsTo(Employee::class, 'admin_id', 'id');
-    // }
+    public function checkLink()
+    {
+        if ($this->type == 0) {
+            return 'Link Storage';
+        }
+        return 'Link Online';
+    }
+
+    public function author()
+    {
+        return $this->belongsTo(Employee::class, 'admin_id');
+    }
 }
