@@ -56,7 +56,7 @@ class CompanyController extends Controller
 
     public function addbranch1(Request $request){
         $bran = new BranCompany();
-        $bran->fill($request->all());
+        $bran ->fill($request->all());
         $bran -> save();
         return redirect('company/branchs');
     }

@@ -12,6 +12,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Resources\ProductCollection;
+use App\Http\Controllers\BannerController;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -93,6 +94,16 @@ Route::prefix('/company')->name("company.")->group(function () {
     Route::get('/structure', [CompanyController::class, 'structure'])->name("structure");
     Route::get('/branchs', [CompanyController::class, 'branchs'])->name("branchs");
 });
+
+Route::prefix('/banner')->name("banner.")->group(function () {
+    Route::get('/info', [BannerController::class, 'info'])->name("info");
+    Route::get('/addbanner', [BannerController::class, 'addbanner'])->name("addbanner");
+    Route::post('/addbanner', [BannerController::class, 'addbanner1'])->name("addbanner");
+    Route::get('/updatebanner/{id}', [BannerController::class, 'updatebanner'])->name("updatebanner");
+    Route::post('/updatebanner/{id}', [BannerController::class, 'updatebanner1'])->name("updatebanner");
+    Route::get('/delete/{id}', [BannerController::class, 'delete'])->name("delete");
+});
+
 Route::get('/timesheet', [TimesheetController::class, 'timesheet'])->name("timesheet");
 Route::get('/test', function (Request $request) {
     $ip = $request->ip();
