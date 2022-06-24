@@ -9,7 +9,7 @@ class Attribute extends Model
 {
     use HasFactory;
 
-    public function Attribute_Employee()
+    public function attributeEmployee()
     {
         return $this->hasOne(Attribute::class);
     }
