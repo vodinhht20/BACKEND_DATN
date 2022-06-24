@@ -145,7 +145,7 @@
             <li class="{{ Request::routeIs('checkin.*') ? 'active' : '' }}">
                 <a href="{{ route("checkin.view") }}" class="waves-effect waves-dark">
                     <span class="pcoded-micon"><i class="ti-agenda"></i><b>FC</b></span>
-                    <span class="pcoded-mtext" data-i18n="nav.form-components.main">Cài đặt công ty</span>
+                    <span class="pcoded-mtext" data-i18n="nav.form-components.main">Cài đặt chấm công</span>
                     <span class="pcoded-mcaret"></span>
                 </a>
             </li>

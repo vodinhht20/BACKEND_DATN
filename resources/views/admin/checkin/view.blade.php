@@ -85,5 +85,32 @@
 
         }
     }
+    ///////////////////////////////////////////////
+    //<----------------AJAX---------------------->
+    $(document).ready(function(){
+        $('#the-add-wifi-button').click(function(){
+          console.log("lmaoooooooo");
+          const url=$(this).attr('data-url');
+            $.ajax({
+                headers: { 'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+                method: "post",
+                url: url,
+                dataType: "JSON",
+                data:{
+                    name:$('#name').val(),
+                    ip:$('#wifi-ip').val(),
+                    branch:$('#branch').val(),
+                    status:$('#check-status').val()
+                },
+                success: function () {
+                        console.log("LMAOOO");
+                      },
+                error: function(){
+                    console.error();
+                }
+            })
+        })
+    })
+
 </script>
 @endsection
