@@ -1828,3 +1828,23 @@ footer::before {
 .notify-confirm-emailpage .box-wrap .btn-re-send-mail i{
     padding-right: 10px;
 }
+
+.card .card-header .border-left-card {
+    margin-bottom: 0;
+    color: #37474f;
+    font-size: 15px;
+    font-weight: 500;
+    display: inline-block;
+    margin-right: 10px;
+    line-height: 1.4;
+    position: relative;
+}
+.card .card-header .border-left-card:after {
+    content: "";
+    background-color: var(--ui-active);
+    position: absolute;
+    left: -20px;
+    top: 0;
+    width: 4px;
+    height: 20px;
+}

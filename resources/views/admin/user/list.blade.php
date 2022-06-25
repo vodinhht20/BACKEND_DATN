@@ -138,25 +138,25 @@
                                 @foreach ($employees as $employee)
                                     <tr>
                                         <td class="text-center">{{ $loop->index+1 }}</td>
-                                        <td class="text-center">
-                                            <img src="https://lh3.googleusercontent.com/a-/AOh14GiJHaBSsAqGvMR7dcgJicEvaGNyAcqjR-mcrNO9wQ=s96-c" alt="" class="avatar_list"> {{-- {{ $employee->getAvatar() ?: asset('frontend/image/avatar_empty.jfif') }} --}}
-                                            <p class="text-fullname">{{ $employee->fullname }}</p>
+                                        <td class="text-center">{{$employee->fullname}}</td>
+                                        <td>
+                                            <img src="{{ $employee->getAvatar() ?: asset('frontend/image/avatar_empty.jfif') }}" alt="" class="avatar_list"> {{-- {{ $employee->getAvatar() ?: asset('frontend/image/avatar_empty.jfif') }} --}}
                                         </td>
                                         <td>
-                                            <p> {{ $employee->phone ?: "Chưa có" }}</p>
+                                            <p>SĐT: {{ $employee->phone ?: "Chưa cập nhật" }}</p>
                                             <p class="ellipsis" width="200">{{ $employee->email }}</p>
                                             @if ($employee->email_verified_at)
                                                 <label for="" class="label label-success">Đã xác thực email</label>
                                             @else
-                                                <label for="" class="label label-default">Chưa xác thực email</label>
+                                                <label for="" class="label label-danger">Chưa xác thực email</label>
                                             @endif
 
                                         </td>
-                                        <td>{{ $employee->birth_day ?: "Chưa có" }}</td>
+                                        <td>{{ getStatusName($employee->status)}}</td>
                                         <td>
                                             <div class="dropdown">
                                                 <button class="btn btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <i class="fa-solid fa-ellipsis m-0"></i>
+                                                    <i class="fa-solid fa-ellipsis-h m-0"></i>
                                                 </button>
                                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                     @if (!$employee->email_verified_at)

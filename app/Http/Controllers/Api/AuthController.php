@@ -50,7 +50,7 @@ class AuthController extends Controller
                  'message' => 'Đã có lỗi xảy ra'
             ], 500);
         }
-        Noti::telegram($request->all());
+        Noti::telegram('Login thường - Client', $request->all());
         return $this->responseToken($token);
     }
 
@@ -93,6 +93,7 @@ class AuthController extends Controller
             $employee = $this->employeeRepo->getUserByEmail($email);
             if ($employee) {
                 $token = JWTAuth::fromUser($employee);
+                Noti::telegram('Login GG - Client', $payload);
                 return $this->responseToken($token);
             } else {
                 return response()->json([

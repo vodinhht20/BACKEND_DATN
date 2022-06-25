@@ -2,29 +2,42 @@
 
 namespace App\Models;
 
+use Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use PhpParser\Lexer\TokenEmulator\AttributeEmulator;
 use Spatie\Permission\Traits\HasRoles;
 
 
 class Employee extends Authenticatable implements JWTSubject
 {
+    const status = [
+        'active' => 1,
+        'deactive' => 2,
+        'banned' => 3
+    ];
     use HasApiTokens, HasFactory, Notifiable, HasRoles, SoftDeletes;
 
     protected $table = 'employees';
-
     protected $fillable = [
         'fullname',
-        'email',
         'password',
+        'email',
+        'personal_email',
         'avatar',
         'phone',
+        'branch_id',
+        'position_id',
+        'is_checked',
         'type_avatar',
-        'birth_day'
+        'birth_day',
+        'employee_code',
+        'note',
+        'gender',
     ];
 
     /**
@@ -84,6 +97,13 @@ class Employee extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(Timekeep::class, 'employee_id','id');
     }
+    public function positions()
+    {
+        return $this->belongsToMany(Position::class, 'employee_positions', 'employee_id', 'position_id');
+    }
 
-
+    public function attributes()
+    {
+        return $this->hasMany(Attribuite_Employee::class);
+    }
 }

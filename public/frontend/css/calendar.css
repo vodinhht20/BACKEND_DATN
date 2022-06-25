@@ -1,0 +1,127 @@
+.box-section-calendar .unset-boder{
+    border: unset !important;
+}
+
+.box-section-calendar .border-bottom {
+    border-bottom: 1px solid #ddd;
+}
+.box-section-calendar .nav-link i{
+    margin-right: 10px;
+    font-size: 17px;
+}
+.box-section-calendar .table-responsive {
+    width: 100%;
+}
+.box-section-calendar .label-blur {
+    min-width: 25px;
+    color: #b1b1b1;
+    display: inline-block;
+}
+.box-section-calendar .shift-title {
+    font-size: 15px;
+}
+.box-section-calendar .dropdown .btn-show-more {
+    background-color: #448aff;
+    color: #fff;
+    padding: 0 15px;
+    padding-top: 3px;
+    font-size: 16px;
+}
+.box-section-calendar .dropdown .btn-show-more i{
+    margin: unset;
+}
+.box-section-calendar .content-line {
+    display: flex;
+    align-items: center;
+}
+.box-section-calendar .nav-tab-calendar {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: space-between;
+}
+.box-section-calendar .nav-tabs  {
+    width: 500px;
+}
+.box-section-calendar .content-line i {
+    font-size: 18px;
+    min-width: 25px;
+    color: #b1b1b1;
+    display: inline-block;
+}
+.box-section-calendar .mx-input {
+    height: 35px;
+}
+.box-section-calendar .interval-day .mx-datepicker {
+    width: 100% !important;
+}
+.company-shift .mx-datepicker-range{
+    width: 55%;
+}
+.box-section-calendar .btn-remote {
+    padding: unset;
+}
+.box-section-calendar .btn-remote i {
+    font-size: 13px;
+    border-radius: 50%;
+    padding: 5px;
+    color: #fff;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.box-section-calendar .btn-remote i:hover {
+    opacity: 0.8;
+}
+.box-section-calendar .btn-remove i {
+    background-color: rgb(230, 27, 27);
+    opacity: 0.8;
+}
+.box-section-calendar .btn-add i {
+    background-color: rgb(9, 173, 31);
+    opacity: 0.8;
+}
+.box-section-calendar .box-day-name {
+    display: flex;
+    grid-column-gap: 10px;
+}
+.box-section-calendar .box-day-name .item-day-name {
+    padding: 5px 15px;
+    color: #11c15b;
+    border: 1px solid #11c15b !important;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: 0.2s;
+    cursor: pointer;
+}
+.box-section-calendar .box-day-name .item-day-name:hover {
+    opacity: 0.8;
+}
+.box-section-calendar .box-day-name .active {
+    background-color: #11c15b;
+    color: #fff;
+}
+.mx-datepicker-popup {
+    z-index: 9999999999;
+}
+.box-section-calendar .mx-input-wrapper  input {
+    text-align: center;
+}
+.pagination_cutomize .pager {
+    display: flex;
+    grid-gap: 10px;
+}
+.pagination_cutomize .pager li {
+    border-radius: 20px;
+    padding: 5px 17px;
+    border: 1px solid #e1e1e1;
+
+}
+.pagination_cutomize .pager  .active {
+    background-color: #5cb85c !important;
+    color: white !important;
+    border-color: #5cb85c !important;
+}
+.overlay-load {
+    z-index: 9999999999;
+    position: fixed;
+}

@@ -12,12 +12,14 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Resources\ProductCollection;
+use App\Http\Controllers\BannerController;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\ScheduleWorkController;
 use App\Http\Controllers\TimesheetController;
 use Stevebauman\Location\Facades\Location;
 
@@ -31,8 +33,8 @@ use Stevebauman\Location\Facades\Location;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/', function (){ return view('index'); })->name("home.index");
+Route::get('php-info', function() { return phpinfo(); })->middleware('auth');
+Route::get('', function (){ return view('index'); })->name("home.index");
 Route::get('/san-pham/{slug}', [ProductController::class, 'showDetail'])->name("product.showDetail");
 Route::get('/tin-tuc', [PostController::class, 'index'])->name("new.index");
 Route::get('/login', [AuthController::class, 'showFormLogin'])->name("login");
@@ -56,12 +58,16 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::prefix('/role')->group(function () {
         Route::get('/', [RoleController::class, 'index'])->name('admin-role.index');
     });
-    Route::prefix('/application')->group(function() {
+    Route::prefix('/application')->group(function () {
         Route::get('/', [ApplicationController::class, 'index'])->name('application-view');
         Route::get('/detail', [ApplicationController::class, 'detail'])->name('application-detail');
         Route::get('/nest', [ApplicationController::class, 'nestView'])->name('application-nestView');
         Route::get('/policy', [ApplicationController::class, 'policy'])->name('application-policy');
         Route::get('/procedure', [ApplicationController::class, 'procedure'])->name('application-procedure');
+    });
+    Route::prefix('/schedule')->group(function () {
+        Route::get('/calender', [ScheduleWorkController::class, 'calendar'])->name('schedule-calender-index');
+        Route::post('/ajax-add-work-shift', [ScheduleWorkController::class, 'ajaxAddWorkShift'])->name('schedule-ajax-add-work-shift');
     });
     Route::post('/ajax-add-role-user', [RoleController::class, 'addRole'])->name('ajax-add-role-user');
     Route::post('/ajax-get-role-user', [RoleController::class, 'getRole'])->name('ajax-get-role-user');
@@ -81,18 +87,28 @@ Route::get('/callback/github', [AuthController::class, 'githubCallback'])->name(
 
 Route::prefix('/company')->name("company.")->group(function () {
     Route::get('/info', [CompanyController::class, 'info'])->name("info");
-    Route::get('/updatecompany/{id}', [CompanyController::class, 'updatecompany'])->name("updatecompany");
-    Route::post('/updatecompany/{id}', [CompanyController::class, 'updatecompany1'])->name("updatecompany");
-    Route::get('/addbranch', [CompanyController::class, 'addbranch'])->name("addbranch");
-    Route::post('/addbranch', [CompanyController::class, 'addbranch1'])->name("addbranch");
-    Route::get('/updatebranch/{id}', [CompanyController::class, 'updatebranch'])->name("updatebranch");
-    Route::post('/updatebranch/{id}', [CompanyController::class, 'updatebranch1'])->name("updatebranch");
+    Route::get('/updatecompany/{id}', [CompanyController::class, 'updateCompanyForm'])->name("updatecompany");
+    Route::post('/updatecompany/{id}', [CompanyController::class, 'updateCompany'])->name("updatecompany");
+    Route::get('/addbranch', [CompanyController::class, 'addBranchForm'])->name("addbranch");
+    Route::post('/addbranch', [CompanyController::class, 'addBranch'])->name("addbranch");
+    Route::get('/updatebranch/{id}', [CompanyController::class, 'updateBranchForm'])->name("updatebranch");
+    Route::post('/updatebranch/{id}', [CompanyController::class, 'updateBranch'])->name("updatebranch");
     Route::get('/delete/{id}', [CompanyController::class, 'delete'])->name("delete");
     Route::get('/structure', [CompanyController::class, 'structure'])->name("structure");
     Route::get('/branchs', [CompanyController::class, 'branchs'])->name("branchs");
 });
+
+Route::prefix('/banner')->name("banner.")->group(function () {
+    Route::get('/info', [BannerController::class, 'info'])->name("info");
+    Route::get('/addbanner', [BannerController::class, 'addBannerForm'])->name("addbanner");
+    Route::post('/addbanner', [BannerController::class, 'addBanner']);
+    Route::get('/updatebanner/{id}', [BannerController::class, 'updateBannerForm'])->name("updatebanner");
+    Route::post('/updatebanner/{id}', [BannerController::class, 'updateBanner']);
+    Route::get('/delete/{id}', [BannerController::class, 'delete'])->name("delete");
+});
+
 Route::get('/timesheet', [TimesheetController::class, 'timesheet'])->name("timesheet");
-Route::get('/test', function(Request $request) {
+Route::get('/test', function (Request $request) {
     $ip = $request->ip();
     dump($ip);
     $position = Location::get($ip);

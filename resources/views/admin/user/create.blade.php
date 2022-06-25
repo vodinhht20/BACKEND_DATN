@@ -39,7 +39,7 @@
                         <div class="row">
                             <div class="col-sm-3">
                                 <div class="form-group">
-                                    <label class="col-form-label">Avatar</label>
+                                    <label class="col-form-label">Ảnh đại diện</label>
                                     <div class="ellipsis" style="max-width: none !important;margin: 5px 0;">
                                         <input type="file" name="avatar" id="avatar" onchange="loadFile(event)">
                                     </div>
@@ -62,76 +62,107 @@
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label class="col-form-label">Chứng minh nhân dân<span class="text-danger">*</span></label>
-                                    <div class="">
-                                        <input type="text" class="form-control data-input" value="{{ old('email') }}" name="email" placeholder="Nhập số chứng minh nhân dân">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-form-label">Email<span class="text-danger">*</span></label>
-                                    <div class="">
-                                        <input type="text" class="form-control data-input" value="{{ old('email') }}" name="email" placeholder="Nhập email thành viên">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-form-label">Trường học<span class="text-danger">*</span></label>
-                                    <div class="">
-                                        <input type="text" class="form-control data-input" value="{{ old('email') }}" name="email" placeholder="Nhập tên trường học">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-form-label">Chuyên ngành<span class="text-danger">*</span></label>
-                                    <div class="">
-                                        <input type="text" class="form-control data-input" value="{{ old('email') }}" name="email" placeholder="Nhập chuyên ngành học">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-form-label">Năm tốt nghiệp<span class="text-danger">*</span></label>
-                                    <div class="">
-                                        <input type="text" class="form-control data-input" value="{{ old('email') }}" name="email" placeholder="Nhập năm tốt nghiệp">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <div class="form-group">
                                     <label class="col-form-label">Ngày sinh</span></label>
                                     <div class="">
                                         <input type="date" class="form-control data-input" value="{{ old('birth_day') }}" name="birth_day" placeholder="Nhập ngày sinh">
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-3">
+                            <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label class="col-form-label">Phone</label>
+                                    <label class="col-form-label">Email công ty<span class="text-danger">*</span></label>
+                                    <div class="">
+                                        <input type="text" class="form-control data-input" value="{{ old('email') }}" name="email" placeholder="Nhập email công ty">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-form-label">Email cá nhân<span class="text-danger">*</span></label>
+                                    <div class="">
+                                        <input type="text" class="form-control data-input" value="{{ old('email') }}" name="personal_email" placeholder="Nhập email cá nhân">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-form-label">Mã nhân viên<span class="text-danger">*</span></label>
+                                    <div class="">
+                                        <input type="text" class="form-control data-input" value="{{ old('email') }}" name="employee_code" placeholder="Nhập mã nhân viên">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-form-label">Số điện thoại</label>
                                     <div class="">
                                         <input type="text" class="form-control data-input" value="{{ old('phone') }}" name="phone" placeholder="+84 329766459">
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-3">
+                            <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label class="col-form-label">Giới tính</span></label>
+                                    <label class="col-form-label">Ghi chú</label>
                                     <div class="">
-                                        <input type="date" class="form-control data-input" value="{{ old('birth_day') }}" name="birth_day" placeholder="Nhập giới tính">
+                                        <textarea class="form-control data-input" name="note"  cols="30" rows="10">{{ old('note') }}</textarea>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-3">
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <div class="form-group">
+                                    <label class="col-form-label">Trạng thái</label>
+                                    <div class="">
+                                        <select name="status" id="" class="form-control data-input border">
+                                            @foreach (config('global.employeeStatus') as $key => $statusName)
+                                                <option value="{{$statusName}}">{{$key}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="form-group">
+                                    <label class="col-form-label">Giới tính</span></label>
+                                    <div class="">
+                                        <select name="gender" id="" class="form-control data-input border">
+                                            @foreach (config('global.gender') as $key => $gender)
+                                                <option value="{{$gender}}">{{$key}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="form-group">
+                                    <label class="col-form-label">Chi nhánh</label>
+                                    <div class="">
+                                        <select name="branch" id="" class="form-control data-input border">
+                                           @foreach ($branchs as $branch)
+                                           <option value="{{$branch->id}}">{{$branch->name}}</option>
+                                           @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
                                 <div class="form-group">
                                     <label class="col-form-label">Phòng ban</label>
-                                    <div class="col-form-label">
-                                        <select name="" id="" class="form-control data-input border">
-                                            <option value="1">Phòng ban</option>
+                                    <div class="">
+                                        <select name="position" id="" class="form-control data-input border">
+                                            <option value="1">Lập trình viên</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="form-group">
+                                    <label class="col-form-label">Trạng thái điểm danh</label>
+                                    <div class="">
+                                        <select name="is_checked" id="" class="form-control data-input border">
+                                            <option value="1">Được phép điểm danh</option>
+                                            <option value="2">Không được phép điểm danh</option>
                                         </select>
                                     </div>
                                 </div>
