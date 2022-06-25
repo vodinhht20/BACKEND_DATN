@@ -2,15 +2,15 @@
     <div class="row align-items-end">
         <div class="col-md-3">
             <label for="">Tên lịch làm việc:</label>
-            <input type="text" name="employee_calender_name" placeholder="Nhập từ khóa..." filter="employee_calender_name" class="form-control filter-data">
+            <input type="text" name="employee_calender_name" placeholder="Nhập từ khóa..." value="{{ request()->get('employee_calender_name') }}" class="form-control filter-data">
         </div>
         <div class="col-md-3">
             <label for="">Tên nhân viên:</label>
-            <input type="text" name="employee_name" placeholder="Nhập từ khóa..." filter="employee_name" class="form-control filter-data">
+            <input type="text" name="employee_name" placeholder="Nhập từ khóa..." value="{{ request()->get('employee_name') }}" class="form-control filter-data">
         </div>
         <div class="col-md-3">
             <label for="">Tên ca làm:</label>
-            <input type="text" name="employee_shift_name" placeholder="Nhập từ khóa..." filter="employee_shift_name" class="form-control filter-data">
+            <input type="text" name="employee_shift_name" placeholder="Nhập từ khóa..." value="{{ request()->get('employee_shift_name') }}" class="form-control filter-data">
         </div>
         <div class="col-md-3">
             <label for="">Thời gian hiệu lực:</label>
