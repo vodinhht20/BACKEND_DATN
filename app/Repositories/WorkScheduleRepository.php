@@ -102,7 +102,7 @@ class WorkScheduleRepository extends BaseRepository
 
         if (isset($options['employee_name'])) {
             $scheduleWorks->whereHas("employee", function ($q) use ($options) {
-                $q->where("name", "like", "%" . $options['employee_name'] . "%" );
+                $q->where("fullname", "like", "%" . $options['employee_name'] . "%" );
             });
         }
 
