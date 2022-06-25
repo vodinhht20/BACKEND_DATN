@@ -1,21 +1,24 @@
-<div class="row align-items-end">
-    <div class="col-md-3">
-        <label for="">Tên lịch làm việc:</label>
-        <input type="text" name="company_name" placeholder="Nhập từ khóa..." filter="company_name" class="form-control filter-data">
+<form action="" class="form-filter">
+    <div class="row align-items-end">
+        <div class="col-md-3">
+            <label for="">Tên lịch làm việc:</label>
+            <input type="text" name="company_name" placeholder="Nhập từ khóa..." value="{{ request()->get('company_name') }}" class="form-control filter-data">
+        </div>
+        <div class="col-md-3">
+            <label for="">Tên ca làm:</label>
+            <input type="text" name="company_shift_name" value="{{ request()->get('company_shift_name') }}" placeholder="Nhập từ khóa..." filter="company_shift_name" class="form-control filter-data">
+        </div>
+        <div class="col-md-3">
+            <label for="">Thời gian hiệu lực:</label>
+            <date-picker lang="vn" v-model="company_interval_day" range value-type="YYYY-MM-DD" format="DD-MM-YYYY" placeholder="Lựa chọn khoảng thời gian"></date-picker>
+            <input type="hidden" :value="company_interval_day" name="company_interval_day">
+        </div>
+        <div class="col-md-3">
+            <a href="{{ route('schedule-calender-index') }}" class="btn btn-inverse btn-sm waves-effect waves-light" style="float: right;">Tất cả</a>
+            <button class="btn btn-primary btn-sm waves-effect waves-light mr-2" style="float: right;">Tìm kiếm</button>
+        </div>
     </div>
-    <div class="col-md-3">
-        <label for="">Tên ca làm:</label>
-        <input type="text" name="company_shift_name" placeholder="Nhập từ khóa..." filter="company_shift_name" class="form-control filter-data">
-    </div>
-    <div class="col-md-3">
-        <label for="">Thời gian hiệu lực:</label>
-        <input type="text" name="company_interval_day" placeholder="Nhập từ khóa..." filter="company_interval_day" class="form-control filter-data">
-    </div>
-    <div class="col-md-3">
-        <button class="btn btn-inverse btn-sm waves-effect waves-light" style="float: right;">Tất cả</button>
-        <button class="btn btn-primary btn-sm waves-effect waves-light mr-2" style="float: right;">Tìm kiếm</button>
-    </div>
-</div>
+</form>
 <div class="mt-5 mb-2 row">
     <div class="col-4">Có <b>{{ $workSchedules['companyData']->total() }}</b> lịch làm việc trong danh sách</div>
 </div>

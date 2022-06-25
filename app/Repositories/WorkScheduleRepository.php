@@ -70,6 +70,74 @@ class WorkScheduleRepository extends BaseRepository
             $scheduleWorks->where('subject_type', $options['subject_type']);
         }
 
+        if (isset($options['name'])) {
+            $scheduleWorks->where("name", "like", "%" . $options['name'] . "%");
+        }
+
+        if (isset($options['shift_name'])) {
+            $scheduleWorks->whereHas("workShift", function ($q) use ($options) {
+                $q->where("name", "like", "%" . $options['shift_name'] . "%" );
+            });
+        }
+
+        if (isset($options['allow_from'])) {
+            $scheduleWorks->where("allow_from", ">=", $options['allow_from']);
+        }
+
+        if (isset($options['allow_to'])) {
+            $scheduleWorks->where("allow_to", "<=", $options['allow_to']);
+        }
+
+        if (isset($options['department_name'])) {
+            $scheduleWorks->whereHas("department", function ($q) use ($options) {
+                $q->where("name", "like", "%" . $options['department_name'] . "%" );
+            });
+        }
+
+        if (isset($options['position_name'])) {
+            $scheduleWorks->whereHas("position", function ($q) use ($options) {
+                $q->where("name", "like", "%" . $options['position_name'] . "%" );
+            });
+        }
+
+        if (isset($options['employee_name'])) {
+            $scheduleWorks->whereHas("employee", function ($q) use ($options) {
+                $q->where("name", "like", "%" . $options['employee_name'] . "%" );
+            });
+        }
+
+        if (isset($options['company_interval_day']) && $options['company_interval_day']) {
+            $companyIntervalDay = explode(',', $options['company_interval_day']);
+            $allowFrom = $companyIntervalDay[0];
+            $allowTo = $companyIntervalDay[1];
+            $scheduleWorks->where("allow_from", ">=", $allowFrom);
+            $scheduleWorks->where("allow_to", "<=", $allowTo);
+        }
+
+        if (isset($options['department_interval_day']) && $options['department_interval_day']) {
+            $companyIntervalDay = explode(',', $options['department_interval_day']);
+            $allowFrom = $companyIntervalDay[0];
+            $allowTo = $companyIntervalDay[1];
+            $scheduleWorks->where("allow_from", ">=", $allowFrom);
+            $scheduleWorks->where("allow_to", "<=", $allowTo);
+        }
+
+        if (isset($options['position_interval_day']) && $options['position_interval_day']) {
+            $companyIntervalDay = explode(',', $options['position_interval_day']);
+            $allowFrom = $companyIntervalDay[0];
+            $allowTo = $companyIntervalDay[1];
+            $scheduleWorks->where("allow_from", ">=", $allowFrom);
+            $scheduleWorks->where("allow_to", "<=", $allowTo);
+        }
+
+        if (isset($options['employee_interval_day']) && $options['employee_interval_day']) {
+            $companyIntervalDay = explode(',', $options['employee_interval_day']);
+            $allowFrom = $companyIntervalDay[0];
+            $allowTo = $companyIntervalDay[1];
+            $scheduleWorks->where("allow_from", ">=", $allowFrom);
+            $scheduleWorks->where("allow_to", "<=", $allowTo);
+        }
+
         $scheduleWorks->orderBy('id', 'desc');
         return $scheduleWorks;
     }
@@ -80,9 +148,9 @@ class WorkScheduleRepository extends BaseRepository
      * @param integer $take
      * @return LengthAwarePaginator
      */
-    public function paginate($options, $take = 20, $pageName): LengthAwarePaginator
+    public function paginate($options, $take = 20, $pageName, $tab): LengthAwarePaginator
     {
-        $workSchedules = $this->query($options)->paginate($take, ['*'], $pageName);
+        $workSchedules = $this->query($options)->paginate($take, ['*'], $pageName)->withPath("?current_tab=$tab");
         return $workSchedules;
     }
 }

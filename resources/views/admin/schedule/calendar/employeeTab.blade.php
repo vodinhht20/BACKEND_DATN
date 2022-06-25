@@ -1,25 +1,28 @@
-<div class="row align-items-end">
-    <div class="col-md-3">
-        <label for="">Tên lịch làm việc:</label>
-        <input type="text" name="employee_calender_name" placeholder="Nhập từ khóa..." filter="employee_calender_name" class="form-control filter-data">
+<form action="" class="form-filter">
+    <div class="row align-items-end">
+        <div class="col-md-3">
+            <label for="">Tên lịch làm việc:</label>
+            <input type="text" name="employee_calender_name" placeholder="Nhập từ khóa..." filter="employee_calender_name" class="form-control filter-data">
+        </div>
+        <div class="col-md-3">
+            <label for="">Tên nhân viên:</label>
+            <input type="text" name="employee_name" placeholder="Nhập từ khóa..." filter="employee_name" class="form-control filter-data">
+        </div>
+        <div class="col-md-3">
+            <label for="">Tên ca làm:</label>
+            <input type="text" name="employee_shift_name" placeholder="Nhập từ khóa..." filter="employee_shift_name" class="form-control filter-data">
+        </div>
+        <div class="col-md-3">
+            <label for="">Thời gian hiệu lực:</label>
+            <date-picker lang="vn" range v-model="employee_interval_day" value-type="YYYY-MM-DD" format="DD-MM-YYYY" placeholder="Lựa chọn khoảng thời gian"></date-picker>
+            <input type="hidden" name="employee_interval_day" :value="employee_interval_day">
+        </div>
+        <div class="col-md-12 mt-3">
+            <a href="{{ route('schedule-calender-index') }}" class="btn btn-inverse btn-sm waves-effect waves-light" style="float: right;">Tất cả</a>
+            <button class="btn btn-primary btn-sm waves-effect waves-light mr-2" style="float: right;">Tìm kiếm</button>
+        </div>
     </div>
-    <div class="col-md-3">
-        <label for="">Tên nhân viên:</label>
-        <input type="text" name="employee_name" placeholder="Nhập từ khóa..." filter="employee_name" class="form-control filter-data">
-    </div>
-    <div class="col-md-3">
-        <label for="">Tên ca làm:</label>
-        <input type="text" name="employee_shift_name" placeholder="Nhập từ khóa..." filter="employee_shift_name" class="form-control filter-data">
-    </div>
-    <div class="col-md-3">
-        <label for="">Thời gian hiệu lực:</label>
-        <input type="text" name="employee_interval_day" placeholder="Nhập từ khóa..." filter="employee_interval_day" class="form-control filter-data">
-    </div>
-    <div class="col-md-12 mt-3">
-        <button class="btn btn-inverse btn-sm waves-effect waves-light" style="float: right;">Tất cả</button>
-        <button class="btn btn-primary btn-sm waves-effect waves-light mr-2" style="float: right;">Tìm kiếm</button>
-    </div>
-</div>
+</form>
 <div class="mt-5 mb-2 row">
     <div class="col-4">Có <b>{{ $workSchedules['employeeData']->total() }}</b> lịch làm việc trong danh sách</div>
 </div>

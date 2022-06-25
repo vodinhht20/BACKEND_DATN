@@ -125,3 +125,10 @@
     z-index: 9999999999;
     position: fixed;
 }
+form .mx-input-wrapper {
+    width: 198px !important;
+}
+
+.modal-body .mx-input-wrapper {
+    width: 100% !important;
+}

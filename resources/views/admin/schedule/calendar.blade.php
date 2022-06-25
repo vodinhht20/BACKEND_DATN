@@ -90,7 +90,7 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Thêm ca làm việc cho công ty</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Thêm lịch làm việc cho công ty</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -99,7 +99,7 @@
                         <form>
                             <div class="form-group">
                                 <label for="recipient-name" class="col-form-label">Tên lịch làm việc</label>
-                                <input type="text" class="form-control" name="workShiftName" v-model="workShiftName">
+                                <input type="text" class="form-control" name="workShiftName" placeholder="Nhập lịch làm việc ..." v-model="workShiftName">
                             </div>
                             <div class="form-group">
                                 <label for="subject_type" class="col-form-label">Áp dụng cho</label>
@@ -155,7 +155,7 @@
                             </div>
                             <div class="form-group interval-day">
                                 <label class="col-form-label">Thời gian hiệu lực</label>
-                                <date-picker v-model="intervalDay" lang="vn" range value-type="YYYY-MM-DD" format="DD-MM-YYYY"></date-picker>
+                                <date-picker v-model="intervalDay" lang="vn" range value-type="YYYY-MM-DD" format="DD-MM-YYYY" placeholder="Lựa chọn khoảng thời gian"></date-picker>
                                 <input type="hidden" v-if="intervalDay" :value="intervalDay">
                             </div>
                         </form>
@@ -186,6 +186,10 @@
                 position_id: null,
                 department_id: null,
                 subject_type: 1,
+                company_interval_day: {!! json_encode(request()->get('company_interval_day') ? explode(",", request()->get('company_interval_day')) : 0)  !!},
+                department_interval_day: {!!  json_encode(request()->get('department_interval_day') ? explode(",", request()->get('department_interval_day')) : 0 ) !!},
+                employee_interval_day: {!!  json_encode(request()->get('employee_interval_day') ? explode(",", request()->get('employee_interval_day')) : 0 ) !!},
+                position_interval_day: {!!  json_encode(request()->get('position_interval_day') ? explode(",", request()->get('position_interval_day')) : 0 ) !!},
                 current_tab: "company_tab",
                 dataWorkShifts: [{ shiftName: '', shiftTime: '' }],
                 dataWorkShiftDays: [
@@ -271,6 +275,7 @@
                     }
                 },
                 onHanldeCloseSweet: () => {
+                    $('.overlay-load').css('display', 'flex');
                     location.reload();
                 },
                 onChangeTypeWorkSchedule: ($event) => {
