@@ -86,7 +86,7 @@
         }
     }
     ///////////////////////////////////////////////
-    //<----------------AJAX---------------------->
+    //<----------------AJAX For WIFI---------------------->
     $(document).ready(function(){
         $('#the-add-wifi-button').click(function(){
           console.log("lmaoooooooo");
@@ -111,6 +111,34 @@
             })
         })
     })
-
+    //<----------------AJAX For Location---------------------->
+    $(document).ready(function(){
+        $('#add-location-button').click(function(){
+          console.log("lmaoooooooo");
+          const url=$(this).attr('data-url');
+            $.ajax({
+                headers: { 'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+                method: "post",
+                url: url,
+                dataType: "JSON",
+                data:{
+                    name:$('#name').val(),
+                    code_branch:$('#code_branch').val(),
+                    address:$('#address').val(),
+                    hotline:$('#hotline').val(),
+                    longtitude:$('#longtitude').val(),
+                    latitude:$('#latitude').val(),
+                    radius:$('#radius').val(),
+                },
+                
+                success: function (response) {
+                    window.location.reload()
+                      },
+                error: function(response){
+                    console.error();
+                }
+            })
+        })
+    })  
 </script>
 @endsection

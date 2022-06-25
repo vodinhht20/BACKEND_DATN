@@ -47,7 +47,12 @@
                         <td>{{ $stt++ }}</td>
                         <td>{{ $wf->name }}</td>
                         <td>{{ $wf->wifi_ip }}</td>
-                        <td>{{ $wf->status }}</td>
+                        <td>@if ($wf->status == 1)
+                            <p style="color: green" >On</p>
+                            @else
+                            <p style="color: red">Off</p> 
+                            @endif
+                        </td>
                     </tr>
                 @endforeach
             </tbody>

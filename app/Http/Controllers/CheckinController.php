@@ -23,4 +23,17 @@ class CheckinController extends Controller
         $wifi->save();
         return back();
     }
+    public function addlocation(Request $request ){
+     
+        $location= new Branch;
+        $location->name=$request->name;
+        $location->code_branch=$request->code_branch;
+        $location->address=$request->address;
+        $location->hotline=$request->hotline;
+        $location->longtitude=$request->longtitude;
+        $location->latitude=$request->latitude;
+        $location->radius=$request->radius;
+        $location->save();
+        return back();
+    }
 }

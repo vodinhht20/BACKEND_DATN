@@ -11,11 +11,4 @@ class Network extends Model
     use HasFactory, SoftDeletes;
     protected $guarded = [];
     protected $table = 'networks';
-    protected $fillable = [
-        'name',
-        'ip',
-        'branch',
-        'status'
-    ];
-
 }

@@ -97,6 +97,7 @@ Route::prefix('/company')->name("company.")->group(function () {
 Route::prefix('/checkin')->name("checkin.")->group(function () {
     Route::get('/view', [CheckinController::class, 'index'])->name("view");
     Route::post('/add-wifi', [CheckinController::class, 'addwifi'])->name("add-wifi");
+    Route::post('/add-location', [CheckinController::class, 'addlocation'])->name("add-location");
 });
 Route::get('/timesheet', [TimesheetController::class, 'timesheet'])->name("timesheet");
 Route::get('/test', function (Request $request) {

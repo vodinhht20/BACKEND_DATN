@@ -11,7 +11,7 @@
         <p style="font-weight: 700">có ... Địa chỉ trong danh sách</p>
     </div>
     <div class="col-sm-6" style="width: 100%;text-align: right" >
-        <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#location-modal">Large</button>
+        <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#location-modal"><i class="fa fa-plus"></i> Thêm</button>
         
     </div>
    </div>
@@ -21,7 +21,7 @@
             <thead>
                 <tr>
                     <th>STT</th>
-                    <th>Tên Vị Trí</th>
+                    <th>Mã Chi Nhánh</th>
                     <th>Địa Chỉ</th>
                     <th>Chi Nhánh</th>
                     <th>Bán Kính</th>
@@ -30,6 +30,20 @@
                 </tr>
             </thead>
             <tbody>
+                @php
+                    $stt=1
+                @endphp
+                @foreach ($branch as $br)
+                    <tr>
+                        <td>{{ $stt++ }}</td>
+                        <td>{{ $br->code_branch }}</td>
+                        <td>{{ $br->address }}</td>
+                        <td>{{ $br->name }}</td>
+                        <td>{{ $br->radius }}</td>
+                        <td>{{ $br->latitude }}</td>
+                        <td>{{ $br->longtitude }}</td>
+                    </tr>
+                @endforeach
             </tbody>
         </table>
        </div>
@@ -46,32 +60,37 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="">Tên Vị Trí</label>
-                    <input type="text" class="form-control" placeholder="Tên Gợi Nhớ VỊ Trí" name="" id="">
+                    <label for="">Mã Chi Nhánh</label>
+                    <input type="text" class="form-control" placeholder="Tên Gợi Nhớ VỊ Trí" name="code_branch" id="code_branch">
                 </div>
                 <div class="form-group">
                     <label for="">Chi Nhánh</label>
-                    <select name="" class="form-control" id="">
+                    {{-- <select name="" class="form-control" id="">
                         <option value="">chi nhánh làm việc</option>
                         <option value="">chi nhánh làm việc</option>
                         <option value="">chi nhánh làm việc</option>
-                    </select>
+                    </select> --}}
+                    <input type="text" name="name" class="form-control" id="name" placeholder="Tên chi nhánh">
                 </div>
                 <div class="form-group">
                     <label for="">Địa Chỉ</label>
-                    <input type="text" class="form-control" placeholder="Địa Chỉ"  name="" id="">
+                    <input type="text" class="form-control" placeholder="Địa Chỉ"  name="address" id="address">
+                </div>
+                <div class="form-group">
+                    <label for="">Hotline</label>
+                    <input type="number" class="form-control" placeholder="Địa Chỉ"  name="hotline" id="hotline">
                 </div>
                 <div class="form-group">
                     <label for="">Vĩ Độ</label>
-                    <input type="number" class="form-control" placeholder="Vĩ Độ"  name="" id="">
+                    <input type="number" class="form-control" placeholder="Vĩ Độ"  name="latitude" id="latitude">
                 </div>
                 <div class="form-group">
                     <label for="">Kinh Độ</label>
-                    <input type="number" class="form-control" placeholder="Kinh Độ"  name="" id="">
+                    <input type="number" class="form-control" placeholder="Kinh Độ"  name="longtitude" id="longtitude">
                 </div>
                 <div class="form-group">
                     <label for="">Bán Kính</label>
-                    <input type="number" class="form-control" value="100"  name="" id="">
+                    <input type="number" class="form-control" value="100"  name="radius" id="radius">
                 </div>
                 <div class="form-group">
                     <label for="">Khoảng Cách Có thể chấm công từ vị trí đã thiết lập (mét) </label>
@@ -80,7 +99,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary waves-effect waves-light ">Save changes</button>
+                <button type="button" class="btn btn-primary waves-effect add-location-button" id="add-location-button" data-url="{{ route('checkin.add-location') }}">Thêm</button>
             </div>
         </div>
     </div>
