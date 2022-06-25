@@ -1,15 +1,15 @@
 <div class="row align-items-end">
     <div class="col-md-3">
-        <label for="">Từ khóa:</label>
-        <input type="text" name="keywords" placeholder="Nhập từ khóa..." id="keywords" filter="keywords" class="form-control filter-data">
+        <label for="">Tên lịch làm việc:</label>
+        <input type="text" name="company_name" placeholder="Nhập từ khóa..." filter="company_name" class="form-control filter-data">
     </div>
     <div class="col-md-3">
-        <label for="">Từ khóa:</label>
-        <input type="text" name="keywords" placeholder="Nhập từ khóa..." id="keywords" filter="keywords" class="form-control filter-data">
+        <label for="">Tên ca làm:</label>
+        <input type="text" name="company_shift_name" placeholder="Nhập từ khóa..." filter="company_shift_name" class="form-control filter-data">
     </div>
     <div class="col-md-3">
-        <label for="">Từ khóa:</label>
-        <input type="text" name="keywords" placeholder="Nhập từ khóa..." id="keywords" filter="keywords" class="form-control filter-data">
+        <label for="">Thời gian hiệu lực:</label>
+        <input type="text" name="company_interval_day" placeholder="Nhập từ khóa..." filter="company_interval_day" class="form-control filter-data">
     </div>
     <div class="col-md-3">
         <button class="btn btn-inverse btn-sm waves-effect waves-light" style="float: right;">Tất cả</button>
@@ -17,13 +17,7 @@
     </div>
 </div>
 <div class="mt-5 mb-2 row">
-    <div class="col-4">Có <b>20</b> lịch làm việc trong danh sách</div>
-    <div class="col-8">
-        <button class="btn btn-outline-primary btn-round waves-effect btn-sm waves-light mr-3" style="padding-top: 10px; float: right;"  data-toggle="modal" data-target="#exampleModal">
-            <i class="ti-plus"></i>
-            Thêm mới
-        </button>
-    </div>
+    <div class="col-4">Có <b>{{ $workSchedules['companyData']->total() }}</b> lịch làm việc trong danh sách</div>
 </div>
 <div class="">
     <div class="table-border-style">
@@ -35,11 +29,11 @@
                         <th>Tên lịch làm việc</th>
                         <th>Ca làm việc trong lịch</th>
                         <th>Thời gian hiệu lực</th>
-                        <th>Thao tác</th>
+                        {{-- <th>Thao tác</th> --}}
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($workSchedules as $workSchedule)
+                    @foreach ($workSchedules['companyData'] as $workSchedule)
                         <tr>
                             <td>#{{ $workSchedule->id }}</td>
                             <td>{{ $workSchedule->name }}</td>
@@ -74,7 +68,7 @@
                                     </span>
                                 </div>
                             </td>
-                            <td>
+                            {{-- <td>
                                 <div class="dropdown">
                                     <button class="btn btn-sm btn-show-more" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Xem thêm">
                                         <i class="ti-more-alt"></i>
@@ -85,11 +79,14 @@
                                         <a class="dropdown-item" href="">Xóa lịch làm việc</a>
                                     </div>
                                 </div>
-                            </td>
+                            </td> --}}
                         </tr>
                     @endforeach
                 </tbody>
             </table>
+            <div style="float: right;" class="pagination_cutomize">
+                {{ $workSchedules['companyData']->appends(request()->query())->links() }}
+            </div>
         </div>
     </div>
 </div>

@@ -5,9 +5,6 @@
 .box-section-calendar .border-bottom {
     border-bottom: 1px solid #ddd;
 }
-.box-section-calendar .nav-tab-calendar {
-    width: 500px;
-}
 .box-section-calendar .nav-link i{
     margin-right: 10px;
     font-size: 17px;
@@ -36,6 +33,15 @@
 .box-section-calendar .content-line {
     display: flex;
     align-items: center;
+}
+.box-section-calendar .nav-tab-calendar {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: space-between;
+}
+.box-section-calendar .nav-tabs  {
+    width: 500px;
 }
 .box-section-calendar .content-line i {
     font-size: 18px;
@@ -97,6 +103,25 @@
 .mx-datepicker-popup {
     z-index: 9999999999;
 }
-.box-section-calendar .mx-input-wrapper  input{
+.box-section-calendar .mx-input-wrapper  input {
     text-align: center;
+}
+.pagination_cutomize .pager {
+    display: flex;
+    grid-gap: 10px;
+}
+.pagination_cutomize .pager li {
+    border-radius: 20px;
+    padding: 5px 17px;
+    border: 1px solid #e1e1e1;
+
+}
+.pagination_cutomize .pager  .active {
+    background-color: #5cb85c !important;
+    color: white !important;
+    border-color: #5cb85c !important;
+}
+.overlay-load {
+    z-index: 9999999999;
+    position: fixed;
 }

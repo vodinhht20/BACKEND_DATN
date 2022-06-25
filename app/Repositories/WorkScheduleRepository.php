@@ -3,6 +3,7 @@ namespace App\Repositories;
 
 use App\Models\WorkSchedule;
 use App\Repositories\BaseRepository;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class WorkScheduleRepository extends BaseRepository
 {
@@ -65,11 +66,23 @@ class WorkScheduleRepository extends BaseRepository
             $scheduleWorks->with($options['with']);
         }
 
+        if (isset($options['subject_type'])) {
+            $scheduleWorks->where('subject_type', $options['subject_type']);
+        }
+
+        $scheduleWorks->orderBy('id', 'desc');
         return $scheduleWorks;
     }
 
-    // public function dataFormat($options)
-    // {
-
-    // }
+    /**
+     *
+     * @param array $options
+     * @param integer $take
+     * @return LengthAwarePaginator
+     */
+    public function paginate($options, $take = 20, $pageName): LengthAwarePaginator
+    {
+        $workSchedules = $this->query($options)->paginate($take, ['*'], $pageName);
+        return $workSchedules;
+    }
 }
