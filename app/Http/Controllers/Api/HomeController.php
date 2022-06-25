@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Repositories\BannerRepository;
-use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
@@ -14,8 +13,18 @@ class HomeController extends Controller
     }
 
     public function banner(){
+        $banner = $this->bannerRepo->getBannerPublic();
+        $bannerRes = collect();
+
+        foreach ($banner as $b){
+            $bannerRes[] = ([
+                'links' => $b->links,
+                'images' => $b->getBanner()
+            ]);
+        }
+        
         return response()->json([
-            "data" => $this->bannerRepo->getBannerPublic(),
+            "data" => $bannerRes,
         ]);
     }
 }

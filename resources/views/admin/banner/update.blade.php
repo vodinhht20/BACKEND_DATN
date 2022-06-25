@@ -8,8 +8,8 @@
 @endsection
 @section('content')
     <div class="banner-info">
-        <div class="col-md-6">
-            <div style="width: 189%;" class="card">
+        <div class="col-md-12">
+            <div style="width: 100%;" class="card">
                 <div class="card-header">
                     <h5>Update banner</h5>
                 </div>
@@ -22,11 +22,11 @@
                                 <span class="form-bar"></span>
                                 <label class="float-label">Name</label>
                             </div>
-                            <div class="form-group form-default">
+                            {{-- <div class="form-group form-default">
                                 <input value="{{$banner->image}}" type="text" name="image" class="form-control" required="">
                                 <span class="form-bar"></span>
                                 <label class="float-label">Image</label>
-                            </div>
+                            </div> --}}
                             <div class="form-group form-default">
                                 <input value="{{$banner->links}}" type="text" name="links" class="form-control" required="">
                                 <span class="form-bar"></span>
@@ -41,16 +41,6 @@
                                 <input value="{{$banner->to_at}}" type="date" name="to_at" class="form-control" required="">
                                 <span class="form-bar"></span>
                                 <label class="float-label">To at</label>
-                            </div>
-                            <div class="form-group form-default">
-                                <input value="{{$banner->type}}" type="number" name="type" class="form-control" required="" min="0" max="1">
-                                <span class="form-bar"></span>
-                                <label class="float-label">Type (0: nếu upload từ máy, 1: nếu upload bằng link ảnh)</label>
-                            </div>
-                            <div class="form-group form-default">
-                                <input value="{{$banner->admin_id}}" type="text" name="admin_id" class="form-control" required="">
-                                <span class="form-bar"></span>
-                                <label class="float-label">Người up</label>
                             </div>
                             <button type="submit"class="btn btn-info waves-effect waves-light">Sửa banner</button>
                         </form>
