@@ -12,6 +12,7 @@ use Laravel\Sanctum\HasApiTokens;
 use PhpParser\Lexer\TokenEmulator\AttributeEmulator;
 use Spatie\Permission\Traits\HasRoles;
 
+
 class Employee extends Authenticatable implements JWTSubject
 {
     const status = [
@@ -92,7 +93,10 @@ class Employee extends Authenticatable implements JWTSubject
     {
         return $this->belongsTo(Branch::class);
     }
-
+    public function timekeep()
+    {
+        return $this->hasMany(Timekeep::class, 'employee_id','id');
+    }
     public function positions()
     {
         return $this->belongsToMany(Position::class, 'employee_positions', 'employee_id', 'position_id');
