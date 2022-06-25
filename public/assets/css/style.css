@@ -427,8 +427,10 @@ b, strong {
       Modal css start
 ==========================  **/
 .modal {
-  z-index: 99999999999; }
-
+  z-index: 9999; }
+  .swal2-container {
+    z-index: 99999 !important;
+  }
 .bd-example .modal {
   display: block;
   position: inherit;

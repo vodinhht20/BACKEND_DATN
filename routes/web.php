@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\ScheduleWorkController;
 use App\Http\Controllers\TimesheetController;
 use Stevebauman\Location\Facades\Location;
 
@@ -32,10 +33,8 @@ use Stevebauman\Location\Facades\Location;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/', function () {
-    return view('index');
-})->name("home.index");
+Route::get('php-info', function() { return phpinfo(); })->middleware('auth');
+Route::get('', function (){ return view('index'); })->name("home.index");
 Route::get('/san-pham/{slug}', [ProductController::class, 'showDetail'])->name("product.showDetail");
 Route::get('/tin-tuc', [PostController::class, 'index'])->name("new.index");
 Route::get('/login', [AuthController::class, 'showFormLogin'])->name("login");
@@ -65,6 +64,10 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/nest', [ApplicationController::class, 'nestView'])->name('application-nestView');
         Route::get('/policy', [ApplicationController::class, 'policy'])->name('application-policy');
         Route::get('/procedure', [ApplicationController::class, 'procedure'])->name('application-procedure');
+    });
+    Route::prefix('/schedule')->group(function () {
+        Route::get('/calender', [ScheduleWorkController::class, 'calendar'])->name('schedule-calender-index');
+        Route::post('/ajax-add-work-shift', [ScheduleWorkController::class, 'ajaxAddWorkShift'])->name('schedule-ajax-add-work-shift');
     });
     Route::post('/ajax-add-role-user', [RoleController::class, 'addRole'])->name('ajax-add-role-user');
     Route::post('/ajax-get-role-user', [RoleController::class, 'getRole'])->name('ajax-get-role-user');
