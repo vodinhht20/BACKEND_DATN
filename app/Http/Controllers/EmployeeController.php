@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Attribuite_Employee;
 use App\Models\Branch;
 use App\Models\Employee;
 use App\Repositories\EmployeeRepository;
@@ -9,6 +10,7 @@ use Illuminate\Http\Request;
 use \Illuminate\Support\Str;
 use Validator;
 use App\Models\Attribute;
+use App\Models\Position;
 use Illuminate\Database\Eloquent\Builder;
 
 class EmployeeController extends Controller
@@ -145,27 +147,27 @@ class EmployeeController extends Controller
 
     public function showFormUpdate($id)
     {
-        $employee = $this->employeeRepo->find($id);
+        $employee = Employee::with('branch', 'positions')->find($id);
         $branchs = Branch::all();
+        $positions = Position::all();
         if (!$employee) {
             return abort(404);
         }
 
-        return view('admin.user.update', compact('employee', 'branchs'));
+        return view('admin.user.update', compact('employee', 'branchs', 'positions'));
     }
 
     public function showInfoUser($id)
     {
         $employee = Employee::with('positions', 'branch')->find($id);
+        $attributes = Attribuite_Employee::with('attribute')->where('employee_id', $id)->get();
         // $employee_attributes = $employee->attributes->load('attribute');
         // dd($employee_attributes->attribute);
-
-        // dd($employee);
         if (!$employee) {
             return abort(404);
         }
 
-        return view('admin.user.show', compact('employee'));
+        return view('admin.user.show', compact('employee', 'attributes'));
     }
 
     public function updateUser(Request $request, $id)
