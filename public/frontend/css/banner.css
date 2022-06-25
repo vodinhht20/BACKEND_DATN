@@ -1,0 +1,10 @@
+@media(min-width: 1200px){
+    .banner-info .card{
+        width: 100%;
+    }
+    .table-responsive {
+        display: inline-block;
+        width: 100%;
+        overflow-x: auto;
+    }
+}
