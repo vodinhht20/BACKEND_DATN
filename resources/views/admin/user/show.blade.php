@@ -70,27 +70,32 @@
                                             @endforeach
                                         </ul>
                                     </div>
-
+                                </div>
+                                <div class="col-sm-6 mt-3 row">
                                     <div class="col-sm-6"><p>Phòng ban</p></div>
                                     <div class="col-sm-6">
                                         <p><strong>{{$employee->branch->name}}</strong></p>
                                     </div>
-
+                                </div>
+                                <div class="col-sm-6 mt-3 row">
                                     <div class="col-sm-6"><p>Quản lý trực tiếp</p></div>
                                     <div class="col-sm-6">
                                         <p><strong>Hoàng Văn A</strong></p>
                                     </div>
-                                    
+                                </div>
+                                <div class="col-sm-6 mt-3 row">
                                     <div class="col-sm-6"><p>Loại hình nhân sự</p></div>
                                     <div class="col-sm-6">
                                         <p><strong>Chưa cập nhật</strong></p>
                                     </div>
-
+                                </div>
+                                <div class="col-sm-6 mt-3 row">
                                     <div class="col-sm-6"><p>Trạng thái nhân sự</p></div>
                                     <div class="col-sm-6">
                                         <p class="text-success"><strong>Đang làm việc</strong></p>
                                     </div>
-                                    
+                                </div>
+                                <div class="col-sm-6 mt-3 row">
                                     <div class="col-sm-6"><p>Trạng thái sử dụng</p></div>
                                     <div class="col-sm-6">
                                         <p><strong>{{getStatusName($employee->status)}}</strong></p>
@@ -99,21 +104,25 @@
                                 <div class="col-sm-6 mt-3 row">
                                     <div class="col-sm-6">Ngày bắt đầu đi làm</div>
                                     <div class="col-sm-6"><p><strong>12/2/2020</strong></p></div>
-
+                                </div>
+                                <div class="col-sm-6 mt-3 row">
                                     <div class="col-sm-6">Ngày bắt đầu chính thức</div>
                                     <div class="col-sm-6"><p><strong>12/2/2020</strong></p></div>
-
+                                </div>
+                                <div class="col-sm-6 mt-3 row">
                                     <div class="col-sm-6">Ngày nghỉ việc</div>
                                     <div class="col-sm-6"><p><strong>12/2/2020</strong></p></div>
-
+                                </div>
+                                <div class="col-sm-6 mt-3 row">
                                     <div class="col-sm-6">Số phép năm nay</div>
                                     <div class="col-sm-6"><p><strong>10</strong></p></div>
-
+                                </div>
+                                <div class="col-sm-6 mt-3 row">
                                     <div class="col-sm-6">Số phép năm trước</div>
                                     <div class="col-sm-6"><p><strong>0</strong></p></div>
                                 </div>
                             </div>
-                            <div class="col-sm-12">
+                            <div class="col-sm-12 mt-3">
                                 <h6> <i class="fa fa-archive" aria-hidden="true"></i> Thông tin cá nhân </h6>
                             </div>
                             <div class="col-sm-12 row">
@@ -122,64 +131,45 @@
                                     <div class="col-sm-6">
                                         <p><strong>{{getGender($employee->gender)}}</strong></p>
                                     </div>
-
-                                    <div class="col-sm-6"><p>Ngày sinh </p></div>
-                                    <div class="col-sm-6">
-                                        <p><strong>{{$employee->birth_day}}</strong></p>
-                                    </div>
-
+                                </div>
+                                <div class="col-sm-6 mt-3 row">
                                     <div class="col-sm-6"><p>Số điện thoại </p></div>
                                     <div class="col-sm-6">
                                         <p><strong>{{$employee->phone ? $employee->phone : "Chưa cập nhật"}}</strong></p>
                                     </div>
-
+                                </div>
+                                <div class="col-sm-6 mt-3 row">
+                                    <div class="col-sm-6"><p>Ngày sinh </p></div>
+                                    <div class="col-sm-6">
+                                        <p><strong>{{$employee->birth_day}}</strong></p>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 mt-3 row">
                                     <div class="col-sm-6"><p>Email cá nhân </p></div>
                                     <div class="col-sm-6">
                                         <p><strong>{{$employee->personal_email ? $employee->personal_email : "Chưa cập nhật"}}</strong></p>
                                     </div>
-
+                                </div>
+                                <div class="col-sm-6 mt-3 row">
                                     <div class="col-sm-6"><p>Email làm việc </p></div>
                                     <div class="col-sm-6">
                                         <p><strong>{{$employee->email}}</strong></p>
                                     </div>
-
+                                </div>
+                                <div class="col-sm-6 mt-3 row">
                                     <div class="col-sm-6"><p>Địa chỉ tạm chú </p></div>
                                     <div class="col-sm-6">
                                         <p><strong>{{$employee->address}}</strong></p>
                                     </div>
-
-                                    <div class="col-sm-6"><p>Tình trạng hôn nhân </p></div>
-                                    <div class="col-sm-6">
-                                        <p><strong>Chưa kết hôn</strong></p>
-                                    </div>
                                 </div>
-
-                                <div class="col-sm-6 mt-3 row">
-                                    <div class="col-sm-6"><p>Mã số thuế </p></div>
-                                    <div class="col-sm-6">
-                                        <p><strong>1731236523</strong></p>
+                                @foreach ($attributes as $attribute)
+                                    <div class="col-sm-6 mt-3 row">
+                                        <div class="col-sm-6"><p>{{$attribute->attribute->name}}</p></div>
+                                        <div class="col-sm-6">
+                                            <p><strong>{{$attribute->data}}</strong></p>
+                                        </div>
                                     </div>
-
-                                    <div class="col-sm-6"><p>Số cccd / hộ chiếu </p></div>
-                                    <div class="col-sm-6">
-                                        <p><strong>1731236523</strong></p>
-                                    </div>
-
-                                    <div class="col-sm-6"><p>Nơi cấp </p></div>
-                                    <div class="col-sm-6">
-                                        <p><strong>Nam Định</strong></p>
-                                    </div>
-
-                                    <div class="col-sm-6"><p>Ngày cấp </p></div>
-                                    <div class="col-sm-6">
-                                        <p><strong>1731236523</strong></p>
-                                    </div>
-
-                                    <div class="col-sm-6"><p>Địa chỉ thường chú </p></div>
-                                    <div class="col-sm-6">
-                                        <p><strong>1731236523</strong></p>
-                                    </div>
-                                </div>
+                                @endforeach
                                 <div class="col-sm-12">
                                     <h6> <i class="fa fa-archive" aria-hidden="true"></i> Ghi chú </h6>
                                 </div>

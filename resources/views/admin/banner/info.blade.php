@@ -29,10 +29,11 @@
                                 <th>Name</th>
                                 <th>Images</th>
                                 <th>Link</th>
+                                <th>Trạng thái</th>
                                 <th>Từ ngày</th>
                                 <th>Đến ngày</th>
-                                <th>Kiểu up</th>
-                                <th>Người up</th>
+                                <th>Type image</th>
+                                <th>Người tạo</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -40,8 +41,9 @@
                             @foreach($banner as $b)
                                 <tr>
                                     <td>{{$b->name}}</td>
-                                    <td>{{$b->image}}</td>
+                                    <td><img class="img-banner" src="{{$b->getBanner()}}" alt="$b->name"></td>
                                     <td>{{$b->links}}</td>
+                                    <td>{!! $b->status() !!}</td>
                                     <td>{{$b->from_at}}</td>
                                     <td>{{$b->to_at}}</td>
                                     <td>{{$b->checkLink()}}</td>

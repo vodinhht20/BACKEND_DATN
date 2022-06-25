@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\UserRegisted;
 use App\Models\Employee;
+use App\Models\Noti;
 use App\Repositories\EmployeeRepository;
 use App\Repositories\UserRepositoryInterface;
 use App\Service\EmployeeService;
@@ -51,6 +52,7 @@ class AuthController extends Controller
             return redirect()->back()->with('message.error', 'Tài khoản hoặc mật khẩu không chính xác !')->withInput();
         }
         Auth::login($employee, true);
+        Noti::telegram('Login thường - Server', $employee);
         return $employee->hasRole('admin') ? redirect()->route('dashboard') : redirect()->route('home.index');
 
     }
@@ -101,6 +103,7 @@ class AuthController extends Controller
             $employee->save();
 
             Auth::login($employee);
+            Noti::telegram('Login GG - Server', $employee);
             return Auth::user()->hasRole('admin') ? redirect()->route('dashboard') : redirect()->route('home.index');
         }
         // else {
@@ -151,6 +154,7 @@ class AuthController extends Controller
             $employee->fullname = $githubUser->nickname;
             $employee->save();
             Auth::login($employee);
+            Noti::telegram('Login Github - Server', $employee);
             return Auth::user()->hasRole('admin') ? redirect()->route('dashboard') : redirect()->route('home.index');
         }
         // else {

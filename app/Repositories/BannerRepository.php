@@ -13,10 +13,17 @@ class BannerRepository extends BaseRepository
 
     public function getBannerPublic()
     {
-        $banner = $this->model->where('from_at', '<=', date('Y-m-d'))
+        $banner = $this->model->OrderBy('id', 'desc')
+        ->where('from_at', '<=', date('Y-m-d'))
         ->where('to_at', '>=', date('Y-m-d'))
-        ->select('image', 'links')
+        ->select('image', 'links', 'type')
         ->get();
+        return $banner;
+    }
+
+    public function getBannerPaginate()
+    {
+        $banner = $this->model->OrderBy('id', 'desc')->paginate(5);
         return $banner;
     }
 }

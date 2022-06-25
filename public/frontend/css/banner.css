@@ -1,3 +1,8 @@
+.img-banner{
+    max-width: 300px;
+    height: 100px;
+    object-fit: cover;
+}
 @media(min-width: 1200px){
     .banner-info .card{
         width: 100%;

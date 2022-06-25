@@ -21,7 +21,7 @@ class Banner extends Model
 
     public function getBanner()
     {
-        if ($this->type == 1) {
+        if ($this->type == 0) {
             return asset('storage/' . $this->image);
         }
         return $this->image;
@@ -33,6 +33,17 @@ class Banner extends Model
             return 'Link Storage';
         }
         return 'Link Online';
+    }
+
+    public function status()
+    {
+        if ($this->from_at > date('Y-m-d')) {
+            return '<label class="label label-inverse">Chưa khởi chạy</label>';
+        }else if ($this->to_at < date('Y-m-d')) {
+            return '<label class="label label-default">Đã kết thúc</label>';
+        }else{
+            return '<label class="label label-success">Đang chạy</label>';
+        }
     }
 
     public function author()
