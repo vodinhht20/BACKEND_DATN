@@ -8,13 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Noti extends Model
 {
     use HasFactory;
-    public static function telegram($message){
+    public static function telegram($type, $message){
         $date = getdate();
         $website = "https://api.telegram.org/bot" . env('TELEGRAM_BOT_TOKEN');
         $chatId = '@mecoinnoti';
         $params = [
             'chat_id' => $chatId,
             'text' => 'Tài khoản "' . $message['email'] .'" vừa login  
+Loại: "' . $type .'"   
 Thời gian: ' . $date['year'].'/'.$date['mon'].'/'.$date['mday'].' '.$date['hours'].':'.$date['minutes'].':'.$date['seconds']. '
 Thiết bị: '.$_SERVER['HTTP_USER_AGENT'].'
 IP: '.$_SERVER['REMOTE_ADDR'],

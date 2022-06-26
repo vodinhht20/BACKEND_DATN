@@ -19,4 +19,8 @@ class TimekeepDetail extends Model
         'timekeep_id',
         'source'
     ];
+    public function tbl_timekeeps(){
+        return $this->belongsTo(TimekeepDetail::class, 'timekeep_id', 'id');
+        
+        }
 }

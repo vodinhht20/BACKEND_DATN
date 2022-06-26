@@ -72,7 +72,7 @@
             <div class="col-md-8">
                 <div class="page-header-title">
                     <h5 class="m-b-10">Quản trị thành viên</h5>
-                    {{-- <p class="m-b-0">Phân quyền truy cập cho thành viên</p> --}}
+                    <p class="m-b-0">Phân quyền truy cập cho thành viên</p>
                 </div>
             </div>
             <div class="col-md-4">
@@ -161,7 +161,7 @@
 @endsection
 
 @section('page-script')
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="{{ asset('frontend/js/select2.min.js') }}"></script>
 
 <script>
 
@@ -221,7 +221,6 @@
         $('#select_role').select2({
             placeholder: "Lựa chọn quyền",
         });
-
     });
     $('#form-add-role').on('submit', function(e) {
         e.preventDefault();

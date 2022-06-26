@@ -51,65 +51,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-form-label">Họ & Tên<span class="text-danger">*</span></label>
-                                    <div class="">
-                                        <input type="text" class="form-control data-input" value="{{ old('fullname') }}" name="fullname" placeholder="Nhập họ và tên thành viên">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-form-label">Ngày sinh</span></label>
-                                    <div class="">
-                                        <input type="date" class="form-control data-input" value="{{ old('birth_day') }}" name="birth_day" placeholder="Nhập ngày sinh">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-form-label">Email công ty<span class="text-danger">*</span></label>
-                                    <div class="">
-                                        <input type="text" class="form-control data-input" value="{{ old('email') }}" name="email" placeholder="Nhập email công ty">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-form-label">Email cá nhân<span class="text-danger">*</span></label>
-                                    <div class="">
-                                        <input type="text" class="form-control data-input" value="{{ old('email') }}" name="personal_email" placeholder="Nhập email cá nhân">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-form-label">Mã nhân viên<span class="text-danger">*</span></label>
-                                    <div class="">
-                                        <input type="text" class="form-control data-input" value="{{ old('email') }}" name="employee_code" placeholder="Nhập mã nhân viên">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-form-label">Số điện thoại</label>
-                                    <div class="">
-                                        <input type="text" class="form-control data-input" value="{{ old('phone') }}" name="phone" placeholder="+84 329766459">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-form-label">Ghi chú</label>
-                                    <div class="">
-                                        <textarea class="form-control data-input" name="note"  cols="30" rows="10">{{ old('note') }}</textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
+                        <div class="row mt-3">
                             <div class="col-sm-2">
                                 <div class="form-group">
                                     <label class="col-form-label">Trạng thái</label>
@@ -168,6 +110,65 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-form-label">Họ & Tên<span class="text-danger">*</span></label>
+                                    <div class="">
+                                        <input type="text" class="form-control data-input" value="{{ old('fullname') }}" name="fullname" placeholder="Nhập họ và tên thành viên">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-form-label">Mã nhân viên<span class="text-danger">*</span></label>
+                                    <div class="">
+                                        <input type="text" class="form-control data-input" value="{{ old('email') }}" name="employee_code" placeholder="Nhập mã nhân viên">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-form-label">Ngày sinh</span></label>
+                                    <div class="">
+                                        <input type="date" class="form-control data-input" value="{{ old('birth_day') }}" name="birth_day" placeholder="Nhập ngày sinh">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-form-label">Số điện thoại</label>
+                                    <div class="">
+                                        <input type="text" class="form-control data-input" value="{{ old('phone') }}" name="phone" placeholder="+84 329766459">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-form-label">Email công ty<span class="text-danger">*</span></label>
+                                    <div class="">
+                                        <input type="text" class="form-control data-input" value="{{ old('email') }}" name="email" placeholder="Nhập email công ty">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-form-label">Email cá nhân<span class="text-danger">*</span></label>
+                                    <div class="">
+                                        <input type="text" class="form-control data-input" value="{{ old('email') }}" name="personal_email" placeholder="Nhập email cá nhân">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-form-label">Ghi chú</label>
+                                    <div class="">
+                                        <textarea class="form-control data-input" name="note"  cols="30" rows="10">{{ old('note') }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="form-group row justify-content-center">
                             <button class="btn btn-primary btn-round waves-effect waves-light ">Tạo mới</button>
                         </div>
