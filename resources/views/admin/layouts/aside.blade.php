@@ -97,6 +97,16 @@
                 </a>
             </li>
         </ul>
+        <div class="pcoded-navigation-label" data-i18n="nav.category.forms">Banner</div>
+        <ul class="pcoded-item pcoded-left-item">
+            <li class="{{ Request::routeIs('banner.*') ? 'active' : '' }}">
+                <a href="{{ route("banner.info") }}" class="waves-effect waves-dark">
+                    <span class="pcoded-micon"><i class="ti-agenda"></i><b>FC</b></span>
+                    <span class="pcoded-mtext" data-i18n="nav.form-components.main">Quản lý banner</span>
+                    <span class="pcoded-mcaret"></span>
+                </a>
+            </li>
+        </ul>
 
         <div class="pcoded-navigation-label" data-i18n="nav.category.other">Bảng công</div>
         <ul class="pcoded-item pcoded-left-item">
@@ -104,6 +114,17 @@
                 <a href="{{ route("timesheet") }}" class="waves-effect waves-dark">
                     <span class="pcoded-micon"><i class="ti-book"></i><b>FC</b></span>
                     <span class="pcoded-mtext" data-i18n="nav.form-components.main">Bảng công</span>
+                    <span class="pcoded-mcaret"></span>
+                </a>
+            </li>
+        </ul>
+
+        <div class="pcoded-navigation-label" data-i18n="nav.category.forms">Cài đặt lịch</div>
+        <ul class="pcoded-item pcoded-left-item">
+            <li class="{{ Request::routeIs('schedule.*') ? 'active' : '' }}">
+                <a href="{{ route("schedule-calender-index") }}" class="waves-effect waves-dark">
+                    <span class="pcoded-micon"><i class="ti-calendar"></i><b>FC</b></span>
+                    <span class="pcoded-mtext" data-i18n="nav.form-components.main">Lịch làm việc</span>
                     <span class="pcoded-mcaret"></span>
                 </a>
             </li>
@@ -140,7 +161,16 @@
                 </a>
             </li>
         </ul>
-
+        <div class="pcoded-navigation-label" data-i18n="nav.category.forms">Chấm Công</div>
+        <ul class="pcoded-item pcoded-left-item">
+            <li class="{{ Request::routeIs('checkin.*') ? 'active' : '' }}">
+                <a href="{{ route("checkin.view") }}" class="waves-effect waves-dark">
+                    <span class="pcoded-micon"><i class="ti-agenda"></i><b>FC</b></span>
+                    <span class="pcoded-mtext" data-i18n="nav.form-components.main">Cài đặt chấm công</span>
+                    <span class="pcoded-mcaret"></span>
+                </a>
+            </li>
+        </ul>
         {{-- <div class="pcoded-navigation-label" data-i18n="nav.category.other">Blog</div>
         <ul class="pcoded-item pcoded-left-item">
             <li>

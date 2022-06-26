@@ -223,7 +223,11 @@ input:checked+.slider:before {
   height: 10px;
 }
 
-.scrollbar-custom::-webkit-scrollbar-thumb {
-  border-radius: 10px;
-  background-color: #b3c5cc;
+.scrollbar-custom::-webkit-scrollbar-thumb
+{
+	border-radius: 10px;
+	background-color:#b3c5cc;
+}
+.align-middle-td td {
+  vertical-align: middle;
 }

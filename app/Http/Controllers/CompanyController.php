@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\ConfixCompany;
 use App\Models\BranCompany;
+use App\Models\Structure;
 
 
 class CompanyController extends Controller
@@ -23,7 +24,8 @@ class CompanyController extends Controller
 
     public function structure(Request $request)
     {
-        return view('admin.company.structure');
+        $departments = Structure::OrderBy('id', 'asc')->paginate(5);
+        return view('admin.company.structure', compact('departments'));
     }
 
     public function worker(Request $request)
@@ -35,26 +37,26 @@ class CompanyController extends Controller
         return view('admin.company.worker',compact('carbon'));
     }
 
-    public function updatecompany($id){
+    public function updateCompanyForm($id){
         $company = ConfixCompany::find($id);
         return view('admin.company.updatecompany', compact('company'));
     }
 
-    public function updatecompany1(Request $request, $id){
+    public function updateCompany(Request $request, $id){
         $company = ConfixCompany::find($id);
         $company -> fill($request->all());
         $company -> save();
         return redirect('company/info');
     }
 
-    public function addbranch(){
+    public function addBranchForm(){
         $bran = BranCompany::all();
         return view('admin.company.addbranch', compact('bran'));
     }
 
-    public function addbranch1(Request $request){
+    public function addBranch(Request $request){
         $bran = new BranCompany();
-        $bran->fill($request->all());
+        $bran ->fill($request->all());
         $bran -> save();
         return redirect('company/branchs');
     }
@@ -64,12 +66,12 @@ class CompanyController extends Controller
         return redirect('company/branchs');
     }
 
-    public function updatebranch($id){
+    public function updateBranchForm($id){
         $bran = BranCompany::find($id);
         return view('admin.company.updatebranch', compact('bran'));
     }
 
-    public function updatebranch1(Request $request, $id){
+    public function updateBranch(Request $request, $id){
         $bran = BranCompany::find($id);
         $bran -> fill($request->all());
         $bran -> save();

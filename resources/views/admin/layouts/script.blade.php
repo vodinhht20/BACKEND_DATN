@@ -31,7 +31,9 @@
 <script src="{{ asset('frontend/js/sweetalert.js') }}"></script>
 <!-- axios -->
 <script src="{{ asset('frontend/js/axios.min.js') }}"></script>
+<script src="{{ asset('frontend/js/moment.min.js') }}"></script>
 <!-- validate -->
 <script type="text/javascript" src="{{asset('frontend')}}/js/jquery.validate.min.js"></script>
 <script type="text/javascript" src="{{asset('frontend')}}/js/validateForm.js"></script>
-
+<!-- vue js -->
+<script src="{{ asset('frontend/js/vue.js') }}" type="text/javascript" ></script>

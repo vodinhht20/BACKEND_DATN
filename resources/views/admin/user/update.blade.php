@@ -56,7 +56,7 @@
                                 <div class="form-group">
                                     <label class="col-form-label">Họ & Tên<span class="text-danger">*</span></label>
                                     <div class="">
-                                        <input type="text" class="form-control data-input" value="{{ $employee->fullname }}" name="name" placeholder="Nhập họ và tên thành viên">
+                                        <input type="text" class="form-control data-input" value="{{ $employee->fullname }}" name="fullname" placeholder="Nhập họ và tên thành viên">
                                     </div>
                                 </div>
                             </div>
@@ -142,16 +142,6 @@
                                            @foreach ($branchs as $branch)
                                            <option value="{{$branch->id}}">{{$branch->name}}</option>
                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-2">
-                                <div class="form-group">
-                                    <label class="col-form-label">Phòng ban</label>
-                                    <div class="">
-                                        <select name="position" id="" class="form-control data-input border">
-                                            <option value="1">Lập trình viên</option>
                                         </select>
                                     </div>
                                 </div>
