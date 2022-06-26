@@ -1,25 +1,29 @@
-<div class="row align-items-end">
-    <div class="col-md-3">
-        <label for="">Tên lịch làm việc:</label>
-        <input type="text" name="department_calender_name" placeholder="Nhập từ khóa..." filter="department_calender_name" class="form-control filter-data">
+<form action="" class="form-filter">
+    <div class="row align-items-end">
+        <div class="col-md-3">
+            <label for="">Tên lịch làm việc:</label>
+            <input type="text" name="department_calender_name" placeholder="Nhập từ khóa..." value="{{ request()->get('department_calender_name') }}" class="form-control filter-data">
+        </div>
+        <div class="col-md-3">
+            <label for="">Tên phòng ban:</label>
+            <input type="text" name="department_name" placeholder="Nhập từ khóa..." value="{{ request()->get('department_name') }}" class="form-control filter-data">
+        </div>
+        <div class="col-md-3">
+            <label for="">Tên ca làm:</label>
+            <input type="text" name="department_shift_name" placeholder="Nhập từ khóa..." value="{{ request()->get('department_shift_name') }}" class="form-control filter-data">
+        </div>
+        <div class="col-md-3">
+            <label for="">Thời gian hiệu lực:</label>
+            <date-picker lang="vn" v-model="department_interval_day" range value-type="YYYY-MM-DD" format="DD-MM-YYYY" placeholder="Lựa chọn khoảng thời gian"></date-picker>
+            <input type="hidden" :value="department_interval_day" name="department_interval_day">
+        </div>
+        <input type="hidden" :value="current_tab" name="current_tab">
+        <div class="col-md-12 mt-3">
+            <a href="{{ route('schedule-calender-index') }}?current_tab=department_tab" class="btn btn-inverse btn-sm waves-effect waves-light" style="float: right;">Tất cả</a>
+            <button class="btn btn-primary btn-sm waves-effect waves-light mr-2" style="float: right;">Tìm kiếm</button>
+        </div>
     </div>
-    <div class="col-md-3">
-        <label for="">Tên phòng ban:</label>
-        <input type="text" name="department_name" placeholder="Nhập từ khóa..." filter="department_name" class="form-control filter-data">
-    </div>
-    <div class="col-md-3">
-        <label for="">Tên ca làm:</label>
-        <input type="text" name="department_shift_name" placeholder="Nhập từ khóa..." filter="department_shift_name" class="form-control filter-data">
-    </div>
-    <div class="col-md-3">
-        <label for="">Thời gian hiệu lực:</label>
-        <input type="text" name="department_interval_day" placeholder="Nhập từ khóa..." filter="department_interval_day" class="form-control filter-data">
-    </div>
-    <div class="col-md-12 mt-3">
-        <button class="btn btn-inverse btn-sm waves-effect waves-light" style="float: right;">Tất cả</button>
-        <button class="btn btn-primary btn-sm waves-effect waves-light mr-2" style="float: right;">Tìm kiếm</button>
-    </div>
-</div>
+</form>
 <div class="mt-5 mb-2 row">
     <div class="col-4">Có <b>{{ $workSchedules['departmentData']->total() }}</b> lịch làm việc trong danh sách</div>
 </div>

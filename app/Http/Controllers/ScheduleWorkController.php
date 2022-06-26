@@ -26,24 +26,65 @@ class ScheduleWorkController extends Controller
     public function calendar(Request $request)
     {
         $take = 2;
-
         $options = [
             'with' => ['workShift', 'employee', 'department', 'position'],
         ];
-        $companyData = $this->workScheduleRepo->paginate([...$options, "subject_type" => config('work_schedule.subject_type.company')], $take, 'company_page');
+
+        // filter and paginate company page
+        $companyData = $this->workScheduleRepo->paginate(
+            [
+                ...$options,
+                "subject_type" => config('work_schedule.subject_type.company'),
+                "name" => $request->input("company_name", null),
+                "shift_name" => $request->input("company_shift_name", null),
+                "company_interval_day" => $request->input("company_interval_day", null),
+            ], $take, 'company_page', 'company_tab');
         $companyData->setPageName('company_page');
-        $departmentData = $this->workScheduleRepo->paginate([...$options, "subject_type" => config('work_schedule.subject_type.department')], $take, 'department_page');
+
+        // filter and paginate department page
+        $departmentData = $this->workScheduleRepo->paginate(
+            [
+                ...$options,
+                "subject_type" => config('work_schedule.subject_type.department'),
+                "name" => $request->input("department_calender_name", null),
+                "department_name" => $request->input("department_name", null),
+                "shift_name" => $request->input("department_shift_name", null),
+                "department_interval_day" => $request->input("department_interval_day", null),
+            ], $take, 'department_page', 'department_tab');
         $departmentData->setPageName('department_page');
-        $positionData = $this->workScheduleRepo->paginate([...$options, "subject_type" => config('work_schedule.subject_type.position')], $take, 'position_page');
+
+        // filter and paginate position page
+        $positionData = $this->workScheduleRepo->paginate(
+            [
+                ...$options,
+                "subject_type" => config('work_schedule.subject_type.position'),
+                "name" => $request->input("position_calender_name", null),
+                "position_name" => $request->input("position_name", null),
+                "shift_name" => $request->input("position_shift_name", null),
+                "position_interval_day" => $request->input("position_interval_day", null),
+            ], $take, 'position_page', 'position_tab');
         $positionData->setPageName('position_page');
-        $employeeData = $this->workScheduleRepo->paginate([...$options, "subject_type" => config('work_schedule.subject_type.employee')], $take, 'employee_page');
+
+        // filter and paginate employee page
+        $employeeData = $this->workScheduleRepo->paginate(
+            [
+                ...$options,
+                "subject_type" => config('work_schedule.subject_type.employee'),
+                "name" => $request->input("employee_calender_name", null),
+                "employee_name" => $request->input("employee_name", null),
+                "shift_name" => $request->input("employee_shift_name", null),
+                "employee_interval_day" => $request->input("employee_interval_day", null),
+            ], $take, 'employee_page', 'employee_tab');
         $employeeData->setPageName('employee_page');
+
         $workSchedules = [
            'companyData' => $companyData,
            'departmentData' => $departmentData,
            'positionData' => $positionData,
            'employeeData' => $employeeData,
         ];
+
+
         $positions = Position::all();
         $departments = Department::all();
         $employees = Employee::all();
