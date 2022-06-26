@@ -3,8 +3,13 @@
 namespace App\Providers;
 
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider;
-
+use \Google\Service\Drive;
+use \Masbug\Flysystem\GoogleDriveAdapter;
+use \League\Flysystem\Filesystem;
+use \Illuminate\Filesystem\FilesystemAdapter;
+use Illuminate\Support\Facades\Log;
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -32,5 +37,29 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Paginator::useBootstrap();
+
+        try {
+            Storage::extend('google', function($app, $config) {
+                $options = [];
+
+                if (!empty($config['teamDriveId'] ?? null)) {
+                    $options['teamDriveId'] = $config['teamDriveId'];
+                }
+
+                $client = new \Google\Client();
+                $client->setClientId($config['clientId']);
+                $client->setClientSecret($config['clientSecret']);
+                $client->refreshToken($config['refreshToken']);
+
+                $service = new Drive($client);
+                $adapter = new GoogleDriveAdapter($service, '/document', $options);
+                $driver = new Filesystem($adapter);
+
+                return new FilesystemAdapter($driver, $adapter);
+            });
+        } catch(\Exception $e) {
+            $message = '[' . date('Y-m-d H:i:s') . '] Error message \'' . $e->getMessage() . '\'' . ' in ' . $e->getFile() . ' line ' . $e->getLine();
+            Log::error($message);
+        }
     }
 }

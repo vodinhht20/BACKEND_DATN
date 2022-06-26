@@ -22,6 +22,7 @@ use Spatie\Permission\Models\Permission;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ScheduleWorkController;
 use App\Http\Controllers\TimesheetController;
+use Illuminate\Support\Facades\Storage;
 use Stevebauman\Location\Facades\Location;
 
 /*
@@ -114,9 +115,57 @@ Route::prefix('/banner')->name("banner.")->group(function () {
 });
 
 Route::get('/timesheet', [TimesheetController::class, 'timesheet'])->name("timesheet");
-Route::get('/test', function (Request $request) {
-    $ip = $request->ip();
-    dump($ip);
-    $position = Location::get($ip);
-    dd($position);
+
+Route::get('/test', function(Request $request) {
+    return view('test');
+});
+Route::post('/test', function(Request $request) {
+    $fileRequest = $request->file('file');
+    $getNameFile = date('Y-m-d H:i').$fileRequest->getClientOriginalName();
+    $getContent = $fileRequest->get();
+    Storage::disk('google')->put($getNameFile, $getContent);
+
+    // lấy ra đường dẫn
+    dd(Storage::disk('google'));
+});
+
+
+Route::get('list', function() {
+    $dir = '/';
+    $recursive = false; // Có lấy file trong các thư mục con không?
+    $contents = collect(Storage::disk('google')->listContents($dir, $recursive));
+    return $contents->where('type', '=', 'file');
+});
+
+Route::get('get', function() {
+    $filename = '1W5GndP2oU2fLVJv424uh3s92MpVzr0xV';
+    $dir = '/';
+    $recursive = false; // Có lấy file trong các thư mục con không?
+    $contents = collect(Storage::disk('google')->listContents($dir, $recursive));
+    $file = $contents
+        ->where('type', '=', 'file')
+        ->where(function($val) use ($filename){
+            return $val['extraMetadata']['id'] == $filename;
+        })
+        ->first(); // có thể bị trùng tên file với nhau!
+    $rawData = Storage::disk('google')->get($file['path']);
+    $name = $file['path'];
+    return response($rawData, 200)
+        ->header('Content-Type', $file['mime_type'])
+        ->header('Content-Disposition', "attachment; filename=$name");
+});
+
+Route::get('delete', function() {
+    $filename = '1TJYM3ap3SS2DkMmB7b9rzokxw8K9geeu';
+    $dir = '/';
+    $recursive = false; // Có lấy file trong các thư mục con không?
+    $contents = collect(Storage::disk('google')->listContents($dir, $recursive));
+    $file = $contents
+        ->where('type', '=', 'file')
+        ->where(function($val) use ($filename){
+            return $val['extraMetadata']['id'] == $filename;
+        })
+        ->first(); // có thể bị trùng tên file với nhau!
+    Storage::disk('google')->restore($file['path']);
+    return 'File was deleted from Google Drive';
 });
