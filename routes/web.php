@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\ProductController as ApiProductController;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CheckinController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
@@ -96,6 +97,11 @@ Route::prefix('/company')->name("company.")->group(function () {
     Route::get('/delete/{id}', [CompanyController::class, 'delete'])->name("delete");
     Route::get('/structure', [CompanyController::class, 'structure'])->name("structure");
     Route::get('/branchs', [CompanyController::class, 'branchs'])->name("branchs");
+});
+Route::prefix('/checkin')->name("checkin.")->group(function () {
+    Route::get('/view', [CheckinController::class, 'index'])->name("view");
+    Route::post('/add-wifi', [CheckinController::class, 'addwifi'])->name("add-wifi");
+    Route::post('/add-location', [CheckinController::class, 'addlocation'])->name("add-location");
 });
 
 Route::prefix('/banner')->name("banner.")->group(function () {
