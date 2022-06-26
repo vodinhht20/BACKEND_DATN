@@ -19,7 +19,7 @@ class HomeController extends Controller
         foreach ($banner as $b){
             $bannerRes[] = ([
                 'links' => $b->links,
-                'images' => $b->getBanner()
+                'image' => $b->getBanner()
             ]);
         }
         
