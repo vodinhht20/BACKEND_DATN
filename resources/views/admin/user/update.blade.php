@@ -56,7 +56,7 @@
                                 <div class="form-group">
                                     <label class="col-form-label">Họ & Tên<span class="text-danger">*</span></label>
                                     <div class="">
-                                        <input type="text" class="form-control data-input" value="{{ $employee->fullname }}" name="name" placeholder="Nhập họ và tên thành viên">
+                                        <input type="text" class="form-control data-input" value="{{ $employee->fullname }}" name="fullname" placeholder="Nhập họ và tên thành viên">
                                     </div>
                                 </div>
                             </div>
