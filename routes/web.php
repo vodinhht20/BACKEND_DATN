@@ -115,7 +115,6 @@ Route::prefix('/banner')->name("banner.")->group(function () {
 });
 
 Route::get('/timesheet', [TimesheetController::class, 'timesheet'])->name("timesheet");
-<<<<<<< HEAD
 
 Route::get('/test', function(Request $request) {
     return view('test');
@@ -170,11 +169,3 @@ Route::get('delete', function() {
     Storage::disk('google')->restore($file['path']);
     return 'File was deleted from Google Drive';
 });
-=======
-Route::get('/test', function (Request $request) {
-    $ip = $request->ip();
-    dump($ip);
-    $position = Location::get($ip);
-    dd($position);
-});
->>>>>>> c61c5680a7f0b34d055841fbc14ae3efc7ca7462
