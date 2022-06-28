@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Events\HandleCheckIn;
 use App\Http\Controllers\Controller;
+use App\Libs\Slack;
 use App\Models\Employee;
 use App\Repositories\TimekeepRepository;
 use Carbon\Carbon;
@@ -68,6 +69,7 @@ class TimekeepingController extends Controller
         } catch (\Exception $e) {
             $message = '[' . date('Y-m-d H:i:s') . '] Error message \'' . $e->getMessage() . '\'' . ' in ' . $e->getFile() . ' line ' . $e->getLine();
             \Log::error($message);
+            Slack::error($message);
             DB::rollBack();
         }
         $options['status'] = $result ? config('timekeep.status.success') : config('timekeep.status.failed');
