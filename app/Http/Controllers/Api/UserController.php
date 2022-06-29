@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Libs\Slack;
 use App\Repositories\EmployeeRepository;
 use App\Repositories\UserRepositoryInterface;
 use Carbon\Carbon;
@@ -122,11 +123,11 @@ class UserController extends Controller
 
     protected function changePasssword(Request $request){
         $employee = JWTAuth::toUser($request->access_token);
-        if (Hash::check($request->password_old, $employee->password)) { 
+        if (Hash::check($request->password_old, $employee->password)) {
             $employee->fill([
                 'password' => Hash::make($request->password_new)
             ])->save();
-            
+
             return response()->json([
                 'error_code' => 'success',
                 'message' => 'Thay đổi mật khẩu thành công!'
@@ -163,7 +164,7 @@ class UserController extends Controller
                 'avatar' => $urlImage,
                 'type_avatar' => 1
             ])->save();
-            
+
             return response()->json([
                 'error_code' => 'success',
                 'message' => 'update avatar thành công!',
@@ -172,6 +173,7 @@ class UserController extends Controller
         } catch (\Exception $e) {
             $message = '[' . date('Y-m-d H:i:s') . '] Error message \'' . $e->getMessage() . '\'' . ' in ' . $e->getFile() . ' line ' . $e->getLine();
             \Log::error($message);
+            Slack::error($message);
             return response()->json([
                 'error_code' => 'error',
                 'message' => 'update avatar thất bại!'
@@ -208,7 +210,7 @@ class UserController extends Controller
             'gender' => $request->gender,
             'phone' => $request->phone,
         ])->save();
-        
+
         return response()->json([
             'error_code' => 'success',
             'message' => 'update thông tin thành công!',

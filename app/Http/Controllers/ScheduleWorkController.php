@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Libs\Slack;
 use App\Models\Department;
 use App\Models\Employee;
 use App\Models\Position;
@@ -167,6 +168,7 @@ class ScheduleWorkController extends Controller
             $message = '[' . date('Y-m-d H:i:s') . '] Error message \'' . $e->getMessage() . '\'' . ' in ' . $e->getFile() . ' line ' . $e->getLine();
             \Log::error($message);
             DB::rollBack();
+            Slack::error($message);
             return response()->json([
                 'error_code' => 'exception_error',
                 'message' => $validator->messages()->first()
