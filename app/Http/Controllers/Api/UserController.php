@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -212,6 +213,52 @@ class UserController extends Controller
             'error_code' => 'success',
             'message' => 'update thông tin thành công!',
         ], 200);
+    }
+
+    protected function kyc(Request $request): JsonResponse
+    {
+        $employee = JWTAuth::toUser($request->access_token);
+        $validator = Validator::make($request->all(), [
+            'file' => 'required',
+            'file.*' => 'required|mimes:jpeg,jpg,png,pdf,xlx,csv|max:10000',
+        ],[
+            'file.*.required' => 'Vui lòng chọn file',
+            'file.*.max' => 'File của bạn vượt quá 10MB',
+            'file.*.mimes' => 'File bạn chọn không đúng định dạng',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $validator->messages()->first()
+            ], 403);
+        }
+
+        $data = [];
+        if ($request->file('file')) {
+            try{
+                foreach ($request->file('file') as $key => $file) {
+                    $name = $employee->employee_code.'_'.Str::random(20).'_'.date('Y-m-d').'.'.$file->extension();
+                    $file->storeAs('public/documents', $name);
+                    $data[]['name'] = $name;
+                }
+            } catch (\Exception $e) {
+                $message = '[' . date('Y-m-d H:i:s') . '] Error message \'' . $e->getMessage() . '\'' . ' in ' . $e->getFile() . ' line ' . $e->getLine();
+                \Log::error($message);
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'update thất bại!'
+                ], 403);
+            }
+        }
+        $image = json_encode($data);
+
+        // // return the response
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Tải lên '.count($data).' tài liệu thành công!',
+        ], 200);
+
     }
 
     protected function storeImage(Request $request, $name = 'image')
