@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Libs\Slack;
+use App\Models\Attribuite_Employee;
 use App\Repositories\EmployeeRepository;
 use App\Repositories\UserRepositoryInterface;
 use Carbon\Carbon;
@@ -220,6 +221,22 @@ class UserController extends Controller
     protected function kyc(Request $request): JsonResponse
     {
         $employee = JWTAuth::toUser($request->access_token);
+        $Attribuite_Employee = Attribuite_Employee::OrderBy('created_at', 'desc')->where('employee_id', $employee->id)->select('status')->first();
+
+        if (!empty($Attribuite_Employee)) {
+            if ($Attribuite_Employee->status == 0) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Không thể upload tài liệu khi đang chờ duyệt'
+                ], 403);
+            }else if ($Attribuite_Employee->status == 1) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Tài liệu của bạn đã được duyệt không thể tải lên tài liệu mới'
+                ], 403);
+            }
+        }
+
         $validator = Validator::make($request->all(), [
             'file' => 'required',
             'file.*' => 'required|mimes:jpeg,jpg,png,pdf,xlx,csv|max:10000',
@@ -242,7 +259,7 @@ class UserController extends Controller
                 foreach ($request->file('file') as $key => $file) {
                     $name = $employee->employee_code.'_'.Str::random(20).'_'.date('Y-m-d').'.'.$file->extension();
                     $file->storeAs('public/documents', $name);
-                    $data[]['name'] = $name;
+                    $data[] = $name;
                 }
             } catch (\Exception $e) {
                 $message = '[' . date('Y-m-d H:i:s') . '] Error message \'' . $e->getMessage() . '\'' . ' in ' . $e->getFile() . ' line ' . $e->getLine();
@@ -253,12 +270,20 @@ class UserController extends Controller
                 ], 403);
             }
         }
-        $image = json_encode($data);
+        $raw_data = json_encode($data);
+
+        $document = new Attribuite_Employee();
+        $document->employee_id = $employee->id;
+        $document->attribute_id = 1;
+        $document->data = "null";
+        $document->raw_data = $raw_data;
+        $document->save();
 
         // // return the response
         return response()->json([
             'status' => 'success',
             'message' => 'Tải lên '.count($data).' tài liệu thành công!',
+            'data' => $raw_data
         ], 200);
 
     }
@@ -267,5 +292,11 @@ class UserController extends Controller
     {
         $path = $request->file($name)->store('public/avatars');
         return substr($path, strlen('public/'));
+    }
+
+    protected function checkDocument(Request $request){
+        $employee = JWTAuth::toUser($request->access_token);
+        $status = Attribuite_Employee::OrderBy('created_at', 'desc')->where('employee_id', $employee->id)->select('status')->first();
+        return $status;
     }
 }
