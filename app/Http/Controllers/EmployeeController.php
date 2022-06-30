@@ -9,9 +9,7 @@ use App\Repositories\EmployeeRepository;
 use Illuminate\Http\Request;
 use \Illuminate\Support\Str;
 use Validator;
-use App\Models\Attribute;
 use App\Models\Position;
-use Illuminate\Database\Eloquent\Builder;
 
 class EmployeeController extends Controller
 {

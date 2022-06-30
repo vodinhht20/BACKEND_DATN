@@ -74,7 +74,7 @@
                                 <div class="col-sm-6 mt-3 row">
                                     <div class="col-sm-6"><p>Phòng ban</p></div>
                                     <div class="col-sm-6">
-                                        <p><strong>{{$employee->branch->name}}</strong></p>
+                                        <p><strong>{{$employee->branch? $employee->branch->name: 'Chưa cập nhật'}}</strong></p>
                                     </div>
                                 </div>
                                 <div class="col-sm-6 mt-3 row">
