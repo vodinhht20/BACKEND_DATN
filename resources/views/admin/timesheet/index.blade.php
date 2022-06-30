@@ -4,6 +4,23 @@
 @endsection
 @section('style-page')
     <link rel="stylesheet" href="{{asset('frontend')}}/css/company-work.css?v1.0.1">
+    <style>
+        :root {
+            --color-hr-1: rgb(10, 132, 255);
+            --color-hr-2: rgb(0, 188, 212);
+            --color-hr-3: rgb(255, 69, 58);
+            --color-hr-4: rgb(0, 177, 79);
+            --color-hr-5: rgb(255, 159, 10);
+            --color-hr-6: rgb(187, 187, 187);
+        }
+        th {
+            min-width: 150px;
+            padding-top: 10px !important;
+            padding-bottom: 10px !important;
+            height: 30px !important;
+            vertical-align: middle !important;
+        }
+    </style>
 @endsection
 @section('header-page')
 <div class="page-header">
@@ -74,32 +91,32 @@
                 <div class="task_Manager" style="margin-top: 20px">
                     <div class="flex" style="display: flex">
                         <div class="items-center" >
-                            <div class="w-10 h-10 rounded-full" style="background-color: rgb(0, 177, 79);"></div>
+                            <div class="w-10 h-10 rounded-full" style="background-color: var(--color-hr-4);"></div>
                             <span class="text-grey55">Chấm công đúng giờ</span>
                         </div>
                         <div class="items-center">
-                            <div class="w-10 h-10 rounded-full" style="background-color: rgb(255, 159, 10);"></div>
+                            <div class="w-10 h-10 rounded-full" style="background-color: var(--color-hr-5);"></div>
                             <span class="text-grey55">Đi muộn/ Về sớm/ Quên checkout</span>
                         </div>
                         <div class="items-center">
-                            <div class="w-10 h-10 rounded-full" style="background-color: rgb(187, 187, 187);"></div>
+                            <div class="w-10 h-10 rounded-full" style="background-color: var(--color-hr-6);"></div>
                             <span class="text-grey55">Không chấm công</span>
                         </div>
                         <div class="items-center">
-                            <div class="w-10 h-10 rounded-full" style="background-color: rgb(10, 132, 255);"></div>
+                            <div class="w-10 h-10 rounded-full" style="background-color: var(--color-hr-1);"></div>
                             <span class="text-grey55">Có đơn từ</span>
                         </div>
                         <div class="items-center">
-                        <div class="w-10 h-10 rounded-full" style="background-color: rgb(0, 188, 212);"></div>
+                        <div class="w-10 h-10 rounded-full" style="background-color: var(--color-hr-2);"></div>
                             <span class="text-grey55">Nghỉ lễ</span>
                         </div>
                         <div class="items-center">
-                            <div class="w-10 h-10 rounded-full" style="background-color: rgb(255, 69, 58);"></div>
+                            <div class="w-10 h-10 rounded-full" style="background-color: var(--color-hr-3);"></div>
                             <span class="text-grey55">Có lỗi</span>
                         </div>
                     </div>
                     <div>
-                        <p>Có <b>...</b> nhân viên trong danh sách</p>
+                        <p>Có <b>{{ count($timesheetFormats) }}</b> nhân viên trong danh sách</p>
                     </div>
                     <div class="table-border-style">
                         <div class="table-responsive scrollbar-custom">
@@ -127,38 +144,50 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                   
-                                    @foreach ($newTimekeeps as $newTimekeep )
+                                    @foreach ($timesheetFormats as $timesheet)
                                     <tr>
-                                        <td>{{$newTimekeep['employee']->fullname}}</td>
-                                    
-                                        <td class="tabletimekeeps">
-                                            <div class="flex-col">
-                                                
-                                                <span>1</span>
-                                                <div class="flex justify-center flex-wrap px-10" style="background-color: rgb(0, 177, 79);"></div>
-                                            </div>
-                                        </td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        
-                                    </tr>
+                                        <td>{{ $timesheet['employee']->fullname }}</td>
+                                            @foreach ($formatDates as $date => $dateName)
+                                                @if (isset($timesheet['timesheet'][$date]))
+                                                    <td class="tabletimekeeps">
+                                                        <div class="flex-col">
+                                                            @if($timesheet['timesheet'][$date]['worktime'] >= 1)
+                                                                <span>1</span>
+                                                                <div class="flex justify-center flex-wrap px-10" style="background-color: var(--color-hr-4);"></div>
+                                                            @elseif ($timesheet['timesheet'][$date]['worktime'] >= 0.5)
+                                                                <span>0.5</span>
+                                                                <div class="flex justify-center flex-wrap px-10" style="background-color: var(--color-hr-5);"></div>
+                                                            @else
+                                                                <span>0</span>
+                                                                <div class="flex justify-center flex-wrap px-10" style="background-color: var(--color-hr-5);"></div>
+                                                            @endif
+                                                        </div>
+                                                    </td>
+                                                @else
+                                                    <td class="tabletimekeeps">
+                                                        <div class="flex-col">
+                                                            <span>0</span>
+                                                            <div class="flex justify-center flex-wrap px-10" style="background-color: var(--color-hr-6);"></div>
+                                                        </div>
+                                                    </td>
+                                                @endif
+                                            @endforeach
+                                            <td>1</td>
+                                            <td>1</td>
+                                            <td>1</td>
+                                            <td>1</td>
+                                            <td>1</td>
+                                            <td>1</td>
+                                            <td>1</td>
+                                            <td>1</td>
+                                            <td>1</td>
+                                            <td>1</td>
+                                        </tr>
                                     @endforeach
                                 </tbody>
                             </table>
                         </div>
                         <div  class=" dataTables_pager" style="margin-top: 30px">
-
-                            {!!$employ->links()!!}
-                
                         </div>
                     </div>
                 </div>
@@ -188,7 +217,7 @@
                 <button type="submit" class="btn btn-primary btn-sm" style="float:right; margin-right:30px">Lưu</button>
             </div>
         </div>
- 
+
     </div>
 
 @endsection

@@ -15,20 +15,18 @@ class TimesheetController extends Controller
     {
         //
     }
+
     public function timesheet(Request $request)
     {
         $rootTimekeeps = Timekeep::with(['timekeepdetail' => function ($q) {
             $q->select('timekeep_id', 'checkin_at');
-
         },
         'employee'
         ])->get();
 
-
-
         $worktime = null;
-        
-        $newTimekeeps = collect();
+
+        $timesheetFormats = [];
         foreach ($rootTimekeeps as $timekeep) {
             $checkin = $timekeep->timekeepdetail->first();
             $checkout = $timekeep->timekeepdetail->last();
@@ -43,38 +41,22 @@ class TimesheetController extends Controller
                 $checkoutFormat = $checkoutFormat == $checkinFormat ? null : $checkoutFormat;
                 $worktime = $this->timesheetService->getDifferentHours($checkinCarbon,$checkoutCarbon);
             }
-           
-            $newTimekeeps[]=([
+            $formatDate = Carbon::createFromFormat("Y-m-d", $timekeep->date)->format('d-m');
+            $timesheetFormats[$timekeep->employee_id]["employee"] = $timekeep->employee;
+            $timesheetFormats[$timekeep->employee_id]["timesheet"][$formatDate] = [
                 'id' => $timekeep->id,
-                'employee' => $timekeep->employee,
-                'date' => $timekeep->date,
                 'checkin' => $checkinFormat,
                 'checkout' => $checkoutFormat,
                 'worktime' => $worktime
-                
-            ]);
-    
-
-        
+            ];
         }
-        
-        // dd($newTimekeeps);
-
-        // $timeSheets = $this->timekeepRepo->dataCheckinByDay("2022-06-13", 1);
         $inpMonth = $request->input('month', Carbon::now()->format("Y-m"));
         $monthYear = Carbon::createFromFormat("Y-m", $inpMonth);
         $formatDates = $this->timesheetService->getDayByMonth($monthYear);
         $currentMonth = Carbon::now()->format('Y-m');
-      
-        $employ = Employee::with('timekeep')
-        ->OrderBy('id', 'asc')
-        ->paginate(5);
-        
-        return view('admin.timesheet.index',compact('currentMonth', "formatDates", "inpMonth","employ","newTimekeeps"));
-
-        
+        return view('admin.timesheet.index',compact('currentMonth', "formatDates", "inpMonth", "timesheetFormats"));
     }
-    
+
 
 
 }
