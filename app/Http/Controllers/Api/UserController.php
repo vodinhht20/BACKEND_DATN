@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Libs\Slack;
 use App\Models\Attribuite_Employee;
+use App\Models\Noti;
 use App\Repositories\EmployeeRepository;
 use App\Repositories\UserRepositoryInterface;
 use Carbon\Carbon;
@@ -239,7 +240,7 @@ class UserController extends Controller
 
         $validator = Validator::make($request->all(), [
             'file' => 'required',
-            'file.*' => 'required|mimes:jpeg,jpg,png,pdf,xlx,csv|max:10000',
+            'file.*' => 'required|mimes:jpeg,jpg,png,pdf,xlx,csv,doc,docx|max:10000',
         ],[
             'file.*.required' => 'Vui lòng chọn file',
             'file.*.max' => 'File của bạn vượt quá 10MB',
@@ -264,6 +265,7 @@ class UserController extends Controller
             } catch (\Exception $e) {
                 $message = '[' . date('Y-m-d H:i:s') . '] Error message \'' . $e->getMessage() . '\'' . ' in ' . $e->getFile() . ' line ' . $e->getLine();
                 \Log::error($message);
+                Noti::telegramLog('Upload document', $message);
                 return response()->json([
                     'status' => 'error',
                     'message' => 'update thất bại!'
