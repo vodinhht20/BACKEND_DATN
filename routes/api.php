@@ -37,7 +37,10 @@ Route::middleware('jwt.auth')->group(function () {
     Route::post('change-password', [UserController::class, 'changePasssword']);
     Route::post('update-avatar', [UserController::class, 'updateAvatar']);
     Route::post('update-profile', [UserController::class, 'updateProfile']);
+    Route::post('kyc', [UserController::class, 'kyc']);
+    Route::get('kyc-check', [UserController::class, 'checkDocument']);
     //user
+
     Route::prefix('checkin')->group(function () {
         Route::post('', [TimekeepingController::class, 'checkIn'])->middleware('checkip');
         Route::get('data-checkin', [TimekeepingController::class, 'getCurrentDataCheckin']);

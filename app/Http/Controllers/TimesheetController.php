@@ -22,8 +22,7 @@ class TimesheetController extends Controller
 
         },
         'employee'
-        ])->GroupBy('employee.id')
-        ->get();
+        ])->get();
 
 
 

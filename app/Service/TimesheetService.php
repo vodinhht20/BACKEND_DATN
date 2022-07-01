@@ -1,6 +1,7 @@
 <?php
 namespace App\Service;
 
+use App\Libs\Slack;
 use Carbon\Carbon;
 use DateTimeZone;
 
@@ -35,6 +36,7 @@ class TimesheetService {
         } catch (\Exception $e) {
             $message = '[' . date('Y-m-d H:i:s') . '] Error message \'' . $e->getMessage() . '\'' . ' in ' . $e->getFile() . ' line ' . $e->getLine();
             \Log::error($message);
+            Slack::error($message);
         }
         return $differentHours;
     }
