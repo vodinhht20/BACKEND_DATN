@@ -7,19 +7,13 @@
         </div>
     </div>
    <div class="form-group row">
-    <div class="col-sm-2">
+    <div class="col-sm-5">
         <select name="" id="" class="form-control">
-            <option value="opt 1">Lựa chọn 1</option>
-            <option value="opt 2"></option>
-            <option value="opt 3"></option>
+            <option value="2">Trạng Thái Hoạt Động</option>
+            <option value="1">On</option>
+            <option value="0">Off</option>
         </select>
     </div>
-    <div class="col-sm-3">
-        <select name="" id="" class="form-control">
-            <option value="opt 1">Lựa chọn 1</option>
-            <option value="opt 2"></option>
-            <option value="opt 3"></option>
-        </select>
     </div>
     <div class="col-sm-6" style="width: 100%;text-align: right" >
         {{-- <button type="button" id="add-wifi-btn"  class="btn btn-primary waves-effect add-wifi-btn" data-toggle="modal" data-target="#add-wifi-modal"> <i class="fa fa-plus"></i> Thêm</button>curent_ip --}}

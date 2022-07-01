@@ -10,9 +10,10 @@ class CheckinController extends Controller
 {
     public function index() {
         $branch=Branch::all();
+        $count_branch=count($branch);
         $wifi=Network::paginate(10); 
         $current_ip = request()->ip();
-        return view('admin.checkin.view',compact('branch' , 'wifi','current_ip'));
+        return view('admin.checkin.view',compact('branch' , 'wifi','current_ip','count_branch'));
     }
     public function addwifi(Request $request ){
      
