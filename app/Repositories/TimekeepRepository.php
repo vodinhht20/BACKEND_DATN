@@ -120,11 +120,11 @@ class TimekeepRepository extends BaseRepository
         }
 
         if (isset($options['employee_id'])) {
-            $query->where("id", $options['employee_id']);
+            $query->where("employee_id", $options['employee_id']);
         }
 
         if (isset($options['employee_ids'])) {
-            $query->whereIn("id", $options['employee_ids']);
+            $query->whereIn("employee_id", $options['employee_ids']);
         }
 
         if (isset($options['keywords'])) {

@@ -16,21 +16,25 @@ class TimesheetController extends Controller
         //
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
+        $monthYear = $request->input('month', Carbon::now()->format("m/Y"));
+        $monthYear = $monthYear ?: Carbon::now()->format("m/Y");
         $options = [
             'with' => ['timekeepdetail' => function ($q) {
                     $q->select('timekeep_id', 'checkin_at');
                 },
                 'employee'],
-            'date_from' => Carbon::now()->startOfMonth(),
-            'date_to' => Carbon::now()->endOfMonth()
+            'date_from' => Carbon::createFromFormat("m/Y", $monthYear)->startOfMonth(),
+            'date_to' => Carbon::createFromFormat("m/Y", $monthYear)->endOfMonth(),
+            'employee_id' => $user->id
         ];
         $timekeeps = $this->timekeepRepo->query($options)->get();
         $timesheetFormats = $this->timekeepRepo->timesheetFormats($timekeeps);
         return response()->json([
-            "data" => $timesheetFormats
+            "data" => array_values($timesheetFormats)[0] ?? [],
+            "month" => $monthYear
         ]);
     }
 }
