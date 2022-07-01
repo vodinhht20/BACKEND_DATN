@@ -1,6 +1,15 @@
 .box-section-timesheet {
     grid-column-gap: 20px;
 }
+
+:root {
+    --color-hr-1: rgb(10, 132, 255);
+    --color-hr-2: rgb(0, 188, 212);
+    --color-hr-3: rgb(255, 69, 58);
+    --color-hr-4: rgb(0, 177, 79);
+    --color-hr-5: rgb(255, 159, 10);
+    --color-hr-6: rgb(187, 187, 187);
+}
 .box-section-timesheet .tabs {
     align-content: flex-start;
     grid-row-gap: 20px;
@@ -135,7 +144,6 @@
 }
 .text-grey55{
     padding-left: 5px;
-    padding-bottom: 5px;
 }
 
 @media(min-width: 1200px){
@@ -163,4 +171,29 @@
     /* .box-section-timesheet .card .tab-pane .table-border-style{
         width: 84vw;
     } */
+}
+
+.box-section-timesheet .table-border-style th {
+    min-width: 150px;
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+    height: 30px !important;
+    vertical-align: middle !important;
+}
+.box-section-timesheet .pagination .page-item .page-link {
+    margin: unset !important;
+}
+.box-section-timesheet .mx-datepicker {
+    width: 100%;
+}
+.box-section-timesheet .mx-input {
+    height: 38px;
+}
+.box-section-timesheet .vue-treeselect__multi-value-label, .vue-treeselect__value-remove {
+    display: table-cell !important;
+    margin-top: 0 !important;
+}
+
+.box-section-timesheet .vue-treeselect__control {
+    height: 38px !important;
 }

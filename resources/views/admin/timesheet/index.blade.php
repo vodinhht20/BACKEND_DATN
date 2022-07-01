@@ -7,37 +7,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.4.0/dist/vue-treeselect.umd.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.4.0/dist/vue-treeselect.min.css">
     <link rel="stylesheet" href="{{asset('frontend')}}/css/company-work.css?v1.0.1">
-    <style>
-        :root {
-            --color-hr-1: rgb(10, 132, 255);
-            --color-hr-2: rgb(0, 188, 212);
-            --color-hr-3: rgb(255, 69, 58);
-            --color-hr-4: rgb(0, 177, 79);
-            --color-hr-5: rgb(255, 159, 10);
-            --color-hr-6: rgb(187, 187, 187);
-        }
-        .table-border-style th {
-            min-width: 150px;
-            padding-top: 10px !important;
-            padding-bottom: 10px !important;
-            height: 30px !important;
-            vertical-align: middle !important;
-        }
-        .pagination .page-item .page-link {
-            margin: unset !important;
-        }
-        .mx-datepicker {
-            width: 100%;
-        }
-        .mx-input {
-            height: 38px;
-        }
-
-        .vue-treeselect__multi-value-label, .vue-treeselect__value-remove {
-            display: table-cell !important;
-            margin-top: 0 !important;
-        }
-    </style>
 @endsection
 @section('header-page')
 <div class="page-header">
@@ -90,7 +59,7 @@
                 <form action="" class="mt-3">
                     <div class="row unset-width">
                         <div class="form-group col-lg-12">
-                            <input type="text" name="keywords" placeholder="Nhập từ khóa..." id="keywords" filter="keywords" class="form-control filter-data" value="{{ request()->keywords }}">
+                            <input type="text" name="keywords" placeholder="Nhập tên nhân viên..." id="keywords" filter="keywords" class="form-control filter-data" value="{{ request()->keywords }}">
                         </div>
                         <div class="form-group col-lg-4">
                             <input class="form-control" type="hidden" name="month" :value="inputMounth" placeholder="Lựa chọn tháng">
@@ -157,7 +126,6 @@
                                         <th class="table-align-center">Số phút đi muộn</th>
                                         <th class="table-align-center">Số phút về sớm</th>
                                         <th class="table-align-center">Công hiện tại</th>
-                                        <th class="table-align-center">Công chuẩn</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -168,16 +136,17 @@
                                                 @if (isset($timesheet['timesheet'][$date]))
                                                     <td class="tabletimekeeps">
                                                         <div class="flex-col">
-                                                            @if($timesheet['timesheet'][$date]['worktime'] >= 1)
-                                                                <span>1</span>
+                                                            @php
+                                                                $timesheetByDate = $timesheet['timesheet'][$date];
+                                                            @endphp
+                                                            @if($timesheetByDate['worktime'] && ($timesheetByDate["minute_late"] || $timesheetByDate["minute_early"] || $timesheetByDate["checkout"]))
+                                                                <div class="flex justify-center flex-wrap px-10" style="background-color: var(--color-hr-5);"></div>
+                                                            @elseif($timesheetByDate['worktime'] > 0)
                                                                 <div class="flex justify-center flex-wrap px-10" style="background-color: var(--color-hr-4);"></div>
-                                                            @elseif ($timesheet['timesheet'][$date]['worktime'] >= 0.5)
-                                                                <span>0.5</span>
-                                                                <div class="flex justify-center flex-wrap px-10" style="background-color: var(--color-hr-5);"></div>
                                                             @else
-                                                                <span>0</span>
-                                                                <div class="flex justify-center flex-wrap px-10" style="background-color: var(--color-hr-5);"></div>
+                                                                <div class="flex justify-center flex-wrap px-10" style="background-color: var(--color-hr-6);"></div>
                                                             @endif
+                                                            <span>{{ $timesheetByDate['worktime'] }}</span>
                                                         </div>
                                                     </td>
                                                 @else
@@ -189,16 +158,15 @@
                                                     </td>
                                                 @endif
                                             @endforeach
-                                            <td>1</td>
-                                            <td>1</td>
-                                            <td>1</td>
-                                            <td>1</td>
-                                            <td>1</td>
-                                            <td>1</td>
-                                            <td>1</td>
-                                            <td>1</td>
-                                            <td>1</td>
-                                            <td>1</td>
+                                            <td>{{ $timesheet['sum_reality_worktime'] }}</td>
+                                            <td>{{ $timesheet["sum_leave_worktime"] }}</td>
+                                            <td>{{ $timesheet["sum_holiday_worktime"] }}</td>
+                                            <td>{{ $timesheet['sum_no_salary_worktime'] }}</td>
+                                            <td>{{ $timesheet['sum_overtime_hour_worktime'] }}</td>
+                                            <td>{{ $timesheet['sum_worktime_hour'] }}</td>
+                                            <td>{{ $timesheet['sum_minute_late_worktime'] }}</td>
+                                            <td>{{ $timesheet['sum_minute_early_worktime'] }}</td>
+                                            <td>{{ $timesheet['sum_current_worktime'] }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
