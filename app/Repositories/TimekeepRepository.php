@@ -177,74 +177,74 @@ class TimekeepRepository extends BaseRepository
             $timesheetFormats[$timekeep->employee_id]["employee"] = $timekeep->employee;
 
             // Tính tổng ngày công thực thế
-            if (isset($timesheetFormats[$timekeep->employee_id]["sum_reality_worktime"])) {
-                if ($timekeep->type == config('timekeep.type.checkin')) {
+            if ($timekeep->type == config('timekeep.type.checkin')) {
+                if (isset($timesheetFormats[$timekeep->employee_id]["sum_reality_worktime"])) {
                     $timesheetFormats[$timekeep->employee_id]["sum_reality_worktime"] += $timekeep->worktime;
+                } else {
+                    $timesheetFormats[$timekeep->employee_id]["sum_reality_worktime"] = $timekeep->worktime;
                 }
-            } else {
-                $timesheetFormats[$timekeep->employee_id]["sum_reality_worktime"] = 0;
             }
 
             // Tính tổng ngày công nghỉ phép
-            if (isset($timesheetFormats[$timekeep->employee_id]["sum_leave_worktime"])) {
-                if ($timekeep->type == config('timekeep.type.leave')) {
+            if ($timekeep->type == config('timekeep.type.leave')) {
+                if (isset($timesheetFormats[$timekeep->employee_id]["sum_leave_worktime"])) {
                     $timesheetFormats[$timekeep->employee_id]["sum_leave_worktime"] += $timekeep->worktime;
+                } else {
+                    $timesheetFormats[$timekeep->employee_id]["sum_leave_worktime"] = $timekeep->worktime;
                 }
-            } else {
-                $timesheetFormats[$timekeep->employee_id]["sum_leave_worktime"] = 0;
             }
 
             // Tính tổng ngày công nghỉ lễ
-            if (isset($timesheetFormats[$timekeep->employee_id]["sum_holiday_worktime"])) {
-                if ($timekeep->type == config('timekeep.type.holiday')) {
+            if ($timekeep->type == config('timekeep.type.holiday')) {
+                if (isset($timesheetFormats[$timekeep->employee_id]["sum_holiday_worktime"])) {
                     $timesheetFormats[$timekeep->employee_id]["sum_holiday_worktime"] += $timekeep->worktime;
+                } else {
+                    $timesheetFormats[$timekeep->employee_id]["sum_holiday_worktime"] = $timekeep->worktime;
                 }
-            } else {
-                $timesheetFormats[$timekeep->employee_id]["sum_holiday_worktime"] = 0;
             }
 
             // Tính tổng ngày công không lương
-            if (isset($timesheetFormats[$timekeep->employee_id]["sum_no_salary_worktime"])) {
-                if ($timekeep->type == config('timekeep.type.no_salary')) {
+            if ($timekeep->type == config('timekeep.type.no_salary')) {
+                if (isset($timesheetFormats[$timekeep->employee_id]["sum_no_salary_worktime"])) {
                     $timesheetFormats[$timekeep->employee_id]["sum_no_salary_worktime"] += $timekeep->worktime;
+                } else {
+                    $timesheetFormats[$timekeep->employee_id]["sum_no_salary_worktime"] = $timekeep->worktime;
                 }
-            } else {
-                $timesheetFormats[$timekeep->employee_id]["sum_no_salary_worktime"] = 0;
             }
 
             // Tổng số giờ OT
             if (isset($timesheetFormats[$timekeep->employee_id]["sum_overtime_hour_worktime"])) {
                 $timesheetFormats[$timekeep->employee_id]["sum_overtime_hour_worktime"] += $timekeep->overtime_hour;
             } else {
-                $timesheetFormats[$timekeep->employee_id]["sum_overtime_hour_worktime"] = 0;
+                $timesheetFormats[$timekeep->employee_id]["sum_overtime_hour_worktime"] = $timekeep->overtime_hour;
             }
 
             // Tổng số giờ làm việc
             if (isset($timesheetFormats[$timekeep->employee_id]["sum_worktime_hour"])) {
                 $timesheetFormats[$timekeep->employee_id]["sum_worktime_hour"] += $worktimeHours;
             } else {
-                $timesheetFormats[$timekeep->employee_id]["sum_worktime_hour"] = 0;
+                $timesheetFormats[$timekeep->employee_id]["sum_worktime_hour"] = $worktimeHours;
             }
 
             // Tổng số phút đi muộn
             if (isset($timesheetFormats[$timekeep->employee_id]["sum_minute_late_worktime"])) {
                 $timesheetFormats[$timekeep->employee_id]["sum_minute_late_worktime"] += $timekeep->minute_late;
             } else {
-                $timesheetFormats[$timekeep->employee_id]["sum_minute_late_worktime"] = 0;
+                $timesheetFormats[$timekeep->employee_id]["sum_minute_late_worktime"] = $timekeep->minute_late;
             }
 
             // Tổng số phút về sớm
             if (isset($timesheetFormats[$timekeep->employee_id]["sum_minute_early_worktime"])) {
                 $timesheetFormats[$timekeep->employee_id]["sum_minute_early_worktime"] += $timekeep->minute_early;
             } else {
-                $timesheetFormats[$timekeep->employee_id]["sum_minute_early_worktime"] = 0;
+                $timesheetFormats[$timekeep->employee_id]["sum_minute_early_worktime"] = $timekeep->minute_early;
             }
 
             // Tổng công hiện tại
             if (isset($timesheetFormats[$timekeep->employee_id]["sum_current_worktime"])) {
                 $timesheetFormats[$timekeep->employee_id]["sum_current_worktime"] += $timekeep->worktime;
             } else {
-                $timesheetFormats[$timekeep->employee_id]["sum_current_worktime"] = 0;
+                $timesheetFormats[$timekeep->employee_id]["sum_current_worktime"] = $timekeep->worktime;
             }
         }
 

@@ -158,10 +158,10 @@
                                                     </td>
                                                 @endif
                                             @endforeach
-                                            <td>{{ $timesheet['sum_reality_worktime'] }}</td>
-                                            <td>{{ $timesheet["sum_leave_worktime"] }}</td>
-                                            <td>{{ $timesheet["sum_holiday_worktime"] }}</td>
-                                            <td>{{ $timesheet['sum_no_salary_worktime'] }}</td>
+                                            <td>{{ $timesheet['sum_reality_worktime'] ?? 0 }}</td>
+                                            <td>{{ $timesheet["sum_leave_worktime"] ?? 0 }}</td>
+                                            <td>{{ $timesheet["sum_holiday_worktime"] ?? 0 }}</td>
+                                            <td>{{ $timesheet['sum_no_salary_worktime'] ?? 0 }}</td>
                                             <td>{{ $timesheet['sum_overtime_hour_worktime'] }}</td>
                                             <td>{{ $timesheet['sum_worktime_hour'] }}</td>
                                             <td>{{ $timesheet['sum_minute_late_worktime'] }}</td>
