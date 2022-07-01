@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Department extends Model
 {
     use HasFactory;
+
+    public function positions()
+    {
+        return $this->hasMany(Position::class, 'department_id', 'id');
+    }
 }

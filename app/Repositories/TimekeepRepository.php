@@ -8,6 +8,7 @@ use App\Repositories\BaseRepository;
 use App\Service\TimekeepService;
 use App\Service\TimesheetService;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 
 class TimekeepRepository extends BaseRepository
 {
@@ -95,5 +96,52 @@ class TimekeepRepository extends BaseRepository
             return $timekeepService->isLocationInRadius($rootLongitude, $rootLatitude, $longitude, $latitude, $radius);
         }
         return false;
+    }
+
+
+    /**
+     *
+     * @param array $options
+     * @return Builder
+     */
+    public function query(array $options): Builder
+    {
+        $query = $this->model->query();
+
+        if (isset($options['with'])) {
+            $query->with($options['with']);
+        }
+
+        if (isset($options['date_from'])) {
+            $query->where("date", ">=", $options['date_from']);
+        }
+
+        if (isset($options['date_to'])) {
+            $query->where("date", "<=", $options['date_to']);
+        }
+
+        if (isset($options['employee_id'])) {
+            $query->where("id", $options['employee_id']);
+        }
+
+        if (isset($options['employee_ids'])) {
+            $query->whereIn("id", $options['employee_ids']);
+        }
+
+        if (isset($options['keywords'])) {
+            $query->whereHas("employee", function ($q) use ($options) {
+                $q->where('fullname', 'like', "%" . $options['keywords'] . "%");
+            });
+        }
+
+        if (isset($options['position_ids']) && count($options['position_ids']) > 0) {
+            $query->whereHas("employee", function ($employeeQuery) use ($options) {
+                $employeeQuery->whereHas("position", function ($positionsQuery) use ($options) {
+                    $positionsQuery->whereIn("id", $options['position_ids']);
+                });
+            });
+        }
+
+        return $query;
     }
 }

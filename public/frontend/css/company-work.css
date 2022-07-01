@@ -69,7 +69,7 @@
 }
 .box-section-timesheet .table th, .table td{
     border-right: 1px solid #ccc;
-   
+
 
 }
 .box-section-timesheet .table_manager tr td{
@@ -106,14 +106,11 @@
     line-height: 60px;
     padding: 0;
 }
-/* .box-section-timesheet .table-responsive::-webkit-scrollbar {
-    z-index: 30;
-} */
-.box-section-timesheet th, td {
+
+.box-section-timesheet .table-border-style th, .box-section-timesheet .table-border-style td {
     height: 80px;
     width: 200px;
     text-align: center;
-    
 }
 
 .table-responsive table{

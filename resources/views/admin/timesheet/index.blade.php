@@ -3,6 +3,9 @@
 <title>TimeWorks Manager</title>
 @endsection
 @section('style-page')
+    <link rel="stylesheet" href="{{asset('frontend/css/datepicker.css')}}">
+    <script src="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.4.0/dist/vue-treeselect.umd.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.4.0/dist/vue-treeselect.min.css">
     <link rel="stylesheet" href="{{asset('frontend')}}/css/company-work.css?v1.0.1">
     <style>
         :root {
@@ -13,12 +16,26 @@
             --color-hr-5: rgb(255, 159, 10);
             --color-hr-6: rgb(187, 187, 187);
         }
-        th {
+        .table-border-style th {
             min-width: 150px;
             padding-top: 10px !important;
             padding-bottom: 10px !important;
             height: 30px !important;
             vertical-align: middle !important;
+        }
+        .pagination .page-item .page-link {
+            margin: unset !important;
+        }
+        .mx-datepicker {
+            width: 100%;
+        }
+        .mx-input {
+            height: 38px;
+        }
+
+        .vue-treeselect__multi-value-label, .vue-treeselect__value-remove {
+            display: table-cell !important;
+            margin-top: 0 !important;
         }
     </style>
 @endsection
@@ -46,7 +63,7 @@
 </div>
 @endsection
 @section('content')
-    <div class="box-section-timesheet row">
+    <div class="box-section-timesheet row" id="app">
         <div class="col-md-12 col-lg-2 col-sm-12 tabs row">
             <div class="col-lg-12 col-md-3 col-sm-4 tab-item active">
                 <i class=" ti-clipboard"></i>
@@ -73,15 +90,15 @@
                 <form action="" class="mt-3">
                     <div class="row unset-width">
                         <div class="form-group col-lg-12">
-                            <input type="text" name="keywords" placeholder="Nhập từ khóa..." id="keywords" filter="keywords" class="form-control filter-data">
+                            <input type="text" name="keywords" placeholder="Nhập từ khóa..." id="keywords" filter="keywords" class="form-control filter-data" value="{{ request()->keywords }}">
                         </div>
                         <div class="form-group col-lg-4">
-                            <input class="form-control" type="month" name="month" max="{{ $currentMonth }}" value="{{ $inpMonth }}" placeholder="Chọn tháng này">
+                            <input class="form-control" type="hidden" name="month" :value="inputMounth" placeholder="Lựa chọn tháng">
+                            <date-picker v-model="inputMounth" type="month" value-type="YYYY-MM" format="MM-YYYY" placeholder="Select month" name="month"></date-picker>
                         </div>
                         <div class="form-group col-lg-4">
-                            <select class="form-control filter-data" name="position">
-                                <option value="">Chọn phòng ban, vị trí, nhân viên</option>
-                            </select>
+                            <input type="hidden" name="departments" :value="departmentValue">
+                            <treeselect v-model="departmentValue" :multiple="true" :options="departments" />
                         </div>
                         <div class="form-group col-lg-4">
                             <button class="btn btn-primary btn-sm">Tìm Kiếm</button>
@@ -188,6 +205,7 @@
                             </table>
                         </div>
                         <div  class=" dataTables_pager" style="margin-top: 30px">
+                            {{  $timesheetFormats->links() }}
                         </div>
                     </div>
                 </div>
@@ -217,43 +235,46 @@
                 <button type="submit" class="btn btn-primary btn-sm" style="float:right; margin-right:30px">Lưu</button>
             </div>
         </div>
-
     </div>
 
 @endsection
 
 @section('page-script')
-<script>
+    <script src="{{ asset('frontend/js/datepicker.js') }}"></script>
+    <script>
+        const tabs = document.querySelectorAll(".tab-item");
+        const panes = document.querySelectorAll(".tab-pane");
+        tabs.forEach((tab, index) => {
+            const pane = panes[index];
+            tab.onclick = function() {
+                document.querySelector(".tab-item.active").classList.remove("active");
+                document.querySelector(".tab-pane.active").classList.remove("active");
+                this.classList.add("active");
+                pane.classList.add("active");
+            };
+        });
 
-    const tabs = document.querySelectorAll(".tab-item");
-    const panes = document.querySelectorAll(".tab-pane");
-    tabs.forEach((tab, index) => {
-        const pane = panes[index];
+        function checkMe(checked) {
+            var cb = document.getElementById("item1");
+            var db = document.getElementById("item2");
 
-        tab.onclick = function() {
-            document.querySelector(".tab-item.active").classList.remove("active");
-            document.querySelector(".tab-pane.active").classList.remove("active");
-            this.classList.add("active");
-            pane.classList.add("active");
-        };
-    });
-
-    function checkMe(checked) {
-        var cb = document.getElementById("item1");
-        var db = document.getElementById("item2");
-
-        var content = document.getElementById("contentt");
-        if (db.checked==true) {
-            content.style.display="block";
-
-        }else{
-            content.style.display="none";
-
-        } if (cb.checked==true) {
-            content.style.display="none";
-
-
+            var content = document.getElementById("contentt");
+            if (db.checked==true) {
+                content.style.display="block";
+            } else{
+                content.style.display="none";
+            } if (cb.checked==true) {
+                content.style.display="none";
+            }
         }
-    }
-</script>
+        Vue.component('treeselect', VueTreeselect.Treeselect);
+        var app = new Vue({
+            el: '#app',
+            data: {
+                inputMounth: "{{ $inpMonth }}",
+                departmentValue: {!! json_encode($requestDepartments) !!},
+                departments: {!! json_encode($departments) !!},
+            }
+        });
+    </script>
 @endsection
