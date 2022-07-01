@@ -7,9 +7,7 @@
         <li class="nav-item">
             <a class="nav-link" data-toggle="tab" href="#deathline" aria-controls="deathline" aria-expanded="false" role="tab" >Danh Sách Vị Trí</a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#dafuk" aria-controls="dafuk" aria-expanded="false" role="tab" >Danh Sách ID Thiết Bị</a>
-        </li>
+        
         
     </ul>
     <!-- Tab panes -->
@@ -20,8 +18,6 @@
         <div class="tab-pane" id="deathline" role="tabpanel">
             @include('admin.checkin.locationlist')        
         </div>
-        <div class="tab-pane" id="dafuk" role="tabpanel">
-            @include('admin.checkin.devicelist')        
-        </div>
+        
     </div>
 </div>
