@@ -19,3 +19,4 @@
 
 <!-- style custom -->
 <link rel="stylesheet" type="text/css" href="{{asset('frontend')}}/css/admin.css">
+<link rel="stylesheet" type="text/css" href="{{asset('frontend')}}/css/loader.css">

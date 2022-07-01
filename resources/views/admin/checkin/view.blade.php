@@ -89,7 +89,6 @@
     //<----------------AJAX For WIFI---------------------->
     $(document).ready(function(){
         $('#the-add-wifi-button').click(function(){
-          console.log("lmaoooooooo");
           const url=$(this).attr('data-url');
             $.ajax({
                 headers: { 'X-CSRF-TOKEN': "{{ csrf_token() }}"},
@@ -100,14 +99,15 @@
                     name:$('#name').val(),
                     ip:$('#wifi-ip').val(),
                     branch:$('#branch').val(),
-                    status:$('#check-status').val()
+                    status : $('input[name=check-status]:checked').val()
                 },
-                success: function () {
-                        console.log("LMAOOO");
+                beforeSend:function(){
+                        $('.custom-loader').removeClass('hide');
                       },
-                error: function(){
-                    console.error();
-                }
+                      complete:function(){
+                        $('.custom-loader').addClass('hide');
+                        window.location.reload();
+                      }
             })
         })
     })
@@ -131,12 +131,13 @@
                     radius:$('#radius').val(),
                 },
                 
-                success: function (response) {
-                    window.location.reload()
+                beforeSend:function(){
+                        $('.custom-loader').removeClass('hide');
                       },
-                error: function(response){
-                    console.error();
-                }
+                      complete:function(){
+                        $('.custom-loader').addClass('hide');
+                        window.location.reload();
+                      }
             })
         })
     })  

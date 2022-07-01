@@ -91,14 +91,14 @@
                     <hr>
                     <label for="">Trạng thái hoạt động</label>
                     <br>
-                    <input type="radio" name="check-status" id="check-status" value="1"> <label for="">On</label>
+                    <input type="radio" name="check-status" id="check-status-on" value="1"> <label for="">On</label>
                     <br>
-                    <input type="radio" name="check-status" id="check-status" value="0"> <label for="">Off</label>
+                    <input type="radio" name="check-status" id="check-status-off" value="0"> <label for="">Off</label>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
-                <button type="button" id="the-add-wifi-button" data-url="{{ route('checkin.add-wifi') }}" class="btn btn-primary waves-effect waves-light ">Thêm</button>
+                <button type="submit" id="the-add-wifi-button" data-url="{{ route('checkin.add-wifi') }}" class="btn btn-primary waves-effect waves-light ">Thêm</button>
             </div>
         </div>
     </div>
