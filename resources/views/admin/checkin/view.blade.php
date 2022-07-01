@@ -85,60 +85,110 @@
 
         }
     }
+    const current_ip_button=document.getElementById("current_ip_button");
+    const wifi_ip=document.getElementById("wifi-ip");
+    const the_current_ip=document.getElementById("the_current_ip").innerHTML;
+    current_ip_button.onclick = function(){
+        wifi_ip.value=the_current_ip;
+    }
     ///////////////////////////////////////////////
     //<----------------AJAX For WIFI---------------------->
     $(document).ready(function(){
         $('#the-add-wifi-button').click(function(){
           const url=$(this).attr('data-url');
-            $.ajax({
-                headers: { 'X-CSRF-TOKEN': "{{ csrf_token() }}"},
-                method: "post",
-                url: url,
-                dataType: "JSON",
-                data:{
+          const name=$('#name').val();
+          const wifi_ip=$('#wifi-ip').val();
+          const status=$('input[name=check-status]:checked').val();
+                  if(name.trim() ==''){
+                    $('#name').addClass('is-invalid');
+                    $('#name_error_msg').text("Tên Không Được Bỏ Trống");
+                  }else if(wifi_ip.trim() ==''){
+                    $('#wifi_ip').addClass('is-invalid');
+                    $('#ip_error_msg').text("IP Không Được Bỏ Trống");
+                  }else if(status == undefined){
+                    $('#status_error_msg').text("Hãy chọn 1 trạng thái");
+                  }
+                  else{
+                    $.ajax({
+                    headers: { 'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+                    method: "post",
+                    url: url,
+                    dataType: "JSON",
+                    data:{
                     name:$('#name').val(),
                     ip:$('#wifi-ip').val(),
                     branch:$('#branch').val(),
                     status : $('input[name=check-status]:checked').val()
-                },
-                beforeSend:function(){
+                    },
+                    beforeSend:function(){
                         $('.custom-loader').removeClass('hide');
                       },
                       complete:function(){
-                        $('.custom-loader').addClass('hide');
                         window.location.reload();
                       }
-            })
+                    })
+                }
+        
+            
+            
         })
     })
     //<----------------AJAX For Location---------------------->
     $(document).ready(function(){
         $('#add-location-button').click(function(){
-          console.log("lmaoooooooo");
-          const url=$(this).attr('data-url');
-            $.ajax({
+           const location_name=$('#location_name').val();
+           const code_branch=$('#code_branch').val();
+           const address=$('#address').val();
+           const hotline=$('#hotline').val();
+           const longtitude=$('#longtitude').val();
+           const latitude=$('#latitude').val();
+           const radius=$('#radius').val();
+           const url=$(this).attr('data-url');
+           if(code_branch.trim() ==''){
+                    $('#code_branch').addClass('is-invalid');
+                    $('#code_branch_error_msg').text("Mã Chi Nhánh Không Được Bỏ Trống");
+            }else if(location_name.trim() ==''){
+                    $('#location_name').addClass('is-invalid');
+                    $('#location_name_error_msg').text("Tên Chi Nhánh Không Được Bỏ Trống");
+            }else if(address.trim() ==''){
+                    $('#address').addClass('is-invalid');
+                    $('#address_error_msg').text("Địa Chỉ Không Được Bỏ Trống");
+            }else if(hotline.trim() ==''){
+                    $('#hotline').addClass('is-invalid');
+                    $('#hotline_error_msg').text("Hotline Không Được Bỏ Trống");
+            }else if(longtitude.trim() ==''){
+                    $('#longtitude').addClass('is-invalid');
+                    $('#longtitude_error_msg').text("Kinh Độ Không Được Bỏ Trống");
+            }else if(latitude.trim() ==''){
+                    $('#latitude').addClass('is-invalid');
+                    $('#latitude_error_msg').text("Vĩ Độ Không Được Bỏ Trống");
+            }else if(radius.trim() ==''){
+                    $('#radius').addClass('is-invalid');
+                    $('#radius_error_msg').text("Bán Kính Không Được Bỏ Trống");
+            }else{
+                $.ajax({
                 headers: { 'X-CSRF-TOKEN': "{{ csrf_token() }}"},
                 method: "post",
                 url: url,
                 dataType: "JSON",
                 data:{
-                    name:$('#name').val(),
+                    location_name:$('#location_name').val(),
                     code_branch:$('#code_branch').val(),
                     address:$('#address').val(),
                     hotline:$('#hotline').val(),
                     longtitude:$('#longtitude').val(),
                     latitude:$('#latitude').val(),
                     radius:$('#radius').val(),
-                },
-                
-                beforeSend:function(){
+                    },
+                    beforeSend:function(){
                         $('.custom-loader').removeClass('hide');
-                      },
+                    },
                       complete:function(){
-                        $('.custom-loader').addClass('hide');
                         window.location.reload();
-                      }
-            })
+                    }
+                })
+            }
+            
         })
     })  
 </script>

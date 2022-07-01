@@ -57,6 +57,11 @@
                 @endforeach
             </tbody>
         </table>
+        <div  class=" dataTables_pager" style="margin-top: 30px">
+
+            {!!$wifi->links()!!}
+
+        </div>
        </div>
    </div>
    
@@ -73,10 +78,12 @@
                 <div class="form-group">
                     <label for="">Tên Wifi</label>
                     <input type="text" class="form-control"  name="name" id="name">
+                    <span id="name_error_msg" class="text text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label for="">IP</label>
                     <input type="text" class="form-control"  name="wifi-ip" id="wifi-ip">
+                    <span id="ip_error_msg" class="text text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label for="">Branch</label>
@@ -87,13 +94,15 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="">ip hiện tại của bạn là : <span id="curent_ip"></span> <a href="">Dùng IP này</a></label>
+                    <label for="">ip hiện tại của bạn là : <span id="the_current_ip">{{ $current_ip }}</span><span class="btn " id="current_ip_button" style="background: none ; border: none" >Dùng IP này</span></label>
                     <hr>
                     <label for="">Trạng thái hoạt động</label>
                     <br>
-                    <input type="radio" name="check-status" id="check-status-on" value="1"> <label for="">On</label>
+                    <input type="radio" name="check-status" id="check-status-on" value="1" > <label for="">On</label>
                     <br>
                     <input type="radio" name="check-status" id="check-status-off" value="0"> <label for="">Off</label>
+                    <br>
+                    <span id="status_error_msg" class="text text-danger"></span>
                 </div>
             </div>
             <div class="modal-footer">

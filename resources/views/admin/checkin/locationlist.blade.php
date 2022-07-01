@@ -62,35 +62,37 @@
                 <div class="form-group">
                     <label for="">Mã Chi Nhánh</label>
                     <input type="text" class="form-control" placeholder="Tên Gợi Nhớ VỊ Trí" name="code_branch" id="code_branch">
+                    <span id="code_branch_error_msg" class="text text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label for="">Chi Nhánh</label>
-                    {{-- <select name="" class="form-control" id="">
-                        <option value="">chi nhánh làm việc</option>
-                        <option value="">chi nhánh làm việc</option>
-                        <option value="">chi nhánh làm việc</option>
-                    </select> --}}
-                    <input type="text" name="name" class="form-control" id="name" placeholder="Tên chi nhánh">
+                    <input type="text" name="location-name" class="form-control" id="location_name" placeholder="Tên chi nhánh">
+                    <span id="location_name_error_msg" class="text text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label for="">Địa Chỉ</label>
                     <input type="text" class="form-control" placeholder="Địa Chỉ"  name="address" id="address">
+                    <span id="address_error_msg" class="text text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label for="">Hotline</label>
-                    <input type="number" class="form-control" placeholder="Địa Chỉ"  name="hotline" id="hotline">
+                    <input type="number" class="form-control" placeholder="Hotline"  name="hotline" id="hotline">
+                    <span id="hotline_error_msg" class="text text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label for="">Vĩ Độ</label>
                     <input type="number" class="form-control" placeholder="Vĩ Độ"  name="latitude" id="latitude">
+                    <span id="latitude_error_msg" class="text text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label for="">Kinh Độ</label>
                     <input type="number" class="form-control" placeholder="Kinh Độ"  name="longtitude" id="longtitude">
+                    <span id="longtitude_error_msg" class="text text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label for="">Bán Kính</label>
                     <input type="number" class="form-control" value="100"  name="radius" id="radius">
+                    <span id="radius_error_msg" class="text text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label for="">Khoảng Cách Có thể chấm công từ vị trí đã thiết lập (mét) </label>
