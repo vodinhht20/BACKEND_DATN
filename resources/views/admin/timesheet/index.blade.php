@@ -173,7 +173,7 @@
                             </table>
                         </div>
                         <div  class=" dataTables_pager" style="margin-top: 30px">
-                            {{  $timesheetFormats->links() }}
+                            {{  $timesheetFormats->appends(request()->all()) }}
                         </div>
                     </div>
                 </div>
