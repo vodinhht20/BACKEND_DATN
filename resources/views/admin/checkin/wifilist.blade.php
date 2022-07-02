@@ -1,27 +1,28 @@
 <div class="">
-    <div class="main-search morphsearch-search open">
-        <div class="input-group">
-            <input type="text" class="form-control" placeholder="Enter Keyword" style="width: 200px; background: transparent">
-            <button style="background: none; border: none; margin-left: -30px " > <span class="input-group-append "><i class="ti-search input-group-text"></i></span></button>
-           
+    <form action="" method="get">
+        <div class="main-search morphsearch-search open">
+            <div class="input-group">
+                <input type="text" name="search_value" id="search_value" class="form-control" placeholder="Enter Keyword" style="width: 200px; background: transparent">
+                <button class="input-group-append " style="background: none; border: none; margin-left: -30px; z-index:10 " > <span ><i class="ti-search input-group-text"></i></span></button>
+               
+            </div>
         </div>
-    </div>
-   <div class="form-group row">
-    <div class="col-sm-5">
-        <select name="" id="" class="form-control">
-            <option value="2">Trạng Thái Hoạt Động</option>
-            <option value="1">On</option>
-            <option value="0">Off</option>
-        </select>
-    </div>
-    <div class="col-sm-6" style="width: 100%;text-align: right" >
-        {{-- <button type="button" id="add-wifi-btn"  class="btn btn-primary waves-effect add-wifi-btn" data-toggle="modal" data-target="#add-wifi-modal"> <i class="fa fa-plus"></i> Thêm</button>curent_ip --}}
-        <button type="button" id="add-wifi-btn"  class="btn btn-primary add-wifi-btn" data-toggle="modal" data-target="#add-wifi-modal" > <i class="fa fa-plus"></i> Thêm</button>
-        
-    </div>
-    </div>
+       <div class="form-group row">
+        <div class="col-sm-5">
+            <select name="search_value_2" id="search_value_2" class="form-control">
+                <option value="">Trạng Thái Hoạt Động</option>
+                <option value="1">On</option>
+                <option value="0">Off</option>
+            </select>
+        </div>
+        <div class="col-sm-6" style="width: 100%;text-align: right" >
+            {{-- <button type="button" id="add-wifi-btn"  class="btn btn-primary waves-effect add-wifi-btn" data-toggle="modal" data-target="#add-wifi-modal"> <i class="fa fa-plus"></i> Thêm</button>curent_ip --}}
+            <button type="button" id="add-wifi-btn"  class="btn btn-primary add-wifi-btn" data-toggle="modal" data-target="#add-wifi-modal" > <i class="fa fa-plus"></i> Thêm</button>
+            
+        </div> 
+       </div>
+    </form>
     
-   </div>
    <div class="form-froup row">
     <div class="table-responsive">
         <table id="simpletable" class="table table-striped table-bordered nowrap ">
