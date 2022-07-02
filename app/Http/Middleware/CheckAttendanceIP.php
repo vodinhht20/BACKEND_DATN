@@ -31,7 +31,7 @@ class CheckAttendanceIP
         }
 
         return response()->json([
-            'message' => 'Check in bị từ chối',
+            'message' => 'Check in bị từ chối. IP: ' . $request->ip(),
             'ip' => $request->ip(),
             'error_code' => 'checkin_access_denied'
         ]);

@@ -196,8 +196,7 @@ b, strong {
           display: inline-block; }
     .card .card-header span {
       display: block;
-      font-size: 13px;
-      margin-top: 5px; }
+      font-size: 13px; }
     .card .card-header h5 {
       margin-bottom: 0;
       color: #37474f;
