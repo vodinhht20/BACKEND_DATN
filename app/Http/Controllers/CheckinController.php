@@ -10,8 +10,10 @@ class CheckinController extends Controller
 {
     public function index() {
         $branch=Branch::all();
-        $wifi=Network::all();
-        return view('admin.checkin.view',compact('branch' , 'wifi'));
+        $count_branch=count($branch);
+        $wifi=Network::paginate(10); 
+        $current_ip = request()->ip();
+        return view('admin.checkin.view',compact('branch' , 'wifi','current_ip','count_branch'));
     }
     public function addwifi(Request $request ){
      
@@ -26,7 +28,7 @@ class CheckinController extends Controller
     public function addlocation(Request $request ){
      
         $location= new Branch;
-        $location->name=$request->name;
+        $location->name=$request->location_name;
         $location->code_branch=$request->code_branch;
         $location->address=$request->address;
         $location->hotline=$request->hotline;
