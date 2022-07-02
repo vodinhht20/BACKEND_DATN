@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="{{asset('frontend/css/datepicker.css')}}">
     <script src="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.4.0/dist/vue-treeselect.umd.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.4.0/dist/vue-treeselect.min.css">
-    <link rel="stylesheet" href="{{asset('frontend')}}/css/company-work.css?v1.0.1">
+    <link rel="stylesheet" href="{{asset('frontend')}}/css/company-work.css?v1.0.2">
 @endsection
 @section('header-page')
 <div class="page-header">
@@ -34,17 +34,17 @@
 @section('content')
     <div class="box-section-timesheet row" id="app">
         <div class="col-md-12 col-lg-2 col-sm-12 tabs row">
-            <div class="col-lg-12 col-md-3 col-sm-4 tab-item active">
+            <div class="col-lg-12 col-md-3 col-sm-4 tab-item" @click="changeTab('timesheet')" :class="{ active: current_tab == 'timesheet'}">
                 <i class=" ti-clipboard"></i>
                 <p>Bảng công</p>
             </div>
-            <div class="col-lg-12 col-md-3 col-sm-4 tab-item">
+            <div class="col-lg-12 col-md-3 col-sm-4 tab-item" @click="changeTab('setting')" :class="{ active: current_tab == 'setting'}">
                 <i class=" ti-settings"></i>
                 <p>Cài đặt ngày chốt công</p>
             </div>
         </div>
         <div class="col-md-12 col-lg-10 col-sm-12 card">
-            <div class="tab-pane active card-header">
+            <div class="tab-pane card-header" :class="{ active: current_tab == 'timesheet'}" >
                 <div class="row align-items-center unset-width">
                     <div class="col-8">
                         <h4>Quản lí bảng công</h4>
@@ -178,26 +178,27 @@
                     </div>
                 </div>
             </div>
-            <div class="tab-pane card-block">
+            <div class="tab-pane card-block setting-timesheet" :class="{ active: current_tab == 'setting'}">
                 <h2>Cài đặt ngày chốt công</h2>
                 <p>Chọn 1 trong 2 cách</p>
                 <div class="tab-radio">
-                    <div class="item " >
-                        <input id="item1" type="radio" name="checked"  onchange="checkMe(this.checked)"><label for="">Ngày cuối cùng của tháng </label>
+                    <div class="item" >
+                        <input type="radio" value="OP01" name="checked" v-model="settingPicked">
+                        <label for="">Ngày cuối cùng của tháng </label>
                     </div>
                     <div class="item">
-                        <input id="item2" type="radio"  name="checked" onchange="checkMe(this.checked)"><label for=""> Người dùng tự chọn ngày cố định mỗi tháng</label>
+                        <input type="radio" value="OP02"  name="checked" v-model="settingPicked">
+                        <label for=""> Người dùng tự chọn ngày cố định mỗi tháng</label>
                     </div>
                 </div>
-                <div class="tab-select-time" >
-
-                    <div class="select-time" id="contentt" style="display: none" >
-                    <label fotab-select-timer="">Chọn ngày chấm công bất kỳ trong tháng</label>
-                    <select name=""  class="form-control ml-2">
-                        @for ($day = 1; $day <= 31; $day++)
-                            <option value="{{$day}}">Ngày {{$day}}</option>
-                        @endfor
-                    </select>
+                <div class="tab-select-time" v-if="settingPicked == 'OP02'">
+                    <div class="select-time">
+                        <label fotab-select-timer="">Chọn ngày chấm công bất kỳ trong tháng</label>
+                        <select name=""  class="form-control ml-2">
+                            @for ($day = 1; $day <= 31; $day++)
+                                <option value="{{$day}}">Ngày {{$day}}</option>
+                            @endfor
+                        </select>
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary btn-sm" style="float:right; margin-right:30px">Lưu</button>
@@ -210,31 +211,6 @@
 @section('page-script')
     <script src="{{ asset('frontend/js/datepicker.js') }}"></script>
     <script>
-        const tabs = document.querySelectorAll(".tab-item");
-        const panes = document.querySelectorAll(".tab-pane");
-        tabs.forEach((tab, index) => {
-            const pane = panes[index];
-            tab.onclick = function() {
-                document.querySelector(".tab-item.active").classList.remove("active");
-                document.querySelector(".tab-pane.active").classList.remove("active");
-                this.classList.add("active");
-                pane.classList.add("active");
-            };
-        });
-
-        function checkMe(checked) {
-            var cb = document.getElementById("item1");
-            var db = document.getElementById("item2");
-
-            var content = document.getElementById("contentt");
-            if (db.checked==true) {
-                content.style.display="block";
-            } else{
-                content.style.display="none";
-            } if (cb.checked==true) {
-                content.style.display="none";
-            }
-        }
         Vue.component('treeselect', VueTreeselect.Treeselect);
         var app = new Vue({
             el: '#app',
@@ -242,7 +218,14 @@
                 inputMounth: "{{ $inpMonth }}",
                 departmentValue: {!! json_encode($requestDepartments) !!},
                 departments: {!! json_encode($departments) !!},
-            }
+                current_tab: "timesheet",
+                settingPicked: ""
+            },
+            methods: {
+                changeTab: (tab) => {
+                    app.current_tab = tab;
+                },
+            },
         });
     </script>
 @endsection

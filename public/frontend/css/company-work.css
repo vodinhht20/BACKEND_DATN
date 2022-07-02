@@ -153,12 +153,6 @@
     .box-section-timesheet .card .tab-pane .task_Manager{
         width: 67.1vw;
     }
-    /* .box-section-timesheet .card .tab-pane .table-border-style{
-        width: 67.1vw;
-    }
-    .box-section-timesheet .card .task_Manager .table-responsive .table{
-        width: 75.1vw;
-    } */
 }
 
 @media(max-width: 1200px){
@@ -168,9 +162,6 @@
     .box-section-timesheet .card .tab-pane .task_Manager{
         width: 84vw;
     }
-    /* .box-section-timesheet .card .tab-pane .table-border-style{
-        width: 84vw;
-    } */
 }
 
 .box-section-timesheet .table-border-style th {
@@ -196,4 +187,10 @@
 
 .box-section-timesheet .vue-treeselect__control {
     height: 38px !important;
+}
+
+.box-section-timesheet .setting-timesheet input{
+    cursor: pointer;
+    width: 15px;
+    height: 15px;
 }
