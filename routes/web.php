@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ScheduleWorkController;
 use App\Http\Controllers\TimesheetController;
 use Illuminate\Support\Facades\Storage;
@@ -108,6 +109,11 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     });
 
     Route::get('/timesheet', [TimesheetController::class, 'timesheet'])->name("timesheet");
+    Route::patch('/update-fcm-token', [NotificationController::class, 'updateToken'])->name("update-fcm-token");
+
+    Route::get('/test', function(Request $request) {
+        return view('test');
+    });
 });
 
 Route::get('login-google', [AuthController::class, 'ggLogin'])->name('login-google');
@@ -115,10 +121,6 @@ Route::get('google/callback', [AuthController::class, 'ggAuthCallback'])->name('
 
 Route::get('/login-github', [AuthController::class, 'githubLogin'])->name('login-github');
 Route::get('/callback/github', [AuthController::class, 'githubCallback'])->name('github-Callback');
-
-Route::get('/test', function(Request $request) {
-    return view('test');
-});
 Route::post('/test', function(Request $request) {
     $fileRequest = $request->file('file');
     $getNameFile = date('Y-m-d H:i').$fileRequest->getClientOriginalName();

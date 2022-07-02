@@ -38,6 +38,7 @@ class Employee extends Authenticatable implements JWTSubject
         'employee_code',
         'note',
         'gender',
+        'fcm_token',
     ];
 
     /**
