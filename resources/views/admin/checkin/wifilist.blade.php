@@ -14,12 +14,13 @@
             <option value="0">Off</option>
         </select>
     </div>
-    </div>
     <div class="col-sm-6" style="width: 100%;text-align: right" >
         {{-- <button type="button" id="add-wifi-btn"  class="btn btn-primary waves-effect add-wifi-btn" data-toggle="modal" data-target="#add-wifi-modal"> <i class="fa fa-plus"></i> Thêm</button>curent_ip --}}
         <button type="button" id="add-wifi-btn"  class="btn btn-primary add-wifi-btn" data-toggle="modal" data-target="#add-wifi-modal" > <i class="fa fa-plus"></i> Thêm</button>
         
     </div>
+    </div>
+    
    </div>
    <div class="form-froup row">
     <div class="table-responsive">

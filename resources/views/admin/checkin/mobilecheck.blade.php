@@ -5,7 +5,7 @@
             <a class="nav-link " data-toggle="tab" data-target="#type" aria-controls="type" aria-expanded="true" role="tab" >Danh Sách WIFI</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#deathline" aria-controls="deathline" aria-expanded="false" role="tab" >Danh Sách Vị Trí</a>
+            <a class="nav-link" data-toggle="tab" data-target="#deathline" aria-controls="deathline" aria-expanded="false" role="tab" >Danh Sách Vị Trí</a>
         </li>
         
         
