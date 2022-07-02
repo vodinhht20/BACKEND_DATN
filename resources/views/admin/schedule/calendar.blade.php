@@ -155,7 +155,7 @@
                             </div>
                             <div class="form-group interval-day">
                                 <label class="col-form-label">Thời gian hiệu lực</label>
-                                <date-picker v-model="intervalDay" lang="vn" range value-type="YYYY-MM-DD" format="DD-MM-YYYY" placeholder="Lựa chọn khoảng thời gian"></date-picker>
+                                <date-picker v-model="intervalDay" lang="vn" range value-type="YYYY-MM" format="MM-YYYY" type="month" placeholder="Lựa chọn khoảng thời gian"></date-picker>
                                 <input type="hidden" v-if="intervalDay" :value="intervalDay">
                             </div>
                         </form>
