@@ -12,6 +12,9 @@
 			color: white !important;
 			border-color: #5cb85c !important;
 		}
+        .mx-datepicker-range {
+            width: 100%;
+        }
     </style>
 @endsection
 @section('header-page')
@@ -95,7 +98,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body overflow-modal scrollbar-right-custom">
                         <form>
                             <div class="form-group">
                                 <label for="recipient-name" class="col-form-label">Tên lịch làm việc</label>
@@ -134,16 +137,34 @@
                                     @endforeach
                                 </select>
                             </div>
+                            <div class="form-group row work-time">
+                                <div class="col-lg-6">
+                                    <label for="recipient-name" class="col-form-label">Thời gian làm việc</label>
+                                    <date-picker lang="vn" type="time" v-model="a" range placeholder="Select time" format="HH:mm" value-type="format"></date-picker>
+                                </div>
+                                <div class="col-lg-6">
+                                    <label for="recipient-name" class="col-form-label">Số công</label>
+                                    <input type="number" class="form-control" placeholder="Nhập số công">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-lg-6">
+                                    <label for="recipient-name" class="col-form-label">Thời gian trễ checkin</label>
+                                    <date-picker lang="vn" type="time" v-model="b" placeholder="Select time" format="mm" value-type="format"></date-picker>
+                                </div>
+                                <div class="col-lg-6">
+                                    <label for="recipient-name" class="col-form-label">Thời gian trễ checkout</label>
+                                    <date-picker lang="vn" type="time" v-model="n" placeholder="Select time" format="mm" value-type="format"></date-picker>
+                                </div>
+                            </div>
                             <div class="form-group">
-                                <label for="recipient-name" class="col-form-label">Ca làm việc</label>
-                                <div v-for="(workshift, index) in dataWorkShifts" class="company-shift">
-                                    <div class="row mt-2 align-items-center">
-                                        <div class="col-11 row" style="margin: unset; grid-column-gap: 10px; align-items: center;">
-                                            <input type="text" class="form-control col-5" name="shiftName[]" v-model="workshift.shiftName" placeholder="Tên ca làm">
-                                            <date-picker v-model="workshift.shiftTime" lang="vn" type="time" range placeholder="Select time" format="HH:mm" value-type="format"></date-picker>
-                                        </div>
-                                        <div class="col-1 btn-remote btn-remove" v-if="dataWorkShifts.length > 1  && dataWorkShifts.length != index+1" @click="removeWorkShift(index)"><i class="ti-close"></i></div>
-                                        <div class="col-1 btn-remote btn-add" v-else @click="addWorkShift"><i class="ti-plus"></i></div>
+                                <label for="recipient-name" class="col-form-label">Số công trễ (> n giờ)</label>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <input type="number" class="form-control" placeholder="Nhập số giờ tối thiếu ">
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <input type="number" class="form-control" placeholder="Nhập số công">
                                     </div>
                                 </div>
                             </div>
@@ -180,6 +201,10 @@
         var app = new Vue({
             el: '#app',
             data: {
+                a: '',
+                b: '',
+                c: '',
+                n: '',
                 intervalDay: '',
                 workShiftName: '',
                 employee_id: null,

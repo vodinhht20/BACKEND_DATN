@@ -6,6 +6,7 @@ use App\Libs\Slack;
 use App\Models\Department;
 use App\Models\Employee;
 use App\Models\Position;
+use App\Repositories\HolidayScheduleRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Repositories\WorkScheduleRepository;
@@ -18,7 +19,8 @@ class ScheduleWorkController extends Controller
 {
     public function __construct(
         private WorkScheduleRepository $workScheduleRepo,
-        private WorkShiftRepository $workShiftRepo
+        private WorkShiftRepository $workShiftRepo,
+        private HolidayScheduleRepository $holidayScheduleRepo
     )
     {
         //
@@ -174,5 +176,62 @@ class ScheduleWorkController extends Controller
                 'message' => $validator->messages()->first()
             ], 442);
         }
+    }
+
+    public function calendarHoliday(Request $request)
+    {
+        $options = [
+            "name" => $request->input("name", null)
+        ];
+        $year = $request->input("date", null);
+        if ($year) {
+            try {
+                $date = Carbon::createFromFormat("Y", $year);
+                $options['date_from'] = $date->copy()->startOfYear()->format('Y-m-d');
+                $options['date_to'] = $date->copy()->endOfYear()->format('Y-m-d');
+            } catch (\Exception $ex) {
+                return redirect()->route('schedule-calendar-holiday')->with('message.error', 'Định dạng năm không hợp lệ');
+            }
+        }
+
+        $holidaySchedules = $this->holidayScheduleRepo->paginate($options);
+        return view('admin.schedule.calendar_holiday', compact('holidaySchedules'));
+    }
+
+    public function showFormCreateHoliday(Request $request)
+    {
+        return view('admin.schedule.calendar_holiday_create');
+    }
+
+    public function insertHoliday(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:255',
+            'interval_day' => 'required',
+        ], [
+            'name.required' => 'Tên ngày nghỉ lễ không được để trống',
+            'name.max' => 'Tên ngày nghỉ lễ không được quá 255 ký tự',
+            'interval_day.required' => 'Ngày nghỉ không được để trống',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->with('message.error', $validator->messages()->first())->withInput();
+        }
+
+        if ($request->input('interval_day') == ",") {
+            return redirect()->back()->with('message.error', "Ngày nghỉ không được để trống")->withInput();
+        }
+        $intervalDays = explode(",", $request->input('interval_day'));
+        $options = [
+            "name" => $request->input("name"),
+            "date_from" => $intervalDays[0],
+            "date_to" => $intervalDays[1],
+        ];
+
+        $result = $this->holidayScheduleRepo->create($options);
+        if ($result) {
+            return redirect()->route('schedule-calendar-holiday')->with('message.success', 'Thêm loại sản phẩm thành công')->with('id_new', $result->id);
+        }
+        return redirect()->back()->with('message.error', 'Không thể tạo mới')->withInput();
     }
 }

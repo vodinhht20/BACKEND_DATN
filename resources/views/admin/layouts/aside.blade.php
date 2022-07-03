@@ -53,14 +53,33 @@
             </li>
         </ul>
 
-        <div class="pcoded-navigation-label" data-i18n="nav.category.forms">Cài đặt lịch</div>
+        <div class="pcoded-navigation-label" data-i18n="nav.category.forms">Lịch</div>
         <ul class="pcoded-item pcoded-left-item">
-            <li class="{{ Request::routeIs('schedule.*') ? 'active' : '' }}">
-                <a href="{{ route("schedule-calender-index") }}" class="waves-effect waves-dark">
-                    <span class="pcoded-micon"><i class="ti-calendar"></i><b>FC</b></span>
-                    <span class="pcoded-mtext" data-i18n="nav.form-components.main">Lịch làm việc</span>
+            <li class="pcoded-hasmenu {{ Request::routeIs('schedule-*') ? 'active pcoded-trigger' : '' }}">
+                <a href="javascript:void(0)" class="waves-effect waves-dark">
+                    <span class="pcoded-micon"><i class="ti-layout-grid2-alt"></i></span>
+                    <span class="pcoded-mtext"
+                        data-i18n="nav.basic-components.main">Cài đặt lịch</span>
                     <span class="pcoded-mcaret"></span>
                 </a>
+                <ul class="pcoded-submenu">
+                    <li class="{{ Request::routeIs('schedule-calender-index') ? 'active' : '' }}">
+                        <a href=" {{route('schedule-calender-index')}} " class="waves-effect waves-dark">
+                            <span class="pcoded-micon"><i class="ti-calendar"></i></span>
+                            <span class="pcoded-mtext"
+                                data-i18n="nav.basic-components.alert">Lịch làm việc</span>
+                            <span class="pcoded-mcaret"></span>
+                        </a>
+                    </li>
+                    <li class="{{ Request::routeIs('schedule-calendar-holiday') ? 'active' : '' }}">
+                        <a href=" {{route('schedule-calendar-holiday')}} " class="waves-effect waves-dark">
+                            <span class="pcoded-micon"><i class="ti-calendar"></i></span>
+                            <span class="pcoded-mtext"
+                                data-i18n="nav.basic-components.alert">Lịch nghỉ lễ</span>
+                            <span class="pcoded-mcaret"></span>
+                        </a>
+                    </li>
+                </ul>
             </li>
         </ul>
 
@@ -74,7 +93,7 @@
                 </a>
             </li>
         </ul>
-        
+
         <div class="pcoded-navigation-label" data-i18n="nav.category.forms">Thành viên</div>
         <ul class="pcoded-item pcoded-left-item">
             <li class="pcoded-hasmenu">
