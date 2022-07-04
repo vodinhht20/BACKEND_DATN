@@ -80,6 +80,35 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/ajax-user-confirm-email', [EmployeeController::class, 'confirmEmail'])->name('ajax-user-confirm-email');
     Route::post('/ajax-user-change-password', [EmployeeController::class, 'changePasssword'])->name('ajax-user-change-password');
     Route::post('/ajax-filter',[EmployeeController::class,'filter'])->name('ajaxFilter');
+
+    Route::prefix('/company')->name("company.")->group(function () {
+        Route::get('/info', [CompanyController::class, 'info'])->name("info");
+        Route::get('/updatecompany/{id}', [CompanyController::class, 'updateCompanyForm'])->name("updatecompany");
+        Route::post('/updatecompany/{id}', [CompanyController::class, 'updateCompany'])->name("updatecompany");
+        Route::get('/addbranch', [CompanyController::class, 'addBranchForm'])->name("addbranch");
+        Route::post('/addbranch', [CompanyController::class, 'addBranch'])->name("addbranch");
+        Route::get('/updatebranch/{id}', [CompanyController::class, 'updateBranchForm'])->name("updatebranch");
+        Route::post('/updatebranch/{id}', [CompanyController::class, 'updateBranch'])->name("updatebranch");
+        Route::get('/delete/{id}', [CompanyController::class, 'delete'])->name("delete");
+        Route::get('/structure', [CompanyController::class, 'structure'])->name("structure");
+        Route::get('/branchs', [CompanyController::class, 'branchs'])->name("branchs");
+    });
+    Route::prefix('/checkin')->name("checkin.")->group(function () {
+        Route::get('/view', [CheckinController::class, 'index'])->name("view");
+        Route::post('/add-wifi', [CheckinController::class, 'addwifi'])->name("add-wifi");
+        Route::post('/add-location', [CheckinController::class, 'addlocation'])->name("add-location");
+    });
+
+    Route::prefix('/banner')->name("banner.")->group(function () {
+        Route::get('/info', [BannerController::class, 'info'])->name("info");
+        Route::get('/addbanner', [BannerController::class, 'addBannerForm'])->name("addbanner");
+        Route::post('/addbanner', [BannerController::class, 'addBanner']);
+        Route::get('/updatebanner/{id}', [BannerController::class, 'updateBannerForm'])->name("updatebanner");
+        Route::post('/updatebanner/{id}', [BannerController::class, 'updateBanner']);
+        Route::get('/delete/{id}', [BannerController::class, 'delete'])->name("delete");
+    });
+
+    Route::get('/timesheet', [TimesheetController::class, 'timesheet'])->name("timesheet");
 });
 
 Route::get('login-google', [AuthController::class, 'ggLogin'])->name('login-google');
@@ -87,35 +116,6 @@ Route::get('google/callback', [AuthController::class, 'ggAuthCallback'])->name('
 
 Route::get('/login-github', [AuthController::class, 'githubLogin'])->name('login-github');
 Route::get('/callback/github', [AuthController::class, 'githubCallback'])->name('github-Callback');
-
-Route::prefix('/company')->name("company.")->group(function () {
-    Route::get('/info', [CompanyController::class, 'info'])->name("info");
-    Route::get('/updatecompany/{id}', [CompanyController::class, 'updateCompanyForm'])->name("updatecompany");
-    Route::post('/updatecompany/{id}', [CompanyController::class, 'updateCompany'])->name("updatecompany");
-    Route::get('/addbranch', [CompanyController::class, 'addBranchForm'])->name("addbranch");
-    Route::post('/addbranch', [CompanyController::class, 'addBranch'])->name("addbranch");
-    Route::get('/updatebranch/{id}', [CompanyController::class, 'updateBranchForm'])->name("updatebranch");
-    Route::post('/updatebranch/{id}', [CompanyController::class, 'updateBranch'])->name("updatebranch");
-    Route::get('/delete/{id}', [CompanyController::class, 'delete'])->name("delete");
-    Route::get('/structure', [CompanyController::class, 'structure'])->name("structure");
-    Route::get('/branchs', [CompanyController::class, 'branchs'])->name("branchs");
-});
-Route::prefix('/checkin')->name("checkin.")->group(function () {
-    Route::get('/view', [CheckinController::class, 'index'])->name("view");
-    Route::post('/add-wifi', [CheckinController::class, 'addwifi'])->name("add-wifi");
-    Route::post('/add-location', [CheckinController::class, 'addlocation'])->name("add-location");
-});
-
-Route::prefix('/banner')->name("banner.")->group(function () {
-    Route::get('/info', [BannerController::class, 'info'])->name("info");
-    Route::get('/addbanner', [BannerController::class, 'addBannerForm'])->name("addbanner");
-    Route::post('/addbanner', [BannerController::class, 'addBanner']);
-    Route::get('/updatebanner/{id}', [BannerController::class, 'updateBannerForm'])->name("updatebanner");
-    Route::post('/updatebanner/{id}', [BannerController::class, 'updateBanner']);
-    Route::get('/delete/{id}', [BannerController::class, 'delete'])->name("delete");
-});
-
-Route::get('/timesheet', [TimesheetController::class, 'timesheet'])->name("timesheet");
 
 Route::get('/test', function(Request $request) {
     return view('test');

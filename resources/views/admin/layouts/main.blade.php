@@ -83,7 +83,13 @@
     </div>
     <!-- Pre-loader end -->
     <div id="pcoded" class="pcoded">
-        <div class="pcoded-overlay-box"></div>
+        <div class="pcoded-overlay-box">
+            
+        </div>
+        <div class="custom-loader hide ">
+            <img class="center" src="{{ asset('frontend') }}/image/loading.gif" alt="">
+            <p class="vertical-center">Vui lòng chờ . . .</p>
+        </div>
         <div class="pcoded-container navbar-wrapper">
             @include('admin.layouts.header')
 
@@ -98,6 +104,7 @@
                             <!-- Main-body start -->
                             <div class="main-body">
                                 <div class="page-wrapper">
+                                    
                                     <!-- Page-body start -->
                                     <div class="page-body">
                                         @yield('content')
