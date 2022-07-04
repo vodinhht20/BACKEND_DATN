@@ -172,18 +172,7 @@ class EmployeeController extends Controller
         return view('admin.user.update', compact('employee', 'branchs', 'positions'));
     }
 
-    public function showInfoUser($id)
-    {
-        $employee = Employee::with('positions', 'branch')->find($id);
-        $attributes = Attribuite_Employee::with('attribute')->where('employee_id', $id)->get();
-        // $employee_attributes = $employee->attributes->load('attribute');
-        // dd($employee_attributes->attribute);
-        if (!$employee) {
-            return abort(404);
-        }
 
-        return view('admin.user.show', compact('employee', 'attributes'));
-    }
 
     public function updateUser(Request $request, $id)
     {
@@ -227,6 +216,17 @@ class EmployeeController extends Controller
             return redirect()->route('admin-list-user')->with('message.success', 'Cập nhật thông tin thành viên thành công !');
         }
         return redirect()->back()->with('message.error', 'Cập nhật thông tin thành viên thất bại')->withInput();
+    }
+
+    public function showInfoUser($id)
+    {
+        $employee = Employee::with('positions', 'branch')->find($id);
+        $attributes = Attribuite_Employee::with('attribute')->where('employee_id', $id)->get();
+        if (!$employee) {
+            return abort(404);
+        }
+
+        return view('admin.user.show', compact('employee', 'attributes'));
     }
 
     public function ajaxRemove(Request $request)
