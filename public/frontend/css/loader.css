@@ -1,0 +1,29 @@
+.hide{
+    display: none!important;
+}
+.custom-loader {
+    /* display: none; */
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    background: rgba(0,0,0, 0.6);
+    left: 0;z-index: 99999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: #fff;
+}
+
+.custom-loader>.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 5%;
+    /* padding-top: 25%; */
+}
+
+.vertical-center {
+    text-align: center;
+}

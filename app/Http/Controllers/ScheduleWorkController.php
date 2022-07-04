@@ -139,8 +139,8 @@ class ScheduleWorkController extends Controller
             $workScheduleOptions = [
                 'name' => $request->work_shift_name,
                 'days' => $request->days,
-                'allow_from' => $intervalDay[0],
-                'allow_to' => $intervalDay[1],
+                'allow_from' => Carbon::createFromFormat("Y-m", $intervalDay[0])->startOfMonth()->format("Y-m-d"),
+                'allow_to' => Carbon::createFromFormat("Y-m", $intervalDay[1])->endOfMonth()->format("Y-m-d"),
             ];
 
             if ($request->subject_type == $departmentType) {
