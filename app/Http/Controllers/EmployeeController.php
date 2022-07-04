@@ -23,18 +23,21 @@ class EmployeeController extends Controller
         $employees = $this->employeeRepo->getAllUserByPublic();
         $branchs = Branch::all();
         $positions = Position::all();
-        return view('admin.user.list', compact('employees','branchs','positions'));
+        return view('admin.user.list', compact('employees', 'branchs', 'positions'));
     }
 
     public function filter(Request $request)
     {
-        $employees = Employee::where('status',$request->status)->where('position_id',$request->position)->where('branch_id',$request->branch)->paginate(10);
-        if(sizeof($employees) == 0){
+        $employees = Employee::where('status', 'like', '%' . $request->status . '%')
+            ->where('position_id', 'like', '%' . $request->position . '%')
+            ->where('branch_id', 'like', '%' . $request->branch . '%')
+            ->paginate(10);
+        if (sizeof($employees) == 0) {
             $outPut = "Không có nhân sự nào có các trạng thái trên";
-        }else{
+        } else {
             $outPut = view('admin.user._partials.base_table', compact('employees'))->render();
         }
-        
+
         return response()->json(["data" => $outPut]);
     }
 

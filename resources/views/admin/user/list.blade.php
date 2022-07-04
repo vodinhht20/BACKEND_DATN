@@ -44,6 +44,7 @@
                     <div class="form-group row">
                         <div class="col-sm-3">
                             <select name="select" class="form-control border" id="statusFilter" onchange="filter()">
+                                <option value="">Trạng thái</option>
                                 <option value="1">Đang hoạt động</option>
                                 <option value="2">Chưa kích hoạt</option>
                                 <option value="3">Bị chặn</option>
@@ -51,6 +52,7 @@
                         </div>
                         <div class="col-sm-3">
                             <select name="select" class="form-control border" id="genderFilter"  onchange="filter()">
+                                <option value="">Giới tính</option>
                                 <option value="1">Nam</option>
                                 <option value="2">Nữ</option>
                             </select>
@@ -66,6 +68,7 @@
                 <div class="form-group row">
                     <div class="col-sm-3">
                         <select name="select" class="form-control border" id="positionFilter" onchange="filter()">
+                            <option value="">Vị trí</option>
                             @foreach ($positions as $position)
                                 <option value="{{$position->id}}">{{$position->name}}</option>
                             @endforeach
@@ -73,6 +76,7 @@
                     </div>
                     <div class="col-sm-3">
                         <select name="select" class="form-control border" id="branchFilter" onchange="filter()">
+                            <option value="">Chi nhánh</option>
                             @foreach ($branchs as $branch)
                                 <option value="{{$branch->id}}">{{$branch->name}}</option>
                             @endforeach
