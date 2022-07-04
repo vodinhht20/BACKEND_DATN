@@ -18,6 +18,17 @@
         .modal-create-schedule input{
             text-align: center;
         }
+        .select2-container {
+            z-index: 99999999;
+        }
+
+        .select2-container--default .select2-selection--multiple .select2-selection__choice {
+            background-color: #11c15b !important;
+            border: none;
+        }
+        .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+            border-right: none;
+        }
     </style>
 @endsection
 @section('header-page')
@@ -134,7 +145,7 @@
                             </div>
                             <div class="form-group" v-else-if="subject_type == 4">
                                 <label for="select_employee" class="col-form-label">Nhân viên áp dụng</label>
-                                <select id="select_employee" class="form-control" v-model="employee_id">
+                                <select name="employee_ids[]" id="select_employee" class="form-control select2" multiple="multiple">
                                     @foreach ($employees as $employee)
                                         <option value="{{ $employee->id }}">{{ $employee->fullname }}</option>
                                     @endforeach
@@ -147,7 +158,7 @@
                                 </div>
                                 <div class="col-lg-6">
                                     <label for="recipient-name" class="col-form-label">Số công</label>
-                                    <input type="number" class="form-control" placeholder="Nhập số công" v-model="actual_workday">
+                                    <input type="number" step="0.5" min="0" max="3" class="form-control" placeholder="Nhập số công" v-model="actual_workday">
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -168,7 +179,7 @@
                                     </div>
                                     <div class="col-lg-6">
                                         <label for="recipient-name" class="col-form-label">Số công</label>
-                                        <input type="number" class="form-control" v-model="virtual_workday" placeholder="Nhập số công">
+                                        <input type="number" step="0.5" min="0" max="3" class="form-control" v-model="virtual_workday" placeholder="Nhập số công">
                                     </div>
                                 </div>
                                 <div class="mt-1">
@@ -216,9 +227,9 @@
                 virtual_workday: 0,
                 intervalDay: '',
                 workShiftName: '',
-                employee_id: null,
-                position_id: null,
-                department_id: null,
+                employee_ids: [],
+                position_id: 1,
+                department_id: 1,
                 subject_type: 1,
                 company_interval_day: {!! json_encode(request()->get('company_interval_day') ? explode(",", request()->get('company_interval_day')) : 0)  !!},
                 department_interval_day: {!!  json_encode(request()->get('department_interval_day') ? explode(",", request()->get('department_interval_day')) : 0 ) !!},
@@ -260,7 +271,7 @@
                     const data = {
                         work_shift_name: app.workShiftName,
                         subject_type: app.subject_type,
-                        employee_id: app.employee_id,
+                        employee_ids: app.employee_ids,
                         position_id: app.position_id,
                         department_id: app.department_id,
                         work_time: app.work_time,
@@ -311,8 +322,15 @@
                     location.reload();
                 },
                 onChangeTypeWorkSchedule: ($event) => {
-                    if ($event.target.value) {
-                        // tính năng đang phát triển
+                    if ($event.target.value == 4) {
+                        setTimeout(() => {
+                            $('#select_employee').select2({
+                                placeholder: "Lựa thành viên",
+                            });
+                            $('#select_employee').on('change', function (e) {
+                                app.employee_ids = $("#select_employee").val();
+                            });
+                        }, 0);
                     }
                 }
             }
@@ -322,9 +340,5 @@
         let params = (new URL(document.location)).searchParams;
         let current_tab = params.get('current_tab');
         app.current_tab = current_tab ? current_tab : 'company_tab';
-
-        $('#select_employee').select2({
-            placeholder: "Lựa chọn thành viên",
-        });
     </script>
 @endsection

@@ -117,7 +117,7 @@ class ScheduleWorkController extends Controller
                             return $fail('Vị trí không được để trống !');
                         }
                     } else if ($value == $employeeType) {
-                        if (!$request->employee_id) {
+                        if (!count($request->employee_ids) > 0) {
                             return $fail('Nhân viên không được để trống !');
                         }
                     }
@@ -160,7 +160,7 @@ class ScheduleWorkController extends Controller
                 $workScheduleOptions['position_id'] = $request->position_id;
                 $workScheduleOptions['subject_type'] = $positionType;
             } else if ($request->subject_type == $employeeType) {
-                $workScheduleOptions['employee_id'] = $request->employee_id;
+                $workScheduleOptions['employee_ids'] = $request->employee_ids;
                 $workScheduleOptions['subject_type'] = $employeeType;
             }
 

@@ -50,7 +50,7 @@ class WorkScheduleRepository extends BaseRepository
             $scheduleWork->position_id = $options['position_id'];
         }
 
-        if (isset($options['employee_id'])) {
+        if (isset($options['employee_ids'])) {
             $scheduleWork->employee_id = $options['employee_id'];
         }
 
