@@ -35,7 +35,7 @@ return new class extends Migration
             $table->dropColumn('work_from_at');
             $table->dropColumn('work_to_at');
             $table->dropColumn('actual_workday');
-            $table->dropColumn('check_in_late');
+            $table->dropColumn('checkin_late');
             $table->dropColumn('checkout_late');
             $table->dropColumn('late_hour');
             $table->dropColumn('virtual_workday');

@@ -12,8 +12,11 @@
 			color: white !important;
 			border-color: #5cb85c !important;
 		}
-        .mx-datepicker-range {
+        .mx-datepicker-range, .mx-datepicker {
             width: 100%;
+        }
+        .modal-create-schedule input{
+            text-align: center;
         }
     </style>
 @endsection
@@ -89,7 +92,7 @@
             </div>
         </div>
         <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade modal-create-schedule" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -140,32 +143,36 @@
                             <div class="form-group row work-time">
                                 <div class="col-lg-6">
                                     <label for="recipient-name" class="col-form-label">Thời gian làm việc</label>
-                                    <date-picker lang="vn" type="time" v-model="a" range placeholder="Select time" format="HH:mm" value-type="format"></date-picker>
+                                    <date-picker lang="vn" type="time" v-model="work_time" range placeholder="Khoảng thời gian làm việc" format="HH:mm" value-type="format"></date-picker>
                                 </div>
                                 <div class="col-lg-6">
                                     <label for="recipient-name" class="col-form-label">Số công</label>
-                                    <input type="number" class="form-control" placeholder="Nhập số công">
+                                    <input type="number" class="form-control" placeholder="Nhập số công" v-model="actual_workday">
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <div class="col-lg-6">
-                                    <label for="recipient-name" class="col-form-label">Thời gian trễ checkin</label>
-                                    <date-picker lang="vn" type="time" v-model="b" placeholder="Select time" format="mm" value-type="format"></date-picker>
+                                    <label for="recipient-name" class="col-form-label">Thời gian trễ checkin (phút)</label>
+                                    <date-picker lang="vn" type="time" v-model="checkin_late" placeholder="Chọn số phút" format="mm" value-type="format"></date-picker>
                                 </div>
                                 <div class="col-lg-6">
-                                    <label for="recipient-name" class="col-form-label">Thời gian trễ checkout</label>
-                                    <date-picker lang="vn" type="time" v-model="n" placeholder="Select time" format="mm" value-type="format"></date-picker>
+                                    <label for="recipient-name" class="col-form-label">Thời gian trễ checkout (phút)</label>
+                                    <date-picker lang="vn" type="time" v-model="checkout_late" placeholder="Chọn số phút" format="mm" value-type="format"></date-picker>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="recipient-name" class="col-form-label">Số công trễ (> n giờ)</label>
                                 <div class="row">
                                     <div class="col-lg-6">
-                                        <input type="number" class="form-control" placeholder="Nhập số giờ tối thiếu ">
+                                        <label for="recipient-name" class="col-form-label">Số giờ tối thiểu (> n giờ)</label>
+                                        <input type="number" class="form-control" v-model="late_hour" placeholder="Nhập số giờ tối thiếu ">
                                     </div>
                                     <div class="col-lg-6">
-                                        <input type="number" class="form-control" placeholder="Nhập số công">
+                                        <label for="recipient-name" class="col-form-label">Số công</label>
+                                        <input type="number" class="form-control" v-model="virtual_workday" placeholder="Nhập số công">
                                     </div>
+                                </div>
+                                <div class="mt-1">
+                                    <i><b>Lưu ý: </b>Nếu số giờ làm việc tối thiểu > <b>n</b> giờ thì sẽ được <b>n</b> công</i>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -201,10 +208,12 @@
         var app = new Vue({
             el: '#app',
             data: {
-                a: '',
-                b: '',
-                c: '',
-                n: '',
+                work_time: '',
+                actual_workday: 0,
+                checkin_late: '',
+                checkout_late: '',
+                late_hour: 0,
+                virtual_workday: 0,
                 intervalDay: '',
                 workShiftName: '',
                 employee_id: null,
@@ -216,7 +225,6 @@
                 employee_interval_day: {!!  json_encode(request()->get('employee_interval_day') ? explode(",", request()->get('employee_interval_day')) : 0 ) !!},
                 position_interval_day: {!!  json_encode(request()->get('position_interval_day') ? explode(",", request()->get('position_interval_day')) : 0 ) !!},
                 current_tab: "company_tab",
-                dataWorkShifts: [{ shiftName: '', shiftTime: '' }],
                 dataWorkShiftDays: [
                     { id: 0, name: "Chủ Nhật", active: 0},
                     { id: 2, name: "Thứ 2", active: 1},
@@ -234,12 +242,6 @@
                     urlParam.searchParams.set('current_tab', tab);
                     window.history.pushState({}, '', urlParam);
                 },
-                addWorkShift: () => {
-                    app.dataWorkShifts.push({ shiftName: '', shiftTime: '' });
-                },
-                removeWorkShift: (indexItem) => {
-                    app.dataWorkShifts = app.dataWorkShifts.filter((item, index) => index != indexItem)
-                },
                 chooseDateName: (itemId) => {
                     app.dataWorkShiftDays = app.dataWorkShiftDays.map(dataItem => {
                         if (dataItem.id == itemId) {
@@ -256,14 +258,19 @@
                         })
                         .filter(item => item);
                     const data = {
-                        interval_day: app.intervalDay,
                         work_shift_name: app.workShiftName,
-                        days: days,
-                        work_shifts: app.dataWorkShifts,
+                        subject_type: app.subject_type,
                         employee_id: app.employee_id,
                         position_id: app.position_id,
                         department_id: app.department_id,
-                        subject_type: app.subject_type
+                        work_time: app.work_time,
+                        actual_workday: app.actual_workday,
+                        checkin_late: app.checkin_late,
+                        checkout_late: app.checkout_late,
+                        late_hour: app.late_hour,
+                        virtual_workday: app.virtual_workday,
+                        days: days,
+                        interval_day: app.intervalDay
                     }
                     try {
                         $('.overlay-load').css('display', 'flex');

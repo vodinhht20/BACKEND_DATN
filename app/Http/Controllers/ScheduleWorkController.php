@@ -102,7 +102,8 @@ class ScheduleWorkController extends Controller
 
         $validator = Validator::make($request->all(), [
             'work_shift_name' => 'required|max:255',
-            'work_shifts' => 'required|array|min:1',
+            'work_time' => 'required|array|min:2',
+            'actual_workday' => 'required|min:0.5|max:3',
             'days' => 'required|array|min:1',
             'interval_day' => 'required|array|min:2',
             'subject_type' => [
@@ -124,9 +125,12 @@ class ScheduleWorkController extends Controller
             ],
         ], [
             'work_shift_name.required' => 'tên lịch làm không được để trống',
-            'work_shifts.required' => 'ca làm không được để trống',
             'days.required' => 'ngày trong tuần không được để trống',
             'interval_day.required' => 'thời gian hiệu lực không được để trống',
+            'work_time.required' => 'Thời gian làm việc không được để trống',
+            'actual_workday.required' => "Số công không được để trống",
+            'actual_workday.min' => "Số công không được nhỏ hơn 0.5",
+            'actual_workday.max' => "Số công không được lớn hơn 3"
         ]);
 
         if ($validator->fails()) {
@@ -138,11 +142,15 @@ class ScheduleWorkController extends Controller
         try {
             DB::beginTransaction();
             $intervalDay = $request->interval_day;
+            $workTime = $request->work_time;
             $workScheduleOptions = [
                 'name' => $request->work_shift_name,
                 'days' => $request->days,
                 'allow_from' => Carbon::createFromFormat("Y-m", $intervalDay[0])->startOfMonth()->format("Y-m-d"),
                 'allow_to' => Carbon::createFromFormat("Y-m", $intervalDay[1])->endOfMonth()->format("Y-m-d"),
+                'work_from_at' => $workTime[0],
+                'work_to_at' => $workTime[1],
+                'actual_workday' => $request->actual_workday
             ];
 
             if ($request->subject_type == $departmentType) {
@@ -156,12 +164,23 @@ class ScheduleWorkController extends Controller
                 $workScheduleOptions['subject_type'] = $employeeType;
             }
 
+            if ($request->checkin_late) {
+                $workScheduleOptions['checkin_late'] = $request->checkin_late;
+            }
+
+            if ($request->checkout_late) {
+                $workScheduleOptions['checkout_late'] = $request->checkout_late;
+            }
+
+            if ($request->late_hour) {
+                $workScheduleOptions['late_hour'] = $request->late_hour;
+            }
+
+            if ($request->virtual_workday) {
+                $workScheduleOptions['virtual_workday'] = $request->virtual_workday;
+            }
+
             $workSchedule = $this->workScheduleRepo->customizeCreate($workScheduleOptions);
-            $workShiftOptions = [
-                'work_schedule_id' => $workSchedule->id,
-                'work_shifts' => $request->work_shifts,
-            ];
-            $this->workShiftRepo->createMultiple($workShiftOptions);
             DB::commit();
             return response()->json([
                 'message' => "Thêm ca làm thành công !"
@@ -173,7 +192,7 @@ class ScheduleWorkController extends Controller
             Slack::error($message);
             return response()->json([
                 'error_code' => 'exception_error',
-                'message' => $validator->messages()->first()
+                'message' => $e->getMessage()
             ], 442);
         }
     }

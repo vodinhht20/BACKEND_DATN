@@ -53,6 +53,35 @@ class WorkScheduleRepository extends BaseRepository
         if (isset($options['employee_id'])) {
             $scheduleWork->employee_id = $options['employee_id'];
         }
+
+        if (isset($options['work_from_at'])) {
+            $scheduleWork->work_from_at = $options['work_from_at'];
+        }
+
+        if (isset($options['work_to_at'])) {
+            $scheduleWork->work_to_at = $options['work_to_at'];
+        }
+
+        if (isset($options['actual_workday'])) {
+            $scheduleWork->actual_workday = $options['actual_workday'];
+        }
+
+        if (isset($options['checkin_late'])) {
+            $scheduleWork->checkin_late = $options['checkin_late'];
+        }
+
+        if (isset($options['checkout_late'])) {
+            $scheduleWork->checkout_late = $options['checkout_late'];
+        }
+
+        if (isset($options['late_hour'])) {
+            $scheduleWork->late_hour = $options['late_hour'];
+        }
+
+        if (isset($options['virtual_workday'])) {
+            $scheduleWork->virtual_workday = $options['virtual_workday'];
+        }
+
         $scheduleWork->save();
 
         return $scheduleWork;
