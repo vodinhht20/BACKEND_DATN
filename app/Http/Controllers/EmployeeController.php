@@ -28,16 +28,14 @@ class EmployeeController extends Controller
 
     public function filter(Request $request)
     {
-        // $employees = Employee::where('status','like','%'. $request->status.'%')
-            // ->where('position_id', $request->position)
-            // ->where('branch_id', $request->branch)
-            // ->where('fullname','like', '%'.$request->keyword.'%')
-            // ->paginate(10);
         $employees = Employee::where('status', 'like', '%' . $request->status . '%')
             ->where('position_id', 'like', '%' . $request->position . '%')
             ->where('gender', 'like', '%' . $request->gender . '%')
             ->where('branch_id', 'like', '%' . $request->branch . '%')
-            ->where('fullname','like', '%'. $request->keyword.'%')
+            ->where(function($query) use ($request){
+                $query->where('fullname', 'LIKE', '%'.$request->keyword.'%')
+                      ->orWhere('email', 'LIKE', '%'.$request->keyword.'%');
+            })
             ->paginate(10);
         if (sizeof($employees) == 0) {
             $outPut = "Không có nhân sự nào có các trạng thái trên";
