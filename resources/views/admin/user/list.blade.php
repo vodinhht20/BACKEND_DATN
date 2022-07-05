@@ -340,7 +340,9 @@
         })
     })()
 
-    function filter( $page = 1 ){
+    function filter( page = 1 ){
+        
+        
         axios.get("{{route('ajaxFilter')}}",{
             params:{
                 status : $('#statusFilter').val(),
@@ -348,7 +350,7 @@
                 position : $('#positionFilter').val(),
                 branch : $('#branchFilter').val(),
                 keyword: $('#keyword').val(),
-                page: $page
+                page: page
             }
         }).then((response)=>{
             $('#data-table').html(response.data.data);

@@ -56,7 +56,7 @@
     <nav>
         <ul class="pagination">
             @for ($i = 1; $i <= $pages; $i++)
-                <li class="page-item" onclick="filter({{$i}})">
+                <li class="page-item" id="page{{$i}}" onclick="filter({{$i}})">
                     <span class="page-link">{{$i}}</span>
                 </li>
             @endfor
@@ -67,3 +67,10 @@
 <div class="overlay-load">
     <img src="{{asset('frontend')}}/image/loading.gif" alt="">
 </div>
+
+<script>
+    $( document ).ready(function() {
+        
+        $('#page'+"{{$employees->currentPage()}}").addClass('active')
+    });
+</script>

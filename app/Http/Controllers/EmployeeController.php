@@ -44,7 +44,6 @@ class EmployeeController extends Controller
         } else {
             $outPut = view('admin.user._partials.base_table', compact('employees','pages'))->render();
         }
-
         return response()->json(["data" => $outPut]);
     }
 
