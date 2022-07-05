@@ -216,7 +216,6 @@
             phoneVN: true
         },
         personal_email:{
-            required:true,
             email:true
         },
       },

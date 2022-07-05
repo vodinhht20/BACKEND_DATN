@@ -186,12 +186,12 @@ class EmployeeController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'fullname' => 'required|max:255',
-            'email' => 'required|email|unique:users',
+            'email' => 'required|email|unique:users,email',
         ], [
             'fullname.required' => 'Họ và Tên không được để trống',
             'fullname.max' => 'Họ và Tên không được quá 255 ký tự',
             'email.required' => 'Email không được để trống',
-            'email.unique:users' => 'Email này đã tồn tại, vui lòng nhập mail khác hoặc đăng nhập',
+            'email.unique:users,email' => 'Email này đã tồn tại, vui lòng nhập mail khác hoặc đăng nhập',
             'email.email' => 'Email không đúng định dạng',
             'personal_email.required' => "Email này đã tồn tại, vui lòng nhập mail khác hoặc đăng nhập",
             'personal_email.email' => 'Email không đúng định dạng',
