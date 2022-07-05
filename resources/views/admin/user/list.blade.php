@@ -340,17 +340,22 @@
         })
     })()
 
-    function filter(){
-        let option = {
-            status : $('#statusFilter').val(),
-            gender : $('#genderFilter').val(),
-            position : $('#positionFilter').val(),
-            branch : $('#branchFilter').val(),
-            keyword: $('#keyword').val()
-        }
-        axios.post("{{route('ajaxFilter')}}",option).then((response)=>{
+    function filter( $page = 1 ){
+        axios.get("{{route('ajaxFilter')}}",{
+            params:{
+                status : $('#statusFilter').val(),
+                gender : $('#genderFilter').val(),
+                position : $('#positionFilter').val(),
+                branch : $('#branchFilter').val(),
+                keyword: $('#keyword').val(),
+                page: $page
+            }
+        }).then((response)=>{
             $('#data-table').html(response.data.data);
         })
     }
+
+    
+
 </script>
 @endsection

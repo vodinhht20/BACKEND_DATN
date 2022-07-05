@@ -53,7 +53,16 @@
     </table>
 </div>
 <div class="paginate row justify-content-center">
-    {{ $employees->links() }}
+    <nav>
+        <ul class="pagination">
+            @for ($i = 1; $i <= $pages; $i++)
+                <li class="page-item" onclick="filter({{$i}})">
+                    <span class="page-link">{{$i}}</span>
+                </li>
+            @endfor
+        </ul>
+    </nav>
+   
 </div>
 <div class="overlay-load">
     <img src="{{asset('frontend')}}/image/loading.gif" alt="">

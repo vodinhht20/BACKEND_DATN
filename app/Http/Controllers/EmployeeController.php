@@ -37,11 +37,12 @@ class EmployeeController extends Controller
                 $query->where('fullname', 'LIKE', '%'.$request->keyword.'%')
                       ->orWhere('email', 'LIKE', '%'.$request->keyword.'%');
             })
-            ->paginate(10);
+            ->paginate(10,['*'],'page',$request->page);
+        $pages = ceil($employees->total()/10);
         if (sizeof($employees) == 0) {
             $outPut = "Không có nhân sự nào có các trạng thái trên";
         } else {
-            $outPut = view('admin.user._partials.base_table', compact('employees'))->render();
+            $outPut = view('admin.user._partials.base_table', compact('employees','pages'))->render();
         }
 
         return response()->json(["data" => $outPut]);
