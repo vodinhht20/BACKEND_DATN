@@ -90,10 +90,12 @@
                             </div>
                             <div class="col-sm-2">
                                 <div class="form-group">
-                                    <label class="col-form-label">Phòng ban</label>
+                                    <label class="col-form-label">Vị trí</label>
                                     <div class="">
                                         <select name="position" id="" class="form-control data-input border">
-                                            <option value="1">Lập trình viên</option>
+                                            @foreach ($positions as $position)
+                                            <option value="{{$position->id}}">{{$position->name}}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -121,15 +123,7 @@
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label class="col-form-label">Mã nhân viên<span class="text-danger">*</span></label>
-                                    <div class="">
-                                        <input type="text" class="form-control data-input" value="{{ old('email') }}" name="employee_code" placeholder="Nhập mã nhân viên">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-form-label">Ngày sinh</span></label>
+                                    <label class="col-form-label">Ngày sinh<span class="text-danger">*</span></label>
                                     <div class="">
                                         <input type="date" class="form-control data-input" value="{{ old('birth_day') }}" name="birth_day" placeholder="Nhập ngày sinh">
                                     </div>
@@ -153,22 +147,28 @@
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label class="col-form-label">Email cá nhân<span class="text-danger">*</span></label>
+                                    <label class="col-form-label">Email cá nhân</label>
                                     <div class="">
                                         <input type="text" class="form-control data-input" value="{{ old('email') }}" name="personal_email" placeholder="Nhập email cá nhân">
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <p class="text-primary"><strong>Thông tin thêm</strong></p>
+                            </div>
+                            @foreach ($attributes as $attribute)
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label class="col-form-label">Ghi chú</label>
+                                    <label class="col-form-label">{{$attribute->name}}</label>
                                     <div class="">
-                                        <textarea class="form-control data-input" name="note"  cols="30" rows="10">{{ old('note') }}</textarea>
+                                        <input type="{{$attribute->data_type}}" class="form-control data-input" name="data" placeholder="{{$attribute->name}}">
                                     </div>
                                 </div>
                             </div>
+                            @endforeach
                         </div>
-
                         <div class="form-group row justify-content-center">
                             <button class="btn btn-primary btn-round waves-effect waves-light ">Tạo mới</button>
                         </div>
@@ -202,6 +202,13 @@
         },
         phone: {
             phoneVN: true
+        },
+        personal_email:{
+            email:true
+        },
+        birth_day:{
+            required:true,
+            date: true
         }
       },
       messages: {
@@ -210,8 +217,15 @@
             required: `<span class="text-validate">Vui lòng nhập email</span>`,
             email: `<span class="text-validate">Vui lòng nhập đúng định dạng email</span>`
         },
+        personal_email: {
+            email: `<span class="text-validate">Vui lòng nhập đúng định dạng email</span>`
+        },
         phone: {
             phoneVN: `<span class="text-validate">Vui lòng nhập đúng số điện thoại</span>`
+        },
+        birth_day:{
+            required: `<span class="text-validate">Vui lòng nhập ngày sinh</span>`,
+            date: `<span class="text-validate">Vui lòng nhập đúng định dạng ngày tháng</span>`
         }
       }
     }

@@ -60,6 +60,12 @@
                             </div>
                             <div class="col-sm-12 row">
                                 <div class="col-sm-6 mt-3 row">
+                                    <div class="col-sm-6"><p>Mã nhân viên</p></div>
+                                    <div class="col-sm-6">
+                                        <p><strong>{{$employee->employee_code}}</strong></p>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 mt-3 row">
                                     <div class="col-sm-6"><p>Vị trí công việc </p></div>
                                     <div class="col-sm-6">
                                         <ul>
@@ -103,7 +109,7 @@
                                         @elseif($employee->status == 2)
                                         <p class="text-waring"><strong>{{getStatusName($employee->status)}}</strong></p>
                                         @else
-                                        <p class="text-secondary"><strong>{{getStatusName($employee->status)}}</strong></p>
+                                        <p class="text-danger"><strong>{{getStatusName($employee->status)}}</strong></p>
                                         @endif
                                     </div>
                                 </div>
@@ -147,7 +153,7 @@
                                 <div class="col-sm-6 mt-3 row">
                                     <div class="col-sm-6"><p>Ngày sinh </p></div>
                                     <div class="col-sm-6">
-                                        <p><strong>{{$employee->birth_day}}</strong></p>
+                                        <p><strong>{{$employee->birth_day ? $employee->birth_day : "Chưa cập nhật"}}</strong></p>
                                     </div>
                                 </div>
                                 <div class="col-sm-6 mt-3 row">
@@ -165,7 +171,7 @@
                                 <div class="col-sm-6 mt-3 row">
                                     <div class="col-sm-6"><p>Địa chỉ tạm chú </p></div>
                                     <div class="col-sm-6">
-                                        <p><strong>{{$employee->address}}</strong></p>
+                                        <p><strong>{{$employee->address ? $employee->address : "Chưa cập nhật"}}</strong></p>
                                     </div>
                                 </div>
                                 @foreach ($attributes as $attribute)
@@ -181,39 +187,6 @@
                                 </div>
                             </div>
                         </div>
-                        {{-- <div class="row">
-                            
-                            <div class="col-sm-3">
-                                <div class="form-group">
-                                    <label class="col-form-label">Số điện thoại</label>
-                                    <div class="">
-                                        {{ $employee->phone ? $employee->phone : "Chưa cập nhật"}}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <div class="form-group">
-                                    <label class="col-form-label">Giới tính:</label>
-                                    <div class="">
-                                        <p>{{getGender($employee->gender)}}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                    <label class="col-form-label">Phòng ban:</label>
-                                    <p>Developer</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-form-label">Địa chỉ:</label>
-                                    <div class="">
-                                        <p>{{ $employee->address ? $employee->address : "Chưa cập nhật" }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> --}}
                        
                 </div>
             </div>

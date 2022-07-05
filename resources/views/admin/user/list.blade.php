@@ -120,7 +120,7 @@
                                             @elseif ($employee->status == 2)
                                             <label for="" class="label label-warning">{{ getStatusName($employee->status)}}</label>
                                             @else
-                                            <label for="" class="label label-secondary">{{ getStatusName($employee->status)}}</label>
+                                            <label for="" class="label label-danger">{{ getStatusName($employee->status)}}</label>
                                             @endif
                                         </td>
                                         <td>
