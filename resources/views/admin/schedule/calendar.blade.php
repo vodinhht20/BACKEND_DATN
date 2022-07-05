@@ -154,7 +154,7 @@
                             <div class="form-group row work-time">
                                 <div class="col-lg-6">
                                     <label for="recipient-name" class="col-form-label">Thời gian làm việc <span class="text-danger">*</span></label>
-                                    <date-picker lang="vn" type="time" v-model="work_time" range placeholder="Khoảng thời gian làm việc" format="HH:mm" value-type="format"></date-picker>
+                                    <date-picker lang="vn" type="time" v-model="work_time" @change="changeDataWorkTime($event)" range placeholder="Khoảng thời gian làm việc" format="HH:mm" value-type="format"></date-picker>
                                 </div>
                                 <div class="col-lg-6">
                                     <label for="recipient-name" class="col-form-label">Số công <span class="text-danger">*</span></label>
@@ -178,12 +178,12 @@
                                         <input type="number" class="form-control" v-model="late_hour" name="late_hour" placeholder="Nhập số giờ tối thiếu ">
                                     </div>
                                     <div class="col-lg-6">
-                                        <label for="recipient-name" class="col-form-label">Số công thiếu</label>
-                                        <input type="number" step="0.5" min="0" max="3" name="virtual_workday" class="form-control" v-model="virtual_workday" placeholder="Nhập số công">
+                                        <label for="recipient-name" class="col-form-label">Công thiếu nhận được</label>
+                                        <input type="number" step="0.5" min="0" :max="actual_workday" name="virtual_workday" class="form-control" v-model="virtual_workday" placeholder="Nhập số công">
                                     </div>
                                 </div>
                                 <div class="mt-1">
-                                    <i><b>Lưu ý: </b>Nếu số giờ làm việc tối thiểu > <b>n</b> giờ thì sẽ được <b>n</b> công</i>
+                                    <i><b>Lưu ý: </b>Nếu số giờ làm việc tối thiểu > <b>@{{ late_hour }}</b> giờ thì sẽ được <b>@{{ virtual_workday }}</b> công</i>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -201,7 +201,7 @@
                     </div>
                     <div class="modal-footer" style="display: block;">
                         <div class="box-log-error" v-if="arr_validate_failed.length > 0">
-                            <ul style="list-style-type: disclosure-closed; margin-left: 20px;">
+                            <ul style="list-style-type: inherit; margin-left: 20px;">
                                 <li v-for="log_failed in arr_validate_failed"><i class="text-validate">@{{ log_failed }}</i></li>
                             </ul>
                         </div>
@@ -252,7 +252,8 @@
                     { id: 6, name: "Thứ 6", active: 1},
                     { id: 7, name: "Thứ 7", active: 0},
                 ],
-                arr_validate_failed: []
+                arr_validate_failed: [],
+                workTimeDiff: 0
             },
             methods: {
                 changeTab: (tab) => {
@@ -379,6 +380,15 @@
                         app.arr_validate_failed.push("Thời gian hiệu lực không được để trống !");
                     }
                     return true;
+                },
+                changeDataWorkTime: ($event) => {
+                    if ($event[0] && $event[1]) {
+                        var fromAt = moment($event[0], 'HH:mm');
+                        var toAt = moment($event[1], 'HH:mm');
+                        app.workTimeDiff = toAt.diff(fromAt, 'hours') ;
+                    } else {
+                        app.workTimeDiff = 0;
+                    }
                 }
             }
         });

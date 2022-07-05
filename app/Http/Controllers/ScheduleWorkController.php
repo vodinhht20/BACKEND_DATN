@@ -30,7 +30,7 @@ class ScheduleWorkController extends Controller
     {
         $take = 2;
         $options = [
-            'with' => ['workShift', 'employee', 'department', 'position'],
+            'with' => ['employee', 'department', 'position'],
         ];
 
         // filter and paginate company page
