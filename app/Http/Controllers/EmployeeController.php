@@ -27,6 +27,13 @@ class EmployeeController extends Controller
         return view('admin.user.list', compact('employees', 'branchs', 'positions'));
     }
 
+    public function getAllUser(){
+        $employees = $this->employeeRepo->getAllUserByPublic();
+        $pages = ceil($employees->total()/10);
+        $outPut = view('admin.user._partials.base_table', compact('employees','pages'))->render();
+        return response()->json(["data" => $outPut]);
+    }
+
     public function filter(Request $request)
     {
         $employees = Employee::where('status', 'like', '%' . $request->status . '%')
