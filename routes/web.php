@@ -79,6 +79,7 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/ajax-un-block-user', [EmployeeController::class, 'ajaxUnBlock'])->name('ajax-un-block-user');
     Route::post('/ajax-user-confirm-email', [EmployeeController::class, 'confirmEmail'])->name('ajax-user-confirm-email');
     Route::post('/ajax-user-change-password', [EmployeeController::class, 'changePasssword'])->name('ajax-user-change-password');
+    Route::post('/ajax-filter',[EmployeeController::class,'filter'])->name('ajaxFilter');
 
     Route::prefix('/company')->name("company.")->group(function () {
         Route::get('/info', [CompanyController::class, 'info'])->name("info");

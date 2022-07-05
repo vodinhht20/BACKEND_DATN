@@ -9,9 +9,7 @@ use App\Repositories\EmployeeRepository;
 use Illuminate\Http\Request;
 use \Illuminate\Support\Str;
 use Validator;
-use App\Models\Attribute;
 use App\Models\Position;
-use Illuminate\Database\Eloquent\Builder;
 
 class EmployeeController extends Controller
 {
@@ -23,7 +21,31 @@ class EmployeeController extends Controller
     public function index()
     {
         $employees = $this->employeeRepo->getAllUserByPublic();
-        return view('admin.user.list', compact('employees'));
+        $branchs = Branch::all();
+        $positions = Position::all();
+        return view('admin.user.list', compact('employees', 'branchs', 'positions'));
+    }
+
+    public function filter(Request $request)
+    {
+        // $employees = Employee::where('status','like','%'. $request->status.'%')
+            // ->where('position_id', $request->position)
+            // ->where('branch_id', $request->branch)
+            // ->where('fullname','like', '%'.$request->keyword.'%')
+            // ->paginate(10);
+        $employees = Employee::where('status', 'like', '%' . $request->status . '%')
+            ->where('position_id', 'like', '%' . $request->position . '%')
+            ->where('gender', 'like', '%' . $request->gender . '%')
+            ->where('branch_id', 'like', '%' . $request->branch . '%')
+            ->where('fullname','like', '%'. $request->keyword.'%')
+            ->paginate(10);
+        if (sizeof($employees) == 0) {
+            $outPut = "Không có nhân sự nào có các trạng thái trên";
+        } else {
+            $outPut = view('admin.user._partials.base_table', compact('employees'))->render();
+        }
+
+        return response()->json(["data" => $outPut]);
     }
 
     public function confirmEmail(Request $request)
@@ -157,18 +179,7 @@ class EmployeeController extends Controller
         return view('admin.user.update', compact('employee', 'branchs', 'positions'));
     }
 
-    public function showInfoUser($id)
-    {
-        $employee = Employee::with('positions', 'branch')->find($id);
-        $attributes = Attribuite_Employee::with('attribute')->where('employee_id', $id)->get();
-        // $employee_attributes = $employee->attributes->load('attribute');
-        // dd($employee_attributes->attribute);
-        if (!$employee) {
-            return abort(404);
-        }
 
-        return view('admin.user.show', compact('employee', 'attributes'));
-    }
 
     public function updateUser(Request $request, $id)
     {
@@ -212,6 +223,17 @@ class EmployeeController extends Controller
             return redirect()->route('admin-list-user')->with('message.success', 'Cập nhật thông tin thành viên thành công !');
         }
         return redirect()->back()->with('message.error', 'Cập nhật thông tin thành viên thất bại')->withInput();
+    }
+
+    public function showInfoUser($id)
+    {
+        $employee = Employee::with('positions', 'branch')->find($id);
+        $attributes = Attribuite_Employee::with('attribute')->where('employee_id', $id)->get();
+        if (!$employee) {
+            return abort(404);
+        }
+
+        return view('admin.user.show', compact('employee', 'attributes'));
     }
 
     public function ajaxRemove(Request $request)

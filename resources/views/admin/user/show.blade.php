@@ -74,7 +74,7 @@
                                 <div class="col-sm-6 mt-3 row">
                                     <div class="col-sm-6"><p>Phòng ban</p></div>
                                     <div class="col-sm-6">
-                                        <p><strong>{{$employee->branch->name}}</strong></p>
+                                        <p><strong>{{$employee->branch? $employee->branch->name: 'Chưa cập nhật'}}</strong></p>
                                     </div>
                                 </div>
                                 <div class="col-sm-6 mt-3 row">
@@ -98,7 +98,13 @@
                                 <div class="col-sm-6 mt-3 row">
                                     <div class="col-sm-6"><p>Trạng thái sử dụng</p></div>
                                     <div class="col-sm-6">
-                                        <p><strong>{{getStatusName($employee->status)}}</strong></p>
+                                        @if ($employee->status == 1)
+                                        <p class="text-success"><strong>{{getStatusName($employee->status)}}</strong></p>
+                                        @elseif($employee->status == 2)
+                                        <p class="text-waring"><strong>{{getStatusName($employee->status)}}</strong></p>
+                                        @else
+                                        <p class="text-secondary"><strong>{{getStatusName($employee->status)}}</strong></p>
+                                        @endif
                                     </div>
                                 </div>
                                 <div class="col-sm-6 mt-3 row">

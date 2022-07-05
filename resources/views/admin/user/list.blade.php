@@ -43,79 +43,41 @@
                <div class="card-header">
                     <div class="form-group row">
                         <div class="col-sm-3">
-                            <select name="select" class="form-control border">
-                                <option value="opt1">Đang hoạt động</option>
-                                <option value="opt2">Type 2</option>
-                                <option value="opt3">Type 3</option>
-                                <option value="opt4">Type 4</option>
-                                <option value="opt5">Type 5</option>
-                                <option value="opt6">Type 6</option>
-                                <option value="opt7">Type 7</option>
-                                <option value="opt8">Type 8</option>
+                            <select name="select" class="form-control border" id="statusFilter" onchange="filter()">
+                                <option value="">Trạng thái</option>
+                                <option value="1">Đang hoạt động</option>
+                                <option value="2">Chưa kích hoạt</option>
+                                <option value="3">Bị chặn</option>
                             </select>
                         </div>
                         <div class="col-sm-3">
-                            <select name="select" class="form-control border">
-                                <option value="opt1">Status</option>
-                                <option value="opt2">Type 2</option>
-                                <option value="opt3">Type 3</option>
-                                <option value="opt4">Type 4</option>
-                                <option value="opt5">Type 5</option>
-                                <option value="opt6">Type 6</option>
-                                <option value="opt7">Type 7</option>
-                                <option value="opt8">Type 8</option>
+                            <select name="select" class="form-control border" id="genderFilter"  onchange="filter()">
+                                <option value="">Giới tính</option>
+                                <option value="1">Nam</option>
+                                <option value="2">Nữ</option>
                             </select>
                         </div>
                         <div class="col-sm-3">
-                            <select name="select" class="form-control border">
-                                <option value="opt1">Tìm kiếm theo tên, email, số...</option>
-                                <option value="opt2">Type 2</option>
-                                <option value="opt3">Type 3</option>
-                                <option value="opt4">Type 4</option>
-                                <option value="opt5">Type 5</option>
-                                <option value="opt6">Type 6</option>
-                                <option value="opt7">Type 7</option>
-                                <option value="opt8">Type 8</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-3">
-                            <select name="select" class="form-control border">
-                                <option value="opt1">Vai trò</option>
-                                <option value="opt2">Type 2</option>
-                                <option value="opt3">Type 3</option>
-                                <option value="opt4">Type 4</option>
-                                <option value="opt5">Type 5</option>
-                                <option value="opt6">Type 6</option>
-                                <option value="opt7">Type 7</option>
-                                <option value="opt8">Type 8</option>
-                            </select>
+                            <input id="keyword" class="form-control" type="text" placeholder="Tìm kiếm bằng tên, email,..." onchange="filter()">
                         </div>
                     </div>
                </div>
                <div class="card-header">
                 <div class="form-group row">
                     <div class="col-sm-3">
-                        <select name="select" class="form-control border">
-                            <option value="opt1">Phòng ban, vị trí</option>
-                            <option value="opt2">Type 2</option>
-                            <option value="opt3">Type 3</option>
-                            <option value="opt4">Type 4</option>
-                            <option value="opt5">Type 5</option>
-                            <option value="opt6">Type 6</option>
-                            <option value="opt7">Type 7</option>
-                            <option value="opt8">Type 8</option>
+                        <select name="select" class="form-control border" id="positionFilter" onchange="filter()">
+                            <option value="">Vị trí</option>
+                            @foreach ($positions as $position)
+                                <option value="{{$position->id}}">{{$position->name}}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="col-sm-3">
-                        <select name="select" class="form-control border">
-                            <option value="opt1">Loại hình nhân sự</option>
-                            <option value="opt2">Type 2</option>
-                            <option value="opt3">Type 3</option>
-                            <option value="opt4">Type 4</option>
-                            <option value="opt5">Type 5</option>
-                            <option value="opt6">Type 6</option>
-                            <option value="opt7">Type 7</option>
-                            <option value="opt8">Type 8</option>
+                        <select name="select" class="form-control border" id="branchFilter" onchange="filter()">
+                            <option value="">Chi nhánh</option>
+                            @foreach ($branchs as $branch)
+                                <option value="{{$branch->id}}">{{$branch->name}}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
@@ -152,11 +114,19 @@
                                             @endif
 
                                         </td>
-                                        <td>{{ getStatusName($employee->status)}}</td>
+                                        <td>
+                                            @if ($employee->status == 1)
+                                            <label for="" class="label label-success">{{ getStatusName($employee->status)}}</label>
+                                            @elseif ($employee->status == 2)
+                                            <label for="" class="label label-warning">{{ getStatusName($employee->status)}}</label>
+                                            @else
+                                            <label for="" class="label label-secondary">{{ getStatusName($employee->status)}}</label>
+                                            @endif
+                                        </td>
                                         <td>
                                             <div class="dropdown">
                                                 <button class="btn btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <i class="fa-solid fa-ellipsis-h m-0"></i>
+                                                    <i class="fa fa-ellipsis-h"></i>
                                                 </button>
                                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                     @if (!$employee->email_verified_at)
@@ -369,5 +339,18 @@
                 })
         })
     })()
+
+    function filter(){
+        let option = {
+            status : $('#statusFilter').val(),
+            gender : $('#genderFilter').val(),
+            position : $('#positionFilter').val(),
+            branch : $('#branchFilter').val(),
+            keyword: $('#keyword').val()
+        }
+        axios.post("{{route('ajaxFilter')}}",option).then((response)=>{
+            $('#data-table').html(response.data.data);
+        })
+    }
 </script>
 @endsection
