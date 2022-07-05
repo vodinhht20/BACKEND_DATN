@@ -175,7 +175,7 @@
                                 <div class="row">
                                     <div class="col-lg-6">
                                         <label for="recipient-name" class="col-form-label">Số giờ tối thiểu (> n giờ)</label>
-                                        <input type="number" class="form-control" v-model="late_hour" name="late_hour" placeholder="Nhập số giờ tối thiếu ">
+                                        <input type="number" class="form-control" :max="workTimeDiff-0.5" min="0" v-model="late_hour" name="late_hour" placeholder="Nhập số giờ tối thiếu ">
                                     </div>
                                     <div class="col-lg-6">
                                         <label for="recipient-name" class="col-form-label">Công thiếu nhận được</label>
@@ -276,9 +276,6 @@
                         return;
                     }
 
-                    alert("Đã thêm");
-                    return;
-
                     const days = app.dataWorkShiftDays.map(item => {
                             if (item.active == 1) {
                                 return item.id;
@@ -324,14 +321,17 @@
                             window.history.pushState({}, '', urlParam);
                             app.onHanldeCloseSweet()
                         });
-                    } catch (error) {
+                    } catch ({response}) {
                         $('.overlay-load').css('display', 'none');
-                        Swal.fire(
-                            'Thêm lịch làm việc thất bại',
-                            'Vui lòng liên hệ quản trị viên để được hỗ trợ',
-                            'error'
-                        );
-                        console.log(error);
+                        if (response.data.error_code && response.data.error_code == "validate_failed") {
+                            app.arr_validate_failed = response.data.messages;
+                        } else {
+                            Swal.fire(
+                                'Thêm lịch làm việc thất bại',
+                                'Vui lòng liên hệ quản trị viên để được hỗ trợ',
+                                'error'
+                            );
+                        }
                     }
                 },
                 onHanldeCloseSweet: () => {
@@ -365,10 +365,18 @@
                         app.arr_validate_failed.push("Thời gian làm việc không được để trống !");
                     }
 
+                    if (app.subject_type == 4 && app.employee_ids.length == 0) {
+                        app.arr_validate_failed.push("Nhân viên áp dụng không được để trống !");
+                    }
+
                     if (app.actual_workday == 0) {
                         app.arr_validate_failed.push("Số không công được để trống !");
-                    } else if(app.actual_workday <= 0 || app.actual_workday > 3 ) {
-                        app.arr_validate_failed.push("Số công phải > 0 và < 3 !");
+                    } else if(!(app.actual_workday > 0 || app.actual_workday <= 3)) {
+                        app.arr_validate_failed.push("Số công phải > 0 và <= 3 !");
+                    }
+
+                    if (!(app.virtual_workday >= 0 || app.virtual_workday < app.actual_workday)) {
+                        app.arr_validate_failed.push(`Công thiếu phải >= 0 và < ${app.actual_workday} !`);
                     }
 
                     let days = app.dataWorkShiftDays.filter(item => item.active);
@@ -379,14 +387,17 @@
                     if (app.intervalDay == '' || app.intervalDay[0] == null || app.intervalDay[1] == null) {
                         app.arr_validate_failed.push("Thời gian hiệu lực không được để trống !");
                     }
+
                     return true;
                 },
                 changeDataWorkTime: ($event) => {
                     if ($event[0] && $event[1]) {
                         var fromAt = moment($event[0], 'HH:mm');
                         var toAt = moment($event[1], 'HH:mm');
-                        app.workTimeDiff = toAt.diff(fromAt, 'hours') ;
+                        app.workTimeDiff = toAt.diff(fromAt, 'hours');
+                        app.late_hour = app.workTimeDiff*0.5;
                     } else {
+                        app.late_hour = 0;
                         app.workTimeDiff = 0;
                     }
                 }

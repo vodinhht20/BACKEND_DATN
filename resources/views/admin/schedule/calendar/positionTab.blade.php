@@ -113,6 +113,13 @@
                             </td> --}}
                         </tr>
                     @endforeach
+                    @if (count($workSchedules['positionData']) == 0)
+                        <tr>
+                            <td colspan="7" class="box_data_empty">
+                                <img src="{{asset('frontend')}}/image/empty_data.png" alt="">
+                            </td>
+                        </tr>
+                    @endif
                 </tbody>
             </table>
         </div>

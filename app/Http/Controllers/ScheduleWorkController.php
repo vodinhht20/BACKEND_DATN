@@ -99,6 +99,7 @@ class ScheduleWorkController extends Controller
         $departmentType = config('work_schedule.subject_type.department');
         $positionType = config('work_schedule.subject_type.position');
         $employeeType = config('work_schedule.subject_type.employee');
+        $companyType = config('work_schedule.subject_type.company');
 
         $validator = Validator::make($request->all(), [
             'work_shift_name' => 'required|max:255',
@@ -136,12 +137,46 @@ class ScheduleWorkController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'error_code' => 'validate_failed',
-                'message' => $validator->messages()->first()
+                'messages' => array($validator->messages()->first())
             ], 442);
         }
+
+        // Kiểm tra lịch làm việc đã tồn tại chưa
+        $intervalDay = $request->interval_day;
+        $options = [
+            'allow_from_or_allow_to' => [
+                Carbon::createFromFormat("Y-m", $intervalDay[0])->startOfMonth()->format("Y-m-d"),
+                Carbon::createFromFormat("Y-m", $intervalDay[1])->endOfMonth()->format("Y-m-d")
+            ],
+            'with' => ['employee']
+        ];
+        if ($request->subject_type == $departmentType) {
+            $options['department_id'] = $request->department_id;
+            $options['subject_type'] = $departmentType;
+        } else if ($request->subject_type == $positionType) {
+            $options['position_id'] = $request->position_id;
+            $options['subject_type'] = $positionType;
+        } else if ($request->subject_type == $employeeType) {
+            $options['employee_ids'] = $request->employee_ids;
+            $options['subject_type'] = $employeeType;
+        } else {
+            $options['subject_type'] = $companyType;
+        }
+        $scheduleWorks = $this->workScheduleRepo->query($options)->first();
+        if ($scheduleWorks) {
+            $message = "Đã tồn tại lịch làm việc trong thời gian này !";
+            if ($request->subject_type == $employeeType) {
+                $message = "Nhân viên [" . $scheduleWorks->employee->fullname . "] đã tồn tại lịch làm việc trong thời gian này !";
+            }
+            return response()->json([
+                'error_code' => 'validate_failed',
+                'messages' => array($message)
+            ], 442);
+        }
+
+        // Bắt đầu tạo mới
         try {
             DB::beginTransaction();
-            $intervalDay = $request->interval_day;
             $workTime = $request->work_time;
             $workScheduleOptions = [
                 'name' => $request->work_shift_name,
@@ -180,7 +215,7 @@ class ScheduleWorkController extends Controller
                 $workScheduleOptions['virtual_workday'] = $request->virtual_workday;
             }
 
-            $workSchedule = $this->workScheduleRepo->customizeCreate($workScheduleOptions);
+            $this->workScheduleRepo->customizeCreate($workScheduleOptions);
             DB::commit();
             return response()->json([
                 'message' => "Thêm ca làm thành công !"

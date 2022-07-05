@@ -16,78 +16,21 @@ class WorkScheduleRepository extends BaseRepository
     /**
      *
      * @param array $options
-     * @return WorkSchedule
+     * @return void
      */
-    public function customizeCreate(array $options): WorkSchedule
+    public function customizeCreate(array $options): void
     {
-        $scheduleWork = new $this->model;
-
-        if (isset($options['name'])) {
-            $scheduleWork->name = $options['name'];
+        if (isset($options['employee_ids']) && count($options['employee_ids']) > 0) {
+            foreach ($options['employee_ids'] as $employeeId) {
+                unset($options['employee_ids']);
+                $this->create([...$options, 'employee_id' => $employeeId]);
+            }
+        } else {
+            $this->create($options);
         }
-
-        if (isset($options['days']) && count($options['days']) > 0) {
-            $scheduleWork->days = $options['days'];
-        }
-
-        if (isset($options['allow_from'])) {
-            $scheduleWork->allow_from = $options['allow_from'];
-        }
-
-        if (isset($options['allow_to'])) {
-            $scheduleWork->allow_to = $options['allow_to'];
-        }
-
-        if (isset($options['subject_type'])) {
-            $scheduleWork->subject_type = $options['subject_type'];
-        }
-
-        if (isset($options['department_id'])) {
-            $scheduleWork->department_id = $options['department_id'];
-        }
-
-        if (isset($options['position_id'])) {
-            $scheduleWork->position_id = $options['position_id'];
-        }
-
-        if (isset($options['employee_ids'])) {
-            $scheduleWork->employee_id = $options['employee_id'];
-        }
-
-        if (isset($options['work_from_at'])) {
-            $scheduleWork->work_from_at = $options['work_from_at'];
-        }
-
-        if (isset($options['work_to_at'])) {
-            $scheduleWork->work_to_at = $options['work_to_at'];
-        }
-
-        if (isset($options['actual_workday'])) {
-            $scheduleWork->actual_workday = $options['actual_workday'];
-        }
-
-        if (isset($options['checkin_late'])) {
-            $scheduleWork->checkin_late = $options['checkin_late'];
-        }
-
-        if (isset($options['checkout_late'])) {
-            $scheduleWork->checkout_late = $options['checkout_late'];
-        }
-
-        if (isset($options['late_hour'])) {
-            $scheduleWork->late_hour = $options['late_hour'];
-        }
-
-        if (isset($options['virtual_workday'])) {
-            $scheduleWork->virtual_workday = $options['virtual_workday'];
-        }
-
-        $scheduleWork->save();
-
-        return $scheduleWork;
     }
 
-    public function query($options)
+    public function query($options = [])
     {
         $scheduleWorks = $this->model->query();
 
@@ -115,6 +58,29 @@ class WorkScheduleRepository extends BaseRepository
 
         if (isset($options['allow_to'])) {
             $scheduleWorks->where("allow_to", "<=", $options['allow_to']);
+        }
+
+        if (isset($options['allow_from_or_allow_to'])) {
+            $scheduleWorks->where(function($subQuery) use ($options){
+                $subQuery->where("allow_from", ">=", $options['allow_from_or_allow_to'][0])
+                      ->orWhere("allow_to", "<=", $options['allow_from_or_allow_to'][1]);
+            });
+        }
+
+        if (isset($options['department_id'])) {
+            $scheduleWorks->where('department_id', $options['department_id']);
+        }
+
+        if (isset($options['position_id'])) {
+            $scheduleWorks->where('position_id', $options['position_id']);
+        }
+
+        if (isset($options['employee_id'])) {
+            $scheduleWorks->where('employee_id', $options['employee_id']);
+        }
+
+        if (isset($options['employee_ids'])) {
+            $scheduleWorks->whereIn('employee_id', $options['employee_ids']);
         }
 
         if (isset($options['department_name'])) {
