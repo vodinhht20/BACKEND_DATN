@@ -288,7 +288,6 @@
 
     function filter( page = 1 ){
         
-        
         axios.get("{{route('ajaxFilter')}}",{
             params:{
                 status : $('#statusFilter').val(),

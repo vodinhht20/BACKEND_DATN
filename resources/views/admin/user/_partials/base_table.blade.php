@@ -27,7 +27,15 @@
                         @endif
 
                     </td>
-                    <td>{{ getStatusName($employee->status)}}</td>
+                    <td>
+                        @if ($employee->status == 1)
+                        <label class="label label-success">{{ getStatusName($employee->status)}}</label>
+                        @elseif($employee->status == 1)
+                        <label class="label label-warning">{{ getStatusName($employee->status)}}</label>
+                        @else
+                        <label class="label label-danger">{{ getStatusName($employee->status)}}</label>
+                        @endif
+                    </td>
                     <td>
                         <div class="dropdown">
                             <button class="btn btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

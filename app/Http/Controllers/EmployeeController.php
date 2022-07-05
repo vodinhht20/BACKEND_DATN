@@ -44,6 +44,7 @@ class EmployeeController extends Controller
                 $query->where('fullname', 'LIKE', '%'.$request->keyword.'%')
                       ->orWhere('email', 'LIKE', '%'.$request->keyword.'%');
             })
+            ->orderBy('updated_at', 'desc')
             ->paginate(10,['*'],'page',$request->page);
         $pages = ceil($employees->total()/10);
         if (sizeof($employees) == 0) {
@@ -236,7 +237,7 @@ class EmployeeController extends Controller
 
     public function showInfoUser($id)
     {
-        $employee = Employee::with('positions', 'branch')->find($id);
+        $employee = Employee::with('position', 'branch')->find($id);
         $attributes = Attribuite_Employee::with('attribute')->where('employee_id', $id)->get();
         if (!$employee) {
             return abort(404);

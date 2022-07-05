@@ -68,13 +68,7 @@
                                 <div class="col-sm-6 mt-3 row">
                                     <div class="col-sm-6"><p>Vị trí công việc </p></div>
                                     <div class="col-sm-6">
-                                        <ul>
-                                            @foreach ($employee->positions as $position)
-                                            <li>
-                                                <strong>{{$position->name}}</strong>
-                                            </li>
-                                            @endforeach
-                                        </ul>
+                                        <p> <strong>{{$employee->position->name}}</strong></p>
                                     </div>
                                 </div>
                                 <div class="col-sm-6 mt-3 row">
@@ -105,11 +99,11 @@
                                     <div class="col-sm-6"><p>Trạng thái sử dụng</p></div>
                                     <div class="col-sm-6">
                                         @if ($employee->status == 1)
-                                        <p class="text-success"><strong>{{getStatusName($employee->status)}}</strong></p>
-                                        @elseif($employee->status == 2)
-                                        <p class="text-waring"><strong>{{getStatusName($employee->status)}}</strong></p>
+                                        <label class="label label-success">{{ getStatusName($employee->status)}}</label>
+                                        @elseif($employee->status == 1)
+                                        <label class="label label-warning">{{ getStatusName($employee->status)}}</label>
                                         @else
-                                        <p class="text-danger"><strong>{{getStatusName($employee->status)}}</strong></p>
+                                        <label class="label label-danger">{{ getStatusName($employee->status)}}</label>
                                         @endif
                                     </div>
                                 </div>
