@@ -55,7 +55,7 @@
 <div class="paginate row justify-content-center">
     <nav>
         <ul class="pagination">
-            <li  class="page-item" onclick="filter({{$employees->currentPage()}}-1)">
+            <li  class="page-item" id="pre" onclick="filter({{$employees->currentPage()}}-1)">
                 <span class="page-link" rel="prev" aria-label="pagination.previous">‹</span>
             </li>
             @for ($i = 1; $i <= $pages; $i++)
@@ -63,8 +63,8 @@
                     <span class="page-link">{{$i}}</span>
                 </li>
             @endfor
-            <li  class="page-item" onclick="filter({{$employees->currentPage()}}+1)">
-                <span class="page-link" rel="prev" aria-label="pagination.previous">›</span>
+            <li  class="page-item" id="next" onclick="filter({{$employees->currentPage()}}+1)">
+                <span class="page-link" rel="next" aria-label="pagination.next">›</span>
             </li>
         </ul>
     </nav>
@@ -76,7 +76,12 @@
 
 <script>
     $( document ).ready(function() {
-        
         $('#page'+"{{$employees->currentPage()}}").addClass('active')
+        if("{{$employees->currentPage()}}" == 1){
+            $('#pre').addClass('disabled')
+        }
+        if("{{$employees->currentPage()}}" == "{{$pages}}"){
+            $('#next').addClass('disabled')
+        }
     });
 </script>
