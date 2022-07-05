@@ -58,9 +58,7 @@
                             </select>
                         </div>
                         <div class="col-sm-3">
-                            <form action="" class="form-group">
-                                <input class="form-control" type="text" placeholder="Tìm kiếm bằng tên, email,..." onchange="search()">
-                            </form>
+                            <input id="keyword" class="form-control" type="text" placeholder="Tìm kiếm bằng tên, email,..." onchange="filter()">
                         </div>
                     </div>
                </div>
@@ -347,7 +345,8 @@
             status : $('#statusFilter').val(),
             gender : $('#genderFilter').val(),
             position : $('#positionFilter').val(),
-            branch : $('#branchFilter').val()
+            branch : $('#branchFilter').val(),
+            keyword: $('#keyword').val()
         }
         axios.post("{{route('ajaxFilter')}}",option).then((response)=>{
             $('#data-table').html(response.data.data);
