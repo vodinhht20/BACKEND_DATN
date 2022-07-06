@@ -108,39 +108,7 @@
     });
 
     (function callApi() {
-        $('.confirm-email').on('click', function (e) {
-            Swal.fire({
-                    title: 'Xác thực email ?',
-                    html: "Xác thực <b style='color: #5fc0fc;'>"+ $(this).attr('data-email') +"</b>",
-                    icon: 'question',
-                    heightAuto: true,
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Xác thực'
-                })
-                .then(async (result) => {
-                    if (result.isConfirmed) {
-                        let option = {
-                            _token: '{{ csrf_token() }}',
-                            id: $(this).attr("data-id"),
-                            params: window.location.search
-                        }
-                        $('.overlay-load').css('display', 'flex');
-                        const response = await axios.post("{{route('ajax-user-confirm-email')}}", option)
-                        if (response.status == 200) {
-                            $('#data-table').html(response.data.data);
-                            await callApi();
-                            $('.overlay-load').css('display', 'none');
-                            Swal.fire(
-                                'Thành công',
-                                'Tài khoản đã được xác thực',
-                                'success'
-                            )
-                        }
-                    }
-                })
-        });
+        
         $('.change-pass').on('click', async function (e) {
             const { value: password } = await Swal.fire({
                     title: 'Thay đổi mật khẩu',
@@ -230,46 +198,6 @@
                                 Swal.fire(
                                     'Thành công',
                                     'Nhân viên này đã được xóa',
-                                    'success'
-                                )
-                            })
-                            .catch((error) => {
-                                    $('.overlay-load').css('display', 'none');
-                                    Swal.fire(
-                                    'Thất bại',
-                                    error.response.data.message,
-                                    'error'
-                                )
-                            })
-                    }
-                })
-        })
-        $('.btn-block-user').on('click', function (e) {
-            Swal.fire({
-                    title: 'Xác nhận !',
-                    text: "Bạn có muốn đưa chặn nhân viên này không ?",
-                    icon: 'warning',
-                    heightAuto: true,
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Xác nhận'
-                })
-                .then((result) => {
-                    if (result.isConfirmed) {
-                        let option = {
-                            _token: '{{ csrf_token() }}',
-                            id: $(this).attr("data-id")
-                        }
-                        $('.overlay-load').css('display', 'flex');
-                        axios.post("{{route('ajax-block-user')}}", option)
-                            .then(({data}) => {
-                                $('#data-table').html(data.data);
-                                callApi();
-                                $('.overlay-load').css('display', 'none');
-                                Swal.fire(
-                                    'Thành công',
-                                    'Nhân viên này đã được thêm vào danh sách chặn',
                                     'success'
                                 )
                             })
