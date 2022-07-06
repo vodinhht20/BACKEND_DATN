@@ -182,7 +182,7 @@
                                         <input type="number" step="0.5" min="0" :max="actual_workday" name="virtual_workday" class="form-control" v-model="virtual_workday" placeholder="Nhập số công">
                                     </div>
                                 </div>
-                                <div class="mt-1">
+                                <div class="mt-1" v-if="virtual_workday>0">
                                     <i><b>Lưu ý: </b>Nếu số giờ làm việc tối thiểu > <b>@{{ late_hour }}</b> giờ thì sẽ được <b>@{{ virtual_workday }}</b> công</i>
                                 </div>
                             </div>
@@ -371,11 +371,11 @@
 
                     if (app.actual_workday == 0) {
                         app.arr_validate_failed.push("Số không công được để trống !");
-                    } else if(!(app.actual_workday > 0 || app.actual_workday <= 3)) {
+                    } else if(!(app.actual_workday > 0 && app.actual_workday <= 3)) {
                         app.arr_validate_failed.push("Số công phải > 0 và <= 3 !");
                     }
 
-                    if (!(app.virtual_workday >= 0 || app.virtual_workday < app.actual_workday)) {
+                    if (!(app.virtual_workday >= 0 && app.virtual_workday < app.actual_workday)) {
                         app.arr_validate_failed.push(`Công thiếu phải >= 0 và < ${app.actual_workday} !`);
                     }
 
