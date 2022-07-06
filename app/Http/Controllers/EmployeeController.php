@@ -141,6 +141,8 @@ class EmployeeController extends Controller
             'email_verified_at' => now()
         ];
 
+        
+
         if (isset($request->birth_day)) {
             $option['birth_day'] = $request->birth_day;
         }
