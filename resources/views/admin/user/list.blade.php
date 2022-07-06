@@ -80,7 +80,7 @@
 
 @section('page-script')
 <script>
-    (function callApi() {
+    (function callBack() {
         $('.change-pass').on('click', async function (e) {
             const { value: password } = await Swal.fire({
                     title: 'Thay đổi mật khẩu',
@@ -144,7 +144,6 @@
                     }
                 }
         });
-
         $('.btn-remove-user').on('click', async function (e) {
             Swal.fire({
                     title: 'Hành động nguy hiểm !!',
@@ -166,7 +165,7 @@
                         axios.post("{{route('ajax-remove-user')}}", option)
                             .then(({data}) => {
                                 $('#data-table').html(data.data);
-                                callApi();
+                                callBack();
                                 $('.overlay-load').css('display', 'none');
                                 Swal.fire(
                                     'Thành công',
@@ -185,28 +184,28 @@
                     }
                 })
         });
+    })();
 
-        $('.action_filter').on('input', function(e){
-            var keyFilter = e.target.getAttribute("data-filter");
-            var urlParam = new URL(window.location);
-            urlParam.searchParams.set(keyFilter, $(this).val());
-            window.history.pushState({}, '', urlParam);
+    $('.action_filter').on('input', function(e){
+        var keyFilter = e.target.getAttribute("data-filter");
+        var urlParam = new URL(window.location);
+        urlParam.searchParams.set(keyFilter, $(this).val());
+        window.history.pushState({}, '', urlParam);
 
-            var paramsUrl = window.location.search;
-            let params = {
-                params: paramsUrl
-            };
-            $('.overlay-load').css('display', 'flex');
-            axios.get("{{route('ajax-filter-employee')}}", { params }).then((response)=>{
-                console.log(response.data);
-                $('#data-table').html(response.data.data);
-                $('.overlay-load').css('display', 'none');
-            });
+        var paramsUrl = window.location.search;
+        let params = {
+            params: paramsUrl
+        };
+        $('.overlay-load').css('display', 'flex');
+        axios.get("{{route('ajax-filter-employee')}}", { params }).then((response)=>{
+            $('#data-table').html(response.data.data);
+            $('.overlay-load').css('display', 'none');
+            callApi();
         });
-        $('.action_filter').map((index, element) => {
-            let keyFilter = element.getAttribute('data-filter');
-            element.value = (new URL(document.location)).searchParams.get(keyFilter) || '';
-        })
-    })()
+    });
+    $('.action_filter').map((index, element) => {
+        let keyFilter = element.getAttribute('data-filter');
+        element.value = (new URL(document.location)).searchParams.get(keyFilter) || '';
+    })
 </script>
 @endsection

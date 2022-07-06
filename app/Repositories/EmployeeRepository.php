@@ -199,12 +199,13 @@ class EmployeeRepository extends BaseRepository
         }
 
         if (isset($options['keyword'])) {
-            $employee->where(function($query) use ($options){
-                $query->where('fullname', 'LIKE', '%' . $options['keyword'] . '%')
-                    ->orWhere('email', 'LIKE', '%' . $options['keyword'] . '%')
-                    ->orWhere('phone', 'LIKE', '%' . $options['keyword'] . '%')
-                    ->orWhere('employee_code', 'LIKE', '%' . $options['keyword'] . '%')
-                    ->orWhere('personal_email', 'LIKE', '%' . $options['keyword'] . '%');
+            $keyword = trim($options['keyword']);
+            $employee->where(function($query) use ($keyword){
+                $query->where('fullname', 'LIKE', '%' . $keyword . '%')
+                    ->orWhere('email', 'LIKE', '%' . $keyword . '%')
+                    ->orWhere('phone', 'LIKE', '%' . $keyword . '%')
+                    ->orWhere('employee_code', 'LIKE', '%' . $keyword . '%')
+                    ->orWhere('personal_email', 'LIKE', '%' . $keyword . '%');
             });
         }
         $employee->orderBy('id', 'desc');
