@@ -23,3 +23,11 @@ function getGender($gender)
     }
     return $gender;
 }
+
+function getDataType($dataType){
+    $type = "text";
+    if($dataType ==2){
+        $type = "email";
+    }
+    return $type;
+}
