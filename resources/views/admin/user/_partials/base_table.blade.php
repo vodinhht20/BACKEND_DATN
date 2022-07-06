@@ -60,7 +60,7 @@
         </tbody>
     </table>
 </div>
-<div class="paginate row justify-content-center">
+<div class="paginate row justify-content-center" id="paginate-link">
     <nav>
         <ul class="pagination">
             <li  class="page-item" id="pre" onclick="filter({{$employees->currentPage()}}-1)">
@@ -90,6 +90,9 @@
         }
         if("{{$employees->currentPage()}}" == "{{$pages}}"){
             $('#next').addClass('disabled')
+        }
+        if("{{$pages}}" == 1){
+            $('#paginate-link').hide()
         }
     });
 </script>
