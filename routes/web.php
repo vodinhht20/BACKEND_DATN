@@ -1,15 +1,15 @@
 <?php
 
 use App\Exports\ProductExport;
-use App\Http\Controllers\Api\ProductController as ApiProductController;
+// use App\Http\Controllers\Api\ProductController as ApiProductController;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CheckinController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\PostController;
-use App\Http\Controllers\ProductController;
+// use App\Http\Controllers\PostController;
+// use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Resources\ProductCollection;
@@ -37,8 +37,8 @@ use Stevebauman\Location\Facades\Location;
 */
 Route::get('php-info', function() { return phpinfo(); })->middleware('auth');
 Route::get('', function (){ return view('index'); })->name("home.index");
-Route::get('/san-pham/{slug}', [ProductController::class, 'showDetail'])->name("product.showDetail");
-Route::get('/tin-tuc', [PostController::class, 'index'])->name("new.index");
+// Route::get('/san-pham/{slug}', [ProductController::class, 'showDetail'])->name("product.showDetail");
+// Route::get('/tin-tuc', [PostController::class, 'index'])->name("new.index");
 Route::get('/login', [AuthController::class, 'showFormLogin'])->name("login");
 Route::post('/login', [AuthController::class, 'login'])->name("post-login");
 Route::get('/register', [AuthController::class, 'showFromRegister'])->name("show-form-register");
@@ -51,6 +51,7 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('', [DashboardController::class, 'index'])->name('dashboard');
     Route::prefix('/employee')->group(function () {
         Route::get('/', [EmployeeController::class, 'index'])->name('admin-list-user');
+        Route::get('/get-all-users', [EmployeeController::class, 'getAllUser'])->name('admin-all-user');
         Route::get('/create', [EmployeeController::class, 'showFormCreate'])->name('show-form-user-create');
         Route::get('/update/{id}', [EmployeeController::class, 'showFormUpdate'])->name('show-form-update-user');
         Route::get('/show/{id}', [EmployeeController::class, 'showInfoUser'])->name('show-info-user');
@@ -79,6 +80,7 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/ajax-un-block-user', [EmployeeController::class, 'ajaxUnBlock'])->name('ajax-un-block-user');
     Route::post('/ajax-user-confirm-email', [EmployeeController::class, 'confirmEmail'])->name('ajax-user-confirm-email');
     Route::post('/ajax-user-change-password', [EmployeeController::class, 'changePasssword'])->name('ajax-user-change-password');
+    Route::get('/ajax-filter',[EmployeeController::class,'filter'])->name('ajaxFilter');
 
     Route::prefix('/company')->name("company.")->group(function () {
         Route::get('/info', [CompanyController::class, 'info'])->name("info");

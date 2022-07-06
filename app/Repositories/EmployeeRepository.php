@@ -59,6 +59,14 @@ class EmployeeRepository extends BaseRepository
         return $employee;
     }
 
+    public function update($id, $arrData = [])
+    {
+        $employee = $this->model->find($id);
+        
+        $employee->update($arrData);
+
+    }
+
     public function updateTokenVerifyEmail($arrData = [])
     {
         $employee = $this->find($arrData['id']);
@@ -77,7 +85,7 @@ class EmployeeRepository extends BaseRepository
 
     public function getAllUserByPublic($take = 10)
     {
-        return $this->model->where('status', 1)->whereNotIn('id', [Auth::user()->id])->orderBy('updated_at', 'desc')->paginate($take);
+        return $this->model->whereNotIn('id', [Auth::user()->id])->orderBy('updated_at', 'desc')->paginate($take);
     }
 
     public function confirmEmail($id)

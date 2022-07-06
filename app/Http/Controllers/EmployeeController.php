@@ -4,14 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Attribuite_Employee;
 use App\Models\Branch;
+use App\Models\Attribute;
 use App\Models\Employee;
 use App\Repositories\EmployeeRepository;
 use Illuminate\Http\Request;
 use \Illuminate\Support\Str;
 use Validator;
-use App\Models\Attribute;
 use App\Models\Position;
-use Illuminate\Database\Eloquent\Builder;
 
 class EmployeeController extends Controller
 {
@@ -23,7 +22,37 @@ class EmployeeController extends Controller
     public function index()
     {
         $employees = $this->employeeRepo->getAllUserByPublic();
-        return view('admin.user.list', compact('employees'));
+        $branchs = Branch::all();
+        $positions = Position::all();
+        return view('admin.user.list', compact('employees', 'branchs', 'positions'));
+    }
+
+    public function getAllUser(){
+        $employees = $this->employeeRepo->getAllUserByPublic();
+        $pages = ceil($employees->total()/10);
+        $outPut = view('admin.user._partials.base_table', compact('employees','pages'))->render();
+        return response()->json(["data" => $outPut]);
+    }
+
+    public function filter(Request $request)
+    {
+        $employees = Employee::where('status', 'like', '%' . $request->status . '%')
+            ->where('position_id', 'like', '%' . $request->position . '%')
+            ->where('gender', 'like', '%' . $request->gender . '%')
+            ->where('branch_id', 'like', '%' . $request->branch . '%')
+            ->where(function($query) use ($request){
+                $query->where('fullname', 'LIKE', '%'.$request->keyword.'%')
+                      ->orWhere('email', 'LIKE', '%'.$request->keyword.'%');
+            })
+            ->orderBy('updated_at', 'desc')
+            ->paginate(10,['*'],'page',$request->page);
+        $pages = ceil($employees->total()/10);
+        if (sizeof($employees) == 0) {
+            $outPut = "Không có nhân sự nào có các trạng thái trên";
+        } else {
+            $outPut = view('admin.user._partials.base_table', compact('employees','pages'))->render();
+        }
+        return response()->json(["data" => $outPut]);
     }
 
     public function confirmEmail(Request $request)
@@ -68,7 +97,9 @@ class EmployeeController extends Controller
     public function showFormCreate()
     {
         $branchs = Branch::all();
-        return view('admin.user.create', compact('branchs'));
+        $positions = Position::all();
+        $attributes = Attribute::all();
+        return view('admin.user.create', compact('branchs','positions','attributes'));
     }
 
     public function addUser(Request $request)
@@ -77,7 +108,6 @@ class EmployeeController extends Controller
         $validator = Validator::make($request->all(), [
             'fullname' => 'required|max:255',
             'email' => 'required|email|unique:users',
-            'employee_code' => 'required',
         ], [
             'fullname.required' => 'Họ và Tên không được để trống',
             'fullname.max' => 'Họ và Tên không được quá 255 ký tự',
@@ -100,7 +130,7 @@ class EmployeeController extends Controller
             'fullname' => $request->fullname,
             'email' => $request->email,
             'personal_email' => $request->personal_email,
-            'employee_code' => $branchCode,
+            'employee_code' => $request->branch.'-'.Str::slug($request->fullname),
             'password' => $passWord,
             'status' => $request->status,
             'gender' => $request->gender,
@@ -147,71 +177,73 @@ class EmployeeController extends Controller
 
     public function showFormUpdate($id)
     {
-        $employee = Employee::with('branch', 'positions')->find($id);
+        $employee = Employee::with('branch', 'positions', 'attributes')->find($id);
         $branchs = Branch::all();
         $positions = Position::all();
+        $attributes = Attribute::all();
         if (!$employee) {
             return abort(404);
         }
 
-        return view('admin.user.update', compact('employee', 'branchs', 'positions'));
+        return view('admin.user.update', compact('employee', 'branchs', 'positions','attributes'));
     }
 
-    public function showInfoUser($id)
-    {
-        $employee = Employee::with('positions', 'branch')->find($id);
-        $attributes = Attribuite_Employee::with('attribute')->where('employee_id', $id)->get();
-        // $employee_attributes = $employee->attributes->load('attribute');
-        // dd($employee_attributes->attribute);
-        if (!$employee) {
-            return abort(404);
-        }
 
-        return view('admin.user.show', compact('employee', 'attributes'));
-    }
 
     public function updateUser(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'fullname' => 'required|max:255',
-            'email' => 'required|email|unique:users,email,' . $id,
+            'email' => 'required|email|unique:users,email',
         ], [
             'fullname.required' => 'Họ và Tên không được để trống',
             'fullname.max' => 'Họ và Tên không được quá 255 ký tự',
             'email.required' => 'Email không được để trống',
-            'email.unique' => 'Email này đã tồn tại vui lòng lựa chọn email khác',
+            'email.unique:users,email' => 'Email này đã tồn tại, vui lòng nhập mail khác hoặc đăng nhập',
             'email.email' => 'Email không đúng định dạng',
+            'personal_email.required' => "Email này đã tồn tại, vui lòng nhập mail khác hoặc đăng nhập",
+            'personal_email.email' => 'Email không đúng định dạng',
         ]);
 
         if ($validator->fails()) {
             return redirect()->back()->with('message.error', $validator->messages()->first())->withInput();
         }
-
-        $option = [
-            'fullname' => $request->fullname,
-            'email' => $request->email,
-        ];
-
-        if (isset($request->birth_day)) {
-            $option['birth_day'] = $request->birth_day;
-        }
-
-        if (isset($request->phone)) {
-            $option['phone'] = $request->phone;
-        }
+        $employee = Employee::find($id);
+        
+        $employee->fullname = $request->fullname;
+        $employee->email = $request->email;
+        $employee->birth_day = $request->birth_day;
+        $employee->phone = $request->phone;
+        $employee->status = $request->status;
+        $employee->position_id = $request->position;
+        $employee->gender = $request->gender;
+        $employee->branch_id = $request->branch;
+        $employee->is_checked = $request->is_checked;
 
         if ($request->hasFile('avatar')) {
             $urlImage = $this->storeImage($request, 'avatar');
-            $option['avatar'] = $urlImage;
-            $option['type_avatar'] = 1;
+            $employee->avatar = $urlImage;
+            $employee->type_avatar = 1;
+        }
+        
+        $employee->update();
+        return redirect()->route('admin-list-user')->with('message.success', 'Cập nhật thông tin thành viên thành công !');
+
+        // if ($employee) {
+        //     return redirect()->route('admin-list-user')->with('message.success', 'Cập nhật thông tin thành viên thành công !');
+        // }
+        // return redirect()->back()->with('message.error', 'Cập nhật thông tin thành viên thất bại')->withInput();
+    }
+
+    public function showInfoUser($id)
+    {
+        $employee = Employee::with('position', 'branch')->find($id);
+        $attributes = Attribuite_Employee::with('attribute')->where('employee_id', $id)->get();
+        if (!$employee) {
+            return abort(404);
         }
 
-        $employee = $this->employeeRepo->update($id, $option);
-
-        if ($employee) {
-            return redirect()->route('admin-list-user')->with('message.success', 'Cập nhật thông tin thành viên thành công !');
-        }
-        return redirect()->back()->with('message.error', 'Cập nhật thông tin thành viên thất bại')->withInput();
+        return view('admin.user.show', compact('employee', 'attributes'));
     }
 
     public function ajaxRemove(Request $request)

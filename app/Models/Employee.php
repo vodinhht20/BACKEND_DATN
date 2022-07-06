@@ -99,10 +99,10 @@ class Employee extends Authenticatable implements JWTSubject
         return $this->hasMany(Timekeep::class, 'employee_id','id');
     }
 
-    public function positions()
-    {
-        return $this->belongsToMany(Position::class, 'employee_positions', 'employee_id', 'position_id');
-    }
+    // public function positions()
+    // {
+    //     return $this->belongsToMany(Position::class, 'employee_positions', 'employee_id', 'position_id');
+    // }
 
     public function position()
     {
