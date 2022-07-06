@@ -26,89 +26,61 @@
 </div>
 @endsection
 @section('content')
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="card">
-                <div class="card-header">
-                    <h5 style="font-size: 17px;">Danh sách nhân sự</h5>
-                    <a href="{{route('user-black-list')}}" class="btn btn-outline-dark btn-round waves-effect waves-light" style="float: right">
-                        <i class="ti-lock"></i>
-                        Danh sách chặn
-                    </a>
-                    <a href="{{route('show-form-user-create')}}" class="btn btn-outline-primary btn-round waves-effect waves-light mr-3" style="float: right">
-                        <i class="ti-plus"></i>
-                        Thêm nhân sự
-                    </a>
-                </div>
-               <div class="card-header">
-                    <div class="form-group row">
-                        <div class="col-sm-3">
-                            <select name="select" class="form-control border" id="statusFilter" onchange="filter()">
-                                <option value="">Trạng thái</option>
-                                <option value="1">Đang hoạt động</option>
-                                <option value="2">Chưa kích hoạt</option>
-                                <option value="3">Bị chặn</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-3">
-                            <select name="select" class="form-control border" id="genderFilter"  onchange="filter()">
-                                <option value="">Giới tính</option>
-                                <option value="1">Nam</option>
-                                <option value="2">Nữ</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-3">
-                            <input id="keyword" class="form-control" type="text" placeholder="Tìm kiếm bằng tên, email,..." onchange="filter()">
-                        </div>
-                    </div>
-               </div>
-               <div class="card-header">
-                <div class="form-group row">
-                    <div class="col-sm-3">
-                        <select name="select" class="form-control border" id="positionFilter" onchange="filter()">
-                            <option value="">Vị trí</option>
-                            @foreach ($positions as $position)
-                                <option value="{{$position->id}}">{{$position->name}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-sm-3">
-                        <select name="select" class="form-control border" id="branchFilter" onchange="filter()">
-                            <option value="">Chi nhánh</option>
-                            @foreach ($branchs as $branch)
-                                <option value="{{$branch->id}}">{{$branch->name}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-           </div>
-
-                @include('admin.layouts.messages')
-                <div class="card-block table-border-style" id="data-table">
-
-                    <div class="paginate row justify-content-center">
-                        {{ $employees->links() }}
-                    </div>
-                    <div class="overlay-load">
-                        <img src="{{asset('frontend')}}/image/loading.gif" alt="">
-                    </div>
-                </div>
+    <div class="card">
+        <div class="card-header" style="box-shadow: none;">
+            <h5 style="font-size: 17px;">Danh sách nhân sự</h5>
+            <a href="{{route('user-black-list')}}" class="btn btn-outline-dark btn-round waves-effect waves-light" style="float: right">
+                <i class="ti-lock"></i>
+                Danh sách chặn
+            </a>
+            <a href="{{route('show-form-user-create')}}" class="btn btn-outline-primary btn-round waves-effect waves-light mr-3" style="float: right">
+                <i class="ti-plus"></i>
+                Thêm nhân sự
+            </a>
+        </div>
+        <div class="row mb-3" style="margin: unset;">
+            <div class="col-sm-3">
+                <label for="">Keyword</label>
+                <input class="form-control action_filter" type="text" name="keyword" placeholder="Tìm kiếm bằng tên, email,..." data-filter="keyword">
             </div>
+            <div class="col-sm-3">
+                <label for="">Trạng thái nhân sự</label>
+                <select name="status" class="form-control action_filter" data-filter="status">
+                    <option value="">-- Tất cả --</option>
+                    <option value="1">Đang hoạt động</option>
+                    <option value="2">Chưa kích hoạt</option>
+                    <option value="3">Bị chặn</option>
+                </select>
+            </div>
+            <div class="col-sm-3">
+                <label for="">Vị trí</label>
+                <select name="position_id" class="form-control action_filter" data-filter="position_id">
+                    <option value="">-- Tất cả --</option>
+                    @foreach ($positions as $position)
+                        <option value="{{$position->id}}">{{$position->name}}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-sm-3">
+                <label for="">Chi nhánh</label>
+                <select name="branch_id" class="form-control action_filter" data-filter="branch_id">
+                    <option value="">-- Tất cả --</option>
+                    @foreach ($branchs as $branch)
+                        <option value="{{$branch->id}}">{{$branch->name}}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+        @include('admin.layouts.messages')
+        <div class="card-block table-border-style" id="data-table">
+            @include('admin.user._partials.base_table')
         </div>
     </div>
 @endsection
 
 @section('page-script')
 <script>
-
-    $( document ).ready(function() {
-        axios.get("{{route('admin-all-user')}}",).then((response)=>{
-            $('#data-table').html(response.data.data);
-        })
-    });
-
     (function callApi() {
-
         $('.change-pass').on('click', async function (e) {
             const { value: password } = await Swal.fire({
                     title: 'Thay đổi mật khẩu',
@@ -172,6 +144,7 @@
                     }
                 }
         });
+
         $('.btn-remove-user').on('click', async function (e) {
             Swal.fire({
                     title: 'Hành động nguy hiểm !!',
@@ -211,27 +184,29 @@
                             })
                     }
                 })
+        });
+
+        $('.action_filter').on('input', function(e){
+            var keyFilter = e.target.getAttribute("data-filter");
+            var urlParam = new URL(window.location);
+            urlParam.searchParams.set(keyFilter, $(this).val());
+            window.history.pushState({}, '', urlParam);
+
+            var paramsUrl = window.location.search;
+            let params = {
+                params: paramsUrl
+            };
+            $('.overlay-load').css('display', 'flex');
+            axios.get("{{route('ajax-filter-employee')}}", { params }).then((response)=>{
+                console.log(response.data);
+                $('#data-table').html(response.data.data);
+                $('.overlay-load').css('display', 'none');
+            });
+        });
+        $('.action_filter').map((index, element) => {
+            let keyFilter = element.getAttribute('data-filter');
+            element.value = (new URL(document.location)).searchParams.get(keyFilter) || '';
         })
     })()
-
-    function filter( page = 1 ){
-
-        axios.get("{{route('ajaxFilter')}}",{
-            params:{
-                status : $('#statusFilter').val(),
-                gender : $('#genderFilter').val(),
-                position : $('#positionFilter').val(),
-                branch : $('#branchFilter').val(),
-                keyword: $('#keyword').val(),
-                page: page
-            }
-        }).then((response)=>{
-            $('#data-table').html(response.data.data);
-            $('#page'+params.page).addClass('active')
-        })
-    }
-
-
-
 </script>
 @endsection

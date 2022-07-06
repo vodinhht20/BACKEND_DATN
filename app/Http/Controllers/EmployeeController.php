@@ -21,7 +21,7 @@ class EmployeeController extends Controller
 
     public function index(Request $request)
     {
-        $employees = $this->employeeRepo->paginate($request->all());
+        $employees = $this->employeeRepo->paginate($request->all())->appends($request->query());
         $branchs = Branch::all();
         $positions = Position::all();
         return view('admin.user.list', compact('employees', 'branchs', 'positions'));
@@ -29,22 +29,12 @@ class EmployeeController extends Controller
 
     public function filter(Request $request)
     {
-        $employees = Employee::where('status', 'like', '%' . $request->status . '%')
-            ->where('position_id', 'like', '%' . $request->position . '%')
-            ->where('gender', 'like', '%' . $request->gender . '%')
-            ->where('branch_id', 'like', '%' . $request->branch . '%')
-            ->where(function($query) use ($request){
-                $query->where('fullname', 'LIKE', '%'.$request->keyword.'%')
-                      ->orWhere('email', 'LIKE', '%'.$request->keyword.'%');
-            })
-            ->orderBy('updated_at', 'desc')
-            ->paginate($request->page);
-        if (sizeof($employees) == 0) {
-            $outPut = "Không có nhân sự nào có các trạng thái trên";
-        } else {
-            $outPut = view('admin.user._partials.base_table', compact('employees'))->render();
-        }
-        return response()->json(["data" => $outPut]);
+        // chuyển param thành mảng
+        $components = parse_url($request->params);
+        parse_str($components['query'], $results);
+        $employees = $this->employeeRepo->paginate($results)->withPath('/admin/employee')->appends($results);
+        $dataView = view('admin.user._partials.base_table', compact('employees'))->render();
+        return response()->json(["data" => $dataView]);
     }
 
     public function confirmEmail(Request $request)

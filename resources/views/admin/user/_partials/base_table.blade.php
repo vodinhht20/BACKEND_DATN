@@ -1,4 +1,4 @@
-<div class="table-responsive">
+<div class="table-responsive" style="width: 100%;">
     <table class="table table-hover">
         <thead>
             <tr>
@@ -7,6 +7,7 @@
                 <th>Thông tin liên lạc</th>
                 <th>Địa chỉ</th>
                 <th>Trạng thái</th>
+                <th>Hành động</th>
             </tr>
         </thead>
         <tbody>
@@ -57,12 +58,19 @@
                     </td>
                 </tr>
             @endforeach
+            @if (count($employees) == 0)
+                <tr>
+                    <td colspan="6" class="box_data_empty">
+                        <img src="{{asset('frontend')}}/image/empty_data.png" alt="">
+                    </td>
+                </tr>
+            @endif
         </tbody>
     </table>
 </div>
+<div class="paginate row justify-content-center">
+    {{ $employees->links() }}
+</div>
 <div class="overlay-load">
     <img src="{{asset('frontend')}}/image/loading.gif" alt="">
-</div>
-<div class="">
-    {{ $employees->links() }}
 </div>

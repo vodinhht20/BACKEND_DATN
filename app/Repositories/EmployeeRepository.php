@@ -172,25 +172,25 @@ class EmployeeRepository extends BaseRepository
 
     public function query($options = [])
     {
-        $employee = $this->model->query;
+        $employee = $this->model->query();
 
         if (isset($options['id'])) {
             $employee->where('id', $options['employee_id']);
         }
 
-        if (isset($options['status'])) {
+        if (isset($options['status']) && $options['status'] != '' ) {
             $employee->where('status', $options['status']);
         }
 
-        if (isset($options['position_id'])) {
+        if (isset($options['position_id']) && $options['position_id'] != '' ) {
             $employee->where('position_id', $options['position_id']);
         }
 
-        if (isset($options['gender'])) {
+        if (isset($options['gender']) && $options['gender'] != '' ) {
             $employee->where('gender', $options['gender']);
         }
 
-        if (isset($options['branch_id'])) {
+        if (isset($options['branch_id']) && $options['branch_id'] != '' ) {
             $employee->where('branch_id', $options['branch_id']);
         }
 
@@ -207,11 +207,12 @@ class EmployeeRepository extends BaseRepository
                     ->orWhere('personal_email', 'LIKE', '%' . $options['keyword'] . '%');
             });
         }
-        return $employee->orderBy('id', 'desc');
+        $employee->orderBy('id', 'desc');
+        return $employee;
     }
 
     public function paginate($options = [], $take = 10)
     {
-        $this->query($options)->paginate($take);
+        return $this->query($options)->paginate($take);
     }
 }
