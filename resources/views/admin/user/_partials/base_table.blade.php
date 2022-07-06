@@ -1,4 +1,4 @@
-<div class="table-responsive">
+<div class="table-responsive" style="width: 100%;">
     <table class="table table-hover">
         <thead>
             <tr>
@@ -7,6 +7,7 @@
                 <th>Thông tin liên lạc</th>
                 <th>Địa chỉ</th>
                 <th>Trạng thái</th>
+                <th>Hành động</th>
             </tr>
         </thead>
         <tbody>
@@ -57,117 +58,19 @@
                     </td>
                 </tr>
             @endforeach
+            @if (count($employees) == 0)
+                <tr>
+                    <td colspan="6" class="box_data_empty">
+                        <img src="{{asset('frontend')}}/image/empty_data.png" alt="">
+                    </td>
+                </tr>
+            @endif
         </tbody>
     </table>
 </div>
-<div class="paginate row justify-content-center" id="paginate-link">
-    <nav>
-        <ul class="pagination">
-            <li  class="page-item" id="pre" onclick="filter({{$employees->currentPage()}}-1)">
-                <span class="page-link" rel="prev" aria-label="pagination.previous">‹</span>
-            </li>
-            @for ($i = 1; $i <= $pages; $i++)
-                <li class="page-item" id="page{{$i}}" onclick="filter({{$i}})">
-                    <span class="page-link">{{$i}}</span>
-                </li>
-            @endfor
-            <li  class="page-item" id="next" onclick="filter({{$employees->currentPage()}}+1)">
-                <span class="page-link" rel="next" aria-label="pagination.next">›</span>
-            </li>
-        </ul>
-    </nav>
-   
+<div class="paginate row justify-content-center">
+    {{ $employees->links() }}
 </div>
 <div class="overlay-load">
     <img src="{{asset('frontend')}}/image/loading.gif" alt="">
 </div>
-
-<script>
-    $( document ).ready(function() {
-        $('#page'+"{{$employees->currentPage()}}").addClass('active')
-        if("{{$employees->currentPage()}}" == 1){
-            $('#pre').addClass('disabled')
-        }
-        if("{{$employees->currentPage()}}" == "{{$pages}}"){
-            $('#next').addClass('disabled')
-        }
-        if("{{$pages}}" == 1){
-            $('#paginate-link').hide()
-        }
-    });
-
-    $('.btn-block-user').on('click', function (e) {
-            Swal.fire({
-                    title: 'Xác nhận !',
-                    text: "Bạn có muốn đưa chặn nhân viên này không ?",
-                    icon: 'warning',
-                    heightAuto: true,
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Xác nhận'
-                })
-                .then((result) => {
-                    if (result.isConfirmed) {
-                        let option = {
-                            _token: '{{ csrf_token() }}',
-                            id: $(this).attr("data-id")
-                        }
-                        $('.overlay-load').css('display', 'flex');
-                        axios.post("{{route('ajax-block-user')}}", option)
-                            .then(({data}) => {
-                                $('#data-table').html(data.data);
-                                callApi();
-                                $('.overlay-load').css('display', 'none');
-                                Swal.fire(
-                                    'Thành công',
-                                    'Nhân viên này đã được thêm vào danh sách chặn',
-                                    'success'
-                                )
-                            })
-                            .catch((error) => {
-                                    $('.overlay-load').css('display', 'none');
-                                    Swal.fire(
-                                    'Thất bại',
-                                    error.response.data.message,
-                                    'error'
-                                )
-                            })
-                    }
-                })
-        });
-
-        $('.confirm-email').on('click', function (e) {
-            Swal.fire({
-                    title: 'Xác thực email ?',
-                    html: "Xác thực <b style='color: #5fc0fc;'>"+ $(this).attr('data-email') +"</b>",
-                    icon: 'question',
-                    heightAuto: true,
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Xác thực'
-                })
-                .then(async (result) => {
-                    if (result.isConfirmed) {
-                        let option = {
-                            _token: '{{ csrf_token() }}',
-                            id: $(this).attr("data-id"),
-                            params: window.location.search
-                        }
-                        $('.overlay-load').css('display', 'flex');
-                        const response = await axios.post("{{route('ajax-user-confirm-email')}}", option)
-                        if (response.status == 200) {
-                            $('#data-table').html(response.data.data);
-                            await callApi();
-                            $('.overlay-load').css('display', 'none');
-                            Swal.fire(
-                                'Thành công',
-                                'Tài khoản đã được xác thực',
-                                'success'
-                            )
-                        }
-                    }
-                })
-        });
-</script>

@@ -51,7 +51,6 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('', [DashboardController::class, 'index'])->name('dashboard');
     Route::prefix('/employee')->group(function () {
         Route::get('/', [EmployeeController::class, 'index'])->name('admin-list-user');
-        Route::get('/get-all-users', [EmployeeController::class, 'getAllUser'])->name('admin-all-user');
         Route::get('/create', [EmployeeController::class, 'showFormCreate'])->name('show-form-user-create');
         Route::get('/update/{id}', [EmployeeController::class, 'showFormUpdate'])->name('show-form-update-user');
         Route::get('/show/{id}', [EmployeeController::class, 'showInfoUser'])->name('show-info-user');
@@ -83,7 +82,7 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/ajax-un-block-user', [EmployeeController::class, 'ajaxUnBlock'])->name('ajax-un-block-user');
     Route::post('/ajax-user-confirm-email', [EmployeeController::class, 'confirmEmail'])->name('ajax-user-confirm-email');
     Route::post('/ajax-user-change-password', [EmployeeController::class, 'changePasssword'])->name('ajax-user-change-password');
-    Route::get('/ajax-filter',[EmployeeController::class,'filter'])->name('ajaxFilter');
+    Route::get('/ajax-filter',[EmployeeController::class,'filter'])->name('ajax-filter-employee');
 
     Route::prefix('/company')->name("company.")->group(function () {
         Route::get('/info', [CompanyController::class, 'info'])->name("info");

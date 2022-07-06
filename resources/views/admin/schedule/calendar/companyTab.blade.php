@@ -118,7 +118,7 @@
             </table>
         </div>
         <div style="float: right;" class="pagination_cutomize">
-            {{ $workSchedules['companyData']->appends(request()->query())->links() }}
+            {{ $workSchedules['companyData']->appends(request()->query()) }}
         </div>
     </div>
 </div>

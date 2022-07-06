@@ -19,40 +19,22 @@ class EmployeeController extends Controller
         //
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $employees = $this->employeeRepo->getAllUserByPublic();
+        $employees = $this->employeeRepo->paginate($request->all())->appends($request->query());
         $branchs = Branch::all();
         $positions = Position::all();
         return view('admin.user.list', compact('employees', 'branchs', 'positions'));
     }
 
-    public function getAllUser(){
-        $employees = $this->employeeRepo->getAllUserByPublic();
-        $pages = ceil($employees->total()/10);
-        $outPut = view('admin.user._partials.base_table', compact('employees','pages'))->render();
-        return response()->json(["data" => $outPut]);
-    }
-
     public function filter(Request $request)
     {
-        $employees = Employee::where('status', 'like', '%' . $request->status . '%')
-            ->where('position_id', 'like', '%' . $request->position . '%')
-            ->where('gender', 'like', '%' . $request->gender . '%')
-            ->where('branch_id', 'like', '%' . $request->branch . '%')
-            ->where(function($query) use ($request){
-                $query->where('fullname', 'LIKE', '%'.$request->keyword.'%')
-                      ->orWhere('email', 'LIKE', '%'.$request->keyword.'%');
-            })
-            ->orderBy('updated_at', 'desc')
-            ->paginate(10,['*'],'page',$request->page);
-        $pages = ceil($employees->total()/10);
-        if (sizeof($employees) == 0) {
-            $outPut = "Không có nhân sự nào có các trạng thái trên";
-        } else {
-            $outPut = view('admin.user._partials.base_table', compact('employees','pages'))->render();
-        }
-        return response()->json(["data" => $outPut]);
+        // chuyển param thành mảng
+        $components = parse_url($request->params);
+        parse_str($components['query'], $results);
+        $employees = $this->employeeRepo->paginate($results)->withPath('/admin/employee')->appends($results);
+        $dataView = view('admin.user._partials.base_table', compact('employees'))->render();
+        return response()->json(["data" => $dataView]);
     }
 
     public function confirmEmail(Request $request)
@@ -141,7 +123,7 @@ class EmployeeController extends Controller
             'email_verified_at' => now()
         ];
 
-        
+
 
         if (isset($request->birth_day)) {
             $option['birth_day'] = $request->birth_day;
@@ -212,7 +194,7 @@ class EmployeeController extends Controller
             return redirect()->back()->with('message.error', $validator->messages()->first())->withInput();
         }
         $employee = Employee::find($id);
-        
+
         $employee->fullname = $request->fullname;
         $employee->email = $request->email;
         $employee->birth_day = $request->birth_day;
@@ -228,7 +210,7 @@ class EmployeeController extends Controller
             $employee->avatar = $urlImage;
             $employee->type_avatar = 1;
         }
-        
+
         $employee->update();
         return redirect()->route('admin-list-user')->with('message.success', 'Cập nhật thông tin thành viên thành công !');
 

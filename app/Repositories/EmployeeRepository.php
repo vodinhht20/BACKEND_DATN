@@ -63,7 +63,7 @@ class EmployeeRepository extends BaseRepository
     public function update($id, $arrData = [])
     {
         $employee = $this->model->find($id);
-        
+
         $employee->update($arrData);
 
     }
@@ -84,9 +84,9 @@ class EmployeeRepository extends BaseRepository
         return false;
     }
 
-    public function getAllUserByPublic($take = 10)
+    public function getAllUserByPublic($options = [], $take = 10)
     {
-        return $this->model->whereNotIn('id', [Auth::user()->id])->orderBy('updated_at', 'desc')->paginate($take);
+        return $this->query($options)->paginate($take);
     }
 
     public function confirmEmail($id)
@@ -168,5 +168,52 @@ class EmployeeRepository extends BaseRepository
     public function findBranch($idBranch){
         $branch = Branch::where('id', $idBranch)->select('id', 'name', 'address')->first();
         return $branch;
+    }
+
+    public function query($options = [])
+    {
+        $employee = $this->model->query();
+
+        if (isset($options['id'])) {
+            $employee->where('id', $options['employee_id']);
+        }
+
+        if (isset($options['status']) && $options['status'] != '' ) {
+            $employee->where('status', $options['status']);
+        }
+
+        if (isset($options['position_id']) && $options['position_id'] != '' ) {
+            $employee->where('position_id', $options['position_id']);
+        }
+
+        if (isset($options['gender']) && $options['gender'] != '' ) {
+            $employee->where('gender', $options['gender']);
+        }
+
+        if (isset($options['branch_id']) && $options['branch_id'] != '' ) {
+            $employee->where('branch_id', $options['branch_id']);
+        }
+
+        if (isset($options['not_in_id']) && count($options['not_in_id'])) {
+            $employee->whereNotIn('id', $options['not_in_id']);
+        }
+
+        if (isset($options['keyword'])) {
+            $keyword = trim($options['keyword']);
+            $employee->where(function($query) use ($keyword){
+                $query->where('fullname', 'LIKE', '%' . $keyword . '%')
+                    ->orWhere('email', 'LIKE', '%' . $keyword . '%')
+                    ->orWhere('phone', 'LIKE', '%' . $keyword . '%')
+                    ->orWhere('employee_code', 'LIKE', '%' . $keyword . '%')
+                    ->orWhere('personal_email', 'LIKE', '%' . $keyword . '%');
+            });
+        }
+        $employee->orderBy('id', 'desc');
+        return $employee;
+    }
+
+    public function paginate($options = [], $take = 10)
+    {
+        return $this->query($options)->paginate($take);
     }
 }
