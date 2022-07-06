@@ -166,7 +166,7 @@ class EmployeeRepository extends BaseRepository
     }
 
     public function findBranch($idBranch){
-        $branch = Branch::where('id', $idBranch)->select('name', 'address')->first();
+        $branch = Branch::where('id', $idBranch)->select('id', 'name', 'address')->first();
         return $branch;
     }
 }
