@@ -1,8 +1,8 @@
- <p style="font-weight: 700; font-size: 40px">Hình Thức Chấm Công</p>
+ <p style="font-weight: 600; font-size: 25px">Hình Thức Chấm Công</p>
  <hr>
 <div class="form-froup row">
     <div class="col-sm-6">
-            <p style="font-size: 20px; margin: auto"><i class="fa fa-mobile-phone"></i> Chấm Công Bằng Điện Thoại</p> 
+        <p style="font-size: 20px; margin: auto"><i class="fa fa-mobile-phone"></i> Chấm Công Bằng Điện Thoại</p>
     </div>
     <div class="col-sm-5" style=" text-align:end">
             <label class="switch">
@@ -26,12 +26,12 @@
         <input type="radio" name="" id=""> <label for="" style="font-size: 15px"> Không giới hạn</label>
         <div class="col-form-label" style="margin-left: 17px"><small>Nhân viên có thể chấm công ở bất kì đâu</small></div>
     </div>
-    
+
 </div>
 <hr>
 <div class="form-froup row">
     <div class="col-sm-6">
-            <p style="font-size: 20px; margin: auto"><i class="fa fa-mobile-phone"></i> Chấm Công Bằng Vân Tay (Tracker)</p> 
+            <p style="font-size: 20px; margin: auto"><i class="fa fa-mobile-phone"></i> Chấm Công Bằng Vân Tay (Tracker)</p>
     </div>
     <div class="col-sm-5" style=" text-align:end">
             <label class="switch">
@@ -46,7 +46,7 @@
 <hr>
 <div class="form-froup row">
     <div class="col-sm-6">
-            <p style="font-size: 20px; margin: auto"><i class="fa fa-mobile-phone"></i> Chấm Công Bằng Khuôn Mặt</p> 
+            <p style="font-size: 20px; margin: auto"><i class="fa fa-mobile-phone"></i> Chấm Công Bằng Khuôn Mặt</p>
     </div>
     <div class="col-sm-5" style=" text-align:end">
             <label class="switch">
@@ -57,5 +57,5 @@
     <div class="form-group" style="margin-left: 30px ">
         <label for="" style="font-size: 15px">Chấm Công Khuôn Mặt <a href=""  style="font-size: 15px; color: #ff9d36">Tại Đây</a></label>
     </div>
-    
+
 </div>

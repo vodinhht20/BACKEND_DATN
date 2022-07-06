@@ -26,26 +26,26 @@
 </div>
 @endsection
 @section('content')
-<div class="box-section-timesheet row">
+<div class="box-section-timesheet row" id="app">
     <div class="col-md-12 col-lg-2 col-sm-12 tabs row">
-        <div class="col-lg-12 col-md-3 col-sm-4 tab-item active">
+        <div class="col-lg-12 col-md-3 col-sm-4 tab-item" @click="changeTab('timesheet_tab')" :class="{ active: current_tab == 'timesheet_tab'}">
             <i class=" ti-clipboard"></i>
             <p>Hình Thức Chấm Công</p>
         </div>
-        <div class="col-lg-12 col-md-3 col-sm-4 tab-item">
+        <div class="col-lg-12 col-md-3 col-sm-4 tab-item"  @click="changeTab('timesheetPhone_tab')" :class="{ active: current_tab == 'timesheetPhone_tab'}">
             <i class=" ti-settings"></i>
             <p>Chấm Công Bằng Điện Thoại</p>
         </div>
     </div>
     <div class="col-md-12 col-lg-10 col-sm-12 card">
-        <div class="tab-pane active ">
+        <div class="tab-pane" :class="{ active: current_tab == 'timesheet_tab'}">
             @include('admin.checkin.checkinlist')
         </div>
-        <div class="tab-pane card-block">
+        <div class="tab-pane card-block" :class="{ active: current_tab == 'timesheetPhone_tab'}">
             @include('admin.checkin.mobilecheck')
         </div>
     </div>
-    
+
 </div>
 @endsection
 
@@ -54,37 +54,37 @@
 @endsection
 @section('page-script')
 <script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            current_tab: "timesheet_tab"
+        },
+        methods: {
+            changeTab: (tab) => {
+                app.current_tab = tab;
+                var urlParam = new URL(window.location);
+                urlParam.searchParams.set('current_tab', tab);
+                window.history.pushState({}, '', urlParam);
+            }
+        },
+    })
+    // set current_tab by params
+    let params = (new URL(document.location)).searchParams;
+    let current_tab = params.get('current_tab');
+    app.current_tab = current_tab ? current_tab : 'timesheet_tab';
+    // const tabs = document.querySelectorAll(".tab-item");
+    // const panes = document.querySelectorAll(".tab-pane");
+    // tabs.forEach((tab, index) => {
+    //     const pane = panes[index];
 
-    const tabs = document.querySelectorAll(".tab-item");
-    const panes = document.querySelectorAll(".tab-pane");
-    tabs.forEach((tab, index) => {
-        const pane = panes[index];
+    //     tab.onclick = function() {
+    //         document.querySelector(".tab-item.active").classList.remove("active");
+    //         document.querySelector(".tab-pane.active").classList.remove("active");
+    //         this.classList.add("active");
+    //         pane.classList.add("active");
+    //     };
+    // });
 
-        tab.onclick = function() {
-            document.querySelector(".tab-item.active").classList.remove("active");
-            document.querySelector(".tab-pane.active").classList.remove("active");
-            this.classList.add("active");
-            pane.classList.add("active");
-        };
-    });
-
-    function checkMe(checked) {
-        var cb = document.getElementById("item1");
-        var db = document.getElementById("item2");
-
-        var content = document.getElementById("contentt");
-        if (db.checked==true) {
-            content.style.display="block";
-
-        }else{
-            content.style.display="none";
-
-        } if (cb.checked==true) {
-            content.style.display="none";
-
-
-        }
-    }
     const current_ip_button=document.getElementById("current_ip_button");
     const wifi_ip=document.getElementById("wifi-ip");
     const the_current_ip=document.getElementById("the_current_ip").innerHTML;
@@ -128,9 +128,9 @@
                       }
                     })
                 }
-        
-            
-            
+
+
+
         })
     })
     //<----------------AJAX For Location---------------------->
@@ -188,8 +188,8 @@
                     }
                 })
             }
-            
+
         })
-    })  
+    })
 </script>
 @endsection
