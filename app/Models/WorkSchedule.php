@@ -13,6 +13,8 @@ class WorkSchedule extends Model
         'days' => 'array',
     ];
 
+    protected $guarded = [];
+
     public function workShift()
     {
         return $this->hasMany(WorkShift::class, 'work_schedule_id', 'id');
