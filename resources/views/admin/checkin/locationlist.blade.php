@@ -8,7 +8,7 @@
     </div>
    <div class="form-group row">
     <div class="col-sm-5">
-        <p style="font-weight: 700">có ... Địa chỉ trong danh sách</p>
+        <p style="font-weight: 700">có {{ $count_branch }} Địa chỉ trong danh sách</p>
     </div>
     <div class="col-sm-6" style="width: 100%;text-align: right" >
         <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#location-modal"><i class="fa fa-plus"></i> Thêm</button>
