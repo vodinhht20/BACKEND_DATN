@@ -60,39 +60,9 @@
         </tbody>
     </table>
 </div>
-<div class="paginate row justify-content-center" id="paginate-link">
-    <nav>
-        <ul class="pagination">
-            <li  class="page-item" id="pre" onclick="filter({{$employees->currentPage()}}-1)">
-                <span class="page-link" rel="prev" aria-label="pagination.previous">‹</span>
-            </li>
-            @for ($i = 1; $i <= $pages; $i++)
-                <li class="page-item" id="page{{$i}}" onclick="filter({{$i}})">
-                    <span class="page-link">{{$i}}</span>
-                </li>
-            @endfor
-            <li  class="page-item" id="next" onclick="filter({{$employees->currentPage()}}+1)">
-                <span class="page-link" rel="next" aria-label="pagination.next">›</span>
-            </li>
-        </ul>
-    </nav>
-   
-</div>
 <div class="overlay-load">
     <img src="{{asset('frontend')}}/image/loading.gif" alt="">
 </div>
-
-<script>
-    $( document ).ready(function() {
-        $('#page'+"{{$employees->currentPage()}}").addClass('active')
-        if("{{$employees->currentPage()}}" == 1){
-            $('#pre').addClass('disabled')
-        }
-        if("{{$employees->currentPage()}}" == "{{$pages}}"){
-            $('#next').addClass('disabled')
-        }
-        if("{{$pages}}" == 1){
-            $('#paginate-link').hide()
-        }
-    });
-</script>
+<div class="">
+    {{ $employees->links() }}
+</div>

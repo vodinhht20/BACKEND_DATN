@@ -82,7 +82,7 @@
                                     <div class="">
                                         <select name="position" id="" class="form-control data-input border">
                                            @foreach ($positions as $position)
-                                           <option value="{{$position->id}}">{{$position->name}}</option>
+                                           <option value="{{$position->id}}" {{$position->id == $employee->position_id ? "selected" : ""}}>{{$position->name}}</option>
                                            @endforeach
                                         </select>
                                     </div>
@@ -92,9 +92,10 @@
                                 <div class="form-group">
                                     <label class="col-form-label">Chi nhánh</label>
                                     <div class="">
+                                       
                                         <select name="branch" id="" class="form-control data-input border">
                                            @foreach ($branchs as $branch)
-                                           <option value="{{$branch->id}}">{{$branch->name}}</option>
+                                           <option value="{{$branch->id}}"  {{$branch->id == $employee->branch_id ? "selected" : ""}}>{{$branch->name}}</option>
                                            @endforeach
                                         </select>
                                     </div>
@@ -105,8 +106,8 @@
                                     <label class="col-form-label">Trạng thái điểm danh</label>
                                     <div class="">
                                         <select name="is_checked" id="" class="form-control data-input border">
-                                            <option value="1">Được phép điểm danh</option>
-                                            <option value="2">Không được phép điểm danh</option>
+                                            <option value="1" {{$employee->is_checked == 1 ? "selected" : ""}}>Được phép điểm danh</option>
+                                            <option value="2" {{$employee->is_checked == 2 ? "selected" : ""}}>Không được phép điểm danh</option>
                                         </select>
                                     </div>
                                 </div>

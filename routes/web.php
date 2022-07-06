@@ -51,7 +51,6 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('', [DashboardController::class, 'index'])->name('dashboard');
     Route::prefix('/employee')->group(function () {
         Route::get('/', [EmployeeController::class, 'index'])->name('admin-list-user');
-        Route::get('/get-all-users', [EmployeeController::class, 'getAllUser'])->name('admin-all-user');
         Route::get('/create', [EmployeeController::class, 'showFormCreate'])->name('show-form-user-create');
         Route::get('/update/{id}', [EmployeeController::class, 'showFormUpdate'])->name('show-form-update-user');
         Route::get('/show/{id}', [EmployeeController::class, 'showInfoUser'])->name('show-info-user');
