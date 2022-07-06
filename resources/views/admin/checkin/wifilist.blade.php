@@ -1,9 +1,11 @@
 <div class="">
     <form action="" method="get">
         <div class="main-search morphsearch-search open">
+            <input type="hidden" name="current_tab_sub" id="" value="timesheet_tab_wifi">
+            <input type="hidden" name="current_tab" id="" value="timesheetPhone_tab">
             <div class="input-group">
                 <input type="text" name="search_value" id="search_value" class="form-control" placeholder="Enter Keyword" style="width: 200px; background: transparent">
-                <button class="input-group-append " style="background: none; border: none; margin-left: -30px; z-index:10 " @click="changeTab('timesheetPhone_tab')" :class="{ active: current_tab == 'timesheetPhone_tab'}" > <span ><i class="ti-search input-group-text"></i></span></button>
+                <button class="input-group-append " style="background: none; border: none; margin-left: -30px; z-index:10 " > <span ><i class="ti-search input-group-text"></i></span></button>
 
             </div>
         </div>

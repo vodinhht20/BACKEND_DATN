@@ -1,11 +1,15 @@
 <div class="">
-    <div class="main-search morphsearch-search open">
-        <div class="input-group">
-            <input type="text" class="form-control" placeholder="Tên, địa chỉ vị trí bạn muốn tìm" style="width: 200px; background: transparent">
-            <button style="background: none; border: none; margin-left: -30px " > <span class="input-group-append "><i class="ti-search input-group-text"></i></span></button>
-           
+    <form action="" method="get">
+        <div class="main-search morphsearch-search open">
+                <input type="hidden" name="current_tab" id="" value="timesheetPhone_tab">
+                <input type="hidden" name="current_tab_sub" id="" value="timesheet_tab_location">
+            <div class="input-group">
+                <input type="text" id="search_value_3" name="search_value_3" class="form-control" placeholder="Tên, địa chỉ vị trí bạn muốn tìm" style="width: 200px; background: transparent">
+                <button class="input-group-append " style="background: none; border: none; margin-left: -30px; z-index:10 " > <span ><i class="ti-search input-group-text"></i></span></button>
+            </div>
         </div>
-    </div>
+    </form>
+    
    <div class="form-group row">
     <div class="col-sm-5">
         <p style="font-weight: 700">có {{ $count_branch }} Địa chỉ trong danh sách</p>
@@ -33,7 +37,7 @@
                 @php
                     $stt=1
                 @endphp
-                @foreach ($branch as $br)
+                @foreach ($branchs as $br)
                     <tr>
                         <td>{{ $stt++ }}</td>
                         <td>{{ $br->code_branch }}</td>
@@ -46,6 +50,9 @@
                 @endforeach
             </tbody>
         </table>
+        <div  class=" dataTables_pager" style="margin-top: 30px">
+            {{ $branchs->appends(request()->all()) }}
+        </div>
        </div>
    </div>
    
