@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\Branch;
 use App\Repositories\BaseRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -162,5 +163,10 @@ class EmployeeRepository extends BaseRepository
     public function getMaxId(): int
     {
         return $this->model->max('id');
+    }
+
+    public function findBranch($idBranch){
+        $branch = Branch::where('id', $idBranch)->select('name', 'address')->first();
+        return $branch;
     }
 }
