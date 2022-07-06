@@ -71,6 +71,9 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::prefix('/schedule')->group(function () {
         Route::get('/calender', [ScheduleWorkController::class, 'calendar'])->name('schedule-calender-index');
         Route::post('/ajax-add-work-shift', [ScheduleWorkController::class, 'ajaxAddWorkShift'])->name('schedule-ajax-add-work-shift');
+        Route::get('/calendar-holiday', [ScheduleWorkController::class, 'calendarHoliday'])->name('schedule-calendar-holiday');
+        Route::get('/calendar-holiday/create', [ScheduleWorkController::class, 'showFormCreateHoliday'])->name('schedule-calendar-holiday-create');
+        Route::post('/calendar-holiday/insert', [ScheduleWorkController::class, 'insertHoliday'])->name('schedule-calendar-holiday-insert');
     });
     Route::post('/ajax-add-role-user', [RoleController::class, 'addRole'])->name('ajax-add-role-user');
     Route::post('/ajax-get-role-user', [RoleController::class, 'getRole'])->name('ajax-get-role-user');

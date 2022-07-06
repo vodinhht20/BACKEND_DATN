@@ -4,7 +4,7 @@
             <div class="input-group">
                 <input type="text" name="search_value" id="search_value" class="form-control" placeholder="Enter Keyword" style="width: 200px; background: transparent">
                 <button class="input-group-append " style="background: none; border: none; margin-left: -30px; z-index:10 " > <span ><i class="ti-search input-group-text"></i></span></button>
-               
+
             </div>
         </div>
        <div class="form-group row">
@@ -18,11 +18,11 @@
         <div class="col-sm-6" style="width: 100%;text-align: right" >
             {{-- <button type="button" id="add-wifi-btn"  class="btn btn-primary waves-effect add-wifi-btn" data-toggle="modal" data-target="#add-wifi-modal"> <i class="fa fa-plus"></i> Thêm</button>curent_ip --}}
             <button type="button" id="add-wifi-btn"  class="btn btn-primary add-wifi-btn" data-toggle="modal" data-target="#add-wifi-modal" > <i class="fa fa-plus"></i> Thêm</button>
-            
-        </div> 
+
+        </div>
        </div>
     </form>
-    
+
    <div class="form-froup row">
     <div class="table-responsive">
         <table id="simpletable" class="table table-striped table-bordered nowrap ">
@@ -35,18 +35,16 @@
                 </tr>
             </thead>
             <tbody>
-                @php
-                    $stt=1;
-                @endphp
                 @foreach ($wifi as $wf)
                     <tr>
-                        <td>{{ $stt++ }}</td>
-                        <td>{{ $wf->name }}</td>
+                        <td class="text-center">{{ $loop->index+1 }}</td>
+                        <td class="text-center">{{ $wf->name }}</td>
                         <td>{{ $wf->wifi_ip }}</td>
-                        <td>@if ($wf->status == 1)
-                            <p style="color: green" >On</p>
+                        <td class="text-center">
+                            @if ($wf->status == 1)
+                            <p style="color: green" >Đang hoạt động</p>
                             @else
-                            <p style="color: red">Off</p> 
+                            <p style="color: red">Ngưng hoạt động</p>
                             @endif
                         </td>
                     </tr>
@@ -54,13 +52,11 @@
             </tbody>
         </table>
         <div  class=" dataTables_pager" style="margin-top: 30px">
-
-            {!!$wifi->links()!!}
-
+            {{ $wifi->appends(request()->all()) }}
         </div>
        </div>
    </div>
-   
+
    <div class="modal fade" class="add-wifi-modal" id="add-wifi-modal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">

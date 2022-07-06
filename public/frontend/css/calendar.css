@@ -58,6 +58,11 @@
 .company-shift .mx-datepicker-range{
     width: 55%;
 }
+.box-section-calendar .overflow-modal {
+    height: 450px !important;
+    overflow-y: auto;
+}
+
 .box-section-calendar .btn-remote {
     padding: unset;
 }
@@ -83,6 +88,7 @@
 .box-section-calendar .box-day-name {
     display: flex;
     grid-column-gap: 10px;
+    justify-content: center;
 }
 .box-section-calendar .box-day-name .item-day-name {
     padding: 5px 15px;
