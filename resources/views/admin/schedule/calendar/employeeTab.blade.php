@@ -29,7 +29,7 @@
 </div>
 <div class="">
     <div class="table-border-style">
-        <div class="table-responsive">
+        <div class="table-responsive scrollbar-custom">
             <table class="table align-middle-td">
                 <thead>
                     <tr>
@@ -37,6 +37,8 @@
                         <th>Tên lịch làm việc</th>
                         <th>Nhân viên</th>
                         <th>Ca làm việc trong lịch</th>
+                        <th>Thời gian trễ</th>
+                        <th>Công thiếu</th>
                         <th>Thời gian hiệu lực</th>
                         {{-- <th>Thao tác</th> --}}
                     </tr>
@@ -48,27 +50,46 @@
                             <td>{{ $workSchedule->name }}</td>
                             <td>
                                 @if ($workSchedule->employee)
-                                    [{{ $workSchedule->employee->id }}] {{ $workSchedule->employee->fullname }}
+                                    <label for="" class="label label-inverse-info">#{{ $workSchedule->employee->id }}</label> {{ $workSchedule->employee->fullname }}
                                 @else
                                     N/A
                                 @endif
                             </td>
                             <td>
-                                @foreach ($workSchedule->workShift as $workShiftItem)
-                                    <div class="content-line mt-2">
-                                        <i class="ti-timer"></i>
-                                        <strong>{{ $workShiftItem->name }}</strong>
-                                        <span class="label label-inverse-primary ml-2">{{ \Carbon\Carbon::createFromFormat('H:i:s', $workShiftItem->work_from)->format('H:i')  }} - {{ \Carbon\Carbon::createFromFormat('H:i:s', $workShiftItem->work_to)->format('H:i') }}</span>
-                                    </div>
-                                @endforeach
+                                <div class="ml-3 mt-2">Số công: <label class="badge badge-success" style="font-weight: 500;">{{ $workSchedule->actual_workday }} công</label></div>
+                                <div class="content-line mt-2">
+                                    <i class="ti-timer"></i>
+                                    <span class="label label-inverse-primary ml-2">{{ \Carbon\Carbon::createFromFormat('H:i:s', $workSchedule->work_from_at)->format('H:i')  }} - {{ \Carbon\Carbon::createFromFormat('H:i:s', $workSchedule->work_to_at)->format('H:i') }}</span>
+                                </div>
                                 <div class="content-line mt-2">
                                     <i class="ti-calendar"></i>
-                                    <span>
+                                    <span class="ml-2">
                                         @foreach ($workSchedule->days as $day)
                                             <label class="label label-inverse-success">{{ config("date.days.$day") }}</label>
                                         @endforeach
                                     </span>
                                 </div>
+                            </td>
+                            <td>
+                                @if ($workSchedule->checkin_late)
+                                    <p>Checkin trễ: <label for="" class="badge badge-info ml-3" style="font-weight: 500;">{{ $workSchedule->checkin_late }} Phút</label></p>
+                                @endif
+
+                                @if ($workSchedule->checkout_late)
+                                    <p>Checkout sớm: <label for="" class="badge badge-info" style="font-weight: 500;">{{ $workSchedule->checkout_late }} Phút</label></p>
+                                @endif
+
+                                @if (!($workSchedule->checkin_late || $workSchedule->checkout_late))
+                                    <p>Không thiết lập</p>
+                                @endif
+                            </td>
+                            <td>
+                                @if ($workSchedule->late_hour)
+                                    <p>Điều kiện: TG > <label for="" class="badge badge-primary" style="font-weight: 500;">{{ $workSchedule->late_hour }} giờ</label></p>
+                                    <p>Số công: <label class="badge badge-success ml-2" style="font-weight: 500;">{{ $workSchedule->virtual_workday }} công</label></p>
+                                @else
+                                    <p>Không thiết lập</p>
+                                @endif
                             </td>
                             <td>
                                 <div>
@@ -98,11 +119,18 @@
                             </td> --}}
                         </tr>
                     @endforeach
+                    @if (count($workSchedules['employeeData']) == 0)
+                        <tr>
+                            <td colspan="7" class="box_data_empty">
+                                <img src="{{asset('frontend')}}/image/empty_data.png" alt="">
+                            </td>
+                        </tr>
+                    @endif
                 </tbody>
             </table>
-            <div style="float: right;">
-                {{ $workSchedules['employeeData']->appends(request()->query())->links() }}
-            </div>
+        </div>
+        <div style="float: right;">
+            {{ $workSchedules['employeeData']->appends(request()->query())->links() }}
         </div>
     </div>
 </div>

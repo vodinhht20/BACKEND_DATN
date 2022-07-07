@@ -2,9 +2,9 @@
 
 return [
     'employeeStatus' => [
-        'Active' => 1,
-        'Deactive' => 2,
-        'Banned' => 3
+        'Đang hoạt động' => 1,
+        'Chưa kích hoạt' => 2,
+        'Bị chặn' => 3
     ],
     'gender' => [
         'Nam' => 1,

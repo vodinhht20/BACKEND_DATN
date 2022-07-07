@@ -1,15 +1,15 @@
 <?php
 
 use App\Exports\ProductExport;
-use App\Http\Controllers\Api\ProductController as ApiProductController;
+// use App\Http\Controllers\Api\ProductController as ApiProductController;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CheckinController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\PostController;
-use App\Http\Controllers\ProductController;
+// use App\Http\Controllers\PostController;
+// use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Resources\ProductCollection;
@@ -37,8 +37,8 @@ use Stevebauman\Location\Facades\Location;
 */
 Route::get('php-info', function() { return phpinfo(); })->middleware('auth');
 Route::get('', function (){ return view('index'); })->name("home.index");
-Route::get('/san-pham/{slug}', [ProductController::class, 'showDetail'])->name("product.showDetail");
-Route::get('/tin-tuc', [PostController::class, 'index'])->name("new.index");
+// Route::get('/san-pham/{slug}', [ProductController::class, 'showDetail'])->name("product.showDetail");
+// Route::get('/tin-tuc', [PostController::class, 'index'])->name("new.index");
 Route::get('/login', [AuthController::class, 'showFormLogin'])->name("login");
 Route::post('/login', [AuthController::class, 'login'])->name("post-login");
 Route::get('/register', [AuthController::class, 'showFromRegister'])->name("show-form-register");
@@ -70,6 +70,9 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::prefix('/schedule')->group(function () {
         Route::get('/calender', [ScheduleWorkController::class, 'calendar'])->name('schedule-calender-index');
         Route::post('/ajax-add-work-shift', [ScheduleWorkController::class, 'ajaxAddWorkShift'])->name('schedule-ajax-add-work-shift');
+        Route::get('/calendar-holiday', [ScheduleWorkController::class, 'calendarHoliday'])->name('schedule-calendar-holiday');
+        Route::get('/calendar-holiday/create', [ScheduleWorkController::class, 'showFormCreateHoliday'])->name('schedule-calendar-holiday-create');
+        Route::post('/calendar-holiday/insert', [ScheduleWorkController::class, 'insertHoliday'])->name('schedule-calendar-holiday-insert');
     });
     Route::post('/ajax-add-role-user', [RoleController::class, 'addRole'])->name('ajax-add-role-user');
     Route::post('/ajax-get-role-user', [RoleController::class, 'getRole'])->name('ajax-get-role-user');
@@ -79,6 +82,7 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/ajax-un-block-user', [EmployeeController::class, 'ajaxUnBlock'])->name('ajax-un-block-user');
     Route::post('/ajax-user-confirm-email', [EmployeeController::class, 'confirmEmail'])->name('ajax-user-confirm-email');
     Route::post('/ajax-user-change-password', [EmployeeController::class, 'changePasssword'])->name('ajax-user-change-password');
+    Route::get('/ajax-filter',[EmployeeController::class,'filter'])->name('ajax-filter-employee');
 
     Route::prefix('/company')->name("company.")->group(function () {
         Route::get('/info', [CompanyController::class, 'info'])->name("info");

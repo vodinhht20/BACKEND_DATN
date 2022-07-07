@@ -20,7 +20,7 @@ class UserController extends Controller
 {
     public function __construct(private EmployeeRepository $employeeRepo)
     {
-        //
+        $this->employeeRepo = $employeeRepo;
     }
 
     /**
@@ -118,6 +118,7 @@ class UserController extends Controller
                 "birth_day" => $profile->birth_day,
                 "phone" => $profile->phone,
                 "employee_code" => $profile->employee_code,
+                "branch" => $this->employeeRepo->findBranch($profile->branch_id),
                 "id" => $profile->id,
                 'profile' => $profile
         ], 200);

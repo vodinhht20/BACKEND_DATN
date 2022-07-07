@@ -26,205 +26,61 @@
 </div>
 @endsection
 @section('content')
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="card">
-                <div class="card-header">
-                    <h5 style="font-size: 17px;">Danh sách nhân sự</h5>
-                    <a href="{{route('user-black-list')}}" class="btn btn-outline-dark btn-round waves-effect waves-light" style="float: right">
-                        <i class="ti-lock"></i>
-                        Danh sách chặn
-                    </a>
-                    <a href="{{route('show-form-user-create')}}" class="btn btn-outline-primary btn-round waves-effect waves-light mr-3" style="float: right">
-                        <i class="ti-plus"></i>
-                        Thêm nhân sự
-                    </a>
-                </div>
-               <div class="card-header">
-                    <div class="form-group row">
-                        <div class="col-sm-3">
-                            <select name="select" class="form-control border">
-                                <option value="opt1">Đang hoạt động</option>
-                                <option value="opt2">Type 2</option>
-                                <option value="opt3">Type 3</option>
-                                <option value="opt4">Type 4</option>
-                                <option value="opt5">Type 5</option>
-                                <option value="opt6">Type 6</option>
-                                <option value="opt7">Type 7</option>
-                                <option value="opt8">Type 8</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-3">
-                            <select name="select" class="form-control border">
-                                <option value="opt1">Status</option>
-                                <option value="opt2">Type 2</option>
-                                <option value="opt3">Type 3</option>
-                                <option value="opt4">Type 4</option>
-                                <option value="opt5">Type 5</option>
-                                <option value="opt6">Type 6</option>
-                                <option value="opt7">Type 7</option>
-                                <option value="opt8">Type 8</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-3">
-                            <select name="select" class="form-control border">
-                                <option value="opt1">Tìm kiếm theo tên, email, số...</option>
-                                <option value="opt2">Type 2</option>
-                                <option value="opt3">Type 3</option>
-                                <option value="opt4">Type 4</option>
-                                <option value="opt5">Type 5</option>
-                                <option value="opt6">Type 6</option>
-                                <option value="opt7">Type 7</option>
-                                <option value="opt8">Type 8</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-3">
-                            <select name="select" class="form-control border">
-                                <option value="opt1">Vai trò</option>
-                                <option value="opt2">Type 2</option>
-                                <option value="opt3">Type 3</option>
-                                <option value="opt4">Type 4</option>
-                                <option value="opt5">Type 5</option>
-                                <option value="opt6">Type 6</option>
-                                <option value="opt7">Type 7</option>
-                                <option value="opt8">Type 8</option>
-                            </select>
-                        </div>
-                    </div>
-               </div>
-               <div class="card-header">
-                <div class="form-group row">
-                    <div class="col-sm-3">
-                        <select name="select" class="form-control border">
-                            <option value="opt1">Phòng ban, vị trí</option>
-                            <option value="opt2">Type 2</option>
-                            <option value="opt3">Type 3</option>
-                            <option value="opt4">Type 4</option>
-                            <option value="opt5">Type 5</option>
-                            <option value="opt6">Type 6</option>
-                            <option value="opt7">Type 7</option>
-                            <option value="opt8">Type 8</option>
-                        </select>
-                    </div>
-                    <div class="col-sm-3">
-                        <select name="select" class="form-control border">
-                            <option value="opt1">Loại hình nhân sự</option>
-                            <option value="opt2">Type 2</option>
-                            <option value="opt3">Type 3</option>
-                            <option value="opt4">Type 4</option>
-                            <option value="opt5">Type 5</option>
-                            <option value="opt6">Type 6</option>
-                            <option value="opt7">Type 7</option>
-                            <option value="opt8">Type 8</option>
-                        </select>
-                    </div>
-                </div>
-           </div>
-
-                @include('admin.layouts.messages')
-                <div class="card-block table-border-style" id="data-table">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th class="text-center">STT</th>
-                                    <th class="text-center">Tên</th>
-                                    <th>Thông tin liên lạc</th>
-                                    <th>Địa chỉ</th>
-                                    <th>Trạng thái</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($employees as $employee)
-                                    <tr>
-                                        <td class="text-center">{{ $loop->index+1 }}</td>
-                                        <td class="text-center">{{$employee->fullname}}</td>
-                                        <td>
-                                            <img src="{{ $employee->getAvatar() ?: asset('frontend/image/avatar_empty.jfif') }}" alt="" class="avatar_list"> {{-- {{ $employee->getAvatar() ?: asset('frontend/image/avatar_empty.jfif') }} --}}
-                                        </td>
-                                        <td>
-                                            <p>SĐT: {{ $employee->phone ?: "Chưa cập nhật" }}</p>
-                                            <p class="ellipsis" width="200">{{ $employee->email }}</p>
-                                            @if ($employee->email_verified_at)
-                                                <label for="" class="label label-success">Đã xác thực email</label>
-                                            @else
-                                                <label for="" class="label label-danger">Chưa xác thực email</label>
-                                            @endif
-
-                                        </td>
-                                        <td>{{ getStatusName($employee->status)}}</td>
-                                        <td>
-                                            <div class="dropdown">
-                                                <button class="btn btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <i class="fa-solid fa-ellipsis-h m-0"></i>
-                                                </button>
-                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                    @if (!$employee->email_verified_at)
-                                                        <a class="dropdown-item confirm-email" data-id="{{ $employee->id }}" data-email="{{ $employee->email }}">Xác thực email</a>
-                                                    @endif
-                                                    <a class="dropdown-item change-pass" data-id="{{ $employee->id }}" data-name="{{ $employee->fullname }}">Thay đổi mật khẩu</a>
-                                                    <a class="dropdown-item" href="{{ route('show-form-update-user', ['id' => $employee->id]) }}">Chỉnh sửa thông tin</a>
-                                                    <a class="dropdown-item" href="{{ route('show-info-user', ['id' => $employee->id]) }}">Xem chi tiết</a>
-                                                    @if ($employee->id != Auth::user()->id)
-                                                        <a class="dropdown-item btn-block-user" data-id="{{ $employee->id }}">Đưa vào danh sách chặn</a>
-                                                        <a class="dropdown-item btn-remove-user" data-id="{{ $employee->id }}">Xóa bỏ</a>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="paginate row justify-content-center">
-                        {{ $employees->links() }}
-                    </div>
-                    <div class="overlay-load">
-                        <img src="{{asset('frontend')}}/image/loading.gif" alt="">
-                    </div>
-                </div>
+    <div class="card">
+        <div class="card-header" style="box-shadow: none;">
+            <h5 style="font-size: 17px;">Danh sách nhân sự</h5>
+            <a href="{{route('user-black-list')}}" class="btn btn-outline-dark btn-round waves-effect waves-light" style="float: right">
+                <i class="ti-lock"></i>
+                Danh sách chặn
+            </a>
+            <a href="{{route('show-form-user-create')}}" class="btn btn-outline-primary btn-round waves-effect waves-light mr-3" style="float: right">
+                <i class="ti-plus"></i>
+                Thêm nhân sự
+            </a>
+        </div>
+        <div class="row mb-3" style="margin: unset;">
+            <div class="col-sm-3">
+                <label for="">Keyword</label>
+                <input class="form-control action_filter" type="text" name="keyword" placeholder="Tìm kiếm bằng tên, email,..." data-filter="keyword">
             </div>
+            <div class="col-sm-3">
+                <label for="">Trạng thái nhân sự</label>
+                <select name="status" class="form-control action_filter" data-filter="status">
+                    <option value="">-- Tất cả --</option>
+                    <option value="1">Đang hoạt động</option>
+                    <option value="2">Chưa kích hoạt</option>
+                    <option value="3">Bị chặn</option>
+                </select>
+            </div>
+            <div class="col-sm-3">
+                <label for="">Vị trí</label>
+                <select name="position_id" class="form-control action_filter" data-filter="position_id">
+                    <option value="">-- Tất cả --</option>
+                    @foreach ($positions as $position)
+                        <option value="{{$position->id}}">{{$position->name}}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-sm-3">
+                <label for="">Chi nhánh</label>
+                <select name="branch_id" class="form-control action_filter" data-filter="branch_id">
+                    <option value="">-- Tất cả --</option>
+                    @foreach ($branchs as $branch)
+                        <option value="{{$branch->id}}">{{$branch->name}}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+        @include('admin.layouts.messages')
+        <div class="card-block table-border-style" id="data-table">
+            @include('admin.user._partials.base_table')
         </div>
     </div>
 @endsection
 
 @section('page-script')
 <script>
-    (function callApi() {
-        $('.confirm-email').on('click', function (e) {
-            Swal.fire({
-                    title: 'Xác thực email ?',
-                    html: "Xác thực <b style='color: #5fc0fc;'>"+ $(this).attr('data-email') +"</b>",
-                    icon: 'question',
-                    heightAuto: true,
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Xác thực'
-                })
-                .then(async (result) => {
-                    if (result.isConfirmed) {
-                        let option = {
-                            _token: '{{ csrf_token() }}',
-                            id: $(this).attr("data-id"),
-                            params: window.location.search
-                        }
-                        $('.overlay-load').css('display', 'flex');
-                        const response = await axios.post("{{route('ajax-user-confirm-email')}}", option)
-                        if (response.status == 200) {
-                            $('#data-table').html(response.data.data);
-                            await callApi();
-                            $('.overlay-load').css('display', 'none');
-                            Swal.fire(
-                                'Thành công',
-                                'Tài khoản đã được xác thực',
-                                'success'
-                            )
-                        }
-                    }
-                })
-        });
+    (function callBack() {
         $('.change-pass').on('click', async function (e) {
             const { value: password } = await Swal.fire({
                     title: 'Thay đổi mật khẩu',
@@ -309,7 +165,7 @@
                         axios.post("{{route('ajax-remove-user')}}", option)
                             .then(({data}) => {
                                 $('#data-table').html(data.data);
-                                callApi();
+                                callBack();
                                 $('.overlay-load').css('display', 'none');
                                 Swal.fire(
                                     'Thành công',
@@ -327,47 +183,29 @@
                             })
                     }
                 })
-        })
-        $('.btn-block-user').on('click', function (e) {
-            Swal.fire({
-                    title: 'Xác nhận !',
-                    text: "Bạn có muốn đưa chặn nhân viên này không ?",
-                    icon: 'warning',
-                    heightAuto: true,
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Xác nhận'
-                })
-                .then((result) => {
-                    if (result.isConfirmed) {
-                        let option = {
-                            _token: '{{ csrf_token() }}',
-                            id: $(this).attr("data-id")
-                        }
-                        $('.overlay-load').css('display', 'flex');
-                        axios.post("{{route('ajax-block-user')}}", option)
-                            .then(({data}) => {
-                                $('#data-table').html(data.data);
-                                callApi();
-                                $('.overlay-load').css('display', 'none');
-                                Swal.fire(
-                                    'Thành công',
-                                    'Nhân viên này đã được thêm vào danh sách chặn',
-                                    'success'
-                                )
-                            })
-                            .catch((error) => {
-                                    $('.overlay-load').css('display', 'none');
-                                    Swal.fire(
-                                    'Thất bại',
-                                    error.response.data.message,
-                                    'error'
-                                )
-                            })
-                    }
-                })
-        })
-    })()
+        });
+    })();
+
+    $('.action_filter').on('input', function(e){
+        var keyFilter = e.target.getAttribute("data-filter");
+        var urlParam = new URL(window.location);
+        urlParam.searchParams.set(keyFilter, $(this).val());
+        window.history.pushState({}, '', urlParam);
+
+        var paramsUrl = window.location.search;
+        let params = {
+            params: paramsUrl
+        };
+        $('.overlay-load').css('display', 'flex');
+        axios.get("{{route('ajax-filter-employee')}}", { params }).then((response)=>{
+            $('#data-table').html(response.data.data);
+            $('.overlay-load').css('display', 'none');
+            callApi();
+        });
+    });
+    $('.action_filter').map((index, element) => {
+        let keyFilter = element.getAttribute('data-filter');
+        element.value = (new URL(document.location)).searchParams.get(keyFilter) || '';
+    })
 </script>
 @endsection
