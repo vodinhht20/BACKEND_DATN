@@ -57,13 +57,20 @@
     var app = new Vue({
         el: '#app',
         data: {
-            current_tab: "timesheet_tab"
+            current_tab: "timesheet_tab",
+            current_tab_sub: "timesheet_tab_wifi"
         },
         methods: {
             changeTab: (tab) => {
                 app.current_tab = tab;
                 var urlParam = new URL(window.location);
                 urlParam.searchParams.set('current_tab', tab);
+                window.history.pushState({}, '', urlParam);
+            },
+            changeTabSub: (tab)=>{
+                app.current_tab_sub = tab;
+                var urlParam = new URL(window.location);
+                urlParam.searchParams.set('current_tab_sub', tab);
                 window.history.pushState({}, '', urlParam);
             }
         },
@@ -72,6 +79,9 @@
     let params = (new URL(document.location)).searchParams;
     let current_tab = params.get('current_tab');
     app.current_tab = current_tab ? current_tab : 'timesheet_tab';
+    ///
+    let current_tab_test = params.get('current_tab_sub');
+    app.current_tab_sub = current_tab_test ? current_tab_test : 'timesheet_tab_wifi';
     // const tabs = document.querySelectorAll(".tab-item");
     // const panes = document.querySelectorAll(".tab-pane");
     // tabs.forEach((tab, index) => {
@@ -191,5 +201,25 @@
 
         })
     })
+    /////////////////////////////
+    const wifi_check_box=document.getElementById("wifi_check_box");
+    const location_check_box=document.getElementById("location_check_box");
+    const qr_check_box=document.getElementById("qr_check_box");
+    const select_all_check_box=document.getElementById("select_all_check_box");
+    select_all_check_box.onclick=function(){
+            if($(this).prop('checked')){
+                $('#wifi_check_box').prop("disabled", true);
+                $('#location_check_box').prop("disabled", true);
+                $('#qr_check_box').prop("disabled", true);
+            }
+            else{
+                $('#wifi_check_box').removeAttr("disabled");
+                $('#location_check_box').removeAttr("disabled");
+                $('#qr_check_box').removeAttr("disabled", true);
+       
+                
+            }
+            
+    }
 </script>
 @endsection
