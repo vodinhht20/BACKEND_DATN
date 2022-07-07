@@ -8,12 +8,19 @@ use Illuminate\Http\Request;
 
 class CheckinController extends Controller
 {
-    public function index() {
+    public function index(Request $request) {
+        $search_value=$request->search_value;
+        $search_value_2=$request->search_value_2;
+        $search_value_3=$request->search_value_3;
+        $branchs=Branch::where('name', 'like', "%$search_value_3%")->paginate(3);
+        $wifi=Network::where('name', 'like', "%$search_value%")->where('status', 'like', "%$search_value_2%")->paginate(10);
+        $wifi->appends($request->except('_token'));
+        $branchs->appends($request->except('_token'));
         $branch=Branch::all();
         $count_branch=count($branch);
-        $wifi=Network::paginate(10);
+        // $wifi=Network::paginate(10);
         $current_ip = request()->ip();
-        return view('admin.checkin.view',compact('branch' , 'wifi','current_ip','count_branch'));
+        return view('admin.checkin.view',compact('branch' , 'wifi','current_ip','count_branch','branchs'));
     }
     public function addwifi(Request $request ){
 
