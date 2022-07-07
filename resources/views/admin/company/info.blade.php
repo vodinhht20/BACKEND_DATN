@@ -71,20 +71,20 @@
                                 <tbody>
                                     @foreach ($company as $com)
                                     <tr>
-                                        <td><i class="ti-agenda"></i> Tên công ty: {{$com->name_company}}</td>
-                                        <td><i class="ti-google"></i> Website: {{$com->website}}</td>
+                                        <td><i class="ti-agenda icon-theme mr-2" style="font-size: 16px; padding: 10px;"></i> Tên công ty: {{$com->name_company}}</td>
+                                        <td><i class="ti-google icon-theme mr-2" style="font-size: 16px; padding: 10px;"></i> Website: {{$com->website}}</td>
                                     </tr>
                                     <tr>
-                                        <td><i class="ti-email"></i>  Email: {{$com->email}}</td>
-                                        <td><i class="ti-facebook"></i> Fanpage: {{$com->fanpage}}</td>
+                                        <td><i class="ti-email icon-theme mr-2" style="font-size: 16px; padding: 10px;"></i>  Email: {{$com->email}}</td>
+                                        <td><i class="ti-facebook icon-theme mr-2" style="font-size: 16px; padding: 10px;"></i> Fanpage: {{$com->fanpage}}</td>
                                     </tr>
                                     <tr>
-                                        <td><i class="ti-layout-column4-alt"></i> Mã số thuế: {{$com->tax_code}}</td>
-                                        <td><i class="ti-home"></i> Trụ sở chính: {{$com->head_quater}}</td>
+                                        <td><i class="ti-layout-column4-alt icon-theme mr-2" style="font-size: 16px; padding: 10px;"></i> Mã số thuế: {{$com->tax_code}}</td>
+                                        <td><i class="ti-home icon-theme mr-2" style="font-size: 16px; padding: 10px;"></i> Trụ sở chính: {{$com->head_quater}}</td>
                                     </tr>
                                     <tr>
-                                        <td><i class="ti-mobile"></i>Hotline: {{$com->hotline}}</td>
-                                        <td><i class="ti-view-list"></i> Mô tả: {{$com->desc}}</td>
+                                        <td><i class="ti-mobile icon-theme mr-2" style="font-size: 16px; padding: 10px;"></i>Hotline: {{$com->hotline}}</td>
+                                        <td><i class="ti-view-list icon-theme mr-2" style="font-size: 16px; padding: 10px;"></i> Mô tả: {{$com->desc}}</td>
                                     </tr>
                                     @endforeach
                                 </tbody>

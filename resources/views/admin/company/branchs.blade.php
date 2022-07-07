@@ -30,25 +30,22 @@
     </div>
 @endsection
 @section('content')
-    <div class="branchs">
-        <ul class="nav nav-tabs md-tabs tabs-left b-none" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('company.info') }}" role="tab" aria-expanded="false">
-                    <i class="ti-layout-media-overlay"></i><br>
-                    Thông tin <br> công ty</a>
-            </li>
-            <li class="nav-item btn-item active">
-                <a class="nav-link" href="{{ route('company.branchs') }}" role="tab" aria-expanded="false">
-                    <i class="ti-wallet"></i><br>
-                    Hệ thống <br> chi nhánh</a>
-            </li>
-            <li class="nav-item btn-item">
-                <a class="nav-link" href="{{ route('company.structure') }}" role="tab" aria-expanded="false">
-                    <i class="ti-wallet"></i><br>
-                    Cơ cấu <br> tổ chức</a>
-            </li>
-        </ul>
-        <div class="tab-pane" id="profile5" role="tabpanel">
+    <div class="branchs row">
+        <div class="col-md-12 col-lg-2 col-sm-12 tabs row">
+            <div class="col-lg-12 col-md-3 col-sm-4 tab-item">
+                <i class="ti-info"></i>
+                <p>Thông tin công ty</p>
+            </div>
+            <div class="col-lg-12 col-md-3 col-sm-4 tab-item">
+                <i class="ti-map"></i>
+                <p>Hệ thống chi nhánh</p>
+            </div>
+            <div class="col-lg-12 col-md-3 col-sm-4 tab-item">
+                <i class="ti-layout-grid2-thumb"></i>
+                <p>Cơ cấu tổ chức</p>
+            </div>
+        </div>
+        <div class="tab-pane col-10" id="profile5" role="tabpanel">
             <div style="overflow-x: auto;" class="card">
                 <div class="card-header">
                     <h5>Hệ thống chi nhánh</h5>

@@ -8,7 +8,7 @@
         <div class="row align-items-center">
             <div class="col-md-8">
                 <div class="page-header-title">
-                    <h5 class="m-b-10">Quản Lý ĐƠn Từ</h5>
+                    <h5 class="m-b-10">Quản Lý Đơn Từ</h5>
                     <p class="m-b-0">Danh sách tất cả các loại đơn từ của bạn</p>
                 </div>
             </div>
@@ -33,7 +33,7 @@
             <p>Hình Thức Chấm Công</p>
         </div>
         <div class="col-lg-12 col-md-3 col-sm-4 tab-item"  @click="changeTab('timesheetPhone_tab')" :class="{ active: current_tab == 'timesheetPhone_tab'}">
-            <i class=" ti-settings"></i>
+            <i class=" ti-settings "></i>
             <p>Chấm Công Bằng Điện Thoại</p>
         </div>
     </div>
@@ -216,10 +216,10 @@
                 $('#wifi_check_box').removeAttr("disabled");
                 $('#location_check_box').removeAttr("disabled");
                 $('#qr_check_box').removeAttr("disabled", true);
-       
-                
+
+
             }
-            
+
     }
 </script>
 @endsection

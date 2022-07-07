@@ -251,3 +251,18 @@ input:checked+.slider:before {
 .align-middle-td td {
   vertical-align: middle;
 }
+
+.icon-theme {
+  font-size: 25px;
+  padding: 5px 12px;
+  background-color: #ffa50024;
+  color: orange;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.checkbox_custom {
+  width: 17px;
+  height: 17px;
+  cursor: pointer;
+}
