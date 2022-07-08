@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\Banner;
 use App\Repositories\BannerRepository;
 use Illuminate\Support\Facades\Auth;
+use Intervention\Image\Facades\Image;
+
+
 
 
 class BannerController extends Controller
@@ -21,6 +24,7 @@ class BannerController extends Controller
     public function addBannerForm(){
         return view('admin.banner.add');
     }
+    // public $public_path = "/public/images";
 
     public function addBanner(Request $request){
         $request->validate([
@@ -39,6 +43,25 @@ class BannerController extends Controller
             'from_at' => $request->from_at,
             'to_at' => $request->to_at
         ];
+    
+        // if ($request->hasFile('image')) {
+        //     // $urlImage = $this->storeImage($request, 'image');
+        //     // $option['image'] = $urlImage;
+        //     // $option['type'] = 0;
+        //     $image       = $request->file('image');
+        //     $filename    = $image->getClientOriginalName();
+        //     $image_resize = Image::make($image->getRealPath());              
+        //     $image_resize->resize(600, 300);
+        //     $image_resize->save(public_path('public/images' .$filename));
+        // }else{
+        //     $request->validate([
+        //         'image_link' => 'required',
+        //     ],[
+        //         'image_link.required' => 'Vui lòng upload ảnh hoặc để link ảnh online',
+        //     ]);
+        //     $image_resize = $request->image_link;
+        
+        // }
         if ($request->hasFile('image')) {
             $urlImage = $this->storeImage($request, 'image');
             $option['image'] = $urlImage;
@@ -53,7 +76,7 @@ class BannerController extends Controller
             $option['type'] = 1;
         }
         $this->bannerRepo->create($option);
-        return redirect('banner/info');
+        return redirect('admin/banner/info');
     }
 
     public function updateBannerForm($id){
