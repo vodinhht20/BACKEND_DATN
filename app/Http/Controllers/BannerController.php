@@ -53,7 +53,7 @@ class BannerController extends Controller
             $option['type'] = 1;
         }
         $this->bannerRepo->create($option);
-        return redirect('banner/info');
+        return redirect()->route('setting.banner.info');
     }
 
     public function updateBannerForm($id){
@@ -78,12 +78,12 @@ class BannerController extends Controller
             'to_at' => $request->to_at
         ];
         $this->bannerRepo->update($id, $option);
-        return redirect('banner/info');
+        return redirect()->route('setting.banner.info');
     }
 
     public function delete($id){
         $this->bannerRepo->delete($id);
-        return redirect('banner/info');
+        return redirect()->route('setting.banner.info');
     }
 
     protected function storeImage(Request $request, $name = 'image')

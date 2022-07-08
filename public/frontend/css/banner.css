@@ -13,3 +13,9 @@
         overflow-x: auto;
     }
 }
+
+.box-actions {
+    display: flex;
+    align-items: center;
+    grid-column-gap: 10px;
+}
