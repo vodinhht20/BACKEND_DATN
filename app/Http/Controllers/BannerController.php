@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Banner;
 use App\Repositories\BannerRepository;
 use Illuminate\Support\Facades\Auth;
-Intervention\Image\Image
+use Image;
 
 class BannerController extends Controller
 {
@@ -89,8 +89,8 @@ class BannerController extends Controller
     protected function storeImage(Request $request, $name = 'image')
     {
         $path = $request->file($name)->store('public/images');
-        $img = Image::make($path)->resize(300, 200);
-        dd($img);
-        // return substr($path, strlen('public/'));
+        $storagePath = substr($path, strlen('public/'));
+        Image::make(public_path("storage/" . $storagePath))->resize(975, 325)->save();
+        return $storagePath;
     }
 }
