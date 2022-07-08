@@ -21,6 +21,7 @@ class BannerController extends Controller
     public function addBannerForm(){
         return view('admin.banner.add');
     }
+    // public $public_path = "/public/images";
 
     public function addBanner(Request $request){
         $request->validate([
