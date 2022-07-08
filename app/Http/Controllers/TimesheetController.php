@@ -60,7 +60,7 @@ class TimesheetController extends Controller
         $timekeeps = $this->timekeepRepo->query($options)->get();
         $timesheetFormats = $this->timekeepRepo->timesheetFormats($timekeeps);
         $departments = $this->departmentRepo->formatVueSelect();
-        $timesheetFormats = $this->paginate($timesheetFormats, 1)->withPath("timesheet");
+        $timesheetFormats = $this->paginate($timesheetFormats, 20)->withPath("timesheet");
         $formatDates = $this->timesheetService->getDayByMonth($monthYear);
         return view('admin.timesheet.index',compact("formatDates", "inpMonth", "timesheetFormats", "departments", "requestDepartments"));
     }

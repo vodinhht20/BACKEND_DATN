@@ -30,73 +30,56 @@
     </div>
 @endsection
 @section('content')
-    <div class="branchs">
-        <ul class="nav nav-tabs md-tabs tabs-left b-none" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('company.info') }}" role="tab" aria-expanded="false">
-                    <i class="ti-layout-media-overlay"></i><br>
-                    Thông tin <br> công ty</a>
-            </li>
-            <li class="nav-item btn-item active">
-                <a class="nav-link" href="{{ route('company.branchs') }}" role="tab" aria-expanded="false">
-                    <i class="ti-wallet"></i><br>
-                    Hệ thống <br> chi nhánh</a>
-            </li>
-            <li class="nav-item btn-item">
-                <a class="nav-link" href="{{ route('company.structure') }}" role="tab" aria-expanded="false">
-                    <i class="ti-wallet"></i><br>
-                    Cơ cấu <br> tổ chức</a>
-            </li>
-        </ul>
-        <div class="tab-pane" id="profile5" role="tabpanel">
-            <div style="overflow-x: auto;" class="card">
-                <div class="card-header">
-                    <h5>Hệ thống chi nhánh</h5>
-                    <div style="display: block;" class="card-header-right">
-                        <ul class="list-unstyled card-option">
-                            <li class="nav-item">
-                                <i class="fa fa fa-wrench open-card-option"></i>
-                                <a href="{{route("company.addbranch")}}" role="tab">Thêm chi nhánh</a>
-                            </li>
-                        </ul>
-                    </div>
+    <div class="">
+        <div class="card">
+            <div class="card-header" style="box-shadow: unset;">
+                <h5>Hệ thống chi nhánh</h5>
+                <p>Hệ thống các chi nhánh trong công ty của bạn</p>
+                <div style="display: block;" class="card-header-right">
+                    <a href="{{route("setting.branch.addbranch")}}" class="btn btn-outline-primary btn-round waves-effect btn-sm waves-light mr-3">
+                        <i class="ti-plus" style="color: unset;"></i> Thêm mới
+                    </a>
                 </div>
-                <div class="card-block table-border-style">
-                    <div class="table-responsive scrollbar-custom">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Tên chi nhánh</th>
-                                    <th>Mã chi nhánh</th>
-                                    <th>Địa chỉ nhánh</th>
-                                    <th>Hotline</th>
-                                    <th>Vĩ độ</th>
-                                    <th>Kinh độ</th>
-                                    <th>Bán kính</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($bran as $b)
-                                <tr>
-                                    <td>{{$b->name}}</td>
-                                    <td>{{$b->code_branch}}</td>
-                                    <td>{{$b->address}}</td>
-                                    <td>{{$b->hotline}}</td>
-                                    <td>{{$b->latitude}}</td>
-                                    <td>{{$b->longtitude}}</td>
-                                    <td>{{$b->radius}}</td>
-                                    <td><a href="{{route('company.delete',$b->id)}}"><i class="ti-trash"></i></a> <a href="{{route("company.updatebranch", $b->id)}}"><i style="float: right" class="ti-pencil"></i></a></td>
-                                    {{-- <td><form class="delete-form" href="{{route('company.delete',$b->id)}}" method="POST">
-                                        @method('DELETE')
-                                        @csrf
-                                        <i class="ti-trash"></i>
-                                    </form></td> --}}
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+            </div>
+            @include('admin.layouts.messages')
+            <div class="card-block table-border-style">
+                <div class="table-responsive scrollbar-custom">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Tên chi nhánh</th>
+                                <th>Địa chỉ nhánh</th>
+                                <th>Vị trí</th>
+                                <th>Hotline</th>
+                                <th>Bán kính</th>
+                                <th class="text-center">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($bran as $b)
+                            <tr>
+                                <td>
+                                    <label for="" class="label label-primary">code: {{$b->code_branch}}</label> <p class="ellipsis">{{$b->name}}</p>
+                                </td>
+                                <td><p class="ellipsis">{{$b->address}}</p></td>
+                                <td>
+                                    Kinh độ: <label for="" class="label label-inverse-success">{{$b->longtitude}}</label>
+                                    <br>
+                                    Vĩ độ: <label for="" class="label label-inverse-success ml-3">{{$b->latitude}}</label>
+                                </td>
+                                <td>{{$b->hotline}}</td>
+                                <td><label for="" class="label label-inverse-info">{{$b->radius}} Meter</label></td>
+                                <td class="text-center">
+                                    <a href="{{route("setting.branch.updatebranch", $b->id)}}" title="Chỉnh sửa">
+                                        <i class="ti-pencil icon-edit-primary"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                <div style="float: right;" class="pagination_cutomize">
                     {{$bran->links()}}
                 </div>
             </div>

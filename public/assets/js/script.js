@@ -227,8 +227,8 @@ function toggleFullScreen() {
 }
 
 $('body').append('' +
-    '<div class="fixed-button" onclick="$(window).scrollTop(0);">' +
-        '<button class="btn btn-md btn-primary">' +
+    `<div class="fixed-button" onclick="window.scrollTo({top: 0, behavior: 'smooth'});">` +
+        '<button class="btn btn-sm btn-md btn-primary">' +
             '<i class="ti-arrow-up" aria-hidden="true"></i>Top' +
         '</button> ' +
     '</div>' +
