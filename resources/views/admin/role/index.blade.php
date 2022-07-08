@@ -173,6 +173,7 @@
             allowOutsideClick: false,
             showLoaderOnConfirm: true,
             confirmButtonText: 'Lựa chọn',
+            showCancelButton: true,
             html: `<select name="model_id" id="select_user" class="form-control select2">
                         <option value=""></option>
                         @foreach ($employees as $employee)

@@ -4,11 +4,19 @@
 @endsection
 @section('header-page')
 <div class="page-header">
+    <style>
+        .pagination{
+            justify-content: center
+        }
+        .table-responsive{
+            width: 100%;
+        }
+    </style>
     <div class="page-block">
         <div class="row align-items-center">
             <div class="col-md-8">
                 <div class="page-header-title">
-                    <h5 class="m-b-10">Quản Lý ĐƠn Từ</h5>
+                    <h5 class="m-b-10">Quản Lý Đơn Từ</h5>
                     <p class="m-b-0">Danh sách tất cả các loại đơn từ của bạn</p>
                 </div>
             </div>
@@ -26,26 +34,26 @@
 </div>
 @endsection
 @section('content')
-<div class="box-section-timesheet row">
+<div class="box-section-timesheet row" id="app">
     <div class="col-md-12 col-lg-2 col-sm-12 tabs row">
-        <div class="col-lg-12 col-md-3 col-sm-4 tab-item active">
+        <div class="col-lg-12 col-md-3 col-sm-4 tab-item" @click="changeTab('timesheet_tab')" :class="{ active: current_tab == 'timesheet_tab'}">
             <i class=" ti-clipboard"></i>
             <p>Hình Thức Chấm Công</p>
         </div>
-        <div class="col-lg-12 col-md-3 col-sm-4 tab-item">
-            <i class=" ti-settings"></i>
+        <div class="col-lg-12 col-md-3 col-sm-4 tab-item"  @click="changeTab('timesheetPhone_tab')" :class="{ active: current_tab == 'timesheetPhone_tab'}">
+            <i class=" ti-settings "></i>
             <p>Chấm Công Bằng Điện Thoại</p>
         </div>
     </div>
     <div class="col-md-12 col-lg-10 col-sm-12 card">
-        <div class="tab-pane active ">
+        <div class="tab-pane" :class="{ active: current_tab == 'timesheet_tab'}">
             @include('admin.checkin.checkinlist')
         </div>
-        <div class="tab-pane card-block">
+        <div class="tab-pane card-block" :class="{ active: current_tab == 'timesheetPhone_tab'}">
             @include('admin.checkin.mobilecheck')
         </div>
     </div>
-    
+
 </div>
 @endsection
 
@@ -54,37 +62,47 @@
 @endsection
 @section('page-script')
 <script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            current_tab: "timesheet_tab",
+            current_tab_sub: "timesheet_tab_wifi"
+        },
+        methods: {
+            changeTab: (tab) => {
+                app.current_tab = tab;
+                var urlParam = new URL(window.location);
+                urlParam.searchParams.set('current_tab', tab);
+                window.history.pushState({}, '', urlParam);
+            },
+            changeTabSub: (tab)=>{
+                app.current_tab_sub = tab;
+                var urlParam = new URL(window.location);
+                urlParam.searchParams.set('current_tab_sub', tab);
+                window.history.pushState({}, '', urlParam);
+            }
+        },
+    })
+    // set current_tab by params
+    let params = (new URL(document.location)).searchParams;
+    let current_tab = params.get('current_tab');
+    app.current_tab = current_tab ? current_tab : 'timesheet_tab';
+    ///
+    let current_tab_test = params.get('current_tab_sub');
+    app.current_tab_sub = current_tab_test ? current_tab_test : 'timesheet_tab_wifi';
+    // const tabs = document.querySelectorAll(".tab-item");
+    // const panes = document.querySelectorAll(".tab-pane");
+    // tabs.forEach((tab, index) => {
+    //     const pane = panes[index];
 
-    const tabs = document.querySelectorAll(".tab-item");
-    const panes = document.querySelectorAll(".tab-pane");
-    tabs.forEach((tab, index) => {
-        const pane = panes[index];
+    //     tab.onclick = function() {
+    //         document.querySelector(".tab-item.active").classList.remove("active");
+    //         document.querySelector(".tab-pane.active").classList.remove("active");
+    //         this.classList.add("active");
+    //         pane.classList.add("active");
+    //     };
+    // });
 
-        tab.onclick = function() {
-            document.querySelector(".tab-item.active").classList.remove("active");
-            document.querySelector(".tab-pane.active").classList.remove("active");
-            this.classList.add("active");
-            pane.classList.add("active");
-        };
-    });
-
-    function checkMe(checked) {
-        var cb = document.getElementById("item1");
-        var db = document.getElementById("item2");
-
-        var content = document.getElementById("contentt");
-        if (db.checked==true) {
-            content.style.display="block";
-
-        }else{
-            content.style.display="none";
-
-        } if (cb.checked==true) {
-            content.style.display="none";
-
-
-        }
-    }
     const current_ip_button=document.getElementById("current_ip_button");
     const wifi_ip=document.getElementById("wifi-ip");
     const the_current_ip=document.getElementById("the_current_ip").innerHTML;
@@ -128,9 +146,9 @@
                       }
                     })
                 }
-        
-            
-            
+
+
+
         })
     })
     //<----------------AJAX For Location---------------------->
@@ -188,8 +206,28 @@
                     }
                 })
             }
-            
+
         })
-    })  
+    })
+    /////////////////////////////
+    const wifi_check_box=document.getElementById("wifi_check_box");
+    const location_check_box=document.getElementById("location_check_box");
+    const qr_check_box=document.getElementById("qr_check_box");
+    const select_all_check_box=document.getElementById("select_all_check_box");
+    select_all_check_box.onclick=function(){
+            if($(this).prop('checked')){
+                $('#wifi_check_box').prop("disabled", true);
+                $('#location_check_box').prop("disabled", true);
+                $('#qr_check_box').prop("disabled", true);
+            }
+            else{
+                $('#wifi_check_box').removeAttr("disabled");
+                $('#location_check_box').removeAttr("disabled");
+                $('#qr_check_box').removeAttr("disabled", true);
+
+
+            }
+
+    }
 </script>
 @endsection
