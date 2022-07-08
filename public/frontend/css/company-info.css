@@ -57,10 +57,6 @@
         border-radius: 15px;
     }
 
-    .company-info {
-        display: flex;
-    }
-
     .company-info .b-none li {
         background-color: #fff;
         width: 9vw !important;
