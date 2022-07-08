@@ -93,6 +93,8 @@ class BannerController extends Controller
     protected function storeImage(Request $request, $name = 'image')
     {
         $path = $request->file($name)->store('public/images');
-        return substr($path, strlen('public/'));
+        $img = Image::make($path)->resize(300, 200);
+        dd($img);
+        // return substr($path, strlen('public/'));
     }
 }
