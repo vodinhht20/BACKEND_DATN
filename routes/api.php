@@ -50,6 +50,12 @@ Route::middleware('jwt.auth')->group(function () {
     Route::prefix('timesheet')->group(function () {
         Route::get('', [TimesheetController::class, 'index']);
     });
+
+    Route::get('spinning-game', function () {
+        return response()->json([
+            "spin" => 'Áo thun'
+    ], 200);
+    });
 });
 
 Route::post('login-google', [AuthController::class, 'googleLogin']);

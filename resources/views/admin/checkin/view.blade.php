@@ -4,11 +4,19 @@
 @endsection
 @section('header-page')
 <div class="page-header">
+    <style>
+        .pagination{
+            justify-content: center
+        }
+        .table-responsive{
+            width: 100%;
+        }
+    </style>
     <div class="page-block">
         <div class="row align-items-center">
             <div class="col-md-8">
                 <div class="page-header-title">
-                    <h5 class="m-b-10">Quản Lý ĐƠn Từ</h5>
+                    <h5 class="m-b-10">Quản Lý Đơn Từ</h5>
                     <p class="m-b-0">Danh sách tất cả các loại đơn từ của bạn</p>
                 </div>
             </div>
