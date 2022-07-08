@@ -16,13 +16,13 @@
                     <ul class="list-unstyled card-option">
                         <li>
                             <i class="fa fa fa-wrench open-card-option"></i>
-                            <a href="{{route("banner.addbanner")}}" role="tab">Thêm banner</a>
+                            <a href="{{route("setting.banner.addbanner")}}" role="tab">Thêm banner</a>
                         </li>
                     </ul>
                 </div>
             </div>
             <div class="card-block table-border-style">
-                <div class="table-responsive">
+                <div class="table-responsive scrollbar-custom">
                     <table class="table table-hover">
                         <thead>
                             <tr>
@@ -30,11 +30,10 @@
                                 <th>Images</th>
                                 <th>Link</th>
                                 <th>Trạng thái</th>
-                                <th>Từ ngày</th>
-                                <th>Đến ngày</th>
+                                <th>Dealine</th>
                                 <th>Type image</th>
                                 <th>Người tạo</th>
-                                <th></th>
+                                <th>Thao tác</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -44,11 +43,19 @@
                                     <td><img class="img-banner" src="{{$b->getBanner()}}" alt="$b->name"></td>
                                     <td>{{$b->links}}</td>
                                     <td>{!! $b->status() !!}</td>
-                                    <td>{{$b->from_at}}</td>
-                                    <td>{{$b->to_at}}</td>
+                                    <td>
+                                        {{$b->from_at}} - {{$b->to_at}}
+                                    </td>
                                     <td>{{$b->checkLink()}}</td>
                                     <td>{{$b->author->fullname}}</td>
-                                    <td><a href="{{route('banner.delete',$b->id)}}"><i class="ti-trash"></i></a> <a href="{{route("banner.updatebanner", $b->id)}}"><i style="float: right" class="ti-pencil"></i></a></td>
+                                    <td class="box-actions">
+                                        <a href="{{route('setting.banner.delete',$b->id)}}">
+                                            <i class="ti-trash icon-remove-danger"></i>
+                                        </a>
+                                        <a href="{{route("setting.banner.updatebanner", $b->id)}}">
+                                            <i style="float: right" class="ti-pencil icon-edit-primary"></i>
+                                        </a>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>

@@ -121,19 +121,43 @@
 
         <div class="pcoded-navigation-label" data-i18n="nav.category.forms">Cài đặt chung</div>
         <ul class="pcoded-item pcoded-left-item">
-            <li class="{{ Request::routeIs('company.*') ? 'active' : '' }}">
-                <a href="{{ route("company.info") }}" class="waves-effect waves-dark">
-                    <span class="pcoded-micon"><i class="ti-agenda"></i><b>FC</b></span>
-                    <span class="pcoded-mtext" data-i18n="nav.form-components.main">Cài đặt công ty</span>
+            <li class="pcoded-hasmenu {{ Request::routeIs('setting.*') ? 'active pcoded-trigger' : '' }}">
+                <a href="javascript:void(0)" class="waves-effect waves-dark">
+                    <span class="pcoded-micon"><i class="ti-agenda"></i></span>
+                    <span class="pcoded-mtext"
+                        data-i18n="nav.basic-components.main">Cài đặt chung</span>
                     <span class="pcoded-mcaret"></span>
                 </a>
-            </li>
-            <li class="{{ Request::routeIs('banner.*') ? 'active' : '' }}">
-                <a href="{{ route("banner.info") }}" class="waves-effect waves-dark">
-                    <span class="pcoded-micon"><i class="ti-agenda"></i><b>FC</b></span>
-                    <span class="pcoded-mtext" data-i18n="nav.form-components.main">Quản lý banner</span>
-                    <span class="pcoded-mcaret"></span>
-                </a>
+                <ul class="pcoded-submenu">
+                    <li class="{{ Request::routeIs('setting.company.*') ? 'active' : '' }}">
+                        <a href="{{ route("setting.company.info") }}" class="waves-effect waves-dark">
+                            <span class="pcoded-micon"><i class="ti-agenda"></i><b>FC</b></span>
+                            <span class="pcoded-mtext" data-i18n="nav.form-components.main">Thông tin công ty</span>
+                            <span class="pcoded-mcaret"></span>
+                        </a>
+                    </li>
+                    <li class="{{ Request::routeIs('setting.branch.*') ? 'active' : '' }}">
+                        <a href="{{ route("setting.branch.list") }}" class="waves-effect waves-dark">
+                            <span class="pcoded-micon"><i class="ti-agenda"></i><b>FC</b></span>
+                            <span class="pcoded-mtext" data-i18n="nav.form-components.main">Hệ thống chi nhánh</span>
+                            <span class="pcoded-mcaret"></span>
+                        </a>
+                    </li>
+                    <li class="{{ Request::routeIs('setting.structure.*') ? 'active' : '' }}">
+                        <a href="{{ route("setting.structure.show") }}" class="waves-effect waves-dark">
+                            <span class="pcoded-micon"><i class="ti-agenda"></i><b>FC</b></span>
+                            <span class="pcoded-mtext" data-i18n="nav.form-components.main">Cơ cấu tổ chức</span>
+                            <span class="pcoded-mcaret"></span>
+                        </a>
+                    </li>
+                    <li class="{{ Request::routeIs('setting.banner.*') ? 'active' : '' }}">
+                        <a href="{{ route("setting.banner.info") }}" class="waves-effect waves-dark">
+                            <span class="pcoded-micon"><i class="ti-agenda"></i><b>FC</b></span>
+                            <span class="pcoded-mtext" data-i18n="nav.form-components.main">Quản lý banner</span>
+                            <span class="pcoded-mcaret"></span>
+                        </a>
+                    </li>
+                </ul>
             </li>
             <li class="{{ Request::routeIs('blog.*') ? 'active' : '' }}">
                 <a href="{{ route("blog.info") }}" class="waves-effect waves-dark">

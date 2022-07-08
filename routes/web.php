@@ -38,8 +38,6 @@ use Stevebauman\Location\Facades\Location;
 */
 Route::get('php-info', function() { return phpinfo(); })->middleware('auth');
 Route::get('', function (){ return view('index'); })->name("home.index");
-Route::get('/san-pham/{slug}', [ProductController::class, 'showDetail'])->name("product.showDetail");
-Route::get('/tin-tuc', [PostController::class, 'index'])->name("new.index");
 Route::get('/login', [AuthController::class, 'showFormLogin'])->name("login");
 Route::post('/login', [AuthController::class, 'login'])->name("post-login");
 Route::get('/register', [AuthController::class, 'showFromRegister'])->name("show-form-register");
@@ -68,10 +66,12 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/policy', [ApplicationController::class, 'policy'])->name('application-policy');
         Route::get('/procedure', [ApplicationController::class, 'procedure'])->name('application-procedure');
     });
+
     Route::prefix('/schedule')->group(function () {
         Route::get('/calender', [ScheduleWorkController::class, 'calendar'])->name('schedule-calender-index');
         Route::post('/ajax-add-work-shift', [ScheduleWorkController::class, 'ajaxAddWorkShift'])->name('schedule-ajax-add-work-shift');
     });
+
     Route::post('/ajax-add-role-user', [RoleController::class, 'addRole'])->name('ajax-add-role-user');
     Route::post('/ajax-get-role-user', [RoleController::class, 'getRole'])->name('ajax-get-role-user');
     Route::post('/ajax-create-user', [EmployeeController::class, 'addUser'])->name('ajax-create-user');

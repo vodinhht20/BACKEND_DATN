@@ -41,7 +41,7 @@
             <p>Hình Thức Chấm Công</p>
         </div>
         <div class="col-lg-12 col-md-3 col-sm-4 tab-item"  @click="changeTab('timesheetPhone_tab')" :class="{ active: current_tab == 'timesheetPhone_tab'}">
-            <i class=" ti-settings"></i>
+            <i class=" ti-settings "></i>
             <p>Chấm Công Bằng Điện Thoại</p>
         </div>
     </div>
@@ -224,10 +224,10 @@
                 $('#wifi_check_box').removeAttr("disabled");
                 $('#location_check_box').removeAttr("disabled");
                 $('#qr_check_box').removeAttr("disabled", true);
-       
-                
+
+
             }
-            
+
     }
 </script>
 @endsection
