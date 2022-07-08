@@ -14,10 +14,12 @@ class Timekeep extends Model
         'employee_id',
         'date'
     ];
+
     public function employee()
     {
         return $this->belongsTo(Employee::class, 'employee_id', 'id');
     }
+
     public function timekeepdetail()
     {
         return $this->hasMany(TimekeepDetail::class);

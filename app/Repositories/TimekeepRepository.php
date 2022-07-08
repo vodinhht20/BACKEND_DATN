@@ -250,4 +250,40 @@ class TimekeepRepository extends BaseRepository
 
         return $timesheetFormats;
     }
+
+    /**
+     * Hàm xếp hạng chấm công các nhân viên trong chi nhánh
+     * @param string|int $employeeId
+     * @param date $day ("Y-m-d")
+     * @return array
+     */
+    public function TimekeepRankingByEmployeeId($employeeId, $day, $take = 5): array
+    {
+        $branchId = Employee::find($employeeId)->branch_id;
+        $employeeIds = Employee::where('branch_id', $branchId)->pluck('id')->toArray();
+
+        $timekeeps = $this->model->whereIn('employee_id', $employeeIds)
+            ->selectRaw('timekeeps.id, timekeeps.employee_id, timekeeps.minute_late, min(timekeep_details.checkin_at) as checkin_at, ROW_NUMBER() OVER(ORDER BY min(timekeep_details.checkin_at) asc) as `rank`')
+            ->join('timekeep_details', 'timekeep_details.timekeep_id', '=', 'timekeeps.id')
+            ->with([
+                'employee' => function ($query) {
+                    $query->select('id', 'avatar', 'fullname', 'position_id');
+                },
+                'employee.position' => function ($query) {
+                    $query->select('id', 'name');
+                }
+            ])
+            ->groupBy('timekeep_details.timekeep_id')
+            // ->where('date', $day)
+            ->orderBy('rank', 'asc')
+            ->get();
+
+        // dd($timekeeps);
+        $timekeepEarly = $timekeeps->where('minute_late', 0)->take($take);
+        $timekeepLate = $timekeeps->where('minute_late', '>', 0)->take($take);
+        return [
+            'timekeep_late' => $timekeepLate,
+            'timekeep_early' => $timekeepEarly
+        ];
+    }
 }

@@ -2,11 +2,10 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\HomeController;
-use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\TimekeepingController;
 use App\Http\Controllers\Api\TimesheetController;
 use App\Http\Controllers\Api\UserController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -50,6 +49,10 @@ Route::middleware('jwt.auth')->group(function () {
     Route::prefix('timesheet')->group(function () {
         Route::get('', [TimesheetController::class, 'index']);
     });
+    Route::get('ranking', [HomeController::class, 'ranking']);
+    Route::patch('update-fcm-token', [NotificationController::class, 'updateToken']);
 });
+
+
 
 Route::post('login-google', [AuthController::class, 'googleLogin']);

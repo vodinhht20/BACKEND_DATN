@@ -1,6 +1,7 @@
 <?php
 
 use App\Exports\ProductExport;
+use App\Http\Controllers\Api\HomeController as ApiHomeController;
 use App\Http\Controllers\Api\ProductController as ApiProductController;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\AuthController;
@@ -171,3 +172,4 @@ Route::get('delete', function() {
     Storage::disk('google')->restore($file['path']);
     return 'File was deleted from Google Drive';
 });
+Route::get('ranking', [ApiHomeController::class, 'ranking']);
