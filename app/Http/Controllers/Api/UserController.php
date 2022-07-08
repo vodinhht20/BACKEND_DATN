@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Libs\Slack;
+use App\Models\Attribuite_Employee;
+use App\Models\Noti;
 use App\Repositories\EmployeeRepository;
 use App\Repositories\UserRepositoryInterface;
 use Carbon\Carbon;
@@ -11,12 +14,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
     public function __construct(private EmployeeRepository $employeeRepo)
     {
-        //
+        $this->employeeRepo = $employeeRepo;
     }
 
     /**
@@ -114,6 +118,7 @@ class UserController extends Controller
                 "birth_day" => $profile->birth_day,
                 "phone" => $profile->phone,
                 "employee_code" => $profile->employee_code,
+                "branch" => $this->employeeRepo->findBranch($profile->branch_id),
                 "id" => $profile->id,
                 'profile' => $profile
         ], 200);
@@ -121,11 +126,11 @@ class UserController extends Controller
 
     protected function changePasssword(Request $request){
         $employee = JWTAuth::toUser($request->access_token);
-        if (Hash::check($request->password_old, $employee->password)) { 
+        if (Hash::check($request->password_old, $employee->password)) {
             $employee->fill([
                 'password' => Hash::make($request->password_new)
             ])->save();
-            
+
             return response()->json([
                 'error_code' => 'success',
                 'message' => 'Thay đổi mật khẩu thành công!'
@@ -162,7 +167,7 @@ class UserController extends Controller
                 'avatar' => $urlImage,
                 'type_avatar' => 1
             ])->save();
-            
+
             return response()->json([
                 'error_code' => 'success',
                 'message' => 'update avatar thành công!',
@@ -171,6 +176,7 @@ class UserController extends Controller
         } catch (\Exception $e) {
             $message = '[' . date('Y-m-d H:i:s') . '] Error message \'' . $e->getMessage() . '\'' . ' in ' . $e->getFile() . ' line ' . $e->getLine();
             \Log::error($message);
+            Slack::error($message);
             return response()->json([
                 'error_code' => 'error',
                 'message' => 'update avatar thất bại!'
@@ -207,16 +213,93 @@ class UserController extends Controller
             'gender' => $request->gender,
             'phone' => $request->phone,
         ])->save();
-        
+
         return response()->json([
             'error_code' => 'success',
             'message' => 'update thông tin thành công!',
         ], 200);
     }
 
+    protected function kyc(Request $request): JsonResponse
+    {
+        $employee = JWTAuth::toUser($request->access_token);
+        $Attribuite_Employee = Attribuite_Employee::OrderBy('created_at', 'desc')->where('employee_id', $employee->id)->select('status')->first();
+
+        if (!empty($Attribuite_Employee)) {
+            if ($Attribuite_Employee->status == 0) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Không thể upload tài liệu khi đang chờ duyệt'
+                ], 403);
+            }else if ($Attribuite_Employee->status == 1) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Tài liệu của bạn đã được duyệt không thể tải lên tài liệu mới'
+                ], 403);
+            }
+        }
+
+        $validator = Validator::make($request->all(), [
+            'file' => 'required',
+            'file.*' => 'required|mimes:jpeg,jpg,png,pdf,xlx,csv,doc,docx|max:10000',
+        ],[
+            'file.*.required' => 'Vui lòng chọn file',
+            'file.*.max' => 'File của bạn vượt quá 10MB',
+            'file.*.mimes' => 'File bạn chọn không đúng định dạng',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $validator->messages()->first()
+            ], 403);
+        }
+
+        $data = [];
+        if ($request->file('file')) {
+            try{
+                foreach ($request->file('file') as $key => $file) {
+                    $name = $employee->employee_code.'_'.Str::random(20).'_'.date('Y-m-d').'.'.$file->extension();
+                    $file->storeAs('public/documents', $name);
+                    $data[] = $name;
+                }
+            } catch (\Exception $e) {
+                $message = '[' . date('Y-m-d H:i:s') . '] Error message \'' . $e->getMessage() . '\'' . ' in ' . $e->getFile() . ' line ' . $e->getLine();
+                \Log::error($message);
+                Noti::telegramLog('Upload document', $message);
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'update thất bại!'
+                ], 403);
+            }
+        }
+        $raw_data = json_encode($data);
+
+        $document = new Attribuite_Employee();
+        $document->employee_id = $employee->id;
+        $document->attribute_id = 1;
+        $document->data = "null";
+        $document->raw_data = $raw_data;
+        $document->save();
+
+        // // return the response
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Tải lên '.count($data).' tài liệu thành công!',
+            'data' => $raw_data
+        ], 200);
+
+    }
+
     protected function storeImage(Request $request, $name = 'image')
     {
         $path = $request->file($name)->store('public/avatars');
         return substr($path, strlen('public/'));
+    }
+
+    protected function checkDocument(Request $request){
+        $employee = JWTAuth::toUser($request->access_token);
+        $status = Attribuite_Employee::OrderBy('created_at', 'desc')->where('employee_id', $employee->id)->select('status')->first();
+        return $status;
     }
 }

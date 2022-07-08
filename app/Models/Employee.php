@@ -91,15 +91,22 @@ class Employee extends Authenticatable implements JWTSubject
 
     public function branch()
     {
-        return $this->belongsTo(Branch::class);
+        return $this->belongsTo(Branch::class, 'branch_id', 'id');
     }
+
     public function timekeep()
     {
         return $this->hasMany(Timekeep::class, 'employee_id','id');
     }
-    public function positions()
+
+    // public function positions()
+    // {
+    //     return $this->belongsToMany(Position::class, 'employee_positions', 'employee_id', 'position_id');
+    // }
+
+    public function position()
     {
-        return $this->belongsToMany(Position::class, 'employee_positions', 'employee_id', 'position_id');
+        return $this->belongsTo(Position::class, 'position_id', 'id');
     }
 
     public function attributes()
