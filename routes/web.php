@@ -122,7 +122,10 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
         });
     });
 
-    Route::get('/timesheet', [TimesheetController::class, 'timesheet'])->name("timesheet");
+    
+        Route::get('/timesheet', [TimesheetController::class, 'timesheet'])->name("timesheet");
+        Route::get('/exportexcel', [TimesheetController::class, 'exportIntoExcel'])->name("exportIntoExcel");
+    
 });
 
 Route::get('login-google', [AuthController::class, 'ggLogin'])->name('login-google');
