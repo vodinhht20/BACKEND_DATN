@@ -127,7 +127,7 @@
                                 <div class="mt-2 row align-items-center" v-for="(position, index) in dataModal.positions">
                                     <div class="col-1">#@{{ index+1 }}</div>
                                     <div class="col-10">
-                                        <input type="text" class="form-control" v-model="position.name"  placeholder="Nhâp tên phòng ban ...">
+                                        <input type="text" class="form-control" v-model="position.name"  placeholder="Nhâp tên vị trí ...">
                                     </div>
                                     <div class="col-1" style="padding: 0;" v-if="position.isNew">
                                         <i class="ti-close btn-icon-remove" @click="handleRemovePosition(index)"></i>
@@ -178,7 +178,7 @@
                                 <div class="mt-2 row align-items-center" v-for="(position, index) in dataModal.positions">
                                     <div class="col-1">#@{{ index+1 }}</div>
                                     <div class="col-10">
-                                        <input type="text" class="form-control" v-model="position.name"  placeholder="Nhâp tên phòng ban ...">
+                                        <input type="text" class="form-control" v-model="position.name"  placeholder="Nhâp tên vị trí ...">
                                     </div>
                                     <div class="col-1" style="padding: 0;" v-if="position.isNew">
                                         <i class="ti-close btn-icon-remove" @click="handleRemovePosition(index)"></i>
