@@ -43,25 +43,6 @@ class BannerController extends Controller
             'from_at' => $request->from_at,
             'to_at' => $request->to_at
         ];
-    
-        // if ($request->hasFile('image')) {
-        //     // $urlImage = $this->storeImage($request, 'image');
-        //     // $option['image'] = $urlImage;
-        //     // $option['type'] = 0;
-        //     $image       = $request->file('image');
-        //     $filename    = $image->getClientOriginalName();
-        //     $image_resize = Image::make($image->getRealPath());              
-        //     $image_resize->resize(600, 300);
-        //     $image_resize->save(public_path('public/images' .$filename));
-        // }else{
-        //     $request->validate([
-        //         'image_link' => 'required',
-        //     ],[
-        //         'image_link.required' => 'Vui lòng upload ảnh hoặc để link ảnh online',
-        //     ]);
-        //     $image_resize = $request->image_link;
-        
-        // }
         if ($request->hasFile('image')) {
             $urlImage = $this->storeImage($request, 'image');
             $option['image'] = $urlImage;

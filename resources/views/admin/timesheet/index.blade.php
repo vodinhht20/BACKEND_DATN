@@ -50,7 +50,7 @@
                         <h4>Quản lí bảng công</h4>
                     </div>
                     <div class="col-4">
-                        <a href="http://127.0.0.1:8000/admin/exportexcel" class="btn btn-outline-primary btn-round waves-effect waves-light" style="float: right; margin-right: 10px;">
+                        <a href="" class="btn btn-outline-primary btn-round waves-effect waves-light" style="float: right; margin-right: 10px;">
                             <i class="ti-printer"></i>
                             Xuất Excel
                         </a>
