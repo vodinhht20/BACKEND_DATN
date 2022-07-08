@@ -4,6 +4,14 @@
 @endsection
 @section('header-page')
 <div class="page-header">
+    <style>
+        .pagination{
+            justify-content: center
+        }
+        .table-responsive{
+            width: 100%;
+        }
+    </style>
     <div class="page-block">
         <div class="row align-items-center">
             <div class="col-md-8">
