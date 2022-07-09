@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Repositories\SingleTypeRepository;
 use Illuminate\Http\Request;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class SingleWordController extends Controller
 {
@@ -21,8 +22,9 @@ class SingleWordController extends Controller
         ]);
     }
 
-    public function GetApprover($id){
-        $approver = $this->singleTypeRepo->getInforEmployeeById($id);
+    public function GetApprover(Request $request, $id){
+        $employee = JWTAuth::toUser($request->access_token);
+        $approver = $this->singleTypeRepo->getInforEmployeeById($employee, $id);
         return response()->json([
             "status" => "200",
             "payload" => $approver,

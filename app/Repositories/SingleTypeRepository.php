@@ -18,17 +18,41 @@ class SingleTypeRepository extends BaseRepository
         return $singleType;
     }
 
-    public function getInforEmployeeById($id){
+    public function getInforEmployeeById($employee, $id){
         $approvers = $this->model->find($id)->approvers;
         $dataApprovers = [];
-        foreach ($approvers as $approver){
+
+        if ($this->model->find($id)->required_leader) {
+            $manager = $employee->branch->employee->where('position_id', 1)->first();
             $dataApprovers[] = 
             [
-                'fullname' => $approver->employee->fullname, 
-                'avatar' => $approver->employee->avatar,
-                'position' => $approver->employee->position->name
+                'fullname' => $manager->fullname, 
+                'avatar' => $manager->avatar,
+                'position' => $manager->position->name,
+                'required_leader' => 1
             ];
-        };
+
+            foreach ($approvers as $approver){
+                if ($approver->employee->id != $manager->id) {
+                    $dataApprovers[] = 
+                    [
+                        'fullname' => $approver->employee->fullname, 
+                        'avatar' => $approver->employee->avatar,
+                        'position' => $approver->employee->position->name
+                    ];
+                }
+            };
+        }else{
+            foreach ($approvers as $approver){
+                $dataApprovers[] = 
+                [
+                    'fullname' => $approver->employee->fullname, 
+                    'avatar' => $approver->employee->avatar,
+                    'position' => $approver->employee->position->name
+                ];
+            };
+        }
+
         return $dataApprovers;
     }
 }
