@@ -14,7 +14,7 @@ class EmployeeRepository extends BaseRepository
         return \App\Models\Employee::class;
     }
 
-    public function getWifiIPByEmployeeId($employeeId)
+    public function getWifiIPByEmployeeId($employeeId): array
     {
         $employee = $this->model
             ->with(['branch', 'branch.network'])

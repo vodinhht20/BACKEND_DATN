@@ -50,7 +50,7 @@ Route::middleware('jwt.auth')->group(function () {
     //setting
 
     Route::prefix('checkin')->group(function () {
-        Route::post('', [TimekeepingController::class, 'checkIn'])->middleware('checkip');
+        Route::post('', [TimekeepingController::class, 'checkIn']);
         Route::get('data-checkin', [TimekeepingController::class, 'getCurrentDataCheckin']);
     });
 

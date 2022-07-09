@@ -53,7 +53,10 @@
             @include('admin.checkin.mobilecheck')
         </div>
     </div>
-
+    <div class="overlay-load" style="position: fixed;">
+        <img src="{{asset('frontend')}}/image/loading.gif" alt="">
+        <span>Vui lòng chờ ...</span>
+    </div>
 </div>
 @endsection
 
@@ -66,7 +69,8 @@
         el: '#app',
         data: {
             current_tab: "timesheet_tab",
-            current_tab_sub: "timesheet_tab_wifi"
+            current_tab_sub: "timesheet_tab_wifi",
+            attendance_setting: {!! $attendanceSetting ?? [] !!}
         },
         methods: {
             changeTab: (tab) => {
@@ -80,6 +84,34 @@
                 var urlParam = new URL(window.location);
                 urlParam.searchParams.set('current_tab_sub', tab);
                 window.history.pushState({}, '', urlParam);
+            },
+            handleUpdateAttendanceSetting: () => {
+                if (app.attendance_setting.length == 0) {
+                    Swal.fire(
+                        'Lỗi',
+                        `Vui lòng lựa chọn hình thức chấm công !`,
+                        'error'
+                    );
+                    return ;
+                }
+                $('.overlay-load').css('display', 'flex');
+                axios.post("{{route('checkin.ajax-attendance-setting')}}", {data: app.attendance_setting})
+                .then(res => {
+                    $('.overlay-load').css('display', 'none');
+                    Swal.fire(
+                        'Thành công',
+                        `Cập nhật thành công`,
+                        'success'
+                    )
+                })
+                .catch(({response}) => {
+                    $('.overlay-load').css('display', 'none');
+                    Swal.fire(
+                        'Thất bại',
+                        `${response.data.messages}`,
+                        'error'
+                    )
+                })
             }
         },
     })

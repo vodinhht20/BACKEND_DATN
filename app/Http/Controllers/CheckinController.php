@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Branch;
 use App\Models\Network;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Validator;
 
 class CheckinController extends Controller
 {
@@ -19,8 +21,30 @@ class CheckinController extends Controller
         $branch = Branch::all();
         $count_branch = count($branch);
         $current_ip = request()->ip();
-        return view('admin.checkin.view',compact('branch' , 'wifi','current_ip','count_branch','branchs'));
+        $attendanceSetting = Redis::get('attendance_setting');
+        return view('admin.checkin.view', compact('branch', 'wifi', 'current_ip', 'count_branch', 'branchs', 'attendanceSetting'));
     }
+
+    public function UpdateAttendanceSetting(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'data' => 'required|array|min:1',
+        ], [
+            'data.required' => 'Vui lòng lựa chọn hình thức chấm công',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'error_code' => 'validate_failed',
+                'messages' => array($validator->messages()->first())
+            ], 442);
+        }
+        Redis::set('attendance_setting', json_encode($request->data));
+        return response()->json([
+            'message' => "Đã cập nhật hình thức chấm công !"
+        ], 200);
+    }
+
     public function addwifi(Request $request ){
 
         $wifi= new Network;

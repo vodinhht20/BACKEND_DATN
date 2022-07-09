@@ -88,6 +88,7 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/view', [CheckinController::class, 'index'])->name("view");
         Route::post('/add-wifi', [CheckinController::class, 'addwifi'])->name("add-wifi");
         Route::post('/add-location', [CheckinController::class, 'addlocation'])->name("add-location");
+        Route::post('/ajax-attendance_setting', [CheckinController::class, 'UpdateAttendanceSetting'])->name("ajax-attendance-setting");
     });
 
     Route::prefix('/setting')->name("setting.")->group(function () {
@@ -122,10 +123,10 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
         });
     });
 
-    
+
         Route::get('/timesheet', [TimesheetController::class, 'timesheet'])->name("timesheet");
         Route::get('/exportexcel', [TimesheetController::class, 'exportIntoExcel'])->name("exportIntoExcel");
-    
+
 });
 
 Route::get('login-google', [AuthController::class, 'ggLogin'])->name('login-google');
