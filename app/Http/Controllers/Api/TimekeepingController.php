@@ -6,20 +6,24 @@ use App\Events\HandleCheckIn;
 use App\Http\Controllers\Controller;
 use App\Libs\Slack;
 use App\Models\Employee;
+use App\Models\Noti;
+use App\Repositories\EmployeeRepository;
 use App\Repositories\TimekeepRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Validator;
 
 class TimekeepingController extends Controller
 {
-    public function __construct(private TimekeepRepository $timekeepRepo)
+    public function __construct(private TimekeepRepository $timekeepRepo, private EmployeeRepository $employeeRepo)
     {
     }
 
-    public function checkIn(Request $request){
+    public function checkIn(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'latitude' => 'required',
             'longitude' => 'required',
@@ -50,44 +54,56 @@ class TimekeepingController extends Controller
             'source' => $request->header('User-Agent')
         ];
 
-        $isLocaionInBranch = $this->timekeepRepo->isLocaionInBranch($longitude, $latitude, $currentAdminId);
-        if (!$isLocaionInBranch) {
-            $options['status'] = config('timekeep.status.failed');
-            event(new HandleCheckIn($options));
-            return response()->json([
-                'message' => 'Checkin thất bại. Bạn không thể chấm công ở địa điểm này',
-                'ip' => $request->ip(),
-                'error_code' => 'checkin_failed'
-            ]);
+        // Kiểm tra checkin theo hình thức chấm công
+
+        $attendanceSetting = json_decode(Redis::get('attendance_setting') ?? '[]');
+        if (in_array(config('attendance_setting.options.wifi'), $attendanceSetting)) {
+            $ipCompanies = $this->employeeRepo->getWifiIPByEmployeeId($currentAdminId);
+            if (!in_array($request->ip(), $ipCompanies)) {
+                $options['status'] = config('timekeep.status.failed');
+                event(new HandleCheckIn($options));
+                return response()->json([
+                    'message' => 'Check in bị từ chối. IP: ' . $request->ip(),
+                    'error_code' => 'checkin_access_denied'
+                ]);
+            }
+        }
+
+        if (in_array(config('attendance_setting.options.gps'), $attendanceSetting)) {
+            $isLocaionInBranch = $this->timekeepRepo->isLocaionInBranch($longitude, $latitude, $currentAdminId);
+            if (!$isLocaionInBranch) {
+                $options['status'] = config('timekeep.status.failed');
+                event(new HandleCheckIn($options));
+                return response()->json([
+                    'message' => 'Checkin thất bại. Bạn không thể chấm công ở địa điểm này',
+                    'error_code' => 'checkin_failed'
+                ]);
+            }
         }
 
         DB::beginTransaction();
-        $result = null;
         try {
-            $result = $this->timekeepRepo->checkin($options);
-            DB::commit();
-        } catch (\Exception $e) {
-            $message = '[' . date('Y-m-d H:i:s') . '] Error message \'' . $e->getMessage() . '\'' . ' in ' . $e->getFile() . ' line ' . $e->getLine();
-            \Log::error($message);
-            Slack::error($message);
-            DB::rollBack();
-        }
-        $options['status'] = $result ? config('timekeep.status.success') : config('timekeep.status.failed');
-        event(new HandleCheckIn($options));
-
-        if ($result) {
+            $this->timekeepRepo->checkin($options);
             $dataCheckinByDay = $this->timekeepRepo->dataCheckinByDay($currentDate->format('Y-m-d'), $currentAdminId);
+            $options['status'] = config('timekeep.status.success');
+            event(new HandleCheckIn($options));
+            DB::commit();
             return response()->json([
                 'status' => 'success',
                 'data' => $dataCheckinByDay
             ]);
+        } catch (\Exception $e) {
+            $message = '[' . date('Y-m-d H:i:s') . '] Error message \'' . $e->getMessage() . '\'' . ' in ' . $e->getFile() . ' line ' . $e->getLine();
+            \Log::error($message);
+            Noti::telegramLog('Checkin Client', $message);
+            DB::rollBack();
+            $options['status'] = config('timekeep.status.failed');
+            event(new HandleCheckIn($options));
+            return response()->json([
+                'message' => 'Checkin thất bại. Vui lòng liên hệ bộ phận kỹ thuật để được hỗ trợ',
+                'error_code' => 'checkin_failed'
+            ]);
         }
-
-        return response()->json([
-            'message' => 'Checkin thất bại. Vui lòng liên hệ bộ phận kỹ thuật để được hỗ trợ',
-            'ip' => $request->ip(),
-            'error_code' => 'checkin_failed'
-        ]);
     }
 
     public function getCurrentDataCheckin(Request $request)

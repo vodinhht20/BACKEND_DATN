@@ -87,8 +87,8 @@ class TimekeepRepository extends BaseRepository
     public function isLocaionInBranch($longitude, $latitude, $employeeId): bool
     {
         $timekeepService = new TimekeepService();
-        $employee = Employee::with('branch')->find($employeeId);
-        $branch = $employee->branch;
+        $employee = Employee::find($employeeId);
+        $branch = $employee['branch'] ?? null;
         if ($branch) {
             $rootLongitude = (float)$branch->longtitude;
             $rootLatitude = (float)$branch->latitude;
