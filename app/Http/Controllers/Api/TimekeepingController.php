@@ -87,11 +87,11 @@ class TimekeepingController extends Controller
             $dataCheckinByDay = $this->timekeepRepo->dataCheckinByDay($currentDate->format('Y-m-d'), $currentAdminId);
             $options['status'] = config('timekeep.status.success');
             event(new HandleCheckIn($options));
+            DB::commit();
             return response()->json([
                 'status' => 'success',
                 'data' => $dataCheckinByDay
             ]);
-            DB::commit();
         } catch (\Exception $e) {
             $message = '[' . date('Y-m-d H:i:s') . '] Error message \'' . $e->getMessage() . '\'' . ' in ' . $e->getFile() . ' line ' . $e->getLine();
             \Log::error($message);
