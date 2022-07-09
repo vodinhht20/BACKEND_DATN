@@ -43,6 +43,8 @@
   position: absolute;
   border-radius: 5px;
   display: none;
+  flex-direction: column;
+  z-index: 999999999999;
 }
 
 .overlay-load img {
@@ -250,4 +252,47 @@ input:checked+.slider:before {
 
 .align-middle-td td {
   vertical-align: middle;
+}
+
+.icon-theme {
+  font-size: 25px;
+  padding: 5px 12px;
+  background-color: #ffa50024;
+  color: orange;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.checkbox_custom {
+  width: 17px;
+  height: 17px;
+  cursor: pointer;
+}
+
+.icon-edit-primary {
+  font-size: 15px;
+  color: #1d5fd7;
+  padding: 10px;
+  background-color: #1d5fd73b;
+  border-radius: 50%;
+  transition: .2s;
+}
+
+.icon-edit-primary:hover {
+  opacity: 0.8;
+  box-shadow: 0px 1px 4px #1d5fd7;
+}
+
+.icon-remove-danger {
+  font-size: 15px;
+  color: #d71d1d;
+  padding: 10px;
+  background-color: #d71d1d44;
+  border-radius: 50%;
+  transition: .2s;
+}
+
+.icon-remove-danger:hover {
+  opacity: 0.8;
+  box-shadow: 0px 1px 4px #d71d1d;
 }
