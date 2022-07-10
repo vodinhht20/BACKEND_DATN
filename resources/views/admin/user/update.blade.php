@@ -160,29 +160,33 @@
                             <div class="col-md-12">
                                 <p><strong>Thông tin thêm</strong></p>
                             </div>
-                            @foreach ($attributes as $attribute)
-
-                                @foreach ($employee->attributes as $employee_attribute)
-                                    @if ($employee_attribute->attribute_id == $attribute->id)
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label class="col-form-label">{{$attribute->name}}</label>
-                                                <div class="">
-                                                    <input type="{{$attribute->data_type}}" class="form-control data-input" name="data" value="{{$employee_attribute->data}}">
-                                                </div>
+                            @foreach ($employee->attributes as $employee_attribute)
+                                @foreach ($attributes as $attribute)
+                                @if ($attribute == $employee->attributes)
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="col-form-label">{{$attribute->name}}</label>
+                                            <div class="">
+                                                <input type="{{$attribute->data_type}}"
+                                                class="form-control data-input"
+                                                name="data"
+                                                value="{{$attribute->id}}">
                                             </div>
                                         </div>
-                                    @endif
-                                @endforeach
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label class="col-form-label">{{$attribute->name}}</label>
-                                        <div class="">
-                                            <input type="{{$attribute->data_type}}" class="form-control data-input" name="data">
+                                    </div>
+                                @else
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="col-form-label">{{$attribute->name}}</label>
+                                            <div class="">
+                                                <input type="{{$attribute->data_type}}"
+                                                class="form-control data-input"
+                                                name="data">
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            
+                                @endif
+                                @endforeach 
                             @endforeach
                         </div>
                         <div class="form-group row justify-content-center">
