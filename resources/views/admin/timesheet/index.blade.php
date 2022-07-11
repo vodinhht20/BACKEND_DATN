@@ -102,7 +102,7 @@
                         </div>
                     </div>
                     <div>
-                        <p>Có <b>{{ count($timesheetFormats) }}</b> nhân viên trong danh sách</p>
+                        <p>Có <b>{{ $timesheetFormats->total() }}</b> nhân viên trong danh sách</p>
                     </div>
                     <div class="table-border-style">
                         <div class="table-responsive scrollbar-custom">
@@ -173,7 +173,7 @@
                             </table>
                         </div>
                         <div  class=" dataTables_pager" style="margin-top: 30px">
-                            {{  $timesheetFormats->links() }}
+                            {{  $timesheetFormats->appends(request()->all()) }}
                         </div>
                     </div>
                 </div>

@@ -14,6 +14,8 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
+use App\Exports\TimekeepExport;
+use Excel;
 
 class TimesheetController extends Controller
 {
@@ -60,7 +62,7 @@ class TimesheetController extends Controller
         $timekeeps = $this->timekeepRepo->query($options)->get();
         $timesheetFormats = $this->timekeepRepo->timesheetFormats($timekeeps);
         $departments = $this->departmentRepo->formatVueSelect();
-        $timesheetFormats = $this->paginate($timesheetFormats, 4)->withPath("/timesheet");
+        $timesheetFormats = $this->paginate($timesheetFormats, 20)->withPath("timesheet");
         $formatDates = $this->timesheetService->getDayByMonth($monthYear);
         return view('admin.timesheet.index',compact("formatDates", "inpMonth", "timesheetFormats", "departments", "requestDepartments"));
     }
@@ -70,5 +72,9 @@ class TimesheetController extends Controller
         $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
         $items = $items instanceof Collection ? $items : Collection::make($items);
         return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
+    }
+    public function exportIntoExcel()
+    {
+        return Excel::download(new TimekeepExport, 'timekeep.xlsx');
     }
 }

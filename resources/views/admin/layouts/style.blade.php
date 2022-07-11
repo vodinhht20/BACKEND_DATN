@@ -13,14 +13,11 @@
 <!-- am chart export.css -->
 <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
 <!-- Style.css -->
-<link rel="stylesheet" type="text/css" href="{{asset('assets')}}/css/style.css?v1.0.3">
+<link rel="stylesheet" type="text/css" href="{{asset('assets')}}/css/style.css?v1.0.4">
 <!-- Select 2 -->
 {{-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" /> --}}
 
 <!-- style custom -->
-<<<<<<< HEAD
 <link rel="stylesheet" type="text/css" href="{{asset('frontend')}}/css/admin.css?v1.0.1">
-=======
-<link rel="stylesheet" type="text/css" href="{{asset('frontend')}}/css/admin.css">
+<link rel="stylesheet" type="text/css" href="{{asset('frontend')}}/css/admin.css?v1.0.2">
 <link rel="stylesheet" type="text/css" href="{{asset('frontend')}}/css/loader.css">
->>>>>>> 57a3d80 (update loader)

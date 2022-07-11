@@ -23,7 +23,8 @@
       };
       // Initialize Firebase
       firebase.initializeApp(firebaseConfig);
-      const messaging = firebase.messaging();
+      const messaging = firebase.messaging()
+        .usePublicVapidKey("BDYE2EYHdIp8qHjTKcJYPvO4PgaAH2pSruP55FOtNs5jWsgdeg7YK6OgJ0daSu21kN7aSzU19NRXRqC4bfITZYQ");
       function initFirebaseMessagingRegistration() {
           messaging.requestPermission().then(function () {
               return messaging.getToken()

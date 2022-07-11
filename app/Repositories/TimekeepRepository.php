@@ -87,8 +87,8 @@ class TimekeepRepository extends BaseRepository
     public function isLocaionInBranch($longitude, $latitude, $employeeId): bool
     {
         $timekeepService = new TimekeepService();
-        $employee = Employee::with('branch')->find($employeeId);
-        $branch = $employee->branch;
+        $employee = Employee::find($employeeId);
+        $branch = $employee['branch'] ?? null;
         if ($branch) {
             $rootLongitude = (float)$branch->longtitude;
             $rootLatitude = (float)$branch->latitude;
@@ -267,20 +267,25 @@ class TimekeepRepository extends BaseRepository
             ->join('timekeep_details', 'timekeep_details.timekeep_id', '=', 'timekeeps.id')
             ->with([
                 'employee' => function ($query) {
-                    $query->select('id', 'avatar', 'fullname', 'position_id');
+                    $query->select('id', 'avatar', 'fullname', 'position_id', 'type_avatar');
                 },
                 'employee.position' => function ($query) {
                     $query->select('id', 'name');
                 }
             ])
             ->groupBy('timekeep_details.timekeep_id')
-            // ->where('date', $day)
+            ->where('date', $day)
             ->orderBy('rank', 'asc')
             ->get();
-
-        // dd($timekeeps);
-        $timekeepEarly = $timekeeps->where('minute_late', 0)->take($take);
-        $timekeepLate = $timekeeps->where('minute_late', '>', 0)->take($take);
+        $timekeeps = $timekeeps->map(function ($timekeep) {
+            $timekeep->checkin_at = Carbon::parse($timekeep->checkin_at)->format('H:i');
+            if ($timekeep->employee) {
+                $timekeep->employee->avatar = $timekeep->employee->getAvatar();
+            }
+            return $timekeep;
+        });
+        $timekeepEarly = $timekeeps->where('minute_late', 0)->take($take)->values();
+        $timekeepLate = $timekeeps->where('minute_late', '>', 0)->take($take)->values();
         return [
             'timekeep_late' => $timekeepLate,
             'timekeep_early' => $timekeepEarly

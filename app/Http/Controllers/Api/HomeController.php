@@ -16,13 +16,13 @@ class HomeController extends Controller
     }
 
     public function banner(){
-        $banner = $this->bannerRepo->getBannerPublic();
+        $banners = $this->bannerRepo->getBannerPublic();
         $bannerRes = collect();
 
-        foreach ($banner as $b){
+        foreach ($banners as $banner){
             $bannerRes[] = ([
-                'links' => $b->links,
-                'image' => $b->getBanner()
+                'links' => $banner->links,
+                'image' => $banner->getBanner()
             ]);
         }
 
@@ -33,17 +33,9 @@ class HomeController extends Controller
 
     public function ranking(Request $request)
     {
-        \Illuminate\Support\Facades\Log::info('------------  BAT DAU -------------');
-        \Illuminate\Support\Facades\Event::listen('Illuminate\Database\Events\QueryExecuted', function ($query) {
-            $sql = $query->sql;
-            \Illuminate\Support\Facades\Log::debug('query : ' . $sql);
-            \Illuminate\Support\Facades\Log::info('-------------------------');
-            \Illuminate\Support\Facades\Log::info('');
-        });
         $employeeId = Auth::user()->id;
         $day = date('Y-m-d');
         $data = $this->timekeepRepo->TimekeepRankingByEmployeeId($employeeId, $day);
-
         return response()->json([
             'data' => $data
         ]);

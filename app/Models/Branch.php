@@ -16,4 +16,9 @@ class Branch extends Model
     {
         return $this->hasMany(Network::class);
     }
+
+    public function employee()
+    {
+        return $this->hasMany(Employee::class, 'branch_id', 'id');
+    }
 }
