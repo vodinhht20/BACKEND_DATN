@@ -39,8 +39,8 @@ class Notification
     public static function sendData(array $data, array $tokens, string $key = "dataRaw"): void
     {
         Larafirebase::fromArray([
-            'title' => "data_raw",
-            'body' => [...$data, "key" => $key]
+            'title' => $key,
+            'body' => [...$data]
         ])->sendMessage($tokens);
     }
 
