@@ -152,7 +152,7 @@ class WorkScheduleRepository extends BaseRepository
         return $workSchedules;
     }
 
-    public function workDayByEmployeeId($day, $employeeId)
+    public function workScheduleForTheDay($day, $employeeId)
     {
         $employee = Employee::find($employeeId);
         $position = null;
@@ -163,32 +163,21 @@ class WorkScheduleRepository extends BaseRepository
                 $department = $position->department;
             }
 
-            $workSchedule = $this->model
+            $workSchedules = $this->model
                 ->where('allow_from', '<=', $day)
                 ->where('allow_to', '>=', $day)
-                ->where(function ($queryA) use ($employeeId, $department, $position) {
-                    $queryA->where('employee_id', $employeeId);
-                    $queryA->orWhere(function ($queryB) use ($department, $position) {
-                        if ($position) {
-                            $queryB->where('position_id', $position->id);
-                        }
-                        if ($department) {
-                            $queryB->orWhere('department_id', $department->id);
-                        }
-                    });
-                })->first();
+                ->get();
 
-            if ($workSchedule) {
-                return $workSchedule;
-            } else {
-                $workSchedule = $this->model
-                    ->where('allow_from', '<=', $day)
-                    ->where('allow_to', '>=', $day)
-                    ->where('subject_type', config('work_schedule.subject_type.company'))
-                    ->first();
-                return $workSchedule;
-            }
+            $workScheduleEmployee = $workSchedules->where('employee_id', $employeeId)->first();
+            $workSchedulePosition = $workSchedules->where('position_id', $position->id)->first();
+            $workScheduleDepartment = $workSchedules->where('department_id', $department->id)->first();
+            $workScheduleCompany = $workSchedules->where('subject_type', config('work_schedule.subject_type.company'))->first();
+
+            if ($workScheduleEmployee) return $workScheduleEmployee;
+            else if ($workSchedulePosition) return $workSchedulePosition;
+            else if ($workScheduleDepartment) return $workScheduleDepartment;
+            else if ($workScheduleCompany) return $workScheduleCompany;
         }
-        return false;
+        return null;
     }
 }

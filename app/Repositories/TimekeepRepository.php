@@ -149,8 +149,8 @@ class TimekeepRepository extends BaseRepository
         $timesheetFormats = [];
         $timesheetService = app(TimesheetService::class);
         foreach ($timekeeps as $timekeep) {
-            $checkin = $timekeep->timekeepdetail->first();
-            $checkout = $timekeep->timekeepdetail->last();
+            $checkin = $timekeep->timekeepDetail->first();
+            $checkout = $timekeep->timekeepDetail->last();
             $worktimeHours = 0;
             if ($checkin) {
 
@@ -290,5 +290,40 @@ class TimekeepRepository extends BaseRepository
             'timekeep_late' => $timekeepLate,
             'timekeep_early' => $timekeepEarly
         ];
+    }
+
+    /**
+     * Hàm kiểm tra xem ngày hôm đấy đã checkin hay Chưa
+     *
+     * @param string $date ('Y-m-d')
+     * @param string|int $employeeId
+     * @return boolean
+     */
+
+    public function isFirstCheckin($date, $employeeId): bool
+    {
+        $timekeep = $this->getFirstCheckin($date, $employeeId);
+        if ($timekeep) {
+            return false;
+        }
+        return true;
+    }
+
+    public function getFirstCheckin($date, $employeeId) {
+        $timekeepDetailRepo = app(TimekeepDetailRepository::class);
+        $timekeep = $this->model->where('date', $date)
+            ->where('employee_id', $employeeId)
+            ->first();
+        if ($timekeep) {
+            return $timekeepDetailRepo->model->where('timekeep_id', $timekeep->id)
+                ->orderBy('checkin_at', 'asc')
+                ->first();
+        }
+        return null;
+    }
+
+    public function getWorkTime($checkin, $checkout)
+    {
+        # code...
     }
 }

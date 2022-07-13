@@ -9,6 +9,7 @@ use App\Models\Employee;
 use App\Models\Noti;
 use App\Repositories\EmployeeRepository;
 use App\Repositories\TimekeepRepository;
+use App\Repositories\WorkScheduleRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,8 +19,13 @@ use Illuminate\Support\Facades\Validator;
 
 class TimekeepingController extends Controller
 {
-    public function __construct(private TimekeepRepository $timekeepRepo, private EmployeeRepository $employeeRepo)
+    public function __construct(
+        private TimekeepRepository $timekeepRepo,
+        private EmployeeRepository $employeeRepo,
+        private WorkScheduleRepository $workScheduleRepo
+    )
     {
+        //
     }
 
     public function checkIn(Request $request)
@@ -79,6 +85,44 @@ class TimekeepingController extends Controller
                     'error_code' => 'checkin_failed'
                 ]);
             }
+        }
+
+
+        $workScheduleForTheDay = $this->workScheduleRepo->workScheduleForTheDay($currentDate->format('Y-m-d'), $currentAdminId);
+        if ($workScheduleForTheDay) {
+            $firstTimekeep = $this->timekeepRepo->getFirstCheckin($currentDate->format('Y-m-d'), $currentAdminId);
+            if ($firstTimekeep) {
+                $minCheckout = Carbon::createFromFormat('H:i:s', $workScheduleForTheDay->work_to_at)
+                    ->subMinutes($workScheduleForTheDay->checkin_late);
+                $earlyMinute = $currentDate->diffInMinutes($minCheckout);
+                if ($earlyMinute > 0) {
+                    $options['minute_early'] = $earlyMinute;
+                }
+
+                $checkinInWork = $firstTimekeep->checkin_at;
+                $checkoutInWork = $currentDate->format('H:i:s');
+                if ($checkoutInWork < $workScheduleForTheDay->work_to_at) {
+                    $checkoutInWork = $workScheduleForTheDay->work_to_at;
+                }
+                if ($currentDate->format('H:i:s') > $checkinInWork) {
+                    $checkinInWork = $workScheduleForTheDay->work_to_at;
+                }
+                dd($checkinInWork, $checkoutInWork);
+            } else {
+                $maxCheckin = Carbon::createFromFormat('H:i:s', $workScheduleForTheDay->work_from_at)
+                    ->addMinutes($workScheduleForTheDay->checkin_late);
+                $lateMinute = $currentDate->diffInMinutes($maxCheckin);
+                if ($lateMinute > 0) {
+                    $options['minute_late'] = $lateMinute;
+                }
+            }
+        } else {
+            $options['status'] = config('timekeep.status.failed');
+            event(new HandleCheckIn($options));
+            return response()->json([
+                'message' => 'Bạn không thể chấm công ngoài ca làm việc',
+                'error_code' => 'checkin_failed'
+            ]);
         }
 
         DB::beginTransaction();
