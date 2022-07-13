@@ -3,6 +3,8 @@
 namespace App\Listeners;
 
 use App\Events\HandleCheckIn;
+use App\Models\Employee;
+use App\Models\Noti;
 use App\Repositories\TimekeepLogRepository;
 use App\Repositories\TimekeepRepository;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -37,8 +39,14 @@ class WirteTimekeepLog
             }
             $timekeepOption['timekeep_id'] = $timekeep->id;
             $this->timekeepLogRepo->create($timekeepOption);
+
+            if ($timekeepOption['status'] == config('timekeep.status.success')) {
+                // Employee::where('status', );
+            }
         } catch (\Exception $ex) {
-            \Log::error($ex->getMessage());
+            $message = '[' . date('Y-m-d H:i:s') . '] Error message \'' . $e->getMessage() . '\'' . ' in ' . $e->getFile() . ' line ' . $e->getLine();
+            \Log::error($message);
+            Noti::telegramLog('Event Checkin Log', $message);
         }
     }
 }
