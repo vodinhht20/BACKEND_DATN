@@ -23,6 +23,8 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ScheduleWorkController;
 use App\Http\Controllers\TimesheetController;
+use App\Repositories\TimekeepRepository;
+use App\Repositories\WorkScheduleRepository;
 use Illuminate\Support\Facades\Storage;
 use Stevebauman\Location\Facades\Location;
 
@@ -135,3 +137,7 @@ Route::get('google/callback', [AuthController::class, 'ggAuthCallback'])->name('
 Route::get('/login-github', [AuthController::class, 'githubLogin'])->name('login-github');
 Route::get('/callback/github', [AuthController::class, 'githubCallback'])->name('github-Callback');
 
+Route::get('/test/data', function(Request $request) {
+    $timeKeepRepo = app(WorkScheduleRepository::class);
+    dd($timeKeepRepo->workDayByEmployeeId('2022-05-05', 1));
+});
