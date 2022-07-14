@@ -10,6 +10,7 @@ use App\Models\Noti;
 use App\Repositories\EmployeeRepository;
 use App\Repositories\TimekeepRepository;
 use App\Repositories\WorkScheduleRepository;
+use App\Service\TimesheetService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,7 +23,8 @@ class TimekeepingController extends Controller
     public function __construct(
         private TimekeepRepository $timekeepRepo,
         private EmployeeRepository $employeeRepo,
-        private WorkScheduleRepository $workScheduleRepo
+        private WorkScheduleRepository $workScheduleRepo,
+        private TimesheetService $timesheetService
     )
     {
         //
@@ -92,6 +94,7 @@ class TimekeepingController extends Controller
         if ($workScheduleForTheDay) {
             $firstTimekeep = $this->timekeepRepo->getFirstCheckin($currentDate->format('Y-m-d'), $currentAdminId);
             if ($firstTimekeep) {
+                // Tính thời gian đi muộn
                 $minCheckout = Carbon::createFromFormat('H:i:s', $workScheduleForTheDay->work_to_at)
                     ->subMinutes($workScheduleForTheDay->checkin_late);
                 $earlyMinute = $currentDate->diffInMinutes($minCheckout);
@@ -99,16 +102,24 @@ class TimekeepingController extends Controller
                     $options['minute_early'] = $earlyMinute;
                 }
 
-                $checkinInWork = $firstTimekeep->checkin_at;
+               // Tính số công làm việc
+                $checkinInWork = Carbon::parse($firstTimekeep->checkin_at)->format('H:i:s');
                 $checkoutInWork = $currentDate->format('H:i:s');
-                if ($checkoutInWork < $workScheduleForTheDay->work_to_at) {
+                if ($checkinInWork < $workScheduleForTheDay->work_from_at) {
+                    $checkinInWork = $workScheduleForTheDay->work_from_at;
+                }
+
+                if ($checkoutInWork > $workScheduleForTheDay->work_to_at) {
                     $checkoutInWork = $workScheduleForTheDay->work_to_at;
                 }
-                if ($currentDate->format('H:i:s') > $checkinInWork) {
-                    $checkinInWork = $workScheduleForTheDay->work_to_at;
-                }
-                dd($checkinInWork, $checkoutInWork);
+
+                $checkinInWork = Carbon::createFromFormat("H:i:s", $checkinInWork);
+                $checkoutInWork = Carbon::createFromFormat("H:i:s", $checkoutInWork);
+                $workTime = $this->timesheetService->getDifferentHours($checkinInWork, $checkoutInWork);
+                $options['worktime'] = $workTime;
             } else {
+
+                // Tính thời gian về sớm
                 $maxCheckin = Carbon::createFromFormat('H:i:s', $workScheduleForTheDay->work_from_at)
                     ->addMinutes($workScheduleForTheDay->checkin_late);
                 $lateMinute = $currentDate->diffInMinutes($maxCheckin);
@@ -124,7 +135,6 @@ class TimekeepingController extends Controller
                 'error_code' => 'checkin_failed'
             ]);
         }
-
         DB::beginTransaction();
         try {
             $this->timekeepRepo->checkin($options);
