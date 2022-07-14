@@ -64,10 +64,8 @@ class WorkScheduleRepository extends BaseRepository
         }
 
         if (isset($options['allow_from_or_allow_to'])) {
-            $scheduleWorks->where(function ($subQuery) use ($options) {
-                $subQuery->where("allow_from", ">=", $options['allow_from_or_allow_to'][0])
-                ->where("allow_to", "<=", $options['allow_from_or_allow_to'][1]);
-            });
+            $scheduleWorks->where("allow_from", ">=", $options['allow_from_or_allow_to'][0]);
+            $scheduleWorks->where("allow_to", "<=", $options['allow_from_or_allow_to'][1]);
         }
 
         if (isset($options['department_id'])) {
