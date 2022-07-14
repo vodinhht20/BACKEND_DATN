@@ -20,7 +20,9 @@ class TimekeepRepository extends BaseRepository
     public function checkin(array $options): TimekeepDetail
     {
         $timekeep = $this->getTimekeepByDate($options['date'], $options['employee_id']);
-        if (!$timekeep) {
+        if ($timekeep) {
+            $timekeep->update($options);
+        } else {
             $timekeep = $this->create($options);
         }
         $options['timekeep_id'] = $timekeep->id;

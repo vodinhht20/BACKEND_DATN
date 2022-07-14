@@ -3,7 +3,7 @@ namespace App\Libs;
 
 use Kutia\Larafirebase\Facades\Larafirebase;
 
-class Notification
+class FirebasePushDataReatime
 {
     /**
      * Hàm gửi thông báo cùng với banner tới client

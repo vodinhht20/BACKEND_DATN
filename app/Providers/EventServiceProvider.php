@@ -8,6 +8,7 @@ use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
 use App\Events\UserRegisted;
+use App\Listeners\PushDataRakingRealtime;
 use App\Listeners\SendEmailVerifyToken;
 use App\Listeners\WirteTimekeepLog;
 
@@ -28,7 +29,8 @@ class EventServiceProvider extends ServiceProvider
         ],
 
         HandleCheckIn::class => [
-            WirteTimekeepLog::class
+            WirteTimekeepLog::class,
+            PushDataRakingRealtime::class
         ]
     ];
 

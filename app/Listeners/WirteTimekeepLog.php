@@ -10,6 +10,7 @@ use App\Repositories\TimekeepRepository;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class WirteTimekeepLog
 {
@@ -39,13 +40,9 @@ class WirteTimekeepLog
             }
             $timekeepOption['timekeep_id'] = $timekeep->id;
             $this->timekeepLogRepo->create($timekeepOption);
-
-            if ($timekeepOption['status'] == config('timekeep.status.success')) {
-                // Employee::where('status', );
-            }
-        } catch (\Exception $ex) {
+        } catch (\Exception $e) {
             $message = '[' . date('Y-m-d H:i:s') . '] Error message \'' . $e->getMessage() . '\'' . ' in ' . $e->getFile() . ' line ' . $e->getLine();
-            \Log::error($message);
+            Log::error($message);
             Noti::telegramLog('Event Checkin Log', $message);
         }
     }

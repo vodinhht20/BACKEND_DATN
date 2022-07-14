@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Branch;
 use App\Repositories\BaseRepository;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -215,5 +216,22 @@ class EmployeeRepository extends BaseRepository
     public function paginate($options = [], $take = 10)
     {
         return $this->query($options)->paginate($take);
+    }
+
+    /**
+     * Lấy ra danh sách nhân viên thuộc chi nhánh đấy
+     *
+     * @param string|integer $employeeId
+     * @return Collection
+     */
+    public function getEmployeeOfBranch($employeeId): Collection
+    {
+        $employees = collect();
+        $employee = $this->model->find($employeeId);
+        if ($employee) {
+            $branchId = $employee->branch_id;
+            $employees = $this->query(['branch_id' => $branchId])->get();
+        }
+        return $employees;
     }
 }
