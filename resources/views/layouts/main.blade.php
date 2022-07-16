@@ -31,5 +31,6 @@
     @include('layouts.footer')
     <a href="#" class="back-to-top"><i class="lni lni-chevron-up"></i></a>
     @include('layouts.script')
+    @yield('script_page')
 </body>
 </html>

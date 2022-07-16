@@ -1,8 +1,11 @@
 <?php
+
 namespace App\Repositories;
 
+use App\Models\Employee;
 use App\Models\WorkSchedule;
 use App\Repositories\BaseRepository;
+use Carbon\Carbon;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class WorkScheduleRepository extends BaseRepository
@@ -48,7 +51,7 @@ class WorkScheduleRepository extends BaseRepository
 
         if (isset($options['shift_name'])) {
             $scheduleWorks->whereHas("workShift", function ($q) use ($options) {
-                $q->where("name", "like", "%" . $options['shift_name'] . "%" );
+                $q->where("name", "like", "%" . $options['shift_name'] . "%");
             });
         }
 
@@ -83,19 +86,19 @@ class WorkScheduleRepository extends BaseRepository
 
         if (isset($options['department_name'])) {
             $scheduleWorks->whereHas("department", function ($q) use ($options) {
-                $q->where("name", "like", "%" . $options['department_name'] . "%" );
+                $q->where("name", "like", "%" . $options['department_name'] . "%");
             });
         }
 
         if (isset($options['position_name'])) {
             $scheduleWorks->whereHas("position", function ($q) use ($options) {
-                $q->where("name", "like", "%" . $options['position_name'] . "%" );
+                $q->where("name", "like", "%" . $options['position_name'] . "%");
             });
         }
 
         if (isset($options['employee_name'])) {
             $scheduleWorks->whereHas("employee", function ($q) use ($options) {
-                $q->where("fullname", "like", "%" . $options['employee_name'] . "%" );
+                $q->where("fullname", "like", "%" . $options['employee_name'] . "%");
             });
         }
 
@@ -145,5 +148,34 @@ class WorkScheduleRepository extends BaseRepository
     {
         $workSchedules = $this->query($options)->paginate($take, ['*'], $pageName)->withPath("?current_tab=$tab");
         return $workSchedules;
+    }
+
+    public function workScheduleForTheDay($day, $employeeId)
+    {
+        $employee = Employee::find($employeeId);
+        $position = null;
+        $department = null;
+        if ($employee) {
+            $position = $employee->position;
+            if ($position) {
+                $department = $position->department;
+            }
+
+            $workSchedules = $this->model
+                ->where('allow_from', '<=', $day)
+                ->where('allow_to', '>=', $day)
+                ->get();
+
+            $workScheduleEmployee = $workSchedules->where('employee_id', $employeeId)->first();
+            $workSchedulePosition = $workSchedules->where('position_id', $position->id)->first();
+            $workScheduleDepartment = $workSchedules->where('department_id', $department->id)->first();
+            $workScheduleCompany = $workSchedules->where('subject_type', config('work_schedule.subject_type.company'))->first();
+
+            if ($workScheduleEmployee) return $workScheduleEmployee;
+            else if ($workSchedulePosition) return $workSchedulePosition;
+            else if ($workScheduleDepartment) return $workScheduleDepartment;
+            else if ($workScheduleCompany) return $workScheduleCompany;
+        }
+        return null;
     }
 }
