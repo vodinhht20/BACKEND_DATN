@@ -62,11 +62,17 @@
 <script>
     const objData = {
     rules: {
-        email: "required",
+        email: {
+            required: true,
+            email: true
+        },
         password: "required",
     },
     messages: {
-        email: `<span class="text-validate">Vui lòng nhập email</span>`,
+        email: {
+            required: `<span class="text-validate">Vui lòng nhập email</span>`,
+            email: `<span class="text-validate">Định dạng email không hợp lệ</span>`
+        },
         password: `<span class="text-validate">Vui lòng nhập password</span>`
     }
   }
