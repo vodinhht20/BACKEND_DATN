@@ -10,6 +10,7 @@ use App\Models\Noti;
 use App\Repositories\DepartmentRepository;
 use App\Repositories\PositionRepository;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class CompanyController extends Controller
@@ -44,10 +45,12 @@ class CompanyController extends Controller
             'id' => 'required',
             'name' => 'required',
             'positions' => 'required',
+            'position_leader' => 'required',
         ], [
             'id.required' => 'Phòng ban không tồn tại',
             'name.required' => 'Tên phòng ban không được để trống',
             'positions.required' => 'Vui lòng thêm vị trí cho phòng ban',
+            'position_leader.required' => 'Vui lòng lựa chọn leader',
         ]);
 
         if ($validator->fails()) {
@@ -61,10 +64,13 @@ class CompanyController extends Controller
             $department = $this->departmentRepo->find($request->id);
             $department->name = $request->name;
             $department->save();
-            $this->positionRepo->createAndUpdateCustom($request->positions, $department->id);
+            $this->positionRepo->createAndUpdateCustom($request->positions, $request->position_leader, $department->id);
+            $orgDepartments = $this->departmentRepo->formatVueSelect('name');
+
             DB::commit();
             return response()->json([
-                'message' => "Cập nhật phòng ban thành công !"
+                'message' => "Cập nhật phòng ban thành công !",
+                'data' => $orgDepartments
             ], 200);
         } catch (\Exception $e) {
             $message = '[' . date('Y-m-d H:i:s') . '] Error message \'' . $e->getMessage() . '\'' . ' in ' . $e->getFile() . ' line ' . $e->getLine();
@@ -108,9 +114,11 @@ class CompanyController extends Controller
             }
             $department = $this->departmentRepo->create($options);
             $this->positionRepo->createAndUpdateCustom($request->positions, $request->position_leader, $department->id);
+            $orgDepartments = $this->departmentRepo->formatVueSelect('name');
             DB::commit();
             return response()->json([
-                'message' => "Thêm mới phòng ban thành công !"
+                'message' => "Thêm mới phòng ban thành công !",
+                'data' => $orgDepartments
             ], 200);
         } catch (\Exception $e) {
             $message = '[' . date('Y-m-d H:i:s') . '] Error message \'' . $e->getMessage() . '\'' . ' in ' . $e->getFile() . ' line ' . $e->getLine();
@@ -122,6 +130,54 @@ class CompanyController extends Controller
                 'message' => $e->getMessage()
             ], 442);
         }
+    }
+
+    public function removeDepartment(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'id' => 'required',
+        ], [
+            'id.required' => 'Phòng ban không tồn tại',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'error_code' => 'validate_failed',
+                'messages' => array($validator->messages()->first())
+            ], 442);
+        }
+
+        try {
+            DB::beginTransaction();
+            $result = $this->departmentRepo->removeDepartmentAndPosition($request->id);
+            if ($result) {
+                $orgDepartments = $this->departmentRepo->formatVueSelect('name');
+                DB::commit();
+                return response()->json([
+                    'message' => "Xóa phòng ban thành công !",
+                    'data' => $orgDepartments
+                ], 200);
+            }
+            DB::rollBack();
+            return response()->json([
+                'error_code' => 'remove_failed',
+                'message' => 'Xóa phòng ban thất bại !'
+            ], 442);
+        } catch (\Exception $e) {
+            $message = '[' . date('Y-m-d H:i:s') . '] Error message \'' . $e->getMessage() . '\'' . ' in ' . $e->getFile() . ' line ' . $e->getLine();
+            Log::error($message);
+            DB::rollBack();
+            Noti::telegramLog('Create Department', $message);
+            return response()->json([
+                'error_code' => 'exception_error',
+                'message' => $e->getMessage()
+            ], 442);
+        }
+
+        return response()->json([
+            'error_code' => 'remove_faild',
+            'message' => 'Xóa phòng ban thất bại'
+        ], 442);
     }
 
     public function worker(Request $request)

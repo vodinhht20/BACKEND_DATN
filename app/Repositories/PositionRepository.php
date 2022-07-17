@@ -43,6 +43,8 @@ class PositionRepository extends BaseRepository
             }
             if ($key == $indexPositionLeader) {
                 $position->is_leader = config('position.is_leader.yes');
+            } else {
+                $position->is_leader = config('position.is_leader.no');
             }
             $position->name = $data['name'];
             $position->save();
