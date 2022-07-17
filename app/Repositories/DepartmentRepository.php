@@ -13,7 +13,7 @@ class DepartmentRepository extends BaseRepository
     public function formatVueSelect($nameCustom = 'label')
     {
         $datas =  $this->model->with(['positions' => function ($q) use($nameCustom) {
-            $q->selectRaw('id, name as `' . $nameCustom . '`, department_id');
+            $q->selectRaw('id, name as `' . $nameCustom . '`, department_id, is_leader');
         }])->selectRaw('id, name as `' . $nameCustom . '`, parent_id')->get()->toArray();
         return $this->buildTree($datas);
     }

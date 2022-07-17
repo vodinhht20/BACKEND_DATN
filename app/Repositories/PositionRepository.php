@@ -32,14 +32,17 @@ class PositionRepository extends BaseRepository
         return $query;
     }
 
-    public function createAndUpdateCustom($datas, $departmentId): void
+    public function createAndUpdateCustom($datas, $indexPositionLeader, $departmentId): void
     {
-        foreach ($datas as $data) {
+        foreach ($datas as $key => $data) {
             if (isset($data['id'])) {
                 $position = $this->model->find($data['id']);
             } else {
                 $position = new $this->model;
                 $position->department_id = $departmentId;
+            }
+            if ($key == $indexPositionLeader) {
+                $position->is_leader = config('position.is_leader.yes');
             }
             $position->name = $data['name'];
             $position->save();

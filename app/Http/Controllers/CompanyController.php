@@ -83,10 +83,12 @@ class CompanyController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'positions' => 'required',
+            'position_leader' => 'required',
         ], [
             'id.required' => 'Phòng ban không tồn tại',
             'name.required' => 'Tên phòng ban không được để trống',
             'positions.required' => 'Vui lòng thêm vị trí cho phòng ban',
+            'position_leader.required' => 'Vui lòng lựa chọn leader'
         ]);
 
         if ($validator->fails()) {
@@ -105,7 +107,7 @@ class CompanyController extends Controller
                 $options['parent_id'] = $request->parent_id;
             }
             $department = $this->departmentRepo->create($options);
-            $this->positionRepo->createAndUpdateCustom($request->positions, $department->id);
+            $this->positionRepo->createAndUpdateCustom($request->positions, $request->position_leader, $department->id);
             DB::commit();
             return response()->json([
                 'message' => "Thêm mới phòng ban thành công !"

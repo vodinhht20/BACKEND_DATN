@@ -43,6 +43,34 @@
         .btn-create-custom:hover, .btn-icon-edit {
             opacity: 0.8;
         }
+
+        .icon_is_leader {
+            color: orange !important;
+            text-shadow: 1px 1px 1px #303b5461;
+            font-size: 20px;
+            margin-left: 10px;
+        }
+
+        .icon_department {
+            background: #0089ff2e;
+            color: #0089ff !important;
+            border-radius: 50%;
+            padding: 5px;
+            margin-right: 10px;
+        }
+        .icon_position {
+            background: #57ff022e;
+            color: #409d10 !important;
+            border-radius: 50%;
+            padding: 5px;
+            margin-right: 10px;
+        }
+
+        .is_leader {
+            cursor: pointer;
+            width: 17px;
+            height: 17px;
+        }
     </style>
 @endsection
 @section('header-page')
@@ -93,13 +121,16 @@
                         :items="departments"
                     >
                         <template v-slot:prepend="{ item, open }">
-                            <v-icon v-if="item.positions">mdi-home-assistant</v-icon>
-                            <v-icon v-else>mdi-sofa-single</v-icon>
+                            <v-icon v-if="item.positions" class="icon_department">mdi-home-assistant</v-icon>
+                            <v-icon v-else class="icon_position">mdi-account-tie</v-icon>
                         </template>
                         <template v-slot:append="{ item, open }">
-                            <div v-if="item.positions" class="btn-icon-edit" title="Chỉnh sủa phòng ban" @click="handleEdit(item)">
+                            <div v-if="item.positions" class="btn-icon-edit" title="Chỉnh sửa phòng ban" @click="handleEdit(item)">
                                 <v-icon style="color: #4494eb;">mdi-circle-edit-outline</v-icon>
                                 Chỉnh sửa
+                            </div>
+                            <div class="" v-else title="Vị trí cao nhất">
+                                <v-icon v-if="item.is_leader" class="icon_is_leader">mdi-shield-star</v-icon>
                             </div>
                         </template>
                     </v-treeview>
@@ -125,8 +156,8 @@
                             <div class="form-group">
                                 <label for="recipient-name" class="col-form-label">Vị trí công việc <span class="text-danger">*</span></label>
                                 <div class="mt-2 row align-items-center" v-for="(position, index) in dataModal.positions">
-                                    <div class="col-1">#@{{ index+1 }}</div>
-                                    <div class="col-10">
+                                    <div class="col-2"><span>#@{{ index+1 }}</span> <input type="radio" name="is_leader"></div>
+                                    <div class="col-9">
                                         <input type="text" class="form-control" v-model="position.name"  placeholder="Nhâp tên vị trí ...">
                                     </div>
                                     <div class="col-1" style="padding: 0;" v-if="position.isNew">
@@ -150,7 +181,7 @@
         </div>
         <!-- Modal -->
         <div class="modal fade" id="modal-create-department" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Tạo mới phòng ban</h5>
@@ -175,10 +206,19 @@
                             </div>
                             <div class="form-group">
                                 <label for="recipient-name" class="col-form-label">Vị trí công việc <span class="text-danger">*</span></label>
+                                <div class="row">
+                                    <label for="" class="col-1">#</label>
+                                    <label for="" class="col-9">Tên vị trí</label>
+                                    <label for="" class="col-1">Leader</label>
+                                    <label for="" class="col-1"></label>
+                                </div>
                                 <div class="mt-2 row align-items-center" v-for="(position, index) in dataModal.positions">
-                                    <div class="col-1">#@{{ index+1 }}</div>
-                                    <div class="col-10">
+                                    <div class="col-1"><span>#@{{ index+1 }}</span></div>
+                                    <div class="col-9">
                                         <input type="text" class="form-control" v-model="position.name"  placeholder="Nhâp tên vị trí ...">
+                                    </div>
+                                    <div class="col-1 text-center">
+                                        <input type="radio" name="is_leader" class="is_leader" :value="index" v-model="dataModal.position_leader">
                                     </div>
                                     <div class="col-1" style="padding: 0;" v-if="position.isNew">
                                         <i class="ti-close btn-icon-remove" @click="handleRemovePosition(index)"></i>
@@ -218,7 +258,7 @@
             },
             methods: {
                 handleCreate: () => {
-                    app.dataModal = {name: null, positions: [{name: ''}], parent_id: ''};
+                    app.dataModal = {name: null, positions: [{name: ''}], parent_id: '', position_leader: 1};
                     $('#modal-create-department').modal('show');
                 },
                 handleEdit: (item) => {
@@ -227,7 +267,7 @@
                     $('#modal-update-department').modal('show');
                 },
                 handleAddPosition: () => {
-                    app.dataModal.positions = [...app.dataModal.positions, {name: '', isNew: true}]
+                    app.dataModal.positions = [...app.dataModal.positions, {name: '', isNew: true, is_leader: 0}]
                 },
                 handleRemovePosition: (indexRemove) => {
                     app.dataModal.positions = app.dataModal.positions.filter((item, index) => index != indexRemove);
