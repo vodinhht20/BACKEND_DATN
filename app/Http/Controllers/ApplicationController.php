@@ -23,8 +23,9 @@ class ApplicationController extends Controller
     public function nestView()
     {
         $options = [
-            'with' => 'approvers'
+            'with' => 'approvers.employee'
         ];
+
         $singleTypes = $this->singleTypeRepo->getPublicSingleType($options);
         return view('admin.application.viewnest', compact('singleTypes'));
     }
