@@ -137,7 +137,7 @@ class TimekeepingController extends Controller
             } else {
                 // Tính thời gian đi muộn
                 $lateMinute = $currentDate->diffInMinutes($maxCheckin);
-                if ($maxCheckin > $currentDate) {
+                if ($maxCheckin < $currentDate) {
                     $options['minute_late'] = $lateMinute;
                 }
             }
