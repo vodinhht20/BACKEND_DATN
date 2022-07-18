@@ -25,94 +25,65 @@
     </div>
 </div>
 @endsection
-{{-- @section('content')
-<div class="">
-    <div class="sub-title">Left Tab</div>
-    <!-- Nav tabs -->
-    <ul class="nav nav-tabs md-tabs tabs-left b-none" role="tablist">
-        <li class="nav-item">
-            <a class="nav-link active" data-toggle="tab" data-target="#application_list"  aria-controls="application_list" aria-expanded="false" role="tab">Danh Sách Đơn Từ</a>
-            <div class="slide"></div>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" data-target="#create_application" aria-controls="create_application" aria-expanded="false" role="tab">Thiết Lập Đơn Từ</a>
-            <div class="slide"></div>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" data-target="#policy" aria-controls="policy" aria-expanded="false" role="tab">Chính Sách nghỉ phép</a>
-            <div class="slide"></div>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" data-target="#procedure" aria-controls="procedure" aria-expanded="false" role="tab">Quy trình</a>
-            <div class="slide"></div>
-        </li>
-    </ul>
-    <!-- Tab panes -->
-    <div class="tab-content tabs-left-content card-block">
-        <div class="tab-pane active" id="application_list" role="tabpanel">
-           @include('admin.application.form')
-        </div>
-        <div class="tab-pane" id="create_application" role="tabpanel">
-            @include('admin.application.nest')
-        </div>
-        <div class="tab-pane" id="policy" role="tabpanel">
-            <p >3. This is Photoshop's version of Lorem IpThis is Photoshop's version of Lorem Ipsum. Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem quis bibendum auctor, nisi elit consequat ipsum, nec sagittis sem nibh id elit. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean mas Cum sociis natoque penatibus et magnis dis.....</p>
-        </div>
-        <div class="tab-pane" id="procedure" role="tabpanel">
-            <p>4.Cras consequat in enim ut efficitur. Nulla posuere elit quis auctor interdum praesent sit amet nulla vel enim amet. Donec convallis tellus neque, et imperdiet felis amet.</p>
-        </div>
-    </div>
-</div>
-
-@endsection --}}
 @section('content')
-    <div class="box-section-timesheet row">
-        <div class="col-md-12 col-lg-2 col-sm-12 tabs row">
-            <a href="{{ route('application-view') }}" class="col-lg-12 col-md-3 col-sm-4 tab-item">
-                <div class="col-lg-12 col-md-3 col-sm-4 ">
-                    <i class=" ti-clipboard"></i>
-                    <p>Danh Sách Đơn Từ</p>
-                </div>
-            </a>
-            <a href="{{ route('application-nestView') }}" class="col-lg-12 col-md-3 col-sm-4 tab-item active">
-                <div class="col-lg-12 col-md-3 col-sm-4 ">
-                    <i class=" ti-clipboard"></i>
-                    <p>Danh Sách Đơn Từ</p>
-                </div>
-            </a>
-            <a href="{{ route('application-policy') }}" class="col-lg-12 col-md-3 col-sm-4 tab-item">
-                <div class="col-lg-12 col-md-3 col-sm-4 ">
-                    <i class=" ti-clipboard"></i>
-                    <p>Danh Sách Đơn Từ</p>
-                </div>
-            </a>
-            <a href="{{ route('application-procedure') }}" class="col-lg-12 col-md-3 col-sm-4 tab-item">
-                <div class="col-lg-12 col-md-3 col-sm-4 ">
-                    <i class=" ti-clipboard"></i>
-                    <p>Danh Sách Đơn Từ</p>
-                </div>
-            </a>
-        </div>
-        <div class="col-md-12 col-lg-10 col-sm-12 card">
-            <div class="tab-pane card-header">
-                {{-- @include('admin.application.form') --}}
+    <div class="box-section-timesheet">
+        <div class="card">
+            <div class="card-header" style="box-shadow: unset;">
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs default-tab tabs" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" data-target="#type" aria-controls="type" aria-expanded="true" role="tab" >Danh Sách Các Loại Đơn</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#deathline" aria-controls="deathline" aria-expanded="false" role="tab" >Thiết Lập Hạn Chốt Đơn</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#dafuk" aria-controls="dafuk" aria-expanded="false" role="tab" >Thiết lập hạn chốt đơn OT</a>
+                    </li>
+                </ul>
             </div>
-            <div class="tab-pane active card-block">
-                @include('admin.application.nest')
+            <!-- Tab panes -->
+            <div class="tab-content tabs card-block">
+                <div class="tab-pane active" id="type" role="tabpanel">
+                    <div>
+                        <p>Có 10 loại đơn trong danh sách</p>
+                    </div>
+                    <div class="table-border-style">
+                        <div class="table-responsive scrollbar-custom" style="width:100%;">
+                            <table class="table align-middle-td">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Tên loại đơn</th>
+                                        <th>Mô tả</th>
+                                        <th>Quy định tạo đơn</th>
+                                        <th>Người duyệt đơn</th>
+                                        <th>Trạng thái áp dụng</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($singleTypes as $singleType)
+                                        <tr></tr>
+                                    @endforeach
+                                    @if (true)
+                                        <tr>
+                                            <td colspan="6" class="box_data_empty">
+                                                <img src="{{asset('frontend')}}/image/empty_data.png" alt="">
+                                            </td>
+                                        </tr>
+                                    @endif
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="deathline" role="tabpanel">
+
+                </div>
+                <div class="tab-pane" id="dafuk" role="tabpanel">
+
+                </div>
             </div>
-            <div class="tab-pane card-block">
-                Còn Ten 3
-            </div>
-            <div class="tab-pane card-block">
-               Còn Ten 4
-            </div>
-            
         </div>
     </div>
 @endsection
-
-@section('style-page')
-    <link rel="stylesheet" href="{{asset('frontend')}}/css/company-work.css">
-@endsection
-
-

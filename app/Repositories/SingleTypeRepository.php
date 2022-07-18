@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Repositories\BaseRepository;
+use Illuminate\Support\Collection;
 
 class SingleTypeRepository extends BaseRepository
 {
@@ -11,11 +12,22 @@ class SingleTypeRepository extends BaseRepository
         return \App\Models\SingleType::class;
     }
 
-    public function getPublicSingleType(){
-        $singleType = $this->model->OrderBy('id', 'desc')
-        ->where('status', config('singletype.status.public'))
-        ->get();
-        return $singleType;
+    /**
+     *
+     * @param array $options
+     * @return Collection
+     */
+    public function getPublicSingleType(array $options): Collection
+    {
+        $singleType = $this->model->query()
+            ->where('status', config('singletype.status.public'))
+            ->orderBy('id', 'desc');
+
+        if ($options['with']) {
+            $singleType->with($options['with']);
+        }
+
+        return $singleType->get();
     }
 
     public function getInforEmployeeById($employee, $id){
@@ -24,9 +36,8 @@ class SingleTypeRepository extends BaseRepository
 
         if ($this->model->find($id)->required_leader) {
             $manager = $employee->branch->employee->where('position_id', 1)->first();
-            $dataApprovers[] = 
-            [
-                'fullname' => $manager->fullname, 
+            $dataApprovers[] = [
+                'fullname' => $manager->fullname,
                 'avatar' => $manager->avatar,
                 'position' => $manager->position->name,
                 'required_leader' => 1
@@ -34,19 +45,17 @@ class SingleTypeRepository extends BaseRepository
 
             foreach ($approvers as $approver){
                 if ($approver->employee->id != $manager->id) {
-                    $dataApprovers[] = 
-                    [
-                        'fullname' => $approver->employee->fullname, 
+                    $dataApprovers[] = [
+                        'fullname' => $approver->employee->fullname,
                         'avatar' => $approver->employee->avatar,
                         'position' => $approver->employee->position->name
                     ];
                 }
             };
-        }else{
+        } else {
             foreach ($approvers as $approver){
-                $dataApprovers[] = 
-                [
-                    'fullname' => $approver->employee->fullname, 
+                $dataApprovers[] = [
+                    'fullname' => $approver->employee->fullname,
                     'avatar' => $approver->employee->avatar,
                     'position' => $approver->employee->position->name
                 ];
