@@ -95,7 +95,6 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     });
 
     Route::prefix('/setting')->name("setting.")->group(function () {
-
         Route::prefix('/banner')->name("banner.")->group(function () {
             Route::get('/info', [BannerController::class, 'info'])->name("info");
             Route::get('/addbanner', [BannerController::class, 'addBannerForm'])->name("addbanner");
@@ -123,6 +122,7 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
             Route::get('/', [CompanyController::class, 'structure'])->name("show");
             Route::post('/ajax-update-department', [CompanyController::class, 'updateDepartment'])->name("update-department");
             Route::post('/ajax-create-department', [CompanyController::class, 'createDepartment'])->name("create-department");
+            Route::post('/ajax-remove-department', [CompanyController::class, 'removeDepartment'])->name("remove-department");
         });
     });
 
