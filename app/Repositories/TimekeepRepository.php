@@ -20,7 +20,9 @@ class TimekeepRepository extends BaseRepository
     public function checkin(array $options): TimekeepDetail
     {
         $timekeep = $this->getTimekeepByDate($options['date'], $options['employee_id']);
-        if (!$timekeep) {
+        if ($timekeep) {
+            $timekeep->update($options);
+        } else {
             $timekeep = $this->create($options);
         }
         $options['timekeep_id'] = $timekeep->id;
@@ -87,8 +89,8 @@ class TimekeepRepository extends BaseRepository
     public function isLocaionInBranch($longitude, $latitude, $employeeId): bool
     {
         $timekeepService = new TimekeepService();
-        $employee = Employee::with('branch')->find($employeeId);
-        $branch = $employee->branch;
+        $employee = Employee::find($employeeId);
+        $branch = $employee['branch'] ?? null;
         if ($branch) {
             $rootLongitude = (float)$branch->longtitude;
             $rootLatitude = (float)$branch->latitude;
@@ -149,8 +151,8 @@ class TimekeepRepository extends BaseRepository
         $timesheetFormats = [];
         $timesheetService = app(TimesheetService::class);
         foreach ($timekeeps as $timekeep) {
-            $checkin = $timekeep->timekeepdetail->first();
-            $checkout = $timekeep->timekeepdetail->last();
+            $checkin = $timekeep->timekeepDetail->first();
+            $checkout = $timekeep->timekeepDetail->last();
             $worktimeHours = 0;
             if ($checkin) {
 
@@ -249,5 +251,111 @@ class TimekeepRepository extends BaseRepository
         }
 
         return $timesheetFormats;
+    }
+
+    /**
+     * Hàm xếp hạng chấm công các nhân viên trong chi nhánh
+     * @param string|int $employeeId
+     * @param date $day ("Y-m-d")
+     * @return array
+     */
+    public function TimekeepRankingByEmployeeId($employeeId, $day, $take = 5): array
+    {
+        $branchId = Employee::find($employeeId)->branch_id;
+        $employeeIds = Employee::where('branch_id', $branchId)->pluck('id')->toArray();
+
+        // Xếp hạng đi sớm
+        $timekeepEarly = $this->model->whereIn('employee_id', $employeeIds)
+            ->selectRaw('timekeeps.id, timekeeps.employee_id, timekeeps.minute_late, min(timekeep_details.checkin_at) as checkin_at, ROW_NUMBER() OVER(ORDER BY min(timekeep_details.checkin_at) asc) as `rank`')
+            ->join('timekeep_details', 'timekeep_details.timekeep_id', '=', 'timekeeps.id')
+            ->with([
+                'employee' => function ($query) {
+                    $query->select('id', 'avatar', 'fullname', 'position_id', 'type_avatar');
+                },
+                'employee.position' => function ($query) {
+                    $query->select('id', 'name');
+                }
+            ])
+            ->groupBy('timekeep_details.timekeep_id')
+            ->where('date', $day)
+            ->orderBy('rank', 'asc')
+            ->where('minute_late', 0)
+            ->get();
+
+        $timekeepEarly = $timekeepEarly->map(function ($timekeep) {
+            $timekeep->checkin_at = Carbon::parse($timekeep->checkin_at)->format('H:i');
+            if ($timekeep->employee) {
+                $timekeep->employee->avatar = $timekeep->employee->getAvatar();
+            }
+            return $timekeep;
+        });
+
+        // Xếp hạng đi muộn
+        $timekeepLate = $this->model->whereIn('employee_id', $employeeIds)
+            ->selectRaw('timekeeps.id, timekeeps.employee_id, timekeeps.minute_late, min(timekeep_details.checkin_at) as checkin_at, ROW_NUMBER() OVER (ORDER BY timekeeps.minute_late ASC) as `rank`')
+            ->join('timekeep_details', 'timekeep_details.timekeep_id', '=', 'timekeeps.id')
+            ->with([
+                'employee' => function ($query) {
+                    $query->select('id', 'avatar', 'fullname', 'position_id', 'type_avatar');
+                },
+                'employee.position' => function ($query) {
+                    $query->select('id', 'name');
+                }
+            ])
+            ->groupBy('timekeep_details.timekeep_id')
+            ->where('date', $day)
+            ->where('minute_late', '>', 0)
+            ->orderBy('rank', 'desc')
+            ->get();
+
+        $rankTimekeepEarlyMax = $timekeepEarly->max('rank');
+        $timekeepLate = $timekeepLate->map(function ($timekeep) use ($rankTimekeepEarlyMax) {
+            $timekeep->checkin_at = Carbon::parse($timekeep->checkin_at)->format('H:i');
+            $timekeep->rank += $rankTimekeepEarlyMax;
+            if ($timekeep->employee) {
+                $timekeep->employee->avatar = $timekeep->employee->getAvatar();
+            }
+            return $timekeep;
+        });
+
+        return [
+            'timekeep_late' => $timekeepLate,
+            'timekeep_early' => $timekeepEarly
+        ];
+    }
+
+    /**
+     * Hàm kiểm tra xem ngày hôm đấy đã checkin hay Chưa
+     *
+     * @param string $date ('Y-m-d')
+     * @param string|int $employeeId
+     * @return boolean
+     */
+
+    public function isFirstCheckin($date, $employeeId): bool
+    {
+        $timekeep = $this->getFirstCheckin($date, $employeeId);
+        if ($timekeep) {
+            return false;
+        }
+        return true;
+    }
+
+    public function getFirstCheckin($date, $employeeId) {
+        $timekeepDetailRepo = app(TimekeepDetailRepository::class);
+        $timekeep = $this->model->where('date', $date)
+            ->where('employee_id', $employeeId)
+            ->first();
+        if ($timekeep) {
+            return $timekeepDetailRepo->model->where('timekeep_id', $timekeep->id)
+                ->orderBy('checkin_at', 'asc')
+                ->first();
+        }
+        return null;
+    }
+
+    public function getWorkTime($checkin, $checkout)
+    {
+        # code...
     }
 }

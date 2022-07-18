@@ -21,8 +21,11 @@ use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ScheduleWorkController;
 use App\Http\Controllers\TimesheetController;
+use App\Repositories\TimekeepRepository;
+use App\Repositories\WorkScheduleRepository;
 use Illuminate\Support\Facades\Storage;
 use Stevebauman\Location\Facades\Location;
 
@@ -86,6 +89,7 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/view', [CheckinController::class, 'index'])->name("view");
         Route::post('/add-wifi', [CheckinController::class, 'addwifi'])->name("add-wifi");
         Route::post('/add-location', [CheckinController::class, 'addlocation'])->name("add-location");
+        Route::post('/ajax-attendance_setting', [CheckinController::class, 'UpdateAttendanceSetting'])->name("ajax-attendance-setting");
     });
 
     Route::prefix('/setting')->name("setting.")->group(function () {
@@ -121,6 +125,8 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     });
 
     Route::get('/timesheet', [TimesheetController::class, 'timesheet'])->name("timesheet");
+    Route::patch('/update-fcm-token', [NotificationController::class, 'updateToken'])->name("update-fcm-token");
+    Route::get('/exportexcel', [TimesheetController::class, 'exportIntoExcel'])->name("exportIntoExcel");
 });
 
 Route::get('login-google', [AuthController::class, 'ggLogin'])->name('login-google');
@@ -129,90 +135,7 @@ Route::get('google/callback', [AuthController::class, 'ggAuthCallback'])->name('
 Route::get('/login-github', [AuthController::class, 'githubLogin'])->name('login-github');
 Route::get('/callback/github', [AuthController::class, 'githubCallback'])->name('github-Callback');
 
-Route::prefix('/company')->name("company.")->group(function () {
-    Route::get('/info', [CompanyController::class, 'info'])->name("info");
-    Route::get('/updatecompany/{id}', [CompanyController::class, 'updateCompanyForm'])->name("updatecompany");
-    Route::post('/updatecompany/{id}', [CompanyController::class, 'updateCompany']);
-    Route::get('/addbranch', [CompanyController::class, 'addBranchForm'])->name("addbranch");
-    Route::post('/addbranch', [CompanyController::class, 'addBranch']);
-    Route::get('/updatebranch/{id}', [CompanyController::class, 'updateBranchForm'])->name("updatebranch");
-    Route::post('/updatebranch/{id}', [CompanyController::class, 'updateBranch']);
-    Route::get('/delete/{id}', [CompanyController::class, 'delete'])->name("delete");
-    Route::get('/structure', [CompanyController::class, 'structure'])->name("structure");
-    Route::get('/branchs', [CompanyController::class, 'branchs'])->name("branchs");
-});
-Route::prefix('/checkin')->name("checkin.")->group(function () {
-    Route::get('/view', [CheckinController::class, 'index'])->name("view");
-    Route::post('/add-wifi', [CheckinController::class, 'addwifi'])->name("add-wifi");
-    Route::post('/add-location', [CheckinController::class, 'addlocation'])->name("add-location");
-});
-
-Route::prefix('/banner')->name("banner.")->group(function () {
-    Route::get('/info', [BannerController::class, 'info'])->name("info");
-    Route::get('/addbanner', [BannerController::class, 'addBannerForm'])->name("addbanner");
-    Route::post('/addbanner', [BannerController::class, 'addBanner']);
-    Route::get('/updatebanner/{id}', [BannerController::class, 'updateBannerForm'])->name("updatebanner");
-    Route::post('/updatebanner/{id}', [BannerController::class, 'updateBanner']);
-    Route::get('/delete/{id}', [BannerController::class, 'delete'])->name("delete");
-});
-
-Route::prefix('/post')->name("post.")->group(function () {
-    Route::get('/info', [PostController::class, 'info'])->name("info");
-    Route::get('/add', [PostController::class, 'addPostForm'])->name("add");
-});
-
-Route::get('/timesheet', [TimesheetController::class, 'timesheet'])->name("timesheet");
-
-Route::get('/test', function(Request $request) {
-    return view('test');
-});
-Route::post('/test', function(Request $request) {
-    $fileRequest = $request->file('file');
-    $getNameFile = date('Y-m-d H:i').$fileRequest->getClientOriginalName();
-    $getContent = $fileRequest->get();
-    Storage::disk('google')->put($getNameFile, $getContent);
-
-    // lấy ra đường dẫn
-    dd(Storage::disk('google'));
-});
-
-
-Route::get('list', function() {
-    $dir = '/';
-    $recursive = false; // Có lấy file trong các thư mục con không?
-    $contents = collect(Storage::disk('google')->listContents($dir, $recursive));
-    return $contents->where('type', '=', 'file');
-});
-
-Route::get('get', function() {
-    $filename = '1W5GndP2oU2fLVJv424uh3s92MpVzr0xV';
-    $dir = '/';
-    $recursive = false; // Có lấy file trong các thư mục con không?
-    $contents = collect(Storage::disk('google')->listContents($dir, $recursive));
-    $file = $contents
-        ->where('type', '=', 'file')
-        ->where(function($val) use ($filename){
-            return $val['extraMetadata']['id'] == $filename;
-        })
-        ->first(); // có thể bị trùng tên file với nhau!
-    $rawData = Storage::disk('google')->get($file['path']);
-    $name = $file['path'];
-    return response($rawData, 200)
-        ->header('Content-Type', $file['mime_type'])
-        ->header('Content-Disposition', "attachment; filename=$name");
-});
-
-Route::get('delete', function() {
-    $filename = '1TJYM3ap3SS2DkMmB7b9rzokxw8K9geeu';
-    $dir = '/';
-    $recursive = false; // Có lấy file trong các thư mục con không?
-    $contents = collect(Storage::disk('google')->listContents($dir, $recursive));
-    $file = $contents
-        ->where('type', '=', 'file')
-        ->where(function($val) use ($filename){
-            return $val['extraMetadata']['id'] == $filename;
-        })
-        ->first(); // có thể bị trùng tên file với nhau!
-    Storage::disk('google')->restore($file['path']);
-    return 'File was deleted from Google Drive';
+Route::get('/test/data', function(Request $request) {
+    $timeKeepRepo = app(WorkScheduleRepository::class);
+    dd($timeKeepRepo->workDayByEmployeeId('2022-05-05', 1));
 });

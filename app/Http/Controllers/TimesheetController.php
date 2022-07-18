@@ -14,6 +14,8 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
+use App\Exports\TimekeepExport;
+use Excel;
 
 class TimesheetController extends Controller
 {
@@ -70,5 +72,9 @@ class TimesheetController extends Controller
         $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
         $items = $items instanceof Collection ? $items : Collection::make($items);
         return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
+    }
+    public function exportIntoExcel()
+    {
+        return Excel::download(new TimekeepExport, 'timekeep.xlsx');
     }
 }

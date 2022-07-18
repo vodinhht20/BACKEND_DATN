@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\HomeController;
+use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\SingleWordController;
 use App\Http\Controllers\Api\TimekeepingController;
 use App\Http\Controllers\Api\TimesheetController;
@@ -47,10 +48,11 @@ Route::middleware('jwt.auth')->group(function () {
 
     //setting
     Route::get('banner', [HomeController::class, 'banner']);
+    Route::get('timekeep-ranking', [HomeController::class, 'ranking']);
     //setting
 
     Route::prefix('checkin')->group(function () {
-        Route::post('', [TimekeepingController::class, 'checkIn'])->middleware('checkip');
+        Route::post('', [TimekeepingController::class, 'checkIn']);
         Route::get('data-checkin', [TimekeepingController::class, 'getCurrentDataCheckin']);
     });
 
@@ -58,11 +60,15 @@ Route::middleware('jwt.auth')->group(function () {
         Route::get('', [TimesheetController::class, 'index']);
     });
 
+    Route::patch('update-fcm-token', [NotificationController::class, 'updateToken']);
+
     Route::get('spinning-game', function () {
         return response()->json([
             "spin" => 'Áo thun'
-    ], 200);
+        ], 200);
     });
 });
+
+
 
 Route::post('login-google', [AuthController::class, 'googleLogin']);

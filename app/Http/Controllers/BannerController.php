@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Banner;
 use App\Repositories\BannerRepository;
 use Illuminate\Support\Facades\Auth;
-
+use Image;
 
 class BannerController extends Controller
 {
@@ -21,6 +21,7 @@ class BannerController extends Controller
     public function addBannerForm(){
         return view('admin.banner.add');
     }
+    // public $public_path = "/public/images";
 
     public function addBanner(Request $request){
         $request->validate([
@@ -89,6 +90,8 @@ class BannerController extends Controller
     protected function storeImage(Request $request, $name = 'image')
     {
         $path = $request->file($name)->store('public/images');
-        return substr($path, strlen('public/'));
+        $storagePath = substr($path, strlen('public/'));
+        Image::make(public_path("storage/" . $storagePath))->resize(975, 325)->save();
+        return $storagePath;
     }
 }
