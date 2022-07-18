@@ -80,6 +80,47 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/ajax-un-block-user', [EmployeeController::class, 'ajaxUnBlock'])->name('ajax-un-block-user');
     Route::post('/ajax-user-confirm-email', [EmployeeController::class, 'confirmEmail'])->name('ajax-user-confirm-email');
     Route::post('/ajax-user-change-password', [EmployeeController::class, 'changePasssword'])->name('ajax-user-change-password');
+    Route::get('/ajax-filter',[EmployeeController::class,'filter'])->name('ajax-filter-employee');
+
+    Route::prefix('/checkin')->name("checkin.")->group(function () {
+        Route::get('/view', [CheckinController::class, 'index'])->name("view");
+        Route::post('/add-wifi', [CheckinController::class, 'addwifi'])->name("add-wifi");
+        Route::post('/add-location', [CheckinController::class, 'addlocation'])->name("add-location");
+    });
+
+    Route::prefix('/setting')->name("setting.")->group(function () {
+
+        Route::prefix('/banner')->name("banner.")->group(function () {
+            Route::get('/info', [BannerController::class, 'info'])->name("info");
+            Route::get('/addbanner', [BannerController::class, 'addBannerForm'])->name("addbanner");
+            Route::post('/addbanner', [BannerController::class, 'addBanner']);
+            Route::get('/updatebanner/{id}', [BannerController::class, 'updateBannerForm'])->name("updatebanner");
+            Route::post('/updatebanner/{id}', [BannerController::class, 'updateBanner']);
+            Route::get('/delete/{id}', [BannerController::class, 'delete'])->name("delete");
+        });
+
+        Route::prefix('/company')->name("company.")->group(function () {
+            Route::get('/info', [CompanyController::class, 'info'])->name("info");
+            Route::get('/update-company/{id}', [CompanyController::class, 'updateCompanyForm'])->name("updatecompany");
+            Route::post('/update-company/{id}', [CompanyController::class, 'updateCompany']);
+        });
+
+        Route::prefix('/branch')->name("branch.")->group(function () {
+            Route::get('/', [CompanyController::class, 'branchs'])->name("list");
+            Route::get('/add-branch', [CompanyController::class, 'addBranchForm'])->name("addbranch");
+            Route::post('/add-branch', [CompanyController::class, 'addBranch']);
+            Route::get('/update-branch/{id}', [CompanyController::class, 'updateBranchForm'])->name("updatebranch");
+            Route::post('/update-branch/{id}', [CompanyController::class, 'updateBranch']);
+        });
+
+        Route::prefix('/structure')->name("structure.")->group(function () {
+            Route::get('/', [CompanyController::class, 'structure'])->name("show");
+            Route::post('/ajax-update-department', [CompanyController::class, 'updateDepartment'])->name("update-department");
+            Route::post('/ajax-create-department', [CompanyController::class, 'createDepartment'])->name("create-department");
+        });
+    });
+
+    Route::get('/timesheet', [TimesheetController::class, 'timesheet'])->name("timesheet");
 });
 
 Route::get('login-google', [AuthController::class, 'ggLogin'])->name('login-google');
@@ -115,8 +156,9 @@ Route::prefix('/banner')->name("banner.")->group(function () {
     Route::get('/delete/{id}', [BannerController::class, 'delete'])->name("delete");
 });
 
-Route::prefix('/blog')->name("blog.")->group(function () {
-    Route::get('/info', [BlogController::class, 'info'])->name("info");
+Route::prefix('/post')->name("post.")->group(function () {
+    Route::get('/info', [PostController::class, 'info'])->name("info");
+    Route::get('/add', [PostController::class, 'addPostForm'])->name("add");
 });
 
 Route::get('/timesheet', [TimesheetController::class, 'timesheet'])->name("timesheet");

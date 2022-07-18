@@ -159,8 +159,8 @@
                     </li>
                 </ul>
             </li>
-            <li class="{{ Request::routeIs('blog.*') ? 'active' : '' }}">
-                <a href="{{ route("blog.info") }}" class="waves-effect waves-dark">
+            <li class="{{ Request::routeIs('post.*') ? 'active' : '' }}">
+                <a href="{{ route("post.info") }}" class="waves-effect waves-dark">
                     <span class="pcoded-micon"><i class="ti-agenda"></i><b>FC</b></span>
                     <span class="pcoded-mtext" data-i18n="nav.form-components.main">Quản lý blog</span>
                     <span class="pcoded-mcaret"></span>
