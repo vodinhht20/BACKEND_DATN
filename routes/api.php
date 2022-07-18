@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\SingleWordController;
 use App\Http\Controllers\Api\TimekeepingController;
 use App\Http\Controllers\Api\TimesheetController;
 use App\Http\Controllers\Api\UserController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -44,6 +45,10 @@ Route::middleware('jwt.auth')->group(function () {
     //singleType
     Route::get('list-single-type', [SingleWordController::class, 'getListSingleType']);
     Route::get('list-approver/{id}', [SingleWordController::class, 'GetApprover']);
+
+    Route::post('requests', function (Request $request) {
+        return $request->all();
+    });
     //singleType
 
     //setting
