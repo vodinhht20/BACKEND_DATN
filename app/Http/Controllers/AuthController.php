@@ -7,11 +7,12 @@ use App\Models\Employee;
 use App\Models\Noti;
 use App\Repositories\EmployeeRepository;
 use App\Repositories\UserRepositoryInterface;
+use App\Rules\ReCaptcha;
 use App\Service\EmployeeService;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 use Log;
 
 class AuthController extends Controller
@@ -28,12 +29,14 @@ class AuthController extends Controller
     }
     public function login(Request $request) {
         $validator = Validator::make($request->all(), [
+            'g-recaptcha-response' => ['required', new ReCaptcha],
             'email' => 'required|email',
-            'password' => 'required'
+            'password' => 'required',
         ], [
-            'email.required' => 'Email không được để trống',
-            'email.email' => 'Email không đúng định dạng',
-            'password.required' => 'Vui lòng nhập mật khẩu',
+            'email.required' => 'Email không được để trống !',
+            'email.email' => 'Email không đúng định dạng !',
+            'password.required' => 'Vui lòng nhập mật khẩu !',
+            'g-recaptcha-response.required' => 'Vui lòng xác minh Recapcha !',
             // 'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự',
         ]);
 
