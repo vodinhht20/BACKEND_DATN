@@ -16,8 +16,9 @@ return new class extends Migration
         Schema::create('requests', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('employee_id');
+            $table->tinyInteger('status')->default(0);
             $table->unsignedInteger('request_detail_id');
-            $table->tinyInteger('status')->defaultValue(0);
+            $table->unsignedInteger('single_type_id');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -30,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('request_');
+        Schema::dropIfExists('requests');
     }
 };
