@@ -26,8 +26,20 @@ function getGender($gender)
 
 function getDataType($dataType){
     $type = "text";
-    if($dataType ==2){
+    if($dataType == 2){
         $type = "email";
     }
     return $type;
+}
+
+/**
+ * Hàm format chuỗi nếu chuỗi dài hơn $length thì sẽ hiển thị (...)
+ *
+ * @param string $string
+ * @param integer $length
+ * @return string
+ */
+function formartString(string $string, int $length = 100): string
+{
+    return strlen($string) > $length ? substr($string, 0, $length) . "..." : $string;
 }

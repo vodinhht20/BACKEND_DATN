@@ -92,29 +92,51 @@
                                             <td style="width: 200px;">{{ $singleType->name }}</td>
                                             <td style="width: 300px;">
                                                 @if ($singleType->required_leader)
-                                                    <label for="" class="label label-primary"> Yêu cầu leader duyệt</label>
-                                                    <hr>
-                                                    Người duyệt cấp 2:
-                                                @endif
-                                                @foreach ($singleType->approvers as $approver)
-                                                    <label for="" class="label label-lg label-inverse-primary mt-2">
-                                                        [{{ $approver->employee->employee_code }}]
-                                                        {{ $approver->employee->fullname }}
+                                                    <label for="" class="label label-primary" > Yêu cầu leader duyệt
                                                     </label>
-                                                @endforeach
+                                                @endif
+                                                <ul class="mt-2 list-tag" style="list-style-type: circle;">
+                                                    @foreach ($singleType->approvers as $approver)
+                                                        <li class="ellipsis">
+                                                            <a href="" style="color: #448aff;" title="{{ $approver->employee->fullname }}">[{{ $approver->employee->employee_code }}]
+                                                                {{ $approver->employee->fullname }}
+                                                            </a>
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                                @if (count($singleType->approvers) == 0)
+                                                    <p>Người duyệt đơn chưa thiết lập</p>
+                                                @endif
                                             </td>
                                             <td style="width: 200px;">
-                                                {{ config('singletype.type.' . $singleType->type) }}
+                                                <label for="" class="label label-inverse-primary">{{ config('singletype.type.' . $singleType->type) }}</label>
                                             </td>
                                             <td style="width: 400px;">
-                                                {{ $singleType->description }}
+                                                {{ formartString($singleType->description, 100) }}
+                                                @if (strlen($singleType->description) > 50)
+                                                    <span class="mytooltip tooltip-effect-1" style="color: #6d95dd;">
+                                                        <span class="tooltip-item2" style="font-weight: 500;">Xem thêm</span>
+                                                        <span class="tooltip-content4 scrollbar-right-custom" style="height: 210px; overflow-y: auto; border-bottom-color: #88b3fb;">
+                                                            {{ $singleType->description }}
+                                                        </span>
+                                                    </span>
+                                                @endif
                                             </td>
                                             <td style="width: 400px;">
-                                                {{ $singleType->regulation }}</td>
+                                                {{ formartString($singleType->regulation, 100) }}
+                                                @if (strlen($singleType->regulation) > 50)
+                                                    <span class="mytooltip tooltip-effect-1" style="color: #6d95dd;">
+                                                        <span class="tooltip-item2" style="font-weight: 500;">Xem thêm</span>
+                                                        <span class="tooltip-content4 scrollbar-right-custom" style="height: 210px; overflow-y: auto; border-bottom-color: #88b3fb;">
+                                                            {{ $singleType->regulation }}
+                                                        </span>
+                                                    </span>
+                                                @endif
+                                            </td>
                                             <td>
                                                 <label class="switch">
                                                     <input type="checkbox" class="value-status" data-id="{{$singleType->id}}" @if ($singleType->status) checked @else @endif>
-                                                    <span class="slider round"></span>
+                                                    <span class="slider round" style="background-color: orange;"></span>
                                                 </label>
                                             </td>
                                             <td></td>
