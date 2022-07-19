@@ -20,8 +20,11 @@ use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ScheduleWorkController;
 use App\Http\Controllers\TimesheetController;
+use App\Repositories\TimekeepRepository;
+use App\Repositories\WorkScheduleRepository;
 use Illuminate\Support\Facades\Storage;
 use Stevebauman\Location\Facades\Location;
 
@@ -92,7 +95,6 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     });
 
     Route::prefix('/setting')->name("setting.")->group(function () {
-
         Route::prefix('/banner')->name("banner.")->group(function () {
             Route::get('/info', [BannerController::class, 'info'])->name("info");
             Route::get('/addbanner', [BannerController::class, 'addBannerForm'])->name("addbanner");
@@ -120,13 +122,13 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
             Route::get('/', [CompanyController::class, 'structure'])->name("show");
             Route::post('/ajax-update-department', [CompanyController::class, 'updateDepartment'])->name("update-department");
             Route::post('/ajax-create-department', [CompanyController::class, 'createDepartment'])->name("create-department");
+            Route::post('/ajax-remove-department', [CompanyController::class, 'removeDepartment'])->name("remove-department");
         });
     });
 
-
-        Route::get('/timesheet', [TimesheetController::class, 'timesheet'])->name("timesheet");
-        Route::get('/exportexcel', [TimesheetController::class, 'exportIntoExcel'])->name("exportIntoExcel");
-
+    Route::get('/timesheet', [TimesheetController::class, 'timesheet'])->name("timesheet");
+    Route::patch('/update-fcm-token', [NotificationController::class, 'updateToken'])->name("update-fcm-token");
+    Route::get('/exportexcel', [TimesheetController::class, 'exportIntoExcel'])->name("exportIntoExcel");
 });
 
 Route::get('login-google', [AuthController::class, 'ggLogin'])->name('login-google');
@@ -135,56 +137,7 @@ Route::get('google/callback', [AuthController::class, 'ggAuthCallback'])->name('
 Route::get('/login-github', [AuthController::class, 'githubLogin'])->name('login-github');
 Route::get('/callback/github', [AuthController::class, 'githubCallback'])->name('github-Callback');
 
-Route::get('/test', function(Request $request) {
-    return view('test');
-});
-Route::post('/test', function(Request $request) {
-    $fileRequest = $request->file('file');
-    $getNameFile = date('Y-m-d H:i').$fileRequest->getClientOriginalName();
-    $getContent = $fileRequest->get();
-    Storage::disk('google')->put($getNameFile, $getContent);
-
-    // lấy ra đường dẫn
-    dd(Storage::disk('google'));
-});
-
-
-Route::get('list', function() {
-    $dir = '/';
-    $recursive = false; // Có lấy file trong các thư mục con không?
-    $contents = collect(Storage::disk('google')->listContents($dir, $recursive));
-    return $contents->where('type', '=', 'file');
-});
-
-Route::get('get', function() {
-    $filename = '1W5GndP2oU2fLVJv424uh3s92MpVzr0xV';
-    $dir = '/';
-    $recursive = false; // Có lấy file trong các thư mục con không?
-    $contents = collect(Storage::disk('google')->listContents($dir, $recursive));
-    $file = $contents
-        ->where('type', '=', 'file')
-        ->where(function($val) use ($filename){
-            return $val['extraMetadata']['id'] == $filename;
-        })
-        ->first(); // có thể bị trùng tên file với nhau!
-    $rawData = Storage::disk('google')->get($file['path']);
-    $name = $file['path'];
-    return response($rawData, 200)
-        ->header('Content-Type', $file['mime_type'])
-        ->header('Content-Disposition', "attachment; filename=$name");
-});
-
-Route::get('delete', function() {
-    $filename = '1TJYM3ap3SS2DkMmB7b9rzokxw8K9geeu';
-    $dir = '/';
-    $recursive = false; // Có lấy file trong các thư mục con không?
-    $contents = collect(Storage::disk('google')->listContents($dir, $recursive));
-    $file = $contents
-        ->where('type', '=', 'file')
-        ->where(function($val) use ($filename){
-            return $val['extraMetadata']['id'] == $filename;
-        })
-        ->first(); // có thể bị trùng tên file với nhau!
-    Storage::disk('google')->restore($file['path']);
-    return 'File was deleted from Google Drive';
+Route::get('/test/data', function(Request $request) {
+    $timeKeepRepo = app(WorkScheduleRepository::class);
+    dd($timeKeepRepo->workDayByEmployeeId('2022-05-05', 1));
 });

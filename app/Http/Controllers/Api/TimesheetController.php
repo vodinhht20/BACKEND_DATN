@@ -22,7 +22,7 @@ class TimesheetController extends Controller
         $monthYear = $request->input('month', Carbon::now()->format("m/Y"));
         $monthYear = $monthYear ?: Carbon::now()->format("m/Y");
         $options = [
-            'with' => ['timekeepdetail' => function ($q) {
+            'with' => ['timekeepDetail' => function ($q) {
                     $q->select('timekeep_id', 'checkin_at');
                 },
                 'employee'],

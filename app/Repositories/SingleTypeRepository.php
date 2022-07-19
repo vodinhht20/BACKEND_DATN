@@ -18,6 +18,13 @@ class SingleTypeRepository extends BaseRepository
         return $singleType;
     }
 
+    public function getPublicSingleTypeOne($id){
+        $singleType = $this->model->where('id', $id)
+        ->where('status', config('singletype.status.public'))
+        ->first();
+        return $singleType;
+    }
+
     public function getInforEmployeeById($employee, $id){
         $approvers = $this->model->find($id)->approvers;
         $dataApprovers = [];
