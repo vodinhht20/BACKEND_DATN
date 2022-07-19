@@ -40,7 +40,7 @@
         </div>
         <div class="row mb-3" style="margin: unset;">
             <div class="col-sm-3">
-                <label for="">Keyword</label>
+                <label for="">Từ khóa</label>
                 <input class="form-control action_filter" type="text" name="keyword" placeholder="Tìm kiếm bằng tên, email,..." data-filter="keyword">
             </div>
             <div class="col-sm-3">
