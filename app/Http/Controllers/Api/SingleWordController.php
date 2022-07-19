@@ -27,6 +27,14 @@ class SingleWordController extends Controller
         ]);
     }
 
+    public function getListSingleTypeId($id){
+        $singleType = $this->singleTypeRepo->getPublicSingleTypeOne($id);
+        return response()->json([
+            "status" => "200",
+            "payload" => $singleType,
+        ]);
+    }
+
     public function GetApprover(Request $request, $id){
         $employee = JWTAuth::toUser($request->access_token);
         $approver = $this->singleTypeRepo->getInforEmployeeById($employee, $id);

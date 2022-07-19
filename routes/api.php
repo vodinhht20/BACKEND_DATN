@@ -44,6 +44,7 @@ Route::middleware('jwt.auth')->group(function () {
 
     //singleType
     Route::get('list-single-type', [SingleWordController::class, 'getListSingleType']);
+    Route::get('list-single-type/{id}', [SingleWordController::class, 'getListSingleTypeId']);
     Route::get('list-approver/{id}', [SingleWordController::class, 'GetApprover']);
 
     Route::post('requests', [SingleWordController::class, 'requestsAdd']);
