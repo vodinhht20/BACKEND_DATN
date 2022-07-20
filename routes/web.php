@@ -127,6 +127,15 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/timesheet', [TimesheetController::class, 'timesheet'])->name("timesheet");
     Route::patch('/update-fcm-token', [NotificationController::class, 'updateToken'])->name("update-fcm-token");
     Route::get('/exportexcel', [TimesheetController::class, 'exportIntoExcel'])->name("exportIntoExcel");
+
+    Route::prefix('/post')->name("post.")->group(function () {
+        Route::get('/info', [PostController::class, 'info'])->name("info");
+        Route::get('/add', [PostController::class, 'addPostForm'])->name("add");
+        Route::post('/add', [PostController::class, 'addPost']);
+        Route::get('/update', [PostController::class, 'updatePostForm'])->name("update");
+        // Route::post('/update', [PostController::class, 'updatePost']);
+        // Route::get('/delete/{id}', [PostController::class, 'delete'])->name("delete");
+    });
 });
 
 Route::get('login-google', [AuthController::class, 'ggLogin'])->name('login-google');

@@ -19,19 +19,19 @@
                         <form class="form-material" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="form-group form-default">
-                                <input type="text" name="title" class="form-control">
+                                <input value="{{$posts->title}}" type="text" name="title" class="form-control">
                                 <span class="form-bar"></span>
                                 <label class="float-label">Title</label>
                             </div>
                             <div style="display: flex;">
                                 <div class="form-group form-default col-sm-6">
-                                    <input type="file" name="images" class="form-control">
+                                    <input value="{{$posts->images}}" type="file" name="images" class="form-control">
                                     <span class="form-bar"></span>
                                     <label class="float-label">Image</label>
                                 </div>
                             </div>
                             <div class="form-group form-default">
-                                <input type="text" name="content" class="form-control">
+                                <input value="{{$posts->content}}" type="text" name="content" class="form-control">
                                 <span class="form-bar"></span>
                                 <label class="float-label">Content</label>
                             </div>

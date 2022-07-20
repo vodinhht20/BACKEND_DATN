@@ -16,11 +16,12 @@
                     <ul class="list-unstyled card-option">
                         <li>
                             <i class="fa fa fa-wrench open-card-option"></i>
-                            <a href="{{route("post.add")}}" role="tab">Thêm blog</a>
+                            <a href="{{route("post.add")}}" role="tab">Thêm Post</a>
                         </li>
                     </ul>
                 </div>
             </div>
+            @include('admin.layouts.messages')
             <div class="card-block table-border-style">
                 <div class="table-responsive">
                     <table class="table table-hover">
@@ -32,18 +33,26 @@
                                 <th>Người viết</th>
                                 <th>Chi nhánh</th>
                                 <th>Thời gian</th>
-                                <th></th>
+                                <th>Chức năng</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($posts as $post)
                                 <tr>
                                     <td class="ellipsis"><a href="">{{$post->title}}</a></td>
-                                    <td><img src="{{$post->images}}" alt=""></td>
+                                    <td><img class="img-banner" src="{{$post->getPost()}}" alt="$post->name"></td>
                                     <td class="ellipsis">{{$post->content}}</td>
                                     <td>{{$post->employee_id}}</td>
                                     <td>{{$post->branch_id}}</td>
                                     <td>{{$post->category_id}}</td>
+                                    <td class="box-actions">
+                                        {{-- <a href="{{route('post.delete',$post->id)}}">
+                                            <i class="ti-trash icon-remove-danger"></i>
+                                        </a> --}}
+                                        <a href="{{route("post.update", $post->id)}}">
+                                            <i style="float: right" class="ti-pencil icon-edit-primary"></i>
+                                        </a>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
