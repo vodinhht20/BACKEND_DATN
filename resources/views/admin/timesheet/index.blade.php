@@ -50,10 +50,13 @@
                         <h4>Quản lí bảng công</h4>
                     </div>
                     <div class="col-4">
-                        <a href="" class="btn btn-outline-primary btn-round waves-effect waves-light" style="float: right; margin-right: 10px;">
+                        
+                     
+                        <a href="{{route("exportexcel")}}" class="btn btn-outline-primary btn-round waves-effect waves-light" style="float: right; margin-right: 10px;">
                             <i class="ti-printer"></i>
                             Xuất Excel
                         </a>
+                 
                     </div>
                 </div>
                 <form action="" class="mt-3">

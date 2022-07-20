@@ -15,7 +15,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
 use App\Exports\TimekeepExport;
-use Excel;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TimesheetController extends Controller
 {
@@ -65,6 +65,7 @@ class TimesheetController extends Controller
         $timesheetFormats = $this->paginate($timesheetFormats, 20)->withPath("timesheet");
         $formatDates = $this->timesheetService->getDayByMonth($monthYear);
         return view('admin.timesheet.index',compact("formatDates", "inpMonth", "timesheetFormats", "departments", "requestDepartments"));
+        
     }
 
     private function paginate($items, $perPage = 5, $page = null, $options = []): LengthAwarePaginator
@@ -73,8 +74,45 @@ class TimesheetController extends Controller
         $items = $items instanceof Collection ? $items : Collection::make($items);
         return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
     }
-    public function exportIntoExcel()
+    
+    
+    public function exportIntoExcel(Request $request)
     {
-        return Excel::download(new TimekeepExport, 'timekeep.xlsx');
+        $requestDepartments = explode(",", $request->departments);
+        $departmentIds = [];
+        $positionIds = [];
+        $requestDepartments = array_filter($requestDepartments, function($e) {
+            return (($e != "") || ($e != null));
+        });
+        foreach ($requestDepartments as $departmentId) {
+            if (strpos($departmentId, "position_") === false) {
+                $departmentIds[] = $departmentId;
+            } else {
+                $positionIds[] = trim($departmentId, "position_");
+            }
+        }
+        $positionIdsByDepartments = $this->positionRepo->query(["department_id" => $departmentIds])->pluck('id')->toArray();
+        $positionIds = array_merge($positionIdsByDepartments, $positionIds);
+        $inpMonth = $request->input('month', Carbon::now()->format("Y-m")) ?: Carbon::now()->format("Y-m");
+        $monthYear = Carbon::createFromFormat("Y-m", $inpMonth);
+
+        $options = [
+            'with' => ['timekeepdetail' => function ($q) {
+                    $q->select('timekeep_id', 'checkin_at');
+                },
+                'employee'],
+            'date_from' => $monthYear->copy()->startOfMonth(),
+            'date_to' => $monthYear->copy()->endOfMonth(),
+            'keywords' => $request->keywords,
+            'position_ids' => $positionIds
+        ];
+        $timekeeps = $this->timekeepRepo->query($options)->get();
+        $timesheetFormats = $this->timekeepRepo->timesheetFormats($timekeeps);
+        $departments = $this->departmentRepo->formatVueSelect();
+        $timesheetFormats = $this->paginate($timesheetFormats, 20)->withPath("timesheet");
+        $formatDates = $this->timesheetService->getDayByMonth($monthYear);
+        // dd($timesheetFormats);
+        return Excel::download(new TimekeepExport($timesheetFormats,$departments,$formatDates), 'timekeep.xlsx');
     }
+
 }
