@@ -63,10 +63,7 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     });
     Route::prefix('/application')->group(function () {
         Route::get('/', [ApplicationController::class, 'index'])->name('application-view');
-        Route::get('/detail', [ApplicationController::class, 'detail'])->name('application-detail');
         Route::get('/nest', [ApplicationController::class, 'nestView'])->name('application-nestView');
-        Route::get('/policy', [ApplicationController::class, 'policy'])->name('application-policy');
-        Route::get('/procedure', [ApplicationController::class, 'procedure'])->name('application-procedure');
     });
 
     Route::prefix('/schedule')->group(function () {

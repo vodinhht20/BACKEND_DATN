@@ -23,6 +23,9 @@
             padding: 10px;
             border-radius: 5px;
         }
+        .mytooltip:hover .tooltip-content4 {
+            padding-top: 30px !important;
+        }
     </style>
 @endsection
 @section('header-page')
@@ -68,10 +71,18 @@
             <!-- Tab panes -->
             <div class="tab-content tabs card-block">
                 <div class="tab-pane active" id="type" role="tabpanel">
-                    <div>
-                        <p>Có <b>{{ count($singleTypes) }}</b> loại đơn trong danh sách</p>
+                    <div class="row align-items-center">
+                        <div class="col-10">
+                            <p>Có <b>{{ count($singleTypes) }}</b> loại đơn trong danh sách</p>
+                        </div>
+                        <div class="col-2" style="float: right;">
+                            <a href='' class="btn btn-outline-primary btn-round waves-effect btn-sm waves-light mr-3" style="padding-top: 10px; float: right;"  data-toggle="modal" data-target="#modal_create_schedule">
+                                <i class="ti-plus"></i>
+                                Thêm mới
+                            </a>
+                        </div>
                     </div>
-                    <div class="table-border-style">
+                    <div class="table-border-style mt-2">
                         <div class="table-responsive scrollbar-custom" style="width:100%;">
                             <table class="table align-middle-td">
                                 <thead>
@@ -133,10 +144,10 @@
                                                     </span>
                                                 @endif
                                             </td>
-                                            <td>
+                                            <td style="width: 100px;">
                                                 <label class="switch">
                                                     <input type="checkbox" class="value-status" data-id="{{$singleType->id}}" @if ($singleType->status) checked @else @endif>
-                                                    <span class="slider round" style="background-color: orange;"></span>
+                                                    <span class="slider round"></span>
                                                 </label>
                                             </td>
                                             <td></td>
