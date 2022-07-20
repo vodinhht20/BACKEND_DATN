@@ -9,23 +9,21 @@ use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithStrictNullComparison;
 
-class TimekeepExport implements FromView,ShouldAutoSize,WithStrictNullComparison  
+class TimekeepExport implements FromView,ShouldAutoSize,WithStrictNullComparison
 {
     use Exportable;
-    public function __construct($timesheetFormats,$departments,$formatDates)
+    public function __construct($timesheetFormats, $formatDates)
     {
-    
+
         $this->timesheetFormats = $timesheetFormats;
-        $this->departments = $departments;
         $this->formatDates = $formatDates;
     }
     public function view(): View
     {
         return view('admin.timesheet.exporttimesheet',[
             'timesheetFormats'=>$this->timesheetFormats,
-            'departments'=>$this->departments,
             'formatDates'=>$this->formatDates
         ]);
     }
-    
+
 }

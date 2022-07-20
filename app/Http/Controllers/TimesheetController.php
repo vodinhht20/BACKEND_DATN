@@ -48,7 +48,6 @@ class TimesheetController extends Controller
         $positionIds = array_merge($positionIdsByDepartments, $positionIds);
         $inpMonth = $request->input('month', Carbon::now()->format("Y-m")) ?: Carbon::now()->format("Y-m");
         $monthYear = Carbon::createFromFormat("Y-m", $inpMonth);
-
         $options = [
             'with' => ['timekeepdetail' => function ($q) {
                     $q->select('timekeep_id', 'checkin_at');
@@ -65,7 +64,7 @@ class TimesheetController extends Controller
         $timesheetFormats = $this->paginate($timesheetFormats, 20)->withPath("timesheet");
         $formatDates = $this->timesheetService->getDayByMonth($monthYear);
         return view('admin.timesheet.index',compact("formatDates", "inpMonth", "timesheetFormats", "departments", "requestDepartments"));
-        
+
     }
 
     private function paginate($items, $perPage = 5, $page = null, $options = []): LengthAwarePaginator
@@ -74,8 +73,8 @@ class TimesheetController extends Controller
         $items = $items instanceof Collection ? $items : Collection::make($items);
         return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
     }
-    
-    
+
+
     public function exportIntoExcel(Request $request)
     {
         $requestDepartments = explode(",", $request->departments);
@@ -108,11 +107,9 @@ class TimesheetController extends Controller
         ];
         $timekeeps = $this->timekeepRepo->query($options)->get();
         $timesheetFormats = $this->timekeepRepo->timesheetFormats($timekeeps);
-        $departments = $this->departmentRepo->formatVueSelect();
-        $timesheetFormats = $this->paginate($timesheetFormats, 20)->withPath("timesheet");
         $formatDates = $this->timesheetService->getDayByMonth($monthYear);
-        // dd($timesheetFormats);
-        return Excel::download(new TimekeepExport($timesheetFormats,$departments,$formatDates), 'timekeep.xlsx');
+        $fileName = "timekeep_" . date('Y_m_d_H_i') . ".xlsx";
+        return Excel::download(new TimekeepExport($timesheetFormats, $formatDates), $fileName);
     }
 
 }

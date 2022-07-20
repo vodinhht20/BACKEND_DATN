@@ -10,7 +10,11 @@
     <H2>Bảng công nhân viên</H2>
 <table class="table table-hover">
     <thead>
+</head>
+<body>
+    <table class="table table-hover">
         <tr>
+            <th>Mã nhân viên</th>
             <th>Tên nhân viên</th>
             @foreach ($formatDates as $date => $dateName)
                 <th class="tabletimekeeps">
@@ -29,20 +33,15 @@
             <th class="table-align-center">Số phút về sớm</th>
             <th class="table-align-center">Công hiện tại</th>
         </tr>
-    </thead>
-    <tbody>
         @foreach ($timesheetFormats as $timesheet)
         <tr>
             <td>{{ $timesheet['employee']->fullname }}</td>
+            <td>{{ $timesheet['employee']->employee_code }}</td>
                 @foreach ($formatDates as $date => $dateName)
                     @if (isset($timesheet['timesheet'][$date]))
                         <td class="tabletimekeeps">
                             <div class="flex-col">
-                                @php
-                                    $timesheetByDate = $timesheet['timesheet'][$date] ?? 0.0;
-                                
-                                @endphp
-                                <span>{{ $timesheetByDate['worktime'] ?: 0.0 }}</span>
+                                <span>{{ $timesheet['timesheet'][$date]['worktime'] ?: 0.0 }}</span>
                             </div>
                         </td>
                     @else
@@ -66,5 +65,9 @@
         @endforeach
     </tbody>
 </table>
+</body>
+</html>
+    </table>
+
 </body>
 </html>

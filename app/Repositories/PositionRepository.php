@@ -26,7 +26,11 @@ class PositionRepository extends BaseRepository
         }
 
         if (isset($options['department_ids']) && count($options['department_ids']) > 0) {
-            $query->whereId("department_id", $options['department_ids']);
+            $query->whereIn("department_id", $options['department_ids']);
+        }
+
+        if (isset($options['department_id'])) {
+            $query->where("department_id", $options['department_id']);
         }
 
         return $query;
