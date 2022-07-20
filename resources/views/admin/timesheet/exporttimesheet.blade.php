@@ -1,13 +1,14 @@
-@section('style-page')
-    <link rel="stylesheet" href="{{asset('frontend/css/datepicker.css')}}">
-    <script src="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.4.0/dist/vue-treeselect.umd.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.4.0/dist/vue-treeselect.min.css">
-    <link rel="stylesheet" href="{{asset('frontend')}}/css/company-work.css?v1.0.2">
-@endsection
-<H2>Bảng công nhân viên</H2>
-<table class="table table-hover">
-    <thead>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+</head>
+<body>
+    <table class="table table-hover">
         <tr>
+            <th>Mã nhân viên</th>
             <th>Tên nhân viên</th>
             @foreach ($formatDates as $date => $dateName)
                 <th class="tabletimekeeps">
@@ -26,22 +27,15 @@
             <th class="table-align-center">Số phút về sớm</th>
             <th class="table-align-center">Công hiện tại</th>
         </tr>
-    </thead>
-    <tbody>
         @foreach ($timesheetFormats as $timesheet)
         <tr>
             <td>{{ $timesheet['employee']->fullname }}</td>
+            <td>{{ $timesheet['employee']->employee_code }}</td>
                 @foreach ($formatDates as $date => $dateName)
                     @if (isset($timesheet['timesheet'][$date]))
                         <td class="tabletimekeeps">
                             <div class="flex-col">
-                                @php
-                                    $timesheetByDate = $timesheet['timesheet'][$date] ?? 0.0;
-                                \Log::info($timesheetByDate);
-                                \Log::info($date);
-
-                                @endphp
-                                <span>{{ $timesheetByDate['worktime'] ?: 0.0 }}</span>
+                                <span>{{ $timesheet['timesheet'][$date]['worktime'] ?: 0.0 }}</span>
                             </div>
                         </td>
                     @else
@@ -63,5 +57,7 @@
                 <td>{{ $timesheet['sum_current_worktime']?? 0 }}</td>
             </tr>
         @endforeach
-    </tbody>
-</table>
+    </table>
+
+</body>
+</html>
