@@ -1,10 +1,13 @@
-@section('style-page')
-    <link rel="stylesheet" href="{{asset('frontend/css/datepicker.css')}}">
-    <script src="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.4.0/dist/vue-treeselect.umd.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.4.0/dist/vue-treeselect.min.css">
-    <link rel="stylesheet" href="{{asset('frontend')}}/css/company-work.css?v1.0.2">
-@endsection
-<H2>Bảng công nhân viên</H2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <H2>Bảng công nhân viên</H2>
 <table class="table table-hover">
     <thead>
         <tr>
@@ -37,9 +40,7 @@
                             <div class="flex-col">
                                 @php
                                     $timesheetByDate = $timesheet['timesheet'][$date] ?? 0.0;
-                                \Log::info($timesheetByDate);
-                                \Log::info($date);
-
+                                
                                 @endphp
                                 <span>{{ $timesheetByDate['worktime'] ?: 0.0 }}</span>
                             </div>
@@ -65,3 +66,5 @@
         @endforeach
     </tbody>
 </table>
+</body>
+</html>
