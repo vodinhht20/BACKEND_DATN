@@ -6,11 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
 </head>
-<body>
-    <H2>Bảng công nhân viên</H2>
-<table class="table table-hover">
-    <thead>
-</head>
+
 <body>
     <table class="table table-hover">
         <tr>
@@ -63,10 +59,6 @@
                 <td>{{ $timesheet['sum_current_worktime']?? 0 }}</td>
             </tr>
         @endforeach
-    </tbody>
-</table>
-</body>
-</html>
     </table>
 
 </body>
