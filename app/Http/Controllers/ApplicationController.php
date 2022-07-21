@@ -26,4 +26,9 @@ class ApplicationController extends Controller
         $singleTypes = $this->singleTypeRepo->getPublicSingleType($options);
         return view('admin.application.viewnest', compact('singleTypes'));
     }
+
+    public function showFormCreate(Request $request)
+    {
+        return view('admin.application.nestCreate');
+    }
 }

@@ -101,8 +101,11 @@
                             <span class="pcoded-mcaret"></span>
                         </a>
                     </li>
-                    <li class="{{ Request::routeIs('application-nestView') ? 'active' : '' }}">
-                        <a href=" {{route('application-nestView')}} " class="waves-effect waves-dark">
+                    <li class="{{
+                            Request::routeIs('application-nest-view') ||  Request::routeIs('application-nest-create')
+                            ? 'active' : ''
+                        }}">
+                        <a href=" {{route('application-nest-view')}} " class="waves-effect waves-dark">
                             <span class="pcoded-micon"><i class="ti-calendar"></i></span>
                             <span class="pcoded-mtext"
                                 data-i18n="nav.basic-components.alert">Thiết lập đơn</span>

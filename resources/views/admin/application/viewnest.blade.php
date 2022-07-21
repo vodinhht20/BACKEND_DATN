@@ -76,7 +76,7 @@
                             <p>Có <b>{{ count($singleTypes) }}</b> loại đơn trong danh sách</p>
                         </div>
                         <div class="col-2" style="float: right;">
-                            <a href='' class="btn btn-outline-primary btn-round waves-effect btn-sm waves-light mr-3" style="padding-top: 10px; float: right;"  data-toggle="modal" data-target="#modal_create_schedule">
+                            <a href="{{ route('application-nest-create') }}" class="btn btn-outline-primary btn-round waves-effect btn-sm waves-light mr-3" style="padding-top: 10px; float: right;">
                                 <i class="ti-plus"></i>
                                 Thêm mới
                             </a>
