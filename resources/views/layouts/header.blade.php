@@ -31,7 +31,11 @@
                                     <a class="page-scroll" href="#download">Tải về</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="page-scroll" href="{{route('login')}}">Đăng nhập</a>
+                                    @if (Auth::check())
+                                        <a class="page-scroll" href="{{route('dashboard')}}">Xin chào: {{ @Auth::user()->fullname }}</a>
+                                    @else
+                                        <a class="page-scroll" href="{{route('login')}}">Đăng nhập</a>
+                                    @endif
                                 </li>
                             </ul>
                         </div> <!-- navbar collapse -->
