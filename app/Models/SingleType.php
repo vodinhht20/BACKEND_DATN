@@ -11,6 +11,15 @@ class SingleType extends Model
     use HasFactory, SoftDeletes;
     protected $table = 'single_types';
 
+    protected $fillable = [
+        'name',
+        'description',
+        'regulation',
+        'required_leader',
+        'type',
+        'status',
+    ];
+
     public function approvers()
     {
         return $this->hasMany(Approver::class, 'single_type_id', 'id');

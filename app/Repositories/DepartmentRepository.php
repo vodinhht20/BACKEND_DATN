@@ -3,6 +3,7 @@ namespace App\Repositories;
 
 use App\Models\Position;
 use App\Repositories\BaseRepository;
+use Illuminate\Support\Collection;
 
 class DepartmentRepository extends BaseRepository
 {

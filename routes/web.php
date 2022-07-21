@@ -63,7 +63,9 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     });
     Route::prefix('/application')->group(function () {
         Route::get('/', [ApplicationController::class, 'index'])->name('application-view');
-        Route::get('/nest/create', [ApplicationController::class, 'showFormCreate'])->name('application-nest-create');
+        Route::get('/nest/create', [ApplicationController::class, 'showFormCreateSingleType'])->name('application-nest-create');
+        Route::post('/nest/change-status', [ApplicationController::class, 'changeStatus'])->name('application-nest-change-status');
+        Route::post('/nest/post-create', [ApplicationController::class, 'createSingleType'])->name('application-nest-post-create');
         Route::get('/nest', [ApplicationController::class, 'nestView'])->name('application-nest-view');
     });
 

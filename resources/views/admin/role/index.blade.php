@@ -3,7 +3,7 @@
     <title>Thành viên | Phân quyền</title>
 @endsection
 @section('style-page')
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{{asset('frontend/css/select2.min.css')}}">
     <style>
         .select2-container--default .select2-selection--single .select2-selection__rendered {
             padding: 0 0 0 10px !important;
