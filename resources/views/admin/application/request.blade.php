@@ -1,6 +1,6 @@
 @extends('admin.layouts.main')
 @section('title')
-    <title>Loại Sản Phẩm | Danh sách</title>
+    <title>Danh sách đơn từ</title>
 @endsection
 @section('style-page')
     <style>
@@ -12,6 +12,15 @@
             position: absolute !important;
             top: -7px !important;
         }
+        .btn i {
+            margin-right: unset !important;
+        }
+        .tooltip-content3 {
+            bottom: 260% !important;
+            width: 150px !important;
+            line-height: 5px !important;
+            left: 100% !important;
+        }
     </style>
 @endsection
 @section('header-page')
@@ -21,7 +30,7 @@
             <div class="col-md-8">
                 <div class="page-header-title">
                     <h5 class="m-b-10">Quản Lý ĐƠn Từ</h5>
-                    <p class="m-b-0">Danh sách tất cả các loại đơn từ của bạn</p>
+                    <p class="m-b-0">Danh sách tất cả các đơn từ của bạn</p>
                 </div>
             </div>
             <div class="col-md-4">
@@ -29,7 +38,7 @@
                     <li class="breadcrumb-item">
                         <a href="{{route('dashboard')}}"> <i class="fa fa-home"></i> </a>
                     </li>
-                    <li class="breadcrumb-item"><a href="">Loại Sản Phẩm</a>
+                    <li class="breadcrumb-item"><a href="">Đơn từ</a>
                     </li>
                 </ul>
             </div>
@@ -66,13 +75,13 @@
             <!-- Tab panes -->
             <div class="tab-content tabs card-block">
                 <div class="tab-pane active" id="type" role="tabpanel">
-                    tab1
+                    @include('admin.application.request.processing')
                 </div>
                 <div class="tab-pane" id="deathline" role="tabpanel">
-                    tab2
+                    @include('admin.application.request.accepted')
                 </div>
                 <div class="tab-pane" id="dafuk" role="tabpanel">
-                    tab3
+                    @include('admin.application.request.unapproved')
                 </div>
             </div>
         </div>

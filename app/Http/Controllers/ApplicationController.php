@@ -23,7 +23,7 @@ class ApplicationController extends Controller
 
     public function index()
     {
-        return view('admin.application.view');
+        return view('admin.application.request');
     }
 
     public function nestView()
