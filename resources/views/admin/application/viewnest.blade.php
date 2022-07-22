@@ -74,7 +74,7 @@
                 </div>
                 @include('admin.layouts.messages')
                 <div class="table-border-style mt-2">
-                    <div class="table-responsive scrollbar-custom" style="width:100%;">
+                    <div class="scrollbar-custom" style="width:100%;">
                         <table class="table align-middle-td">
                             <thead>
                                 <tr>

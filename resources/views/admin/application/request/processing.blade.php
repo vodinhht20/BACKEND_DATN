@@ -39,13 +39,15 @@
                             <p><b>23/07/2022</b></p>
                         </div>
                     </td>
-                    <td>
-                        <div>
-                            <img src="https://technext.github.io/mega_able/assets/images/avatar-4.jpg" alt="" width="50">
-                            <img src="https://technext.github.io/mega_able/assets/images/avatar-4.jpg" alt="" width="50">
-                            <img src="https://technext.github.io/mega_able/assets/images/avatar-4.jpg" alt="" width="50">
-                            <img src="https://technext.github.io/mega_able/assets/images/avatar-4.jpg" alt="" width="50">
-                        </div>
+                    <td style="max-width: 150px; white-space: unset;" >
+                        @for ($i = 1; $i < 10; $i++)
+                            <span class="mytooltip tooltip-effect-5 pt-2" style="display: inline-block;">
+                                <img src="https://technext.github.io/mega_able/assets/images/avatar-4.jpg" class="avatar-custome" alt="" width="50">
+                                <span class="tooltip-content clearfix">
+                                    <span class="tooltip-text text-center">Võ Định</span>
+                                </span>
+                            </span>
+                        @endfor
                     </td>
                     <td>
                         <div class="mytooltip tooltip-effect-9">

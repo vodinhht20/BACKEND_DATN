@@ -21,6 +21,14 @@
             line-height: 5px !important;
             left: 100% !important;
         }
+        img.avatar-custome {
+            background-color: #cccccc;
+            border: 1px solid #9f9fff;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+        }
     </style>
 @endsection
 @section('header-page')
