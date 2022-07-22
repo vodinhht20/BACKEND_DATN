@@ -23,7 +23,7 @@ class SingleTypeRepository extends BaseRepository
             ->where('status', config('singletype.status.public'))
             ->orderBy('id', 'desc');
 
-        if ($options['with']) {
+        if (isset($options['with'])) {
             $singleType->with($options['with']);
         }
 
