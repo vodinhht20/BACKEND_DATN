@@ -114,4 +114,9 @@ class Employee extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(Attribuite_Employee::class);
     }
+
+    public function singleWord()
+    {
+        return $this->hasMany(Request::class, 'employee_id');
+    }
 }
