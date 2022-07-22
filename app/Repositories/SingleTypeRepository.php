@@ -24,10 +24,6 @@ class SingleTypeRepository extends BaseRepository
     {
         $singleType = $this->model->query();
 
-        if (isset($options['with'])) {
-            $singleType->with($options['with']);
-        }
-
         if (isset($options['status'])) {
             $singleType->where('status', $options['status']);
         }
@@ -52,7 +48,8 @@ class SingleTypeRepository extends BaseRepository
         return $this->query($options)->get();
     }
 
-    public function getPublicSingleTypeOne($id){
+    public function getPublicSingleTypeOne($id)
+    {
         $singleType = $this->model->where('id', $id)
         ->where('status', config('singletype.status.public'))
         ->first();
