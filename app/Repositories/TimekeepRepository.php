@@ -292,7 +292,7 @@ class TimekeepRepository extends BaseRepository
 
         // Xếp hạng đi muộn
         $timekeepLate = $this->model->whereIn('employee_id', $employeeIds)
-            ->selectRaw('timekeeps.id, timekeeps.employee_id, timekeeps.minute_late, min(timekeep_details.checkin_at) as checkin_at, ROW_NUMBER() OVER (ORDER BY timekeeps.minute_late ASC) as `rank`')
+            ->selectRaw('timekeeps.id, timekeeps.employee_id, timekeeps.minute_late, min(timekeep_details.checkin_at) as checkin_at, ROW_NUMBER() OVER (ORDER BY timekeeps.minute_late DESC) as `rank`')
             ->join('timekeep_details', 'timekeep_details.timekeep_id', '=', 'timekeeps.id')
             ->with([
                 'employee' => function ($query) {
@@ -305,7 +305,7 @@ class TimekeepRepository extends BaseRepository
             ->groupBy('timekeep_details.timekeep_id')
             ->where('date', $day)
             ->where('minute_late', '>', 0)
-            ->orderBy('rank', 'desc')
+            ->orderBy('rank', 'asc')
             ->get();
 
         $rankTimekeepEarlyMax = $timekeepEarly->max('rank');

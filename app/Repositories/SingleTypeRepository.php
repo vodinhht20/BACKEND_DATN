@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Repositories\BaseRepository;
+use Illuminate\Support\Collection;
 
 class SingleTypeRepository extends BaseRepository
 {
@@ -11,11 +12,22 @@ class SingleTypeRepository extends BaseRepository
         return \App\Models\SingleType::class;
     }
 
-    public function getPublicSingleType(){
-        $singleType = $this->model->OrderBy('id', 'desc')
-        ->where('status', config('singletype.status.public'))
-        ->get();
-        return $singleType;
+    /**
+     *
+     * @param array $options
+     * @return Collection
+     */
+    public function getPublicSingleType(array $options = []): Collection
+    {
+        $singleType = $this->model->query()
+            ->where('status', config('singletype.status.public'))
+            ->orderBy('id', 'desc');
+
+        if (isset($options['with'])) {
+            $singleType->with($options['with']);
+        }
+
+        return $singleType->get();
     }
 
     public function getPublicSingleTypeOne($id){
