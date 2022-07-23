@@ -1,109 +1,142 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
-</head>
-<body>
-  <div id="app">
-    <v-app>
-      <v-main>
-        <template>
-            <v-treeview
-                activatable
-                rounded
-                hoverable
-                open-all
-                :items="departments"
-            > asdasd</v-treeview>
-        </template>
-      </v-main>
-    </v-app>
+<style>
+    @import url('https://fonts.googleapis.com/css?family=Open+Sans:600');
+    body {
+    align-items: center;
+    background: #EEF5FD;
+    color: #545556;
+    display: flex;
+    font-family: "Open Sans", sans-serif;
+    font-size: 20px;
+    height: 100vh;
+    justify-content: center;
+    margin: 0;
+    }
+    .showOverlay {
+    bottom: 0;
+    display: flex;
+    font-size: 16px;
+    left: calc(50% - 55px);
+    margin-bottom: 7px;
+    position: absolute;
+    }
+    .check {
+    bottom: 0;
+    display: flex;
+    left: calc(50% + 40px);
+    margin-bottom: 10px;
+    position: absolute;
+    }
+    .containerOuter {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 2px 6px 20px 2px rgba(10,10,120,0.15);
+    }
+    .container {
+    position: relative;
+    margin: 20px;
+    overflow: hidden;
+    width: 160px;
+    }
+    .hidden {
+    display: none;
+    }
+    .entry {
+    height: 25px;
+    position: absolute;
+    width: 160px;
+    }
+    .entry:nth-child(2) {
+    left: 8px;
+    top: 8px;
+    }
+    .entry:nth-child(4) {
+    left: 8px;
+    top: 58px;
+    }
+    .entry:nth-child(6) {
+    left: 8px;
+    top: 108px;
+    }
+    .circle {
+    border: 2px solid #545556;
+    border-radius: 50%;
+    cursor: pointer;
+    height: 20px;
+    position: absolute;
+    transition: border-color 300ms;
+    width: 20px;
+    }
+    .entry-label {
+    cursor: pointer;
+    margin-top: -3px;
+    padding-left: 40px;
+    user-select: none;
+    -moz-user-select: none;
+    }
+    .overlay {
+    background: #fff;
+    mask: url(#holes);
+    -webkit-mask-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAACMCAYAAAAOc+uVAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAOxAAADsQBlSsOGwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAItSURBVHic7ZnNjhJBFIVPA0txr0Iyw+tIdOXWaDRufZWZeYbZuMKOUV9Gg+HHGN/BHBcNcSBT1KVOEVycb0mq635UVd9U5zQkif+Y3rkFclhQxYIqFlQZiM8vALQAPgP4AWC1+X0E4ALAFMBzAOPiCixjRfIdyX5g/h7JFyTnJYVKBGckHxQsxJBke2rBK5LF55bdal6fSnCmyO1JhlcyKrhkwbYekBySXNcUfF1L7o7k20jhhsxetxYAJk3T/Kks2EfXmkaHxkXO1MfacgCwmbPNjYsIftV1knzJDYgIfqsgkuJ7bkBE8FcFkRTr3IBzXxay9SOCjyuIFM8dEZxUECmeOyL4tIJIimluQKRRLwFcnqBRDwDMUaFRjwG8quC0zxtk5ACEL6wrksNaZiQfkvwZKRxtM08AfGDgBh2Q6wG4BfAo+sAxXB/xp+6VI3lzTMGSK3/Lgu1mt62fji1W+tH0m+R7dm9iZNVeMnjm9om0mUOs8O+zc47dz84Juh76DJG3NYEqeHLOfVnIYkEVC6pYUMWCKhZUsaCKBVUsqGJBFQuqWFDFgipO3OnEfRcn7qWCTtxTOHFP4cS9Ek7cVZy4qzhxL4ZO3AXoxF2QoxP3DifuW5y4q1hQxYIqFlSxoIoFVSyoYkEVC6pYUMWCKhZUsaCKE3c6cd/FiXupoBP3FE7cUzhxr4QTdxUn7ipO3IuhE3cBOnEX5OjEvcOJ+xYn7ioWVLGgigVV/gKEL4RSyM8Z8wAAAABJRU5ErkJggg==);
+    height: 140px;
+    pointer-events: none;
+    transition: background 300ms;
+    width: 40px;
+    }
+    .highlight {
+    background: #4D98EF;
+    border-radius: 50%;
+    height: 12px;
+    left: 14px;
+    pointer-events: none;
+    position: absolute;
+    top: 14px;
+    transition: transform 400ms cubic-bezier(0.175, 0.885, 0.32, 1.2);
+    transform: translateY(-50px);
+    width: 12px;
+    }
+    .hidden:nth-child(1):checked ~ .highlight {
+    transform: translateY(0);
+    }
+    .hidden:nth-child(3):checked ~ .highlight {
+    transform: translateY(50px);
+    }
+    .hidden:nth-child(5):checked ~ .highlight {
+    transform: translateY(100px);
+    }
+    .hidden:nth-child(1):checked + .entry .circle {
+    border-color: #4D98EF;
+    }
+    .hidden:nth-child(3):checked + .entry .circle {
+    border-color: #4D98EF;
+    }
+    .hidden:nth-child(5):checked + .entry .circle {
+    border-color: #4D98EF;
+    }
+    .check:checked ~ .containerOuter .overlay {
+    background: #ecf0f4;
+    }
+</style>
+<div class="containerOuter">
+  <div class="container">
+    <input type="radio" class="hidden" id="input1" name="inputs">
+    <label class="entry" for="input1"><div class="circle"></div><div class="entry-label">Kingdom</div></label>
+    <div class="highlight"></div>
+    <div class="overlay"></div>
   </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
-  <script>
-    new Vue({
-        el: '#app',
-        vuetify: new Vuetify(),
-        data: {
-            departments: [
-                {
-                    id: 1,
-                    name: 'Applications :',
-                    children: [
-                        { id: 2, name: 'Calendar : app' },
-                        { id: 3, name: 'Chrome : app' },
-                        { id: 4, name: 'Webstorm : app' },
-                    ],
-                },
-                {
-                    id: 5,
-                    name: 'Documents :',
-                    children: [
-                        {
-                            id: 6,
-                            name: 'vuetify :',
-                            children: [
-                                {
-                                id: 7,
-                                name: 'src :',
-                                children: [
-                                    { id: 8, name: 'index : ts' },
-                                    { id: 9, name: 'bootstrap : ts' },
-                                ],
-                                },
-                            ],
-                        },
-                        {
-                            id: 10,
-                            name: 'material2 :',
-                            children: [
-                                {
-                                id: 11,
-                                name: 'src :',
-                                children: [
-                                    { id: 12, name: 'v-btn : ts' },
-                                    { id: 13, name: 'v-card : ts' },
-                                    { id: 14, name: 'v-window : ts' },
-                                ],
-                                },
-                            ],
-                        },
-                    ],
-                },
-                {
-                    id: 15,
-                    name: 'Downloads :',
-                    children: [
-                        { id: 16, name: 'October : pdf' },
-                        { id: 17, name: 'November : pdf' },
-                        { id: 18, name: 'Tutorial : html' },
-                    ],
-                },
-                {
-                    id: 19,
-                    name: 'Videos :',
-                    children: [
-                        {
-                        id: 20,
-                        name: 'Tutorials :',
-                        children: [
-                            { id: 21, name: 'Basic layouts : mp4' },
-                            { id: 22, name: 'Advanced techniques : mp4' },
-                            { id: 23, name: 'All about app : dir' },
-                        ],
-                        },
-                        { id: 24, name: 'Intro : mov' },
-                        { id: 25, name: 'Conference introduction : avi' },
-                    ],
-                },
-            ]
-        }
-    })
-  </script>
-</body>
-</html>
+  <div class="container">
+    <input type="radio" class="hidden" id="input1" name="inputs">
+    <label class="entry" for="input1"><div class="circle"></div><div class="entry-label">Kingdom</div></label>
+    <div class="highlight"></div>
+    <div class="overlay"></div>
+  </div>
+</div>
+<svg width="0" height="0" viewBox="0 0 40 140">
+  <defs>
+    <mask id="holes">
+      <rect x="0" y="0" width="100" height="140" fill="white" />
+      <circle r="12" cx="20" cy="20" fill="black"/>
+      <circle r="12" cx="20" cy="70" fill="black"/>
+      <circle r="12" cx="20" cy="120" fill="black"/>
+    </mask>
+  </defs>
+</svg>

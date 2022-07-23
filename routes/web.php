@@ -93,7 +93,6 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     });
 
     Route::prefix('/setting')->name("setting.")->group(function () {
-
         Route::prefix('/banner')->name("banner.")->group(function () {
             Route::get('/info', [BannerController::class, 'info'])->name("info");
             Route::get('/addbanner', [BannerController::class, 'addBannerForm'])->name("addbanner");
@@ -121,6 +120,7 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
             Route::get('/', [CompanyController::class, 'structure'])->name("show");
             Route::post('/ajax-update-department', [CompanyController::class, 'updateDepartment'])->name("update-department");
             Route::post('/ajax-create-department', [CompanyController::class, 'createDepartment'])->name("create-department");
+            Route::post('/ajax-remove-department', [CompanyController::class, 'removeDepartment'])->name("remove-department");
         });
     });
 
@@ -132,8 +132,8 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/info', [PostController::class, 'info'])->name("info");
         Route::get('/add', [PostController::class, 'addPostForm'])->name("add");
         Route::post('/add', [PostController::class, 'addPost']);
-        Route::get('/update', [PostController::class, 'updatePostForm'])->name("update");
-        // Route::post('/update', [PostController::class, 'updatePost']);
+        Route::get('/update/{id}', [PostController::class, 'updatePostForm'])->name("update");
+        Route::post('/update/{id}', [PostController::class, 'updatePost']);
         // Route::get('/delete/{id}', [PostController::class, 'delete'])->name("delete");
     });
 });

@@ -51,7 +51,7 @@
                                 </select>
                                 <label class="float-label">Chi nhánh</label>
                             </div>
-                            <button type="submit" class="btn btn-info waves-effect waves-light">Thêm post</button>
+                            <button type="submit" class="btn btn-info waves-effect waves-light">Sửa post</button>
                         </form>
                     </div>
                 </div>

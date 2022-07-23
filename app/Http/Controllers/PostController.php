@@ -28,9 +28,9 @@ class PostController extends Controller
             'content' => 'required',
             'images' => 'required',
         ],[
-            'title.required' => 'Name không được để trống',
-            'content.required' => 'Ngày bắt đầu không được để trống',
-            'images.required' => 'Ngày kết thúc không được để trống',
+            'title.required' => 'Tiêu đề không được để trống',
+            'content.required' => 'Nội dung khoong được để trống',
+            'images.required' => 'Ảnh không được để trống',
         ]);
         if ($validator->fails()) {
             return redirect()->back()->with('message.error', $validator->messages()->first())->withInput();
@@ -56,5 +56,24 @@ class PostController extends Controller
         $branchs = Branch::all();
         $categories = PostCategory::all();
         return view('admin.post.update', compact('posts', 'branchs', 'categories'));
+    }
+
+    public function updatePost(Request $request, $id){
+        $validator = Validator::make($request->all(), [
+            'title' => 'required',
+            'content' => 'required',
+            'images' => 'required',
+        ],[
+            'title.required' => 'Tiêu đề không được để trống',
+            'content.required' => 'Nội dung khoong được để trống',
+            'images.required' => 'Ảnh không được để trống',
+        ]);
+        if ($validator->fails()) {
+            return redirect()->back()->with('message.error', $validator->messages()->first())->withInput();
+        }
+        $post = Post::find($id);
+        $post -> fill($request->all(), $post);
+        $post -> save();
+        return redirect()->route('post.info')->with('message.success', "Sửa bài viết thành công");
     }
 }

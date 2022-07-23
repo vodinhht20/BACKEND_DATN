@@ -11,7 +11,7 @@ class Attribuite_Employee extends Model
     protected $table = 'attribute_employees';
     protected $fillable = [
         'employee_id',
-        'attribuite_id',
+        'attribute_id',
         'data',
         'raw_data'
     ];
