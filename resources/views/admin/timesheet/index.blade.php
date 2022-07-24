@@ -50,7 +50,7 @@
                         <h4>Quản lí bảng công</h4>
                     </div>
                     <div class="col-4">
-                        <a href="" class="btn btn-outline-primary btn-round waves-effect waves-light" style="float: right; margin-right: 10px;">
+                        <a href="{{ route("export-excel-timesheet") }}?{{ http_build_query(request()->query()) }}" class="btn btn-outline-primary btn-round waves-effect waves-light" style="float: right; margin-right: 10px;">
                             <i class="ti-printer"></i>
                             Xuất Excel
                         </a>
@@ -131,7 +131,7 @@
                                 <tbody>
                                     @foreach ($timesheetFormats as $timesheet)
                                     <tr>
-                                        <td>{{ $timesheet['employee']->fullname }}</td>
+                                        <td>{{ $timesheet['employee']?->fullname }}</td>
                                             @foreach ($formatDates as $date => $dateName)
                                                 @if (isset($timesheet['timesheet'][$date]))
                                                     <td class="tabletimekeeps">
