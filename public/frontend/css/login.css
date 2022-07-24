@@ -101,6 +101,11 @@ a {
   text-align: center;
 }
 
+.wrapper-input {
+  width: 95%;
+  margin: auto;
+}
+
 .wrapper_btn .btn-login {
   border: 0;
   background: #ff9d36;

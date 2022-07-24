@@ -3,6 +3,7 @@ namespace App\Repositories;
 
 use App\Models\Position;
 use App\Repositories\BaseRepository;
+use Illuminate\Support\Collection;
 
 class DepartmentRepository extends BaseRepository
 {
@@ -61,5 +62,35 @@ class DepartmentRepository extends BaseRepository
             }
         }
         return false;
+    }
+
+
+    /**
+     * Hàm lấy ra danh sách các leader của các phòng ban
+     *
+     * @param array $departmentIds
+     * @return Collection
+     */
+    public function getDepartmentWithLeader(array $departmentIds): Collection
+    {
+        $departments = $this->model->query()->whereIn('id', $departmentIds)
+            ->with(['positions' => function($query) {
+                    $query->where('is_leader', config('position.is_leader.yes'));
+                },
+                'positions.employee' => function($query) {
+                    $query->where('status', config('employee.status.active'));
+                    $query->select('id', 'position_id', 'fullname', 'avatar');
+                }
+            ])->get();
+
+        $departments = $departments->map(function ($record) {
+            $employee = $record?->positions[0]?->employee[0];
+            $record->setRelation('positions' , null);
+            return collect([
+                'department' => $record,
+                'employee' => $employee
+            ]);
+        });
+        return $departments->keyBy('department.id');
     }
 }

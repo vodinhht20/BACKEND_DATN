@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Attribuite_Employee extends Model
+class AttribuiteEmployee extends Model
 {
     use HasFactory;
     protected $table = 'attribute_employees';

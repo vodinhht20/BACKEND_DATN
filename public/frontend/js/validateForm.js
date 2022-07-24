@@ -18,7 +18,7 @@ function validateForm (element,objData, funcAjax = '', flag = false) {
       } else {
         form.submit();
       }
-    },
+    }
   });
 }
 function isDate(txtDate)

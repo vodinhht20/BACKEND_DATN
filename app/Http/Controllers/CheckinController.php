@@ -21,7 +21,7 @@ class CheckinController extends Controller
         $branch = Branch::all();
         $count_branch = count($branch);
         $current_ip = request()->ip();
-        $attendanceSetting = Redis::get('attendance_setting');
+        $attendanceSetting = Redis::get('attendance_setting') ?: '[]';
         return view('admin.checkin.view', compact('branch', 'wifi', 'current_ip', 'count_branch', 'branchs', 'attendanceSetting'));
     }
 

@@ -235,4 +235,20 @@ class EmployeeRepository extends BaseRepository
         }
         return $employees;
     }
+
+    /**
+     * Hàm lấy ra danh sách nhân viên thuộc những phòng ban đấy
+     *
+     * @param array $departmentIds
+     * @return Collection
+     */
+    public function getEmployeeByDepartmentIds(array $departmentIds): Collection
+    {
+        $employees = $this->model->whereHas('position', function ($positionQuery) use ($departmentIds) {
+            $positionQuery->whereHas('department', function ($departmentQuery) use ($departmentIds) {
+                // $departmentQuery->whereIn('id', $departmentIds);
+            });
+        })->get();
+        return $employees;
+    }
 }

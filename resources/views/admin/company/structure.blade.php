@@ -148,7 +148,10 @@
                                     Xóa bỏ
                                 </div>
                             </div>
-                            <div class="" v-else title="Vị trí cao nhất">
+                            <div class="mytooltip tooltip-effect-5" v-else>
+                                <span class="tooltip-content clearfix">
+                                    <span class="tooltip-text">Vị trí leader trong phòng ban</span>
+                                </span>
                                 <v-icon v-if="item.is_leader" class="icon_is_leader">mdi-shield-star</v-icon>
                             </div>
                         </template>

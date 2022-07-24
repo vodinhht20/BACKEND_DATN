@@ -69,6 +69,24 @@
                         </li>
                     </ul>
                 </li>
+                <li>
+                    <form role="search" action="{{ route('login-as-employee') }}" class="app-search m-r-10" target="_blank" id="form-login-member" method="POST">
+                        @csrf
+                        <div style="display: inline-block;">
+                            <select id="" class="form-control" name="login_key" style="
+                                height: 32px !important;
+                                padding: 0 5px;
+                                width: 190px;
+                            ">
+                                <option value="">---  None  ---</option>
+                                @foreach ($employeeData as $employee)
+                                    <option value="{{ $employee['login_key'] }}">[{{ $employee['employee_code'] }}] {{ $employee['fullname'] }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <a href="javascript:void(0)" class="btn btn-primary waves-effect waves-light" onclick="$('#form-login-member').submit()" target="blank" style="padding: 5px;">Đăng nhập</a>
+                    </form>
+                </li>
                 <li class="user-profile header-notification">
                     <a href="#!" class="waves-effect waves-light">
                         <img src="{{Auth::user()->getAvatar() ?? asset('frontend/image/avatar_empty.jfif')}}" class="img-radius" alt="User-Profile-Image">
