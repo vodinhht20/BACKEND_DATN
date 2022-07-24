@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Attribuite_Employee;
+use App\Models\AttribuiteEmployee;
 use App\Models\Branch;
 use App\Models\Attribute;
 use App\Models\Employee;
 use App\Repositories\EmployeeRepository;
 use Illuminate\Http\Request;
 use \Illuminate\Support\Str;
-use Validator;
 use App\Models\Position;
 use Google\Service\ServiceControl\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class EmployeeController extends Controller
 {
@@ -47,7 +47,7 @@ class EmployeeController extends Controller
             })
             ->orderBy('updated_at', 'desc')
             ->paginate(10,['*'],'page',$request->page);
-            
+
         $pages = ceil($employees->total()/10);
         if (sizeof($employees) == 0) {
             $outPut = "Không có nhân sự nào có các trạng thái trên";
@@ -120,7 +120,7 @@ class EmployeeController extends Controller
             'personal_email.required' => "Email này đã tồn tại, vui lòng nhập mail khác hoặc đăng nhập",
             'personal_email.email' => 'Email không đúng định dạng',
         ]);
-        
+
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
@@ -168,7 +168,7 @@ class EmployeeController extends Controller
         foreach($attributes as $attribute){
             $attriName = $attribute->name;
             if($request->$attriName != ''){
-                $exitAttribute = Attribuite_Employee::where('attribute_id','=',$attribute->id)
+                $exitAttribute = AttribuiteEmployee::where('attribute_id','=',$attribute->id)
                 ->where('employee_id','=', $employee->id)
                 ->where('data','=',$request->$attriName)->get();
                 if(sizeof($exitAttribute) == 0){
@@ -178,9 +178,9 @@ class EmployeeController extends Controller
                     $dataAtribute['employee_id'] = $employee->id;
                     $dataAtribute['data'] = $request->$attriName;
                     $dataAtribute['raw_data'] = 'awdbayw awydagwd';
-                    $newAttribute = Attribuite_Employee::create($dataAtribute);
+                    $newAttribute = AttribuiteEmployee::create($dataAtribute);
                 }
-                
+
               }
         }
         die;
@@ -194,7 +194,7 @@ class EmployeeController extends Controller
             ], 200);
         }
 
-        
+
 
         return response()->json([
             'success' => false,
@@ -236,7 +236,7 @@ class EmployeeController extends Controller
             return redirect()->back()->with('message.error', $validator->messages()->first())->withInput();
         }
         $employee = Employee::find($id);
-        
+
         $employee->fullname = $request->fullname;
         $employee->email = $request->email;
         $employee->birth_day = $request->birth_day;
@@ -252,7 +252,7 @@ class EmployeeController extends Controller
             $employee->avatar = $urlImage;
             $employee->type_avatar = 1;
         }
-        
+
         $employee->update();
         return redirect()->route('admin-list-user')->with('message.success', 'Cập nhật thông tin thành viên thành công !');
 
@@ -265,7 +265,7 @@ class EmployeeController extends Controller
     public function showInfoUser($id)
     {
         $employee = Employee::with('position', 'branch')->find($id);
-        $attributes = Attribuite_Employee::with('attribute')->where('employee_id', $id)->get();
+        $attributes = AttribuiteEmployee::with('attribute')->where('employee_id', $id)->get();
         if (!$employee) {
             return abort(404);
         }

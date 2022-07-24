@@ -10,9 +10,9 @@ class Position extends Model
 {
     use HasFactory, SoftDeletes;
 
-    public function Employee()
+    public function employee()
     {
-        return $this->belongsToMany(Employee::class, 'employee_positions', 'position_id', 'employee_id');
+        return $this->hasMany(Employee::class);
     }
 
     public function department()

@@ -3,7 +3,7 @@
         <table class="table align-middle-td">
             <thead>
                 <tr>
-                    <th>#</th>
+                    <th>STT</th>
                     <th>Mã đơn</th>
                     <th>Loại đơn</th>
                     <th>Người tạo</th>
@@ -14,46 +14,44 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>#002</td>
+                <tr v-for="(record, index) in requestProcessData.data">
+                    <td>@{{ index+1 }}</td>
+                    <td>#@{{ record.id }}</td>
                     <td>
                         <p>Đơn nghỉ không lương</p>
                         <label for="" class="label bg-primary">Đang xử lý</label>
                     </td>
                     <td>
-                        <p><b>Võ Văn Định</b></p>
-                        <p>Phòng hành chính nhân sự</p>
-                        <label for="" class="label label-inverse-info-border">HR Manager</label>
+                        <p><b>@{{ record.employee?.fullname }}</b></p>
+                        <p>@{{ record.employee?.position?.department?.name || "Chưa thiết lập phòng ban" }}</p>
+                        <label for="" class="label label-inverse-info-border">@{{ record.employee?.position?.name || "Chưa thiết lập vị trí" }}</label>
                     </td>
                     <td>
-                        <b>22/07/2022</b>
+                        <b>@{{ record.created_at }}</b>
                     </td>
                     <td>
                         <div>
                             <label for="">Bắt đầu nghỉ</label>
-                            <p><b>23/07/2022</b></p>
+                            <p><b>@{{ record.request_detail.quit_work_from_at }}</b></p>
                         </div>
                         <div>
                             <label for="">Kết thúc nghỉ</label>
-                            <p><b>23/07/2022</b></p>
+                            <p><b>@{{ record.request_detail.quit_work_to_at }}</b></p>
                         </div>
                     </td>
-                    <td style="max-width: 150px; white-space: unset;" >
-                        @for ($i = 1; $i < 10; $i++)
-                            <span class="mytooltip tooltip-effect-5 pt-2" style="display: inline-block;">
-                                <img src="https://technext.github.io/mega_able/assets/images/avatar-4.jpg" class="avatar-custome" alt="" width="50">
-                                <span class="tooltip-content clearfix">
-                                    <span class="tooltip-text text-center">Võ Định</span>
-                                </span>
+                    <td style="max-width: 150px; white-space: unset;">
+                        <span class="mytooltip tooltip-effect-5 pt-2 pl-2" style="display: inline-block;" v-for="approver in record.approvers">
+                            <img :src="approver.avatar" class="avatar-custome" alt="" width="50">
+                            <span class="tooltip-content clearfix">
+                                <span class="tooltip-text text-center">@{{ approver.fullname }}</span>
                             </span>
-                        @endfor
+                        </span>
                     </td>
                     <td>
                         <div class="mytooltip tooltip-effect-9">
-                            <button class="btn waves-effect waves-dark btn-primary btn-outline-primary btn-icon">
+                            <a :href="linkRequestDetail(record.id)" class="btn waves-effect waves-dark btn-primary btn-outline-primary btn-icon">
                                 <i class="icofont icofont-eye-alt"></i>
-                            </button>
+                            </a>
                             <span class="tooltip-content3">Xem chi tiết</span>
                         </div>
                         <div class="mytooltip tooltip-effect-9 ml-2">
@@ -75,6 +73,29 @@
         </table>
     </div>
     <div style="float: right;" class="pagination_cutomize">
-        {{-- {{ $singleTypes->links() }} --}}
+        <nav aria-label="Page navigation example">
+            <template>
+                <paginate
+                    :page-count="requestProcessData.last_page"
+                    v-model="requestProcessData.current_page"
+                    :initial-page="requestProcessData.current_page"
+                    :click-handler="changePageProcess"
+                    :prev-text="'‹'"
+                    :next-text="'›'"
+                    :page-link-class="'page-link'"
+                    :container-class="'pagination'"
+                    :page-class="'page-item'"
+                    :prev-link-class="'page-link'"
+                    :next-link-class="'page-link'"
+                    :prev-class="'page-item'"
+                    :next-class="'page-item'"
+                >
+                </paginate>
+            </template>
+        </div>
     </div>
+</div>
+<div class="overlay-load">
+    <img src="{{asset('frontend')}}/image/loading.gif" alt="">
+    <p style="color: #3c2525;">Vui lòng chờ ...</p>
 </div>

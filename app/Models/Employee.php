@@ -64,8 +64,12 @@ class Employee extends Authenticatable implements JWTSubject
 
     public function getAvatar()
     {
-        if ($this->type_avatar == 1) {
-            return asset('storage/' . $this->avatar);
+        if (!empty($this->avatar)) {
+            if ($this->type_avatar == 1) {
+                return asset('storage/' . $this->avatar);
+            }
+        } else {
+            return asset('frontend/image/avatar_empty.jfif');
         }
         return $this->avatar;
     }
@@ -118,5 +122,22 @@ class Employee extends Authenticatable implements JWTSubject
     public function singleWord()
     {
         return $this->hasMany(Request::class, 'employee_id');
+    }
+
+    public function getLeader()
+    {
+        $position = $this->position;
+        if ($position->is_leader == config('position.is_leader.yes')) {
+            return $this;
+        }
+
+        $department = $position?->department;
+        if ($department) {
+            return Employee::whereHas('position', function ($query) use($department) {
+                $query->where('department_id', $department->id);
+                $query->where('is_leader', config('position.is_leader.yes'));
+            })->first();
+        }
+        return null;
     }
 }

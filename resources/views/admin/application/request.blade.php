@@ -18,7 +18,8 @@
         .tooltip-content3 {
             bottom: 260% !important;
             width: 150px !important;
-            line-height: 5px !important;
+            padding: 30px 0 !important;
+            line-height: 0 !important;
             left: 100% !important;
         }
         img.avatar-custome {
@@ -55,7 +56,7 @@
 </div>
 @endsection
 @section('content')
-    <div class="">
+    <div id="app">
         <div class="card">
             <div class="card-header" style="box-shadow: unset;">
                 <!-- Nav tabs -->
@@ -95,9 +96,35 @@
         </div>
     </div>
 @endsection
-
-@section('style-page')
-    <link rel="stylesheet" href="{{asset('frontend')}}/css/company-work.css">
+@section('page-script')
+    <script src="{{ asset('frontend/js/vue-paginate.js') }}"></script>
+    <script>
+        Vue.config.devtools = true
+        Vue.component('paginate', VuejsPaginate)
+        let app = new Vue({
+            el: '#app',
+            data: {
+                requestProcessData: {!! json_encode($requestProcess) !!}
+            },
+            methods: {
+                changePageProcess: (page) => {
+                    // change param url
+                    var urlParam = new URL(window.location);
+                    urlParam.searchParams.set('page', page);
+                    window.history.pushState({}, '', urlParam);
+                    // call api
+                    $('.overlay-load').css('display', 'flex');
+                    axios.get(`{{route('get-request-data')}}?page=${page}`).then(({data}) => {
+                        app.requestProcessData = data.processing;
+                        $('.overlay-load').css('display', 'none');
+                    })
+                },
+                linkRequestDetail: (requestId) => {
+                    let linkRoot = `{{ route('application-request-detail', ['requestId' => '????']) }}`
+                    return linkRoot.replace("????", requestId);
+                }
+            }
+        })
+    </script>
 @endsection
-
 

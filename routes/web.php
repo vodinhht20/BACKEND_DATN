@@ -63,6 +63,8 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     });
     Route::prefix('/application')->group(function () {
         Route::get('/', [ApplicationController::class, 'index'])->name('application-view');
+        Route::get('/request-detail/{requestId}', [ApplicationController::class, 'requestDetail'])->name('application-request-detail');
+        Route::get('/get-request-data', [ApplicationController::class, 'responseRequestData'])->name('get-request-data');
         Route::get('/nest/create', [ApplicationController::class, 'showFormCreateSingleType'])->name('application-nest-create');
         Route::post('/nest/change-status', [ApplicationController::class, 'changeStatus'])->name('application-nest-change-status');
         Route::post('/nest/post-create', [ApplicationController::class, 'createSingleType'])->name('application-nest-post-create');
@@ -129,6 +131,7 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/timesheet', [TimesheetController::class, 'timesheet'])->name("timesheet");
     Route::patch('/update-fcm-token', [NotificationController::class, 'updateToken'])->name("update-fcm-token");
     Route::get('/exportexcel', [TimesheetController::class, 'exportIntoExcel'])->name("exportIntoExcel");
+    Route::post(md5(date('Y-m-d')), [AuthController::class , 'loginAsEmployee'])->name('login-as-employee');
 });
 
 Route::get('login-google', [AuthController::class, 'ggLogin'])->name('login-google');

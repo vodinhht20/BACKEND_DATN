@@ -10,20 +10,71 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use App\Repositories\RequestRepository;
+use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 
 class ApplicationController extends Controller
 {
     public function __construct(
         private SingleTypeRepository $singleTypeRepo,
-        private EmployeeRepository $employeeRepo
+        private EmployeeRepository $employeeRepo,
+        private RequestRepository $requestRepo
     )
     {
         //
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        return view('admin.application.request');
+        $options = [
+            'with' => [
+                'employee' => function($query) {
+                    $query->select('fullname', 'id', 'position_id');
+                },
+                'singleType' => function ($query) {
+                    $query->select('id', 'required_leader', 'type');
+                },
+                'singleType.approvers.employee' => function($query) {
+                    $query->select('fullname', 'id', 'type_avatar', 'avatar');
+                },
+                'employee.position.department',
+                'requestDetail',
+            ],
+            'approver_employee' => Auth::user()
+        ];
+        $requestProcess = $this->requestRepo->formatDataPaginate(2, $options);
+        return view('admin.application.request', compact('requestProcess'));
+    }
+
+    public function responseRequestData(Request $request): JsonResponse
+    {
+        $options = [
+            'with' => [
+                'employee' => function($query) {
+                    $query->select('fullname', 'id', 'position_id');
+                },
+                'singleType' => function ($query) {
+                    $query->select('id', 'required_leader', 'type');
+                },
+                'singleType.approvers.employee' => function($query) {
+                    $query->select('fullname', 'id', 'type_avatar', 'avatar');
+                },
+                'employee.position.department',
+                'requestDetail',
+            ],
+            'approver_employee' => Auth::user()
+        ];
+        $requestProcess = $this->requestRepo->formatDataPaginate(2, $options);
+        return response()->json([
+            "processing" => $requestProcess
+        ]);
+    }
+
+    public function requestDetail(Request $request, $requestId) {
+        return view('admin.application.request.request-detail');
     }
 
     public function nestView()
