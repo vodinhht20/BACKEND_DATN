@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Rules\ReCaptcha;
 class AuthController extends Controller
 {
 
@@ -26,14 +27,19 @@ class AuthController extends Controller
     public function login(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
+            'g-recaptcha-response' => ['required', new ReCaptcha],
             'email' => 'required',
             'password' => 'required',
+        ], [
+            'g-recaptcha-response.required' => 'Vui lòng xác minh Recapcha !',
+            'email.required' => 'Email không được để trống !',
+            'password.required' => 'Vui lòng nhập mật khẩu !',
         ]);
         if ($validator->fails()) {
             return response()->json([
                 'status' => 'success',
                 'message' => $validator->messages()->first()
-            ], 404)->withInput();
+            ], 404);
         }
         $credentials = request(['email', 'password']);
         $token = JWTAuth::attempt($credentials);

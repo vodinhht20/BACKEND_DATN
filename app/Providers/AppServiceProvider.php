@@ -10,6 +10,8 @@ use \Masbug\Flysystem\GoogleDriveAdapter;
 use \League\Flysystem\Filesystem;
 use \Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\View;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -37,6 +39,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Paginator::useBootstrap();
+
+        View::composer('admin.layouts.header', 'App\Http\ViewComposers\ViewTopBarHeader');
 
         try {
             Storage::extend('google', function($app, $config) {

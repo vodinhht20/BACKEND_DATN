@@ -49,7 +49,7 @@ class TimesheetController extends Controller
         $inpMonth = $request->input('month', Carbon::now()->format("Y-m")) ?: Carbon::now()->format("Y-m");
         $monthYear = Carbon::createFromFormat("Y-m", $inpMonth);
         $options = [
-            'with' => ['timekeepdetail' => function ($q) {
+            'with' => ['timekeepDetail' => function ($q) {
                     $q->select('timekeep_id', 'checkin_at');
                 },
                 'employee'],

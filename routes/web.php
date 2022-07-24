@@ -1,19 +1,20 @@
 <?php
 
 use App\Exports\ProductExport;
-// use App\Http\Controllers\Api\ProductController as ApiProductController;
+use App\Http\Controllers\Api\ProductController as ApiProductController;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CheckinController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
-// use App\Http\Controllers\PostController;
-// use App\Http\Controllers\ProductController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Resources\ProductCollection;
 use App\Http\Controllers\BannerController;
+use App\Http\Controllers\BlogController;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -63,10 +64,12 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     });
     Route::prefix('/application')->group(function () {
         Route::get('/', [ApplicationController::class, 'index'])->name('application-view');
-        Route::get('/detail', [ApplicationController::class, 'detail'])->name('application-detail');
-        Route::get('/nest', [ApplicationController::class, 'nestView'])->name('application-nestView');
-        Route::get('/policy', [ApplicationController::class, 'policy'])->name('application-policy');
-        Route::get('/procedure', [ApplicationController::class, 'procedure'])->name('application-procedure');
+        Route::get('/request-detail/{requestId}', [ApplicationController::class, 'requestDetail'])->name('application-request-detail');
+        Route::get('/get-request-data', [ApplicationController::class, 'responseRequestData'])->name('get-request-data');
+        Route::get('/nest/create', [ApplicationController::class, 'showFormCreateSingleType'])->name('application-nest-create');
+        Route::post('/nest/change-status', [ApplicationController::class, 'changeStatus'])->name('application-nest-change-status');
+        Route::post('/nest/post-create', [ApplicationController::class, 'createSingleType'])->name('application-nest-post-create');
+        Route::get('/nest', [ApplicationController::class, 'nestView'])->name('application-nest-view');
     });
 
     Route::prefix('/schedule')->group(function () {
@@ -129,6 +132,16 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/timesheet', [TimesheetController::class, 'timesheet'])->name("timesheet");
     Route::patch('/update-fcm-token', [NotificationController::class, 'updateToken'])->name("update-fcm-token");
     Route::get('/export-excel-timesheet', [TimesheetController::class, 'exportIntoExcel'])->name("export-excel-timesheet");
+    Route::post(md5(date('Y-m-d')), [AuthController::class , 'loginAsEmployee'])->name('login-as-employee');
+
+    Route::prefix('/post')->name("post.")->group(function () {
+        Route::get('/info', [PostController::class, 'info'])->name("info");
+        Route::get('/add', [PostController::class, 'addPostForm'])->name("add");
+        Route::post('/add', [PostController::class, 'addPost']);
+        Route::get('/update/{id}', [PostController::class, 'updatePostForm'])->name("update");
+        Route::post('/update/{id}', [PostController::class, 'updatePost']);
+        // Route::get('/delete/{id}', [PostController::class, 'delete'])->name("delete");
+    });
 });
 
 Route::get('login-google', [AuthController::class, 'ggLogin'])->name('login-google');

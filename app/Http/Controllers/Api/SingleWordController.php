@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Noti;
 use App\Models\Request as ModelsRequest;
-use App\Models\Request_detail;
+use App\Models\RequestDetail;
 use App\Repositories\SingleTypeRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -67,7 +67,7 @@ class SingleWordController extends Controller
         try {
             DB::beginTransaction();
             $ModelRequest = new ModelsRequest();
-            $Request_detail = new Request_detail();
+            $Request_detail = new RequestDetail();
 
             $Request_detail->fill([
                 'content' => $request->lydo,

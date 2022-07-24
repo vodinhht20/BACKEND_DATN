@@ -120,7 +120,8 @@ class UserController extends Controller
                 "employee_code" => $profile->employee_code,
                 "branch" => $this->employeeRepo->findBranch($profile->branch_id),
                 "id" => $profile->id,
-                'profile' => $profile
+                // 'profile' => $profile,
+                'single_word' => $profile->singleWord->count(),
         ], 200);
     }
 

@@ -2,13 +2,42 @@
 @section('title')
     <title>Loại Sản Phẩm | Danh sách</title>
 @endsection
+@section('style-page')
+    <style>
+        th, td {
+            white-space: unset;
+        }
+        .slider.round {
+            height: 28px;
+        }
+        .slider:before {
+            left: 5px;
+            bottom: 2px;
+            height: 24px;
+        }
+
+        .text-description {
+            border: 1px dashed #d3caca;
+            background-color: #efefed;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .mytooltip:hover .tooltip-content4 {
+            padding-top: 30px !important;
+        }
+
+        body {
+            padding-right: unset !important;
+        }
+    </style>
+@endsection
 @section('header-page')
 <div class="page-header">
     <div class="page-block">
         <div class="row align-items-center">
             <div class="col-md-8">
                 <div class="page-header-title">
-                    <h5 class="m-b-10">Quản Lý ĐƠn Từ</h5>
+                    <h5 class="m-b-10">Quản Lý Đơn Từ</h5>
                     <p class="m-b-0">Danh sách tất cả các loại đơn từ của bạn</p>
                 </div>
             </div>
@@ -25,94 +54,154 @@
     </div>
 </div>
 @endsection
-{{-- @section('content')
-<div class="">
-    <div class="sub-title">Left Tab</div>
-    <!-- Nav tabs -->
-    <ul class="nav nav-tabs md-tabs tabs-left b-none" role="tablist">
-        <li class="nav-item">
-            <a class="nav-link active" data-toggle="tab" data-target="#application_list"  aria-controls="application_list" aria-expanded="false" role="tab">Danh Sách Đơn Từ</a>
-            <div class="slide"></div>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" data-target="#create_application" aria-controls="create_application" aria-expanded="false" role="tab">Thiết Lập Đơn Từ</a>
-            <div class="slide"></div>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" data-target="#policy" aria-controls="policy" aria-expanded="false" role="tab">Chính Sách nghỉ phép</a>
-            <div class="slide"></div>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" data-target="#procedure" aria-controls="procedure" aria-expanded="false" role="tab">Quy trình</a>
-            <div class="slide"></div>
-        </li>
-    </ul>
-    <!-- Tab panes -->
-    <div class="tab-content tabs-left-content card-block">
-        <div class="tab-pane active" id="application_list" role="tabpanel">
-           @include('admin.application.form')
-        </div>
-        <div class="tab-pane" id="create_application" role="tabpanel">
-            @include('admin.application.nest')
-        </div>
-        <div class="tab-pane" id="policy" role="tabpanel">
-            <p >3. This is Photoshop's version of Lorem IpThis is Photoshop's version of Lorem Ipsum. Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem quis bibendum auctor, nisi elit consequat ipsum, nec sagittis sem nibh id elit. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean mas Cum sociis natoque penatibus et magnis dis.....</p>
-        </div>
-        <div class="tab-pane" id="procedure" role="tabpanel">
-            <p>4.Cras consequat in enim ut efficitur. Nulla posuere elit quis auctor interdum praesent sit amet nulla vel enim amet. Donec convallis tellus neque, et imperdiet felis amet.</p>
-        </div>
-    </div>
-</div>
-
-@endsection --}}
 @section('content')
-    <div class="box-section-timesheet row">
-        <div class="col-md-12 col-lg-2 col-sm-12 tabs row">
-            <a href="{{ route('application-view') }}" class="col-lg-12 col-md-3 col-sm-4 tab-item">
-                <div class="col-lg-12 col-md-3 col-sm-4 ">
-                    <i class=" ti-clipboard"></i>
-                    <p>Danh Sách Đơn Từ</p>
+    <div class="box-section-timesheet">
+        <div class="card">
+            <div class="card-header" style="box-shadow: unset;">
+                <h5 class="card-header-text">Danh sách các loại đơn</h5>
+            </div>
+            <div class="card-block">
+                <div class="row align-items-center">
+                    <div class="col-10">
+                        <p>Có <b>{{ $singleTypes->total() }}</b> loại đơn trong danh sách</p>
+                    </div>
+                    <div class="col-2" style="float: right;">
+                        <a href="{{ route('application-nest-create') }}" class="btn btn-outline-primary btn-round waves-effect btn-sm waves-light mr-3" style="padding-top: 10px; float: right;">
+                            <i class="ti-plus"></i>
+                            Thêm mới
+                        </a>
+                    </div>
                 </div>
-            </a>
-            <a href="{{ route('application-nestView') }}" class="col-lg-12 col-md-3 col-sm-4 tab-item active">
-                <div class="col-lg-12 col-md-3 col-sm-4 ">
-                    <i class=" ti-clipboard"></i>
-                    <p>Danh Sách Đơn Từ</p>
+                @include('admin.layouts.messages')
+                <div class="table-border-style mt-2">
+                    <div class="scrollbar-custom" style="width:100%;">
+                        <table class="table align-middle-td">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Tên loại đơn</th>
+                                    <th>Người duyệt đơn</th>
+                                    <th>Loại Template</th>
+                                    <th>Mô tả</th>
+                                    <th>Quy định tạo đơn</th>
+                                    <th>Trạng thái</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($singleTypes as $singleType)
+                                    <tr class={{ (Session::has('message.success') && session('id_new') && session('id_new') == $singleType->id ) ?'bg-green':'' }}>
+                                        <td>{{ $loop->index+1 }}</td>
+                                        <td style="width: 200px;">{{ $singleType->name }}</td>
+                                        <td style="width: 300px;">
+                                            @if ($singleType->required_leader)
+                                                <label for="" class="label label-primary" > Yêu cầu leader duyệt
+                                                </label>
+                                            @endif
+                                            <ul class="mt-2 list-tag" style="list-style-type: circle;">
+                                                @foreach ($singleType->approvers as $approver)
+                                                    <li class="ellipsis">
+                                                        <a href="" style="color: #448aff;" title="{{ $approver->employee->fullname }}">[{{ $approver->employee->employee_code }}]
+                                                            {{ $approver->employee->fullname }}
+                                                        </a>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                            @if (count($singleType->approvers) == 0)
+                                                <p>Người duyệt đơn chưa thiết lập</p>
+                                            @endif
+                                        </td>
+                                        <td style="width: 200px;">
+                                            <label for="" class="label label-inverse-primary">{{ config('singletype.type.' . $singleType->type) }}</label>
+                                        </td>
+                                        <td style="width: 400px;">
+                                            {{ formartString($singleType->description, 100) }}
+                                            @if (strlen($singleType->description) > 50)
+                                                <span class="mytooltip tooltip-effect-1" style="color: #6d95dd;">
+                                                    <span class="tooltip-item2" style="font-weight: 500;">Xem thêm</span>
+                                                    <span class="tooltip-content4 scrollbar-right-custom" style="height: 210px; overflow-y: auto; border-bottom-color: #88b3fb;">
+                                                        {{ $singleType->description }}
+                                                    </span>
+                                                </span>
+                                            @endif
+                                        </td>
+                                        <td style="width: 400px;">
+                                            {{ formartString($singleType->regulation, 100) }}
+                                            @if (strlen($singleType->regulation) > 50)
+                                                <span class="mytooltip tooltip-effect-1" style="color: #6d95dd;">
+                                                    <span class="tooltip-item2" style="font-weight: 500;">Xem thêm</span>
+                                                    <span class="tooltip-content4 scrollbar-right-custom" style="height: 210px; overflow-y: auto; border-bottom-color: #88b3fb;">
+                                                        {{ $singleType->regulation }}
+                                                    </span>
+                                                </span>
+                                            @endif
+                                        </td>
+                                        <td style="width: 100px;">
+                                            <label class="switch">
+                                                <input type="checkbox" class="value-status change-status" data-id="{{$singleType->id}}" @if ($singleType->status) checked @else @endif>
+                                                <span class="slider round"></span>
+                                            </label>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                @endforeach
+                                @if (count($singleTypes) == 0)
+                                    <tr>
+                                        <td colspan="6" class="box_data_empty">
+                                            <img src="{{asset('frontend')}}/image/empty_data.png" alt="">
+                                        </td>
+                                    </tr>
+                                @endif
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="float: right;" class="pagination_cutomize">
+                        {{ $singleTypes->links() }}
+                    </div>
                 </div>
-            </a>
-            <a href="{{ route('application-policy') }}" class="col-lg-12 col-md-3 col-sm-4 tab-item">
-                <div class="col-lg-12 col-md-3 col-sm-4 ">
-                    <i class=" ti-clipboard"></i>
-                    <p>Danh Sách Đơn Từ</p>
-                </div>
-            </a>
-            <a href="{{ route('application-procedure') }}" class="col-lg-12 col-md-3 col-sm-4 tab-item">
-                <div class="col-lg-12 col-md-3 col-sm-4 ">
-                    <i class=" ti-clipboard"></i>
-                    <p>Danh Sách Đơn Từ</p>
-                </div>
-            </a>
+            </div>
         </div>
-        <div class="col-md-12 col-lg-10 col-sm-12 card">
-            <div class="tab-pane card-header">
-                {{-- @include('admin.application.form') --}}
-            </div>
-            <div class="tab-pane active card-block">
-                @include('admin.application.nest')
-            </div>
-            <div class="tab-pane card-block">
-                Còn Ten 3
-            </div>
-            <div class="tab-pane card-block">
-               Còn Ten 4
-            </div>
-            
+        <div class="overlay-load">
+            <img src="{{asset('frontend')}}/image/loading.gif" alt="">
+            <p>Vui lòng chờ ...</p>
         </div>
     </div>
 @endsection
-
-@section('style-page')
-    <link rel="stylesheet" href="{{asset('frontend')}}/css/company-work.css">
+@section('page-script')
+    <script>
+        $(document).ready(function () {
+            $('.change-status').on('click', async function (e) {
+                Swal.fire({
+                    title: '<h3 class="mt-2">Xác nhận thay đổi trạng thái</h3>',
+                    showCancelButton: true,
+                    confirmButtonText: 'Đồng ý'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $('.overlay-load').css('display', 'flex');
+                        let data = {
+                            id: $(this).attr("data-id"),
+                            status: e.target.checked ? 1 : 0
+                        }
+                        axios.post("{{route('application-nest-change-status')}}", data).then(res => {
+                            Swal.fire({
+                                title: 'Thành công',
+                                text: 'Trạng thái đã được thay đổi',
+                                icon: 'success'
+                            })
+                            $('.overlay-load').css('display', 'none');
+                        }).catch(({response}) => {
+                            e.target.checked = !e.target.checked;
+                            Swal.fire(
+                                'Thất bại',
+                                response.data.message,
+                                'error'
+                            );
+                            $('.overlay-load').css('display', 'none');
+                        })
+                        return;
+                    }
+                    e.target.checked = !e.target.checked;
+                })
+            })
+        });
+    </script>
 @endsection
-
-

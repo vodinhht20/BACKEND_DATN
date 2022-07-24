@@ -83,6 +83,39 @@
             </li>
         </ul>
 
+        <div class="pcoded-navigation-label" data-i18n="nav.category.forms">Đơn từ</div>
+        <ul class="pcoded-item pcoded-left-item">
+            <li class="pcoded-hasmenu {{ Request::routeIs('application-*') ? 'active pcoded-trigger' : '' }}">
+                <a href="javascript:void(0)" class="waves-effect waves-dark">
+                    <span class="pcoded-micon"><i class="ti-files"></i></span>
+                    <span class="pcoded-mtext"
+                        data-i18n="nav.basic-components.main">Đơn từ</span>
+                    <span class="pcoded-mcaret"></span>
+                </a>
+                <ul class="pcoded-submenu">
+                    <li class="{{ Request::routeIs('application-view') ? 'active' : '' }}">
+                        <a href=" {{route('application-view')}} " class="waves-effect waves-dark">
+                            <span class="pcoded-micon"><i class="ti-calendar"></i></span>
+                            <span class="pcoded-mtext"
+                                data-i18n="nav.basic-components.alert">Phê duyệt đơn</span>
+                            <span class="pcoded-mcaret"></span>
+                        </a>
+                    </li>
+                    <li class="{{
+                            Request::routeIs('application-nest-view') ||  Request::routeIs('application-nest-create')
+                            ? 'active' : ''
+                        }}">
+                        <a href=" {{route('application-nest-view')}} " class="waves-effect waves-dark">
+                            <span class="pcoded-micon"><i class="ti-calendar"></i></span>
+                            <span class="pcoded-mtext"
+                                data-i18n="nav.basic-components.alert">Thiết lập đơn</span>
+                            <span class="pcoded-mcaret"></span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+
         <div class="pcoded-navigation-label" data-i18n="nav.category.forms">Chấm Công</div>
         <ul class="pcoded-item pcoded-left-item">
             <li class="{{ Request::routeIs('checkin.*') ? 'active' : '' }}">
@@ -124,13 +157,6 @@
                         <a href="{{ route('user-black-list') }}" class="waves-effect waves-dark">
                             <span class="pcoded-micon"><i class="ti-zip"></i><b>FC</b></span>
                             <span class="pcoded-mtext" data-i18n="nav.form-components.main">Danh Sách Chặn</span>
-                            <span class="pcoded-mcaret"></span>
-                        </a>
-                    </li>
-                    <li class="{{ Request::routeIs('application') ? 'active' : '' }}">
-                        <a href="{{ route('application-view') }}" class="waves-effect waves-dark">
-                            <span class="pcoded-micon"><i class="ti-zip"></i><b>FC</b></span>
-                            <span class="pcoded-mtext" data-i18n="nav.form-components.main">Danh Đơn Từ</span>
                             <span class="pcoded-mcaret"></span>
                         </a>
                     </li>
@@ -177,6 +203,13 @@
                         </a>
                     </li>
                 </ul>
+            </li>
+            <li class="{{ Request::routeIs('post.*') ? 'active' : '' }}">
+                <a href="{{ route("post.info") }}" class="waves-effect waves-dark">
+                    <span class="pcoded-micon"><i class="ti-agenda"></i><b>FC</b></span>
+                    <span class="pcoded-mtext" data-i18n="nav.form-components.main">Quản lý blog</span>
+                    <span class="pcoded-mcaret"></span>
+                </a>
             </li>
         </ul>
     </div>
