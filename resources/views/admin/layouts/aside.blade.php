@@ -57,7 +57,7 @@
         <ul class="pcoded-item pcoded-left-item">
             <li class="pcoded-hasmenu {{ Request::routeIs('schedule-*') ? 'active pcoded-trigger' : '' }}">
                 <a href="javascript:void(0)" class="waves-effect waves-dark">
-                    <span class="pcoded-micon"><i class="ti-calendar"></i></span>
+                    <span class="pcoded-micon"><i class="ti-layout-grid2-alt"></i></span>
                     <span class="pcoded-mtext"
                         data-i18n="nav.basic-components.main">Cài đặt lịch</span>
                     <span class="pcoded-mcaret"></span>
@@ -203,6 +203,13 @@
                         </a>
                     </li>
                 </ul>
+            </li>
+            <li class="{{ Request::routeIs('post.*') ? 'active' : '' }}">
+                <a href="{{ route("post.info") }}" class="waves-effect waves-dark">
+                    <span class="pcoded-micon"><i class="ti-agenda"></i><b>FC</b></span>
+                    <span class="pcoded-mtext" data-i18n="nav.form-components.main">Quản lý blog</span>
+                    <span class="pcoded-mcaret"></span>
+                </a>
             </li>
         </ul>
     </div>

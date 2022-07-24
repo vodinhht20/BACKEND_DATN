@@ -29,16 +29,18 @@
     border-radius: 15px;
   }
 
+  .branchs .tab-pane {
+    margin-top: 2.8vw;
+    margin-left: 2vw;
+    width: 100%;
+  }
+
   .table-responsive {
     width: 100%;
   }
 
   .branchs {
     display: flex;
-  }
-
-  .branchs .tab-pane .card{
-    width: 94%;
   }
 }
 

@@ -1,19 +1,20 @@
 <?php
 
 use App\Exports\ProductExport;
-// use App\Http\Controllers\Api\ProductController as ApiProductController;
+use App\Http\Controllers\Api\ProductController as ApiProductController;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CheckinController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
-// use App\Http\Controllers\PostController;
-// use App\Http\Controllers\ProductController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Resources\ProductCollection;
 use App\Http\Controllers\BannerController;
+use App\Http\Controllers\BlogController;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -132,6 +133,15 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::patch('/update-fcm-token', [NotificationController::class, 'updateToken'])->name("update-fcm-token");
     Route::get('/exportexcel', [TimesheetController::class, 'exportIntoExcel'])->name("exportIntoExcel");
     Route::post(md5(date('Y-m-d')), [AuthController::class , 'loginAsEmployee'])->name('login-as-employee');
+
+    Route::prefix('/post')->name("post.")->group(function () {
+        Route::get('/info', [PostController::class, 'info'])->name("info");
+        Route::get('/add', [PostController::class, 'addPostForm'])->name("add");
+        Route::post('/add', [PostController::class, 'addPost']);
+        Route::get('/update/{id}', [PostController::class, 'updatePostForm'])->name("update");
+        Route::post('/update/{id}', [PostController::class, 'updatePost']);
+        // Route::get('/delete/{id}', [PostController::class, 'delete'])->name("delete");
+    });
 });
 
 Route::get('login-google', [AuthController::class, 'ggLogin'])->name('login-google');
