@@ -25,7 +25,7 @@ class Post extends Model
     public function getPost()
     {
         if ($this->images != '') {
-            return asset('storage/' . $this->images);
+            return asset('/storage/' . $this->images);
         }
         return $this->images;
     }
