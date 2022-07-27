@@ -33,6 +33,12 @@
 </div>
 @endsection
 @section('content')
+    @php
+        $employee = $requestData->employee;
+        $requestDetail = $requestData->requestDetail;
+        $singleType = $requestData->singleType;
+        $requestApproveHistories = $requestData->requestApproveHistories;
+    @endphp
     <div class="box-section-timesheet">
         <div class="card">
             <div class="card-header" style="box-shadow: unset;">
@@ -46,21 +52,21 @@
                         </h5>
                         <div>
                             <div class="mt-2 d-flex align-items-center" style="grid-column-gap: 10px;">
-                                <img src="" alt="" class="avatar_list">
+                                <img src="{{ $employee->getAvatar() }}" alt="" class="avatar_list">
                                 <div>
-                                    <b>Võ Văn Định</b>
-                                    <p style="margin: 0; color: var(--ui-outline);">Software Engine</p>
+                                    <b>{{ $employee->fullname }}</b>
+                                    <p style="margin: 0; color: var(--ui-outline);">{{ $employee->position->name }}</p>
                                 </div>
                             </div>
                             <hr>
                             <div>
                                 <div>
                                     <label for="" class="text-info">Bắt đầu nghỉ: </label>
-                                    <b>23/07/2022</b>
+                                    <b>{{ $requestDetail->quit_work_from_at }}</b>
                                 </div>
                                 <div>
                                     <label for="" class="text-info">Kết thúc nghỉ: </label>
-                                    <b>23/07/2022</b>
+                                    <b>{{ $requestDetail->quit_work_to_at }}</b>
                                 </div>
                             </div>
                             <hr>
@@ -74,7 +80,7 @@
                             <hr>
                             <div class="row">
                                 <div class="col-6">
-                                    <b>Đơn nghỉ không lương</b>
+                                    <b>{{ $singleType->name }}</b>
                                     <p class="text-info">Loại đơn</p>
                                 </div>
                                 <div class="col-6">
@@ -82,7 +88,7 @@
                                     <p class="text-info">Trạng thái đơn</p>
                                 </div>
                                 <div class="col-6">
-                                    <b>22/07/2022</b>
+                                    <b>{{ $requestData->created_at }}</b>
                                     <p class="text-info">Thời gian tạo đơn</p>
                                 </div>
                                 <div class="col-6">
@@ -93,7 +99,7 @@
                             <hr>
                             <div>
                                 <b>Lý do tạo đơn</b>
-                                <p>Xin được nghỉ chăm vợ</p>
+                                <p>{{ $requestDetail->content }}</p>
                             </div>
                             <hr>
                             <div>
@@ -120,15 +126,20 @@
                                     <label for="" class="text-custom">20:04:56 24/07/2022</label>
                                     <span>Đã tạo đơn</span>
                                 </li>
-                                <li>
-                                    <label for="" class="text-custom">20:04:56 24/07/2022</label>
-                                    <span>Đơn đã được duyệt bởi</span>
-                                </li>
-                                <li>
-                                    <label for="" class="text-custom">20:04:56 24/07/2022</label>
-                                    <span>Đơn đã bị từ chối</span>
-                                    <p class="text-danger">Lý do: Đơn không hợp lệ</p>
-                                </li>
+                                @foreach ($requestApproveHistories as $history)
+                                    <li>
+                                        @if ($history->status == config('hí'))
+                                            <label for="" class="text-custom">{{ $history-> }}</label>
+                                            <span>Đã được duyệt bởi <a href="">{{ $history->employee->fullname }}</a></span>
+                                        @elseif($)
+                                            <li>
+                                                <label for="" class="text-custom">20:04:56 24/07/2022</label>
+                                                <span>Đơn đã bị từ chối</span>
+                                                <p class="text-danger">Lý do: Đơn không hợp lệ</p>
+                                            </li>
+                                        @endif
+                                    </li>
+                                @endforeach
                             </ul>
                         </div>
                     </div>

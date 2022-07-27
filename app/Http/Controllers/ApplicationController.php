@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Request as ModelRequest;
 
 class ApplicationController extends Controller
 {
@@ -74,7 +75,14 @@ class ApplicationController extends Controller
     }
 
     public function requestDetail(Request $request, $requestId) {
-        return view('admin.application.request.request-detail');
+
+        $requestData = ModelRequest::find($requestId);
+
+        if (!$requestData) {
+            abort(404);
+        }
+
+        return view('admin.application.request.request-detail', compact('requestData'));
     }
 
     public function nestView()
