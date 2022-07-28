@@ -35,4 +35,9 @@ class Request extends Model
     {
         return $this->belongsTo(SingleType::class);
     }
+
+    public function requestApproveHistories()
+    {
+        return $this->hasMany(RequestApproveHistories::class, 'request_id', 'id');
+    }
 }

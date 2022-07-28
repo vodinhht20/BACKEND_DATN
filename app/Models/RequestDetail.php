@@ -23,4 +23,14 @@ class RequestDetail extends Model
         'quit_work_to_at',
         'request_id'
     ];
+
+    public function requestApproveHistories()
+    {
+        return $this->hasMany(RequestApproveHistories::class, 'employee_id', 'id');
+    }
+
+    public function request()
+    {
+        return $this->belongsTo(Request::class, 'request_id', 'id');
+    }
 }
