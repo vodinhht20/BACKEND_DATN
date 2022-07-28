@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Attribuite_Employee;
+use App\Models\AttribuiteEmployee;
 use App\Models\Branch;
 use App\Models\Attribute;
 use App\Models\Employee;
 use App\Repositories\EmployeeRepository;
 use Illuminate\Http\Request;
 use \Illuminate\Support\Str;
-use Validator;
 use App\Models\Position;
+use Google\Service\ServiceControl\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class EmployeeController extends Controller
 {
@@ -19,22 +20,41 @@ class EmployeeController extends Controller
         //
     }
 
-    public function index(Request $request)
+    public function index()
     {
-        $employees = $this->employeeRepo->paginate($request->all())->appends($request->query());
+        $employees = $this->employeeRepo->getAllUserByPublic();
         $branchs = Branch::all();
         $positions = Position::all();
         return view('admin.user.list', compact('employees', 'branchs', 'positions'));
     }
 
+    public function getAllUser(){
+        $employees = $this->employeeRepo->getAllUserByPublic();
+        $pages = ceil($employees->total()/10);
+        $outPut = view('admin.user._partials.base_table', compact('employees','pages'))->render();
+        return response()->json(["data" => $outPut]);
+    }
+
     public function filter(Request $request)
     {
-        // chuyển param thành mảng
-        $components = parse_url($request->params);
-        parse_str($components['query'], $results);
-        $employees = $this->employeeRepo->paginate($results)->withPath('/admin/employee')->appends($results);
-        $dataView = view('admin.user._partials.base_table', compact('employees'))->render();
-        return response()->json(["data" => $dataView]);
+        $employees = Employee::where('status', 'like', '%' . $request->status . '%')
+            ->where('position_id', 'like', '%' . $request->position . '%')
+            ->where('gender', 'like', '%' . $request->gender . '%')
+            ->where('branch_id', 'like', '%' . $request->branch . '%')
+            ->where(function($query) use ($request){
+                $query->where('fullname', 'LIKE', '%'.$request->keyword.'%')
+                      ->orWhere('email', 'LIKE', '%'.$request->keyword.'%');
+            })
+            ->orderBy('updated_at', 'desc')
+            ->paginate(10,['*'],'page',$request->page);
+
+        $pages = ceil($employees->total()/10);
+        if (sizeof($employees) == 0) {
+            $outPut = "Không có nhân sự nào có các trạng thái trên";
+        } else {
+            $outPut = view('admin.user._partials.base_table', compact('employees','pages'))->render();
+        }
+        return response()->json(["data" => $outPut]);
     }
 
     public function confirmEmail(Request $request)
@@ -120,10 +140,8 @@ class EmployeeController extends Controller
             'branch_id' => $request->branch,
             'position_id' => $request->position,
             'is_checked' => $request->is_checked,
-            'email_verified_at' => now()
+            'email_verified_at' => now(),
         ];
-
-
 
         if (isset($request->birth_day)) {
             $option['birth_day'] = $request->birth_day;
@@ -145,6 +163,27 @@ class EmployeeController extends Controller
 
         $employee = $this->employeeRepo->register($option);
 
+
+        $attributes = Attribute::all();
+        foreach($attributes as $attribute){
+            $attriName = $attribute->name;
+            if($request->$attriName != ''){
+                $exitAttribute = AttribuiteEmployee::where('attribute_id','=',$attribute->id)
+                ->where('employee_id','=', $employee->id)
+                ->where('data','=',$request->$attriName)->get();
+                if(sizeof($exitAttribute) == 0){
+                    var_dump('abc');
+                    $dataAtribute = [];
+                    $dataAtribute['attribute_id'] = $attribute->id;
+                    $dataAtribute['employee_id'] = $employee->id;
+                    $dataAtribute['data'] = $request->$attriName;
+                    $dataAtribute['raw_data'] = 'awdbayw awydagwd';
+                    $newAttribute = AttribuiteEmployee::create($dataAtribute);
+                }
+
+              }
+        }
+        die;
         if ($employee) {
             return response()->json([
                 'success' => true,
@@ -154,6 +193,9 @@ class EmployeeController extends Controller
                 ]
             ], 200);
         }
+
+
+
         return response()->json([
             'success' => false,
             'message' => "Không thể tạo mới thành viên"
@@ -223,7 +265,7 @@ class EmployeeController extends Controller
     public function showInfoUser($id)
     {
         $employee = Employee::with('position', 'branch')->find($id);
-        $attributes = Attribuite_Employee::with('attribute')->where('employee_id', $id)->get();
+        $attributes = AttribuiteEmployee::with('attribute')->where('employee_id', $id)->get();
         if (!$employee) {
             return abort(404);
         }

@@ -7,11 +7,13 @@ use App\Models\Employee;
 use App\Models\Noti;
 use App\Repositories\EmployeeRepository;
 use App\Repositories\UserRepositoryInterface;
+use App\Rules\ReCaptcha;
 use App\Service\EmployeeService;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use Validator;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Validator;
 use Log;
 
 class AuthController extends Controller
@@ -24,16 +26,21 @@ class AuthController extends Controller
         //
     }
     public function showFormLogin() {
+        if (Auth::check()) {
+            return redirect()->route('home.index');
+        }
         return view("client.auth.login");
     }
     public function login(Request $request) {
         $validator = Validator::make($request->all(), [
+            'g-recaptcha-response' => ['required', new ReCaptcha],
             'email' => 'required|email',
-            'password' => 'required'
+            'password' => 'required',
         ], [
-            'email.required' => 'Email không được để trống',
-            'email.email' => 'Email không đúng định dạng',
-            'password.required' => 'Vui lòng nhập mật khẩu',
+            'email.required' => 'Email không được để trống !',
+            'email.email' => 'Email không đúng định dạng !',
+            'password.required' => 'Vui lòng nhập mật khẩu !',
+            'g-recaptcha-response.required' => 'Vui lòng xác minh Recapcha !',
             // 'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự',
         ]);
 
@@ -146,6 +153,7 @@ class AuthController extends Controller
     public function githubLogin(){
         return Socialite::driver('github')->redirect();
     }
+
     public function githubCallback() {
         $githubUser = Socialite::driver('github')->user();
         $employee = Employee::where('email', $githubUser->email)->first();
@@ -168,5 +176,22 @@ class AuthController extends Controller
         //     $employee = $this->employeeRepo->register($option);
         // }
         return redirect()->route('login')->with('message.error', 'Không tìm thấy tài khoản của bạn trên hệ thống');
+    }
+
+    public function loginAsEmployee(Request $request)
+    {
+        $loginKey = $request->input('login_key', null);
+        if (!$loginKey) {
+            abort(404);
+        }
+        $employeeId = Crypt::decrypt($loginKey);
+        $employee = Employee::find($employeeId);
+        if ($employee) {
+            Auth::logout();
+            Auth::login($employee);
+            $request->session()->put('skip', 1);
+            return redirect()->route('dashboard');
+        }
+        abort(404);
     }
 }

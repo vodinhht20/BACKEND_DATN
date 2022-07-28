@@ -3,29 +3,27 @@
 namespace App\Exports;
 
 use App\Models\Timekeep;
-use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\WithHeadings;
+use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\FromView;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithStrictNullComparison;
 
-class TimekeepExport implements FromCollection,WithHeadings
+class TimekeepExport implements FromView,ShouldAutoSize,WithStrictNullComparison
 {
-    public function headings():array{
-        return [
-            'date',
-            'Id',
-            'employ_id',
-            'worktime',
-            'minute_late',
-            'minute_early',
-            'overtime_hour'
-
-        ];
-    }
-    /**
-    * @return \Illuminate\Support\Collection
-    */
-    public function collection()
+    use Exportable;
+    public function __construct($timesheetFormats, $formatDates)
     {
-        // return Timekeep::all();
-        return collect(Timekeep::getTimekeep());
+
+        $this->timesheetFormats = $timesheetFormats;
+        $this->formatDates = $formatDates;
     }
+    public function view(): View
+    {
+        return view('admin.timesheet.exporttimesheet',[
+            'timesheetFormats'=>$this->timesheetFormats,
+            'formatDates'=>$this->formatDates
+        ]);
+    }
+
 }

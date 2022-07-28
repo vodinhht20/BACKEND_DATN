@@ -285,7 +285,7 @@ class ScheduleWorkController extends Controller
 
         $result = $this->holidayScheduleRepo->create($options);
         if ($result) {
-            return redirect()->route('schedule-calendar-holiday')->with('message.success', 'Thêm loại sản phẩm thành công')->with('id_new', $result->id);
+            return redirect()->route('schedule-calendar-holiday')->with('message.success', 'Thêm lịch nghỉ lễ thành công')->with('id_new', $result->id);
         }
         return redirect()->back()->with('message.error', 'Không thể tạo mới')->withInput();
     }

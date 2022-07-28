@@ -4,14 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Position extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
-    public function Employee()
+    public function employee()
     {
-        return $this->belongsToMany(Employee::class, 'employee_positions', 'position_id', 'employee_id');
+        return $this->hasMany(Employee::class);
     }
 
     public function department()

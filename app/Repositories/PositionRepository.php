@@ -26,20 +26,29 @@ class PositionRepository extends BaseRepository
         }
 
         if (isset($options['department_ids']) && count($options['department_ids']) > 0) {
-            $query->whereId("department_id", $options['department_ids']);
+            $query->whereIn("department_id", $options['department_ids']);
+        }
+
+        if (isset($options['department_id'])) {
+            $query->where("department_id", $options['department_id']);
         }
 
         return $query;
     }
 
-    public function createAndUpdateCustom($datas, $departmentId): void
+    public function createAndUpdateCustom($datas, $indexPositionLeader, $departmentId): void
     {
-        foreach ($datas as $data) {
+        foreach ($datas as $key => $data) {
             if (isset($data['id'])) {
                 $position = $this->model->find($data['id']);
             } else {
                 $position = new $this->model;
                 $position->department_id = $departmentId;
+            }
+            if ($key == $indexPositionLeader) {
+                $position->is_leader = config('position.is_leader.yes');
+            } else {
+                $position->is_leader = config('position.is_leader.no');
             }
             $position->name = $data['name'];
             $position->save();

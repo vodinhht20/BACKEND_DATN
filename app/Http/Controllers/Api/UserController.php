@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Libs\Slack;
-use App\Models\Attribuite_Employee;
+use App\Models\AttribuiteEmployee;
 use App\Models\Noti;
 use App\Repositories\EmployeeRepository;
 use App\Repositories\UserRepositoryInterface;
@@ -120,7 +120,8 @@ class UserController extends Controller
                 "employee_code" => $profile->employee_code,
                 "branch" => $this->employeeRepo->findBranch($profile->branch_id),
                 "id" => $profile->id,
-                'profile' => $profile
+                // 'profile' => $profile,
+                'single_word' => $profile->singleWord->count(),
         ], 200);
     }
 
@@ -223,7 +224,7 @@ class UserController extends Controller
     protected function kyc(Request $request): JsonResponse
     {
         $employee = JWTAuth::toUser($request->access_token);
-        $Attribuite_Employee = Attribuite_Employee::OrderBy('created_at', 'desc')->where('employee_id', $employee->id)->select('status')->first();
+        $Attribuite_Employee = AttribuiteEmployee::OrderBy('created_at', 'desc')->where('employee_id', $employee->id)->select('status')->first();
 
         if (!empty($Attribuite_Employee)) {
             if ($Attribuite_Employee->status == 0) {
@@ -275,7 +276,7 @@ class UserController extends Controller
         }
         $raw_data = json_encode($data);
 
-        $document = new Attribuite_Employee();
+        $document = new AttribuiteEmployee();
         $document->employee_id = $employee->id;
         $document->attribute_id = 1;
         $document->data = "null";
@@ -299,7 +300,7 @@ class UserController extends Controller
 
     protected function checkDocument(Request $request){
         $employee = JWTAuth::toUser($request->access_token);
-        $status = Attribuite_Employee::OrderBy('created_at', 'desc')->where('employee_id', $employee->id)->select('status')->first();
+        $status = AttribuiteEmployee::OrderBy('created_at', 'desc')->where('employee_id', $employee->id)->select('status')->first();
         return $status;
     }
 }

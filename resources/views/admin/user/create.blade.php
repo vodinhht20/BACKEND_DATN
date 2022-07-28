@@ -163,7 +163,7 @@
                                 <div class="form-group">
                                     <label class="col-form-label">{{$attribute->name}}</label>
                                     <div class="">
-                                        <input name="{{$attribute->name}}" type="{{getDataType($attribute->data_type)}}" class="form-control data-input" name="data" placeholder="{{$attribute->name}}">
+                                        <input name="{{$attribute->name}}" type="{{getDataType($attribute->data_type)}}" class="form-control data-input" placeholder="{{$attribute->name}}">
                                     </div>
                                 </div>
                             </div>
