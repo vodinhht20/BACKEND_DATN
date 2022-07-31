@@ -30,6 +30,10 @@
             height: 50px;
             object-fit: cover;
         }
+
+        .badge-top-right {
+            top: 5px !important;
+        }
     </style>
 @endsection
 @section('header-page')
@@ -59,38 +63,49 @@
     <div id="app">
         <div class="card">
             <div class="card-header" style="box-shadow: unset;">
-                <!-- Nav tabs -->
-                <ul class="nav nav-tabs default-tab tabs" role="tablist">
-                    <li class="nav-item">
-                        <a class="nav-link active box-position" data-toggle="tab" data-target="#type" aria-controls="type" aria-expanded="true" role="tab" >
-                            Đơn cần phê duyệt
-                            <label for="" class="badge badge-primary badge-top-right">10</label>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link box-position" data-toggle="tab" href="#dafuk" aria-controls="dafuk" aria-expanded="false" role="tab" >
-                            Đơn đã được duyệt
-                            <label for="" class="badge badge-success badge-top-right">10</label>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link box-position" data-toggle="tab" href="#deathline" aria-controls="deathline" aria-expanded="false" role="tab" >
-                            Đơn đã từ chối
-                            <label for="" class="badge badge-warning badge-top-right">10</label>
-                        </a>
-                    </li>
-                </ul>
+                <div style="max-width: 400px !important;">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs md-tabs unset-boder" role="tablist" style="border: unset;">
+                        <li class="nav-item" @click="() => app.current_tab = 'process'">
+                            <a class="nav-link box-position" :class="{ active: current_tab == 'process'}" data-toggle="tab" href="#process_tab" role="tab" >
+                                Đơn cần phê duyệt
+                            </a>
+                            <div class="slide"></div>
+                            <label for="" class="badge badge-primary badge-top-right">@{{ requestProcessData.total }}</label>
+                        </li>
+                        <li class="nav-item" @click="() => app.current_tab = 'accepted'">
+                            <a class="nav-link box-position" :class="{ active: current_tab == 'accepted'}" data-toggle="tab" href="#accepted_tab" role="tab" >
+                                Đơn đã được duyệt
+                            </a>
+                            <div class="slide"></div>
+                            <label for="" class="badge badge-success badge-top-right">@{{ requestAcceptedData.total }}</label>
+                        </li>
+                        <li class="nav-item" @click="() => app.current_tab = 'unapproved'">
+                            <a class="nav-link box-position" :class="{ active: current_tab == 'unapproved'}" data-toggle="tab" href="#unapproved_tab" role="tab" >
+                                Đơn đã từ chối
+                            </a>
+                            <div class="slide"></div>
+                            <label for="" class="badge badge-warning badge-top-right">@{{ requestUnapprovedData.total }}</label>
+                        </li>
+                    </ul>
+                </div>
             </div>
             <!-- Tab panes -->
-            <div class="tab-content tabs card-block">
-                <div class="tab-pane active" id="type" role="tabpanel">
-                    @include('admin.application.request.processing')
+            <div class="card-block">
+                <div class="tab-contents">
+                    <div class="" v-if="current_tab == 'process'" id="process_tab" role="tabpanel">
+                        @include('admin.application.request.processing')
+                    </div>
+                    <div class="" v-if="current_tab == 'accepted'" id="accepted_tab" role="tabpanel">
+                        @include('admin.application.request.accepted')
+                    </div>
+                    <div class="" v-if="current_tab == 'unapproved'" id="unapproved_tab" role="tabpanel">
+                        @include('admin.application.request.unapproved')
+                    </div>
                 </div>
-                <div class="tab-pane" id="deathline" role="tabpanel">
-                    @include('admin.application.request.accepted')
-                </div>
-                <div class="tab-pane" id="dafuk" role="tabpanel">
-                    @include('admin.application.request.unapproved')
+                <div class="overlay-load">
+                    <img src="{{asset('frontend')}}/image/loading.gif" alt="">
+                    <p style="color: #3c2525;">Vui lòng chờ ...</p>
                 </div>
             </div>
         </div>
@@ -101,10 +116,13 @@
     <script>
         Vue.config.devtools = true
         Vue.component('paginate', VuejsPaginate)
-        let app = new Vue({
+        var app = new Vue({
             el: '#app',
             data: {
-                requestProcessData: {!! json_encode($requestProcess) !!}
+                requestProcessData: {!! json_encode($requestProcess) !!},
+                requestAcceptedData: {!! json_encode($requestAccepted) !!},
+                requestUnapprovedData: {!! json_encode($requestUnapproved) !!},
+                current_tab: 'process'
             },
             methods: {
                 changePageProcess: (page) => {

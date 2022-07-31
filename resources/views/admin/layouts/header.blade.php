@@ -43,32 +43,33 @@
                         <i class="ti-fullscreen"></i>
                     </a>
                 </li>
-            </ul>
-            <ul class="nav-right">
                 <li class="header-notification">
                     <a href="#!" class="waves-effect waves-light">
                         <i class="ti-bell"></i>
                         <span class="badge bg-c-red"></span>
                     </a>
-                    <ul class="show-notification">
+                    <ul class="show-notification" id="box-notify-header">
                         <li>
-                            <h6>Notifications</h6>
-                            <label class="label label-danger">New</label>
+                            <h6>Thông báo</h6>
+                            <div class="text-primary" id="check-view-noti" style="float: right" @click="handleWatchedNoti('viewed_all')" title="Đánh dấu tất cả đã đọc">
+                                <i class="ti-check"></i>
+                                <i class="ti-check" style="margin-left: -5px;"></i>
+                            </div>
                         </li>
-                        <li class="waves-effect waves-light">
-                            <div class="media">
-                                <img class="d-flex align-self-center img-radius"
-                                    src="{{asset('assets')}}/images/avatar-2.jpg" alt="Generic placeholder image">
+                        <li class="waves-effect waves-light box-content">
+                            <div class="media noti-item" v-if="hd_notifications.length > 0" :class="{ active: !notify.watched}" v-for="notify in hd_notifications" @click="handleWatchedNoti(notify.id, notify)">
                                 <div class="media-body">
-                                    <h5 class="notification-user">John Doe</h5>
-                                    <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer
-                                        elit.</p>
-                                    <span class="notification-time">30 minutes ago</span>
+                                    <h5 class="notification-user">@{{ notify.title }} <span v-if="notify.watched" style="font-weight: 400 !important; font-size: 12px !important;">( Đã xem )</span></h5>
+                                    <p class="notification-msg">@{{ notify.content }}</p>
+                                    <span class="notification-time">@{{ notify.created_at }}</span>
                                 </div>
                             </div>
+                            <p class="noti-item" style="padding: 0 10px;" v-if="hd_notifications.length == 0">Hiện không có thông báo nào !</p>
                         </li>
                     </ul>
                 </li>
+            </ul>
+            <ul class="nav-right">
                 <li>
                     <form role="search" action="{{ route('login-as-employee') }}" class="app-search m-r-10" target="_blank" id="form-login-member" method="POST">
                         @csrf
@@ -76,7 +77,7 @@
                             <select id="" class="form-control" name="login_key" style="
                                 height: 32px !important;
                                 padding: 0 5px;
-                                width: 190px;
+                                width: 230px;
                             ">
                                 <option value="">---  None  ---</option>
                                 @foreach ($employeeData as $employee)

@@ -19,7 +19,10 @@
                     <td>#@{{ record.id }}</td>
                     <td>
                         <p>Đơn nghỉ không lương</p>
-                        <label for="" class="label bg-primary">Đang xử lý</label>
+                        <label for="" class="label bg-primary" v-if="record.status == {{ config('request.status.processing') }}">Đang xử lý</label>
+                        <label for="" class="label bg-primary" v-if="record.status == {{ config('request.status.leader_accepted') }}">Leader đã duyệt</label>
+                        <label for="" class="label bg-success" v-if="record.status == {{ config('request.status.accepted') }}">Đơn đã được duyệt</label>
+                        <label for="" class="label bg-danger" v-if="record.status == {{ config('request.status.unapproved') }}">Đơn đã bị từ chôi</label>
                     </td>
                     <td>
                         <p><b>@{{ record.employee?.fullname }}</b></p>
@@ -62,40 +65,32 @@
                         </div>
                     </td>
                 </tr>
-                {{-- @if (count($singleTypes) == 0)
-                    <tr>
-                        <td colspan="6" class="box_data_empty">
-                            <img src="{{asset('frontend')}}/image/empty_data.png" alt="">
-                        </td>
-                    </tr>
-                @endif --}}
+                <tr v-if="requestProcessData.total == 0">
+                    <td colspan="6" class="box_data_empty">
+                        <img src="{{asset('frontend')}}/image/empty_data.png" alt="">
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>
-    <div style="float: right;" class="pagination_cutomize">
-        <nav aria-label="Page navigation example">
-            <template>
-                <paginate
-                    :page-count="requestProcessData.last_page"
-                    v-model="requestProcessData.current_page"
-                    :initial-page="requestProcessData.current_page"
-                    :click-handler="changePageProcess"
-                    :prev-text="'‹'"
-                    :next-text="'›'"
-                    :page-link-class="'page-link'"
-                    :container-class="'pagination'"
-                    :page-class="'page-item'"
-                    :prev-link-class="'page-link'"
-                    :next-link-class="'page-link'"
-                    :prev-class="'page-item'"
-                    :next-class="'page-item'"
-                >
-                </paginate>
-            </template>
-        </div>
+    <div style="float: right;" class=""  v-if="requestProcessData.total > 0">
+        <template>
+            <paginate
+                :page-count="requestProcessData.last_page"
+                v-model="requestProcessData.current_page"
+                :initial-page="requestProcessData.current_page"
+                :click-handler="changePageProcess"
+                :prev-text="'‹'"
+                :next-text="'›'"
+                :page-link-class="'page-link'"
+                :container-class="'pagination'"
+                :page-class="'page-item'"
+                :prev-link-class="'page-link'"
+                :next-link-class="'page-link'"
+                :prev-class="'page-item'"
+                :next-class="'page-item'"
+            >
+            </paginate>
+        </template>
     </div>
-</div>
-<div class="overlay-load">
-    <img src="{{asset('frontend')}}/image/loading.gif" alt="">
-    <p style="color: #3c2525;">Vui lòng chờ ...</p>
 </div>

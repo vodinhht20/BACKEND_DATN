@@ -41,6 +41,7 @@ class AppServiceProvider extends ServiceProvider
         Paginator::useBootstrap();
 
         View::composer('admin.layouts.header', 'App\Http\ViewComposers\ViewTopBarHeader');
+        View::composer('admin.layouts.script-header', 'App\Http\ViewComposers\ViewTopBarHeader');
 
         try {
             Storage::extend('google', function($app, $config) {

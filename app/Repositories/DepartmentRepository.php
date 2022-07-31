@@ -81,10 +81,16 @@ class DepartmentRepository extends BaseRepository
                     $query->where('status', config('employee.status.active'));
                     $query->select('id', 'position_id', 'fullname', 'avatar');
                 }
-            ])->get();
+            ])
+            ->get();
 
         $departments = $departments->map(function ($record) {
-            $employee = $record?->positions[0]?->employee[0];
+            $employee = $record->positions
+                ?->where('is_leader', config('position.is_leader.yes'))
+                ?->first()
+                ?->employee
+                ?->first();
+
             $record->setRelation('positions' , null);
             return collect([
                 'department' => $record,

@@ -2,10 +2,17 @@
 namespace App\Repositories;
 
 use App\Models\Employee;
+use App\Models\Noti;
+use App\Models\Request;
+use App\Models\RequestApproveHistories;
 use App\Repositories\BaseRepository;
+use Carbon\Carbon;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class RequestRepository extends BaseRepository
 {
@@ -95,33 +102,122 @@ class RequestRepository extends BaseRepository
 
         // Format data paginate
         $dataPaginate = $requestProcess->map(function ($item) use($departmentWithLeader) {
-                $approverInfos = $item?->singleType?->approvers?->pluck('employee') ?: collect();
+                $approverInfos = $this->getApprover($item, $departmentWithLeader);
                 $item = collect($item);
-
-                if (isset($item['single_type']['required_leader']) && $item['single_type']['required_leader']) {
-                    $departmentId = $item['employee']['position']['department_id'] ?? null;
-                    $leader = $departmentWithLeader[$departmentId]['employee'] ?? null;
-                    if ($leader) {
-                        $approverInfos[] = $leader;
-                    }
-                }
-
                 if (isset($item['single_type'])) {
                     $item->put('type', $item['single_type']['type']);
                 }
-
-                // format avatar
-                $approverInfos = $approverInfos->unique('id')->map(function ($record) {
-                    $avatar = $record->getAvatar();
-                    $record = collect($record);
-                    $record->put('avatar', $avatar);
-                    return $record;
-                });
                 $item->put('approvers', $approverInfos);
                 $item->forget('single_type');
                 return $item;
-            });
+        });
         $requestProcess->setCollection($dataPaginate);
         return $requestProcess;
+    }
+
+    /**
+     * Hàm lấy ra danh sách người phê duyệt của đơn từ
+     *
+     * @param Request $request
+     * @param Collection|null $departmentWithLeader
+     * @return Collection
+     */
+    public function getApprover(Request $request, Collection $departmentWithLeader = null): Collection
+    {
+        $departmentRepo = app(DepartmentRepository::class);
+        $approverInfos = $request?->singleType?->approvers?->pluck('employee') ?: collect();
+        $requiredLeader = $request?->singleType?->required_leader;
+        if ($requiredLeader) {
+            $departmentId = $request?->employee?->position?->department_id;
+            if ($departmentWithLeader) {
+                $leader = $departmentWithLeader[$departmentId]['employee'] ?? null;
+            } else {
+                $departmentWithLeader = $departmentRepo->getDepartmentWithLeader(array($departmentId));
+                $leader = $departmentWithLeader[$departmentId]['employee'] ?? null;
+            }
+            if ($leader) {
+                $leader->is_leader = true;
+                $approverInfos[] = $leader;
+            }
+        }
+
+        return $approverInfos = $approverInfos->unique('id')->map(function ($record) {
+            $avatar = $record->getAvatar();
+            $record = collect($record);
+            $record->put('avatar', $avatar);
+            return $record;
+        });
+    }
+
+    /**
+     * Hàm duyệt đơn từ
+     *
+     * @param array $data
+     * @return Request
+     */
+    public function handleApprove(array $data, Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $requestApproveHistory = new RequestApproveHistories;
+            $requestApproveHistory->employee_id = $data['employee_id'];
+            $requestApproveHistory->request_id = $request->id;
+
+            if ($data['status'] == config('request_approve_history.status.accepted')) {
+                $requiredLeader = $request->singleType->required_leader;
+                $requestStatusOld = $request->status;
+                // khiểm tra xem đơn này có cho phép leader duyệt không
+                if ($requiredLeader) {
+                    if ($requestStatusOld == config('request.status.processing')) {
+                        $request->status = config('request.status.leader_accepted');
+                    } else if ($requestStatusOld == config('request.status.leader_accepted')) {
+                        $request->status = config('request.status.accepted');
+                    }
+                } else {
+                    $request->status = config('request.status.accepted');
+                }
+                $requestApproveHistory->status = $data['status'];
+            } else if ($data['status'] == config('request_approve_history.status.unapproved')) {
+                $requestApproveHistory->status = $data['status'];
+                $requestApproveHistory->reason = $data['reason'];
+                $request->status = config("request.status.unapproved");
+            }
+
+            if ($request->save() && $requestApproveHistory->save()) {
+                DB::commit();
+                return $request;
+            }
+            throw new Exception("Duyệt đơn thất bại");
+        } catch (Exception $e) {
+            $message = '[' . date('Y-m-d H:i:s') . '] Error message \'' . $e->getMessage() . '\'' . ' in ' . $e->getFile() . ' line ' . $e->getLine();
+            Log::error($message);
+            DB::rollBack();
+            Noti::telegramLog('Approve Request', $message);
+            return;
+        }
+    }
+
+    /**
+     * Cho phép duyệt đơn
+     *
+     * @param Request $request
+     * @param Employee $employee admin hiện tại đang login
+     * @param Collection $approvers danh sách người duyệt đơn
+     * @return boolean
+     */
+    public function canViewApproverRequest(Request $request, Employee $employee, Collection $approvers): bool
+    {
+        $canViewApprover = false;
+        if ($request->status == config('request.status.processing') || $request->status == config('request.status.leader_accepted') ) {
+            $approverIds = $approvers->pluck('id')->toArray();
+            if (in_array($employee->id, $approverIds)) {
+                $canViewApprover = true;
+                if ($request->status == config('request.status.leader_accepted')) {
+                    $leaderAccepted = $approvers->where('id', $employee->id)->where('is_leader', true)->first();
+                    if ($leaderAccepted) $canViewApprover = false;
+                }
+            }
+        }
+        return $canViewApprover;
     }
 }

@@ -62,19 +62,20 @@
                             <div>
                                 <div>
                                     <label for="" class="text-info">Bắt đầu nghỉ: </label>
-                                    <b>{{ $requestDetail->quit_work_from_at }}</b>
+                                    <b>{{ $requestDetail->quit_work_from_at->format('H:i d-m-Y') }}</b>
                                 </div>
                                 <div>
                                     <label for="" class="text-info">Kết thúc nghỉ: </label>
-                                    <b>{{ $requestDetail->quit_work_to_at }}</b>
+                                    <b>{{ $requestDetail->quit_work_to_at->format('H:i d-m-Y') }}</b>
                                 </div>
                             </div>
                             <hr>
                             <h6 class="d-flex align-items-center" style="grid-column-gap: 5px;">
                                 <i class="ti-timer text-info mt-1" style="font-size: 20px;"></i>
                                 <div class="mt-1">
-                                    <span>Tổng số công nghỉ: </span>
-                                    <strong class="" style="color: var(--ui-outline);">4</strong>
+                                    <span>Tổng số ngày nghỉ: </span>
+                                    <strong class="" style="color: var(--ui-outline);">{{ $leaveDay }} </strong>
+                                    <span>( ngày )</span>
                                 </div>
                             </h6>
                             <hr>
@@ -84,15 +85,15 @@
                                     <p class="text-info">Loại đơn</p>
                                 </div>
                                 <div class="col-6">
-                                    <b class="text-primary">Chờ xử lý</b>
+                                    <b class="{{ $requestData->renderClassNameByStatus() }}">{{ $requestData->getStatusStr() }}</b>
                                     <p class="text-info">Trạng thái đơn</p>
                                 </div>
                                 <div class="col-6">
-                                    <b>{{ $requestData->created_at }}</b>
+                                    <b>{{ $requestData->created_at->format('H:i d-m-Y') }}</b>
                                     <p class="text-info">Thời gian tạo đơn</p>
                                 </div>
                                 <div class="col-6">
-                                    <b>#10703</b>
+                                    <b>#{{ $requestData->id }}</b>
                                     <p class="text-info">Mã đơn</p>
                                 </div>
                             </div>
@@ -105,7 +106,14 @@
                             <div>
                                 <h6>Cấp duyệt</h6>
                                 <div>
-                                    ádsadd
+                                    @foreach ($approvers as $approver)
+                                        <span class="mytooltip tooltip-effect-5 pt-2 pl-2" style="display: inline-block;" v-for="approver in record.approvers">
+                                            <img src="{{ $approver['avatar'] }}" alt="" class="avatar_list">
+                                            <span class="tooltip-content clearfix">
+                                                <span class="tooltip-text text-center">{{ $approver['fullname'] }}</span>
+                                            </span>
+                                        </span>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
@@ -116,26 +124,45 @@
                         </h5>
                         <div class="mt-2">
                             <h6>Phê duyệt</h6>
-                            <p>Hiện tại chưa có thông tin phê duyệt</p>
+                            @if (count($requestApproveHistories) > 0)
+                                <ul>
+                                    @foreach ($requestApproveHistories as $history)
+                                        <li>
+                                            @if ($history->status == config('request_approve_history.status.accepted'))
+                                                <span><b class="text-primary">{{ $history->employee->fullname }}</b> đã phê duyệt</span>
+                                            @elseif($history->status == config('request_approve_history.status.unapproved'))
+                                                <li>
+                                                    <span><b class="text-primary">{{ $history->employee->fullname }}</b> đã từ chối</span>
+                                                    <p class="pl-2">Lý do: <span class="text-danger">{{ $history->reason }}</span></p>
+                                                </li>
+                                            @endif
+                                        </li>
+                                    @endforeach
+                                    @if ($requestData->status == config('request.status.accepted') || $requestData->status == config('request.status.unapproved'))
+                                        <li><p class="text-primary">Hoàn tất duyệt đơn !</p></li>
+                                    @endif
+                                </ul>
+                            @else
+                                <p>Hiện tại chưa có thông tin phê duyệt</p>
+                            @endif
                         </div>
                         <hr>
                         <div>
                             <h6>Lịch sử cập nhật đơn</h6>
                             <ul>
                                 <li>
-                                    <label for="" class="text-custom">20:04:56 24/07/2022</label>
+                                    <label for="" class="text-custom">{{ $requestData->created_at->format('H:i:s d-m-Y') }}</label>
                                     <span>Đã tạo đơn</span>
                                 </li>
                                 @foreach ($requestApproveHistories as $history)
                                     <li>
-                                        @if ($history->status == config('hí'))
-                                            <label for="" class="text-custom">{{ $history-> }}</label>
-                                            <span>Đã được duyệt bởi <a href="">{{ $history->employee->fullname }}</a></span>
-                                        @elseif($)
+                                        @if ($history->status == config('request_approve_history.status.accepted'))
+                                            <label for="" class="text-custom">{{ $history->created_at->format('H:i:s d-m-Y') }}</label>
+                                            <span>Đơn đã được duyệt bởi <b class="text-primary">{{ $history->employee->fullname }}</b></span>
+                                        @elseif($history->status == config('request_approve_history.status.unapproved'))
                                             <li>
-                                                <label for="" class="text-custom">20:04:56 24/07/2022</label>
-                                                <span>Đơn đã bị từ chối</span>
-                                                <p class="text-danger">Lý do: Đơn không hợp lệ</p>
+                                                <label for="" class="text-custom">{{ $history->created_at->format('H:i:s d-m-Y') }}</label>
+                                                <span>Đơn đã bị từ chối bởi <b class="text-primary">{{ $history->employee->fullname }}</span>
                                             </li>
                                         @endif
                                     </li>
@@ -145,8 +172,10 @@
                     </div>
                 </div>
                 <div class="mt-3 d-flex justify-content-center align-items-center" style="grid-column-gap: 10px;">
-                    <button class="btn btn-primary btn-round waves-effect waves-light">Phê duyệt</button>
-                    <button class="btn btn-danger btn-round waves-effect waves-light">Từ chối</button>
+                    @if ($canViewApprover)
+                        <button class="btn btn-primary btn-round waves-effect waves-light" id="approve">Phê duyệt</button>
+                        <button class="btn btn-danger btn-round waves-effect waves-light">Từ chối</button>
+                    @endif
                     <a href="{{ url()->previous() }}" class="btn btn-inverse btn-round waves-effect waves-light" style="color: #fff; !important">Quay lại</a>
                 </div>
             </div>
@@ -158,5 +187,44 @@
     </div>
 @endsection
 @section('page-script')
-
+    <script>
+        const REQUEST_ID = {{ $requestId }};
+        const ACCEPT_REQUEST_URL = `{{ route('ajax-approve-request') }}`;
+        $(document).ready(function () {
+            $("#approve").on('click', function() {
+                Swal.fire({
+                    title: 'Xác nhận',
+                    text: "Bạn có chắc chắn muốn phê duyệt đơn này ?",
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Phê duyệt'
+                })
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        let data = {
+                            id: REQUEST_ID,
+                            status: {{ config('request_approve_history.status.accepted') }}
+                        }
+                        axios.post(ACCEPT_REQUEST_URL, data)
+                            .then(({data}) => {
+                                Swal.fire(
+                                    'Thành công',
+                                    'Đơn của bạn đã được duyệt',
+                                    'success'
+                                )
+                            })
+                            .catch(({response}) => {
+                                Swal.fire(
+                                    'Thhsdas',
+                                    'Đơn của bạn đã được duyệt',
+                                    'error'
+                                )
+                            })
+                    }
+                })
+            })
+        });
+    </script>
 @endsection
