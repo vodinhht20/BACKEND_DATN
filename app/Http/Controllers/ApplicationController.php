@@ -16,6 +16,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Request as ModelRequest;
+use App\Repositories\EmployeeLeavePermissionRepository;
 use App\Repositories\NotifycationRepository;
 use App\Service\TimesheetService;
 
@@ -25,7 +26,8 @@ class ApplicationController extends Controller
         private SingleTypeRepository $singleTypeRepo,
         private EmployeeRepository $employeeRepo,
         private RequestRepository $requestRepo,
-        private TimesheetService $timesheetService
+        private TimesheetService $timesheetService,
+        private EmployeeLeavePermissionRepository $employeeLeavePermissionRepo
     )
     {
         //
@@ -229,8 +231,8 @@ class ApplicationController extends Controller
         ];
         $result = $this->requestRepo->handleApprove($data, $modelRequest);
         if ($result) {
-            if ($result->status == config('request.status.request')) {
-                $this->requestRepo->enforcementRequest($result);
+            if ($result->status == config('request.status.accepted')) {
+                $this->employeeLeavePermissionRepo->enforcementRequest($result);
             }
 
             return response()->json([
