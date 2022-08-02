@@ -86,4 +86,31 @@ class NotifycationRepository extends BaseRepository
         return $notification->update(['watched' => 1]);
     }
 
+    /**
+     * Gửi notification
+     * @param array $employee_ids
+     * @param string $title
+     * @param string $content
+     * @param integer $domain
+     * @param integer $type
+     * @param string|null $link
+     * @return void
+     */
+    public function pushNotifications(array $employee_ids, string $title, string $content, int $domain, int $type, string $link = null)
+    {
+        $notiData = [];
+        foreach ($employee_ids as $employee_id) {
+            $notiData[] = [
+                'title' => $title,
+                'content' => $content,
+                'domain' => $domain,
+                'type' => $type,
+                'employee_id' => $employee_id,
+                'link' => $link
+            ];
+        }
+        $result = $this->model->insert($notiData);
+        return $result;
+    }
+
 }

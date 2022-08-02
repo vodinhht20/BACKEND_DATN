@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Noti;
 use App\Models\Request as ModelsRequest;
 use App\Models\RequestDetail;
+use App\Repositories\NotifycationRepository;
+use App\Repositories\RequestRepository;
 use App\Repositories\SingleTypeRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -14,9 +16,13 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class SingleWordController extends Controller
 {
-    public function __construct(private SingleTypeRepository $singleTypeRepo)
+    public function __construct(
+        private SingleTypeRepository $singleTypeRepo,
+        private RequestRepository $requestRepo,
+        private NotifycationRepository $notifycationRepo
+        )
     {
-        $this->singleTypeRepo = $singleTypeRepo;
+        
     }
 
     public function getListSingleType(){
@@ -82,6 +88,30 @@ class SingleWordController extends Controller
             ])->save();
 
             DB::commit();
+            
+            $requestApproves = $this->requestRepo->getApprover($ModelRequest);
+            $employeeIds = $requestApproves->pluck('id')->toArray();
+            $requestName = $ModelRequest->singleType->name;
+            $requestDomain = config('notification.domain.BE');
+            $requestType = config('notification.type.personal');
+            $result = $this->notifycationRepo->pushNotifications(
+                $employeeIds, 'Bạn có đơn cần phê duyệt',
+                "Nhân viên $employee->fullname vừa tạo đơn $requestName",
+                $requestDomain,
+                $requestType,
+                "/admin/application/request-detail/$ModelRequest->id",
+            );
+            if (!$result) {
+                $message = "Không thể gửi noti cho người cần duyệt - mã đơn ($ModelRequest->id)";
+                \Log::error($message);
+                Noti::telegramLog('Tạo gửi noti thất bại ', $message);
+            }
+
+            return response()->json([
+                'error_code' => 'success',
+                'message' => 'gửi đơn thành công!',
+            ], 200);
+
         } catch (\Exception $e) {
             $message = '[' . date('Y-m-d H:i:s') . '] Error message \'' . $e->getMessage() . '\'' . ' in ' . $e->getFile() . ' line ' . $e->getLine();
             \Log::error($message);
@@ -92,10 +122,5 @@ class SingleWordController extends Controller
                 'message' => $e->getMessage()
             ], 442);
         }
-
-        return response()->json([
-            'error_code' => 'success',
-            'message' => 'gửi đơn thành công!',
-        ], 200);
     }
 }
