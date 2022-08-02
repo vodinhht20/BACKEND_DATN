@@ -66,7 +66,7 @@
                     </td>
                 </tr>
                 <tr v-if="requestProcessData.total == 0">
-                    <td colspan="6" class="box_data_empty">
+                    <td colspan="8" class="box_data_empty">
                         <img src="{{asset('frontend')}}/image/empty_data.png" alt="">
                     </td>
                 </tr>
