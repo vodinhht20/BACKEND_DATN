@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Attribuite_Employee;
 use App\Models\Noti;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;

@@ -57,37 +57,26 @@ class SingleTypeRepository extends BaseRepository
     }
 
     public function getInforEmployeeById($employee, $id){
-        $approvers = $this->model->find($id)->approvers;
+        $singleType = $this->model->find($id);
+        $approvers = $singleType?->approvers;
         $dataApprovers = [];
 
-        if ($this->model->find($id)->required_leader) {
-            $manager = $employee->branch->employee->where('position_id', 1)->first();
+        if ($singleType?->required_leader) {
+            $manager = $employee->getLeader();
             $dataApprovers[] = [
                 'fullname' => $manager->fullname,
-                'avatar' => $manager->avatar,
+                'avatar' => $manager->getAvatar(),
                 'position' => $manager->position->name,
                 'required_leader' => 1
             ];
-
-            foreach ($approvers as $approver){
-                if ($approver->employee->id != $manager->id) {
-                    $dataApprovers[] = [
-                        'fullname' => $approver->employee->fullname,
-                        'avatar' => $approver->employee->avatar,
-                        'position' => $approver->employee->position->name
-                    ];
-                }
-            };
-        } else {
-            foreach ($approvers as $approver){
-                $dataApprovers[] = [
-                    'fullname' => $approver->employee->fullname,
-                    'avatar' => $approver->employee->avatar,
-                    'position' => $approver->employee->position->name
-                ];
-            };
         }
-
+        foreach ($approvers as $approver){
+            $dataApprovers[] = [
+                'fullname' => $approver->employee->fullname,
+                'avatar' => $approver->employee->getAvatar(),
+                'position' => $approver->employee->position->name
+            ];
+        };
         return $dataApprovers;
     }
 
