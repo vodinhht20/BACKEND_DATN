@@ -217,8 +217,8 @@
                             })
                             .catch(({response}) => {
                                 Swal.fire(
-                                    'Thhsdas',
-                                    'Đơn của bạn đã được duyệt',
+                                    'Lỗi ',
+                                    'Không thể duyệt đơn vào lúc này',
                                     'error'
                                 )
                             })

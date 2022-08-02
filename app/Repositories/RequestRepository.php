@@ -103,10 +103,14 @@ class RequestRepository extends BaseRepository
         // Format data paginate
         $dataPaginate = $requestProcess->map(function ($item) use($departmentWithLeader) {
                 $approverInfos = $this->getApprover($item, $departmentWithLeader);
+                $getStatusStr = $item->getStatusStr();
+                $renderClassNameByStatus = $item->renderClassNameByStatus();
                 $item = collect($item);
                 if (isset($item['single_type'])) {
                     $item->put('type', $item['single_type']['type']);
                 }
+                $item->put('getStatusStr', $getStatusStr);
+                $item->put('class_status', $renderClassNameByStatus);
                 $item->put('approvers', $approverInfos);
                 $item->forget('single_type');
                 return $item;
@@ -208,7 +212,13 @@ class RequestRepository extends BaseRepository
     public function canViewApproverRequest(Request $request, Employee $employee, Collection $approvers): bool
     {
         $canViewApprover = false;
-        if ($request->status == config('request.status.processing') || $request->status == config('request.status.leader_accepted') ) {
+
+        if ($request->status == config('request.status.processing')) {
+            if ($request->singleType->required_leader) {
+                $leaderAccepted = $approvers->where('id', $employee->id)->where('is_leader', true)->first();
+                if ($leaderAccepted) $canViewApprover = true;
+            }
+        } else if ($request->status == config('request.status.leader_accepted')) {
             $approverIds = $approvers->pluck('id')->toArray();
             if (in_array($employee->id, $approverIds)) {
                 $canViewApprover = true;
@@ -218,6 +228,7 @@ class RequestRepository extends BaseRepository
                 }
             }
         }
+
         return $canViewApprover;
     }
 }

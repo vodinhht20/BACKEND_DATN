@@ -19,10 +19,7 @@
                     <td>#@{{ record.id }}</td>
                     <td>
                         <p>Đơn nghỉ không lương</p>
-                        <label for="" class="label bg-primary" v-if="record.status == {{ config('request.status.processing') }}">Đang xử lý</label>
-                        <label for="" class="label bg-primary" v-if="record.status == {{ config('request.status.leader_accepted') }}">Leader đã duyệt</label>
-                        <label for="" class="label bg-success" v-if="record.status == {{ config('request.status.accepted') }}">Đơn đã được duyệt</label>
-                        <label for="" class="label bg-danger" v-if="record.status == {{ config('request.status.unapproved') }}">Đơn đã bị từ chôi</label>
+                        <label for="" class="label bg-primary" :class="record.class_status">@{{ record.getStatusStr }}</label>
                     </td>
                     <td>
                         <p><b>@{{ record.employee?.fullname }}</b></p>
@@ -57,12 +54,12 @@
                             </a>
                             <span class="tooltip-content3">Xem chi tiết</span>
                         </div>
-                        <div class="mytooltip tooltip-effect-9 ml-2">
+                        {{-- <div class="mytooltip tooltip-effect-9 ml-2">
                             <button class="btn waves-effect waves-dark btn-success btn-outline-success btn-icon">
                                 <i class="icofont icofont-check-circled"></i>
                             </button>
                             <span class="tooltip-content3">Duyệt nhanh</span>
-                        </div>
+                        </div> --}}
                     </td>
                 </tr>
                 <tr v-if="requestProcessData.total == 0">

@@ -19,6 +19,8 @@ use App\Models\Request as ModelRequest;
 use App\Repositories\EmployeeLeavePermissionRepository;
 use App\Repositories\NotifycationRepository;
 use App\Service\TimesheetService;
+use Illuminate\Support\Facades\Notification;
+
 
 class ApplicationController extends Controller
 {
@@ -27,7 +29,8 @@ class ApplicationController extends Controller
         private EmployeeRepository $employeeRepo,
         private RequestRepository $requestRepo,
         private TimesheetService $timesheetService,
-        private EmployeeLeavePermissionRepository $employeeLeavePermissionRepo
+        private EmployeeLeavePermissionRepository $employeeLeavePermissionRepo,
+        private NotifycationRepository $notifycationRepo
     )
     {
         //
@@ -35,7 +38,7 @@ class ApplicationController extends Controller
 
     public function index(Request $request)
     {
-        $take = 2;
+        $take = 8;
         $statusPending  = array(config('request.status.processing'), config('request.status.leader_accepted'));
         $statusAccepted = config('request.status.accepted');
         $statusUnapproved = config('request.status.unapproved');
@@ -225,20 +228,35 @@ class ApplicationController extends Controller
                 "message" => "Không tìm thấy đơn này"
             ], 442);
         }
-        $data = [
-            'status' => $request->status,
-            'employee_id' => $currentAdmin->id
-        ];
-        $result = $this->requestRepo->handleApprove($data, $modelRequest);
-        if ($result) {
-            if ($result->status == config('request.status.accepted')) {
-                $this->employeeLeavePermissionRepo->enforcementRequest($result);
+        try {
+            $data = [
+                'status' => $request->status,
+                'employee_id' => $currentAdmin->id
+            ];
+            $request = $this->requestRepo->handleApprove($data, $modelRequest);
+            if ($request) {
+                if ($request->status == config('request.status.accepted')) {
+                    $this->employeeLeavePermissionRepo->enforcementRequest($request);
+                    $title = "Đơn của bạn đã được duyệt";
+                    $employeeIds = array($request->employee_id);
+                    $content = $request->singleType->name . " của bạn đã được tạo";
+                    $domain = config('notification.domain.FE');
+                    $type = config('notification.type.personal');
+                    $dataNoti = json_encode(["title" => $title, "content" => $content]);
+                    $fcmTokens = array($request->employee->fcm_token ?? null);
+                    $this->notifycationRepo->pushNotifications($employeeIds, $title, $content, $domain, $type);
+                    Notification::send(null, new \App\Notifications\SendPushNotification("notifycation", $dataNoti, $fcmTokens));
+                    return response()->json([
+                        "status" => "success",
+                        "message" => "Đơn này đã được phê duyệt"
+                    ]);
+                }
             }
-
-            return response()->json([
-                "status" => "success",
-                "message" => "Đơn này đã được phê duyệt"
-            ]);
+        } catch (\Exception $e) {
+            $message = '[' . date('Y-m-d H:i:s') . '] Error message \'' . $e->getMessage() . '\'' . ' in ' . $e->getFile() . ' line ' . $e->getLine();
+            Log::error($message);
+            DB::rollBack();
+            Noti::telegramLog('Create Work Schedule', $message);
         }
 
         return response()->json([
