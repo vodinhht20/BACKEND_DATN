@@ -325,3 +325,6 @@ input:checked+.slider:before {
 #box-notify-header .box-content .media:hover {
   background-color: #f1f1f1;
 }
+.header-notification .inactive {
+  display: none !important;
+}

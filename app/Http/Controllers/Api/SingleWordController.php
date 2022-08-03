@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\HandleCreateRequest;
 use App\Http\Controllers\Controller;
 use App\Models\Noti;
 use App\Models\Request as ModelsRequest;
@@ -25,7 +26,7 @@ class SingleWordController extends Controller
         private TimekeepRepository $timekeepRepo,
         )
     {
-        
+
     }
 
     public function getListSingleType(){
@@ -89,21 +90,24 @@ class SingleWordController extends Controller
                 'single_type_id' => $request->id,
                 'request_detail_id' => $Request_detail->id,
             ])->save();
-
             DB::commit();
-            
+
+            // Gửi thông báo cho các bộ phận duyệt
             $requestApproves = $this->requestRepo->getApprover($ModelRequest);
             $employeeIds = $requestApproves->pluck('id')->toArray();
             $requestName = $ModelRequest->singleType->name;
-            $requestDomain = config('notification.domain.BE');
-            $requestType = config('notification.type.personal');
-            $result = $this->notifycationRepo->pushNotifications(
-                $employeeIds, 'Bạn có đơn cần phê duyệt',
-                "Nhân viên $employee->fullname vừa tạo đơn $requestName",
-                $requestDomain,
-                $requestType,
-                "/admin/application/request-detail/$ModelRequest->id",
-            );
+            $fcmTokens = $requestApproves->pluck('fcm_token')->toArray();
+            $options = [
+                "title" => "Bạn có đơn cần phê duyệt",
+                "employee_ids" => $employeeIds,
+                "content" => "Nhân viên $employee->fullname vừa tạo đơn $requestName",
+                "request_domain" => config('notification.domain.BE'),
+                "request_type" => config('notification.type.personal'),
+                "link" => "/admin/application/request-detail/$ModelRequest->id",
+                "fcm_tokens" => $fcmTokens
+            ];
+            $result = $this->notifycationRepo->pushNotifications($options);
+            event(new HandleCreateRequest($options));
             if (!$result) {
                 $message = "Không thể gửi noti cho người cần duyệt - mã đơn ($ModelRequest->id)";
                 \Log::error($message);

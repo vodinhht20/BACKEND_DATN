@@ -43,12 +43,12 @@
                         <i class="ti-fullscreen"></i>
                     </a>
                 </li>
-                <li class="header-notification">
+                <li class="header-notification" id="box-notify-header">
                     <a href="#!" class="waves-effect waves-light">
                         <i class="ti-bell"></i>
-                        <span class="badge bg-c-red"></span>
+                        <span class="badge bg-c-red" :class="{ inactive: hd_notifications.filter(record => record.watched == 0).length == 0 }"></span>
                     </a>
-                    <ul class="show-notification" id="box-notify-header">
+                    <ul class="show-notification">
                         <li>
                             <h6>Thông báo</h6>
                             <div class="text-primary" id="check-view-noti" style="float: right" @click="handleWatchedNoti('viewed_all')" title="Đánh dấu tất cả đã đọc">

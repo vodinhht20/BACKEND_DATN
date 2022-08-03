@@ -6,10 +6,20 @@
         },
         methods: {
             handleWatchedNoti: (id, notify = null) => {
+                notifyHeader.hd_notifications = notifyHeader.hd_notifications.map((record => {
+                    if (id == 'viewed_all') {
+                        return {...record, watched: 1};
+                    } else if (record.id == id) {
+                        return {...record, watched: 1};
+                    }
+                    return record;
+                }));
+
                 if (notify && notify.watched) {
                     window.location.href = notify.link;
                     return;
                 }
+
                 axios.post("{{ route('ajax-watched-noti') }}", {id})
                     .then(res => {
                         if (notify && notify.link && notify.link.trim() != '') {
