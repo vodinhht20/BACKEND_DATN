@@ -239,7 +239,7 @@ class ApplicationController extends Controller
                     $this->employeeLeavePermissionRepo->enforcementRequest($request);
                     $title = "Đơn của bạn đã được duyệt";
                     $employeeIds = array($request->employee_id);
-                    $content = $request->singleType->name . " của bạn đã được tạo";
+                    $content = $request->singleType->name . " của bạn đã được duyệt";
                     $domain = config('notification.domain.FE');
                     $type = config('notification.type.personal');
                     $dataNoti = json_encode(["title" => $title, "content" => $content]);
