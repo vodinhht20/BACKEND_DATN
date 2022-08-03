@@ -10,6 +10,8 @@ use App\Models\RequestDetail;
 use App\Repositories\NotifycationRepository;
 use App\Repositories\RequestRepository;
 use App\Repositories\SingleTypeRepository;
+use App\Repositories\TimekeepRepository;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -20,7 +22,8 @@ class SingleWordController extends Controller
     public function __construct(
         private SingleTypeRepository $singleTypeRepo,
         private RequestRepository $requestRepo,
-        private NotifycationRepository $notifycationRepo
+        private NotifycationRepository $notifycationRepo,
+        private TimekeepRepository $timekeepRepo,
         )
     {
 
@@ -128,5 +131,17 @@ class SingleWordController extends Controller
                 'message' => $e->getMessage()
             ], 442);
         }
+    }
+
+    public function getTimekeep(Request $request) {
+        $employee = JWTAuth::toUser($request->access_token);
+        $date = Carbon::createFromFormat('Y-m-d', $request->currentDate)->format('Y-m-d');
+        $dataCheckinByDay = $this->timekeepRepo->dataCheckinByDay($date, $employee->id);
+        // dd($dataCheckinByDay);
+        return response()->json([
+            'error_code' => 'success',
+            'data' => $dataCheckinByDay,
+            'message' => 'lấy timeKeeps thành công!',
+        ], 200);
     }
 }
