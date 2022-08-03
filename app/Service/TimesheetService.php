@@ -40,4 +40,27 @@ class TimesheetService {
         }
         return $differentHours;
     }
+
+    /**
+    * @param Carbon|null $firstTime
+    * @param Carbon|null $lastTime
+    * @return float
+    */
+    public function getDifferentDay(Carbon $firstTime = null, Carbon $lastTime = null): float
+    {
+        $differentDays = 0;
+        try {
+            if (!$firstTime) {
+                return $differentDays;
+            }
+            if ($lastTime) {
+                $differentDays = round($firstTime->floatDiffInDays($lastTime), 1);
+            }
+        } catch (\Exception $e) {
+            $message = '[' . date('Y-m-d H:i:s') . '] Error message \'' . $e->getMessage() . '\'' . ' in ' . $e->getFile() . ' line ' . $e->getLine();
+            \Log::error($message);
+            Slack::error($message);
+        }
+        return $differentDays;
+    }
 }

@@ -34,7 +34,7 @@ class TimesheetController extends Controller
         $timesheetFormats = $this->timekeepRepo->timesheetFormats($timekeeps);
         return response()->json([
             "data" => array_values($timesheetFormats)[0] ?? [],
-            "month" => $monthYear
+            "month" => $monthYear,
         ]);
     }
 }

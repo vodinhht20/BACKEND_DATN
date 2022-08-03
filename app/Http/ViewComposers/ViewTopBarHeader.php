@@ -2,6 +2,7 @@
 
 namespace App\Http\ViewComposers;
 use App\Repositories\EmployeeRepository;
+use App\Repositories\NotifycationRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\View\View;
@@ -9,7 +10,8 @@ use Illuminate\View\View;
 class ViewTopBarHeader
 {
     public function __construct(
-        private EmployeeRepository $employeeRepo
+        private EmployeeRepository $employeeRepo,
+        private NotifycationRepository $notifycationRepo
     ) {
     }
 
@@ -21,14 +23,15 @@ class ViewTopBarHeader
      */
     public function compose(View $view)
     {
-        $options = [
+        // Lấy ra danh sách nhân viên có quyền admin
+        $employeeOptions = [
             'status' => config('employee.status.active'),
         ];
         if (Auth::check()) {
-            $options['not_in_id'] = array(Auth::user()->id);
+            $employeeOptions['not_in_id'] = array(Auth::user()->id);
         }
         $employeeData = [];
-        $logAsEmployees = $this->employeeRepo->query($options)->get();
+        $logAsEmployees = $this->employeeRepo->query($employeeOptions)->get();
         foreach ($logAsEmployees as $employee) {
             $employeeData[] = [
                 'fullname' => $employee->fullname,
@@ -36,6 +39,13 @@ class ViewTopBarHeader
                 'login_key' => Crypt::encrypt($employee->id),
             ];
         }
-        $view->with('employeeData', $employeeData);
+
+        // Lấy ra danh sách thông báo của người đấy
+        $notiOptions = [
+            "domain" => config('notification.domain.BE'),
+            "type" => config('notification.type.personal')
+        ];
+        $notification_headers = $this->notifycationRepo->getNotifyByEmployee(Auth::user(), $notiOptions)->toArray();
+        $view->with(compact('employeeData', 'notification_headers'));
     }
 }
