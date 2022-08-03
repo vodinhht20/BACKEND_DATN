@@ -43,6 +43,13 @@ class NotifycationRepository extends BaseRepository
             $query->where("domain", $options['domain']);
         }
 
+        if (isset($options['new'])) {
+            $query->take(1);
+            $query->where("watched", $options['watched']);
+            $query->orderBy('id', 'desc');
+            return $query;
+        }
+
         if (isset($options['watched'])) {
             $query->where("watched", $options['watched']);
         }
@@ -79,6 +86,8 @@ class NotifycationRepository extends BaseRepository
     public function handleWatched($id, $options = [])
     {
         if ($id == 'viewed_all') {
+            $notification = $this->query($options);
+        } else if ($id == 'new') {
             $notification = $this->query($options);
         } else {
             $notification = $this->query([...$options, 'id' => $id]);

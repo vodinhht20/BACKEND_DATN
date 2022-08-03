@@ -103,7 +103,9 @@ class SingleWordController extends Controller
                 "content" => "Nhân viên $employee->fullname vừa tạo đơn $requestName",
                 "request_domain" => config('notification.domain.BE'),
                 "request_type" => config('notification.type.personal'),
-                "link" => "/admin/application/request-detail/$ModelRequest->id",
+                "link" => "application/request-detail/$ModelRequest->id",
+                "watched" => 0,
+                "id" => "new",
                 "fcm_tokens" => $fcmTokens
             ];
             $result = $this->notifycationRepo->pushNotifications($options);

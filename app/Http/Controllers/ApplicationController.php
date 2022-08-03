@@ -245,7 +245,7 @@ class ApplicationController extends Controller
                     $dataNoti = json_encode(["title" => $title, "content" => $content]);
                     $fcmTokens = array($request->employee->fcm_token ?? null);
                     $this->notifycationRepo->pushNotifications($employeeIds, $title, $content, $domain, $type);
-                    Notification::send(null, new \App\Notifications\SendPushNotification("notifycation", $dataNoti, $fcmTokens));
+                    Notification::send(null, new \App\Notifications\SendPushNotification("noti_request_done", $dataNoti, $fcmTokens));
                     return response()->json([
                         "status" => "success",
                         "message" => "Đơn này đã được phê duyệt"
