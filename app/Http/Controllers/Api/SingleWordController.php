@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\HandleCreateRequest;
 use App\Http\Controllers\Controller;
 use App\Models\Noti;
 use App\Models\Request as ModelsRequest;
@@ -9,6 +10,8 @@ use App\Models\RequestDetail;
 use App\Repositories\NotifycationRepository;
 use App\Repositories\RequestRepository;
 use App\Repositories\SingleTypeRepository;
+use App\Repositories\TimekeepRepository;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -19,10 +22,11 @@ class SingleWordController extends Controller
     public function __construct(
         private SingleTypeRepository $singleTypeRepo,
         private RequestRepository $requestRepo,
-        private NotifycationRepository $notifycationRepo
+        private NotifycationRepository $notifycationRepo,
+        private TimekeepRepository $timekeepRepo,
         )
     {
-        
+
     }
 
     public function getListSingleType(){
@@ -86,21 +90,24 @@ class SingleWordController extends Controller
                 'single_type_id' => $request->id,
                 'request_detail_id' => $Request_detail->id,
             ])->save();
-
             DB::commit();
-            
+
+            // Gửi thông báo cho các bộ phận duyệt
             $requestApproves = $this->requestRepo->getApprover($ModelRequest);
             $employeeIds = $requestApproves->pluck('id')->toArray();
             $requestName = $ModelRequest->singleType->name;
-            $requestDomain = config('notification.domain.BE');
-            $requestType = config('notification.type.personal');
-            $result = $this->notifycationRepo->pushNotifications(
-                $employeeIds, 'Bạn có đơn cần phê duyệt',
-                "Nhân viên $employee->fullname vừa tạo đơn $requestName",
-                $requestDomain,
-                $requestType,
-                "/admin/application/request-detail/$ModelRequest->id",
-            );
+            $fcmTokens = $requestApproves->pluck('fcm_token')->toArray();
+            $options = [
+                "title" => "Bạn có đơn cần phê duyệt",
+                "employee_ids" => $employeeIds,
+                "content" => "Nhân viên $employee->fullname vừa tạo đơn $requestName",
+                "request_domain" => config('notification.domain.BE'),
+                "request_type" => config('notification.type.personal'),
+                "link" => "/admin/application/request-detail/$ModelRequest->id",
+                "fcm_tokens" => $fcmTokens
+            ];
+            $result = $this->notifycationRepo->pushNotifications($options);
+            event(new HandleCreateRequest($options));
             if (!$result) {
                 $message = "Không thể gửi noti cho người cần duyệt - mã đơn ($ModelRequest->id)";
                 \Log::error($message);
@@ -122,5 +129,17 @@ class SingleWordController extends Controller
                 'message' => $e->getMessage()
             ], 442);
         }
+    }
+
+    public function getTimekeep(Request $request) {
+        $employee = JWTAuth::toUser($request->access_token);
+        $date = Carbon::createFromFormat('Y-m-d', $request->currentDate)->format('Y-m-d');
+        $dataCheckinByDay = $this->timekeepRepo->dataCheckinByDay($date, $employee->id);
+        // dd($dataCheckinByDay);
+        return response()->json([
+            'error_code' => 'success',
+            'data' => $dataCheckinByDay,
+            'message' => 'lấy timeKeeps thành công!',
+        ], 200);
     }
 }

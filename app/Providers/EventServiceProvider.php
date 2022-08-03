@@ -31,6 +31,10 @@ class EventServiceProvider extends ServiceProvider
         HandleCheckIn::class => [
             WirteTimekeepLog::class,
             PushDataRakingRealtime::class
+        ],
+
+        HandleCreateRequest::class => [
+            PushNotificaion::class,
         ]
     ];
 

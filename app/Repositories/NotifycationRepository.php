@@ -96,17 +96,19 @@ class NotifycationRepository extends BaseRepository
      * @param string|null $link
      * @return void
      */
-    public function pushNotifications(array $employee_ids, string $title, string $content, int $domain, int $type, string $link = null)
+    public function pushNotifications(array $options)
     {
         $notiData = [];
-        foreach ($employee_ids as $employee_id) {
+        foreach ($options['employee_ids'] as $employee_id) {
             $notiData[] = [
-                'title' => $title,
-                'content' => $content,
-                'domain' => $domain,
-                'type' => $type,
+                'title' => $options['title'],
+                'content' => $options['content'],
+                'domain' => $options['request_domain'],
+                'type' => $options['request_type'],
                 'employee_id' => $employee_id,
-                'link' => $link
+                'link' => $options['link'],
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
             ];
         }
         $result = $this->model->insert($notiData);
