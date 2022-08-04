@@ -1,3 +1,29 @@
+<div>
+    <form action="" class="form-filter">
+        <div class="row align-items-end">
+            <div class="col-md-3">
+                <label for="">Từ khóa</label>
+                <input type="text" name="keywork" placeholder="Nhập từ khóa..." class="form-control filter-data">
+            </div>
+            <div class="col-md-3">
+                <label for="">Loại đơn:</label>
+                <input type="text" name="type" value="" placeholder="Loại đơn..." filter="company_shift_name" class="form-control filter-data">
+            </div>
+            <div class="col-md-3">
+                <label for="">Người tạo:</label>
+                <input type="text" name="employee" value="" placeholder="Người tạo..." filter="company_shift_name" class="form-control filter-data">
+            </div>
+            <input type="hidden" :value="current_tab" name="current_tab">
+            <div class="col-md-3">
+                <a href="{{ route('schedule-calender-index') }}" class="btn btn-inverse btn-sm waves-effect waves-light" style="float: right;">Tất cả</a>
+                <button class="btn btn-primary btn-sm waves-effect waves-light mr-2" style="float: right;">Tìm kiếm</button>
+            </div>
+        </div>
+    </form>
+    <div class="mt-5 mb-2 row">
+        <div class="col-4">Có <b>3</b> lịch làm việc trong danh sách</div>
+    </div>
+</div>
 <div class="table-border-style mt-2">
     <div class="table-responsive scrollbar-custom" style="width:100%;">
         <table class="table align-middle-td">
