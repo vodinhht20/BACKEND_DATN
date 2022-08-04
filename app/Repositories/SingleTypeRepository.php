@@ -61,7 +61,7 @@ class SingleTypeRepository extends BaseRepository
         $approvers = $singleType?->approvers;
         $dataApprovers = [];
 
-        if ($singleType?->required_leader) {
+        if ($singleType?->required_leader == 1) {
             $manager = $employee->getLeader();
             $dataApprovers[] = [
                 'fullname' => $manager->fullname,
@@ -71,11 +71,21 @@ class SingleTypeRepository extends BaseRepository
             ];
         }
         foreach ($approvers as $approver){
-            $dataApprovers[] = [
-                'fullname' => $approver->employee->fullname,
-                'avatar' => $approver->employee->getAvatar(),
-                'position' => $approver->employee->position->name
-            ];
+            if ($singleType->required_leader == 1) {
+                if ($approver->employee->id != $employee->getLeader()->id) {
+                    $dataApprovers[] = [
+                        'fullname' => $approver->employee->fullname,
+                        'avatar' => $approver->employee->getAvatar(),
+                        'position' => $approver->employee->position->name
+                    ];
+                }
+            }else{
+                $dataApprovers[] = [
+                    'fullname' => $approver->employee->fullname,
+                    'avatar' => $approver->employee->getAvatar(),
+                    'position' => $approver->employee->position->name
+                ];
+            }
         };
         return $dataApprovers;
     }
