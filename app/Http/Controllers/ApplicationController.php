@@ -256,7 +256,7 @@ class ApplicationController extends Controller
             $message = '[' . date('Y-m-d H:i:s') . '] Error message \'' . $e->getMessage() . '\'' . ' in ' . $e->getFile() . ' line ' . $e->getLine();
             Log::error($message);
             DB::rollBack();
-            Noti::telegramLog('Create Work Schedule', $message);
+            Noti::telegramLog('Approver Request', $message);
         }
 
         return response()->json([
