@@ -15,6 +15,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
 use App\Exports\TimekeepExport;
+use App\Imports\TimekeepImport;
 use Maatwebsite\Excel\Facades\Excel;
 
 class TimesheetController extends Controller
@@ -110,6 +111,15 @@ class TimesheetController extends Controller
         $formatDates = $this->timesheetService->getDayByMonth($monthYear);
         $fileName = "timekeep_" . date('Y_m_d_H_i') . ".xlsx";
         return Excel::download(new TimekeepExport($timesheetFormats, $formatDates), $fileName);
+    }
+    public function importView(Request $request){
+        return view('admin.timesheet.index');
+    }
+
+    public function importExcel(Request $request){
+        Excel::import(new TimekeepImport, $request->file('file'));
+        return back();
+        
     }
 
 }

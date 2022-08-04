@@ -49,6 +49,23 @@
                     <div class="col-8">
                         <h4>Quản lí bảng công</h4>
                     </div>
+                    <div class="card">
+                        <div class="card-header">Nhập dữ liệu chấm công</div>
+                        <div class="card-body">
+                            @if(session('status'))
+                            <div class="alert alert-success" role="alert">
+                                {{session('status')}}
+                            </div>
+                            @endif
+                            <form action="{{ route("import-excel-timesheet") }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <div class="from-group">
+                                <input type="file" name="file">
+                                <button type="submit" class="btn btn-outline-primary btn-round waves-effect waves-light">Import</button>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
                     <div class="col-4">
                         <a href="{{ route("export-excel-timesheet") }}?{{ http_build_query(request()->query()) }}" class="btn btn-outline-primary btn-round waves-effect waves-light" style="float: right; margin-right: 10px;">
                             <i class="ti-printer"></i>
