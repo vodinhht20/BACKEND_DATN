@@ -118,7 +118,7 @@ class TimesheetController extends Controller
 
     public function importExcel(Request $request){
         Excel::import(new TimekeepImport, $request->file('file'));
-        return back();
+        // return back();
         
     }
 

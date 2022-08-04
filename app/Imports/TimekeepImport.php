@@ -15,14 +15,15 @@ class TimekeepImport implements ToModel, WithHeadingRow
     */
     public function model(array $row)
     {
+        
         return new Timekeep([
-            'employee_id' => $row[0],
-            'date'=>$row[1],
-            'type'=>$row[2],
-            'worktime' => $row[3],
-            'minute_late' => $row[4],
-            'minute_early' => $row[5],
-            'overtime_hour' => $row[6],
+            'employee_id' => $row['employee_id'],
+            'date'=>$row['date'],
+            'type'=>$row['type'],
+            'worktime' => $row['worktime'],
+            'minute_late' => $row['minute_late'],
+            'minute_early' => $row['minute_early'],
+            'overtime_hour' => $row['overtime_hour'],
 
         ]);
     }
