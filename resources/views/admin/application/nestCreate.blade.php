@@ -84,8 +84,8 @@
                             <div class="form-group col-lg-6 col-sx-12">
                                 <label class="">Mẫu đơn <span class="text-danger">*</span></label>
                                 <select name="type" class="form-control" id="">
-                                    @foreach (config('singletype.type') as  $id => $typeName)
-                                        <option value="{{ $id }}" @checked(old('type') == $id)>{{ $typeName }}</option>
+                                    @foreach (config('singletype.type_info') as  $id => $singletype)
+                                        <option value="{{ $id }}" @checked(old('type') == $id)>{{ $singletype['title'] }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -123,10 +123,10 @@
                     <blockquote class="blockquote">
                         <p class="m-b-0">Thông tin các mẫu đơn:</p>
                         <ul class="mt-2">
-                            @foreach (config('singletype.type') as $key => $singleTypeName)
+                            @foreach (config('singletype.type_info') as $id => $singletype)
                                 <li>
-                                    <p style="margin: 0;"><b>{{ $singleTypeName }}</b></p>
-                                    <p>{{ config('singletype.type_info.' . $key) }}</p>
+                                    <p style="margin: 0;"><b>{{ $singletype['title'] }}</b></p>
+                                    <p>{{ $singletype['info'] }}</p>
                                 </li>
                             @endforeach
                         </ul>

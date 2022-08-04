@@ -32,6 +32,11 @@
 <!-- axios -->
 <script src="{{ asset('frontend/js/axios.min.js') }}"></script>
 <script src="{{ asset('frontend/js/moment.min.js') }}"></script>
+
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-messaging.js"></script>
+
 <!-- validate -->
 <script type="text/javascript" src="{{asset('frontend')}}/js/jquery.validate.min.js"></script>
 <script type="text/javascript" src="{{asset('frontend')}}/js/validateForm.js"></script>

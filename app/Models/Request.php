@@ -40,4 +40,38 @@ class Request extends Model
     {
         return $this->hasMany(RequestApproveHistories::class, 'request_id', 'id');
     }
+
+    public function getStatusStr()
+    {
+        $status = $this->status;
+        if ($this->singleType?->required_leader) {
+            if ($status == config('request.status.processing')) {
+                return "Chờ leader duyệt";
+            }
+        }
+
+        if ($status == config('request.status.processing') || $status == config('request.status.leader_accepted')) {
+            return "Chờ xử lý";
+        }
+
+        if ($status == config('request.status.accepted')) {
+            return "Đơn đã được phê duyệt";
+        }
+
+        if ($status == config('request.status.unapproved')) {
+            return "Đơn bị từ chối";
+        }
+        return  "N/A";
+    }
+
+    public function renderClassNameByStatus()
+    {
+        $status = $this->status;
+        if ($status == config('request.status.accepted')) {
+            return "text-success";
+        } else if ($status == config('request.status.unapproved')) {
+            return "text-danger";
+        }
+        return  "text-primary";
+    }
 }

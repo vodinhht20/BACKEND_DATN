@@ -16,13 +16,21 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Request as ModelRequest;
+use App\Repositories\EmployeeLeavePermissionRepository;
+use App\Repositories\NotifycationRepository;
+use App\Service\TimesheetService;
+use Illuminate\Support\Facades\Notification;
+
 
 class ApplicationController extends Controller
 {
     public function __construct(
         private SingleTypeRepository $singleTypeRepo,
         private EmployeeRepository $employeeRepo,
-        private RequestRepository $requestRepo
+        private RequestRepository $requestRepo,
+        private TimesheetService $timesheetService,
+        private EmployeeLeavePermissionRepository $employeeLeavePermissionRepo,
+        private NotifycationRepository $notifycationRepo
     )
     {
         //
@@ -30,6 +38,10 @@ class ApplicationController extends Controller
 
     public function index(Request $request)
     {
+        $take = 8;
+        $statusPending  = array(config('request.status.processing'), config('request.status.leader_accepted'));
+        $statusAccepted = config('request.status.accepted');
+        $statusUnapproved = config('request.status.unapproved');
         $options = [
             'with' => [
                 'employee' => function($query) {
@@ -46,8 +58,10 @@ class ApplicationController extends Controller
             ],
             'approver_employee' => Auth::user()
         ];
-        $requestProcess = $this->requestRepo->formatDataPaginate(2, $options);
-        return view('admin.application.request', compact('requestProcess'));
+        $requestProcess = $this->requestRepo->formatDataPaginate($take, [...$options, 'statues' => $statusPending]);
+        $requestAccepted = $this->requestRepo->formatDataPaginate($take, [...$options, 'status' => $statusAccepted]);
+        $requestUnapproved = $this->requestRepo->formatDataPaginate($take, [...$options, 'status' => $statusUnapproved]);
+        return view('admin.application.request', compact('requestProcess', 'requestUnapproved', 'requestAccepted'));
     }
 
     public function responseRequestData(Request $request): JsonResponse
@@ -77,12 +91,19 @@ class ApplicationController extends Controller
     public function requestDetail(Request $request, $requestId) {
 
         $requestData = ModelRequest::find($requestId);
-
+        $approvers = $this->requestRepo->getApprover($requestData);
         if (!$requestData) {
             abort(404);
         }
+        $requestDetail = $requestData->requestDetail;
+        $quitWorkFromAt = Carbon::parse($requestDetail->quit_work_from_at);
+        $quitWorkToAt = Carbon::parse($requestDetail->quit_work_to_at);
+        $canViewApprover = false;
+        $currentAdmin = Auth::user();
+        $canViewApprover = $this->requestRepo->canViewApproverRequest($requestData, $currentAdmin, $approvers);
+        $leaveDay = $this->timesheetService->getDifferentDay($quitWorkFromAt, $quitWorkToAt);
 
-        return view('admin.application.request.request-detail', compact('requestData'));
+        return view('admin.application.request.request-detail', compact('requestData', 'requestId', 'approvers', 'leaveDay', 'canViewApprover'));
     }
 
     public function nestView()
@@ -101,7 +122,7 @@ class ApplicationController extends Controller
             'name' => 'required|max:255',
             'type' => [
                 'required',
-                Rule::in(array_keys(config('singletype.type')))
+                Rule::in(config('singletype.type'))
             ],
             'employee_id' => 'required|array',
             'regulation' => 'required',
@@ -179,5 +200,68 @@ class ApplicationController extends Controller
             'success' => false,
             'message' => 'Cập nhật trạng thái thất bại'
         ], 404);
+    }
+
+    public function ajaxAcceptRequest(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'id' => 'required',
+            'status' => ['required', Rule::in(config('request_approve_history.status'))]
+        ], [
+            "id.require" => "Không tìm thấy loại đơn này",
+            "status.require" => "Trạng thái không được để trống",
+            "status.in" => "Trạng thái không đơn không hợp lệ"
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                "status" => "validate_failed",
+                "message" => $validator->messages()->first()
+            ], 442);
+        }
+
+        $modelRequest = $this->requestRepo->find($request->id);
+        $currentAdmin = Auth::user();
+        if (!$modelRequest) {
+            return response()->json([
+                "status" => "failed",
+                "message" => "Không tìm thấy đơn này"
+            ], 442);
+        }
+        try {
+            $data = [
+                'status' => $request->status,
+                'employee_id' => $currentAdmin->id
+            ];
+            $request = $this->requestRepo->handleApprove($data, $modelRequest);
+            if ($request) {
+                if ($request->status == config('request.status.accepted')) {
+                    $this->employeeLeavePermissionRepo->enforcementRequest($request);
+                    $title = "Đơn của bạn đã được duyệt";
+                    $employeeIds = array($request->employee_id);
+                    $content = $request->singleType->name . " của bạn đã được duyệt";
+                    $domain = config('notification.domain.FE');
+                    $type = config('notification.type.personal');
+                    $dataNoti = json_encode(["title" => $title, "content" => $content]);
+                    $fcmTokens = array($request->employee->fcm_token ?? null);
+                    $this->notifycationRepo->pushNotifications($employeeIds, $title, $content, $domain, $type);
+                    Notification::send(null, new \App\Notifications\SendPushNotification("noti_request_done", $dataNoti, $fcmTokens));
+                    return response()->json([
+                        "status" => "success",
+                        "message" => "Đơn này đã được phê duyệt"
+                    ]);
+                }
+            }
+        } catch (\Exception $e) {
+            $message = '[' . date('Y-m-d H:i:s') . '] Error message \'' . $e->getMessage() . '\'' . ' in ' . $e->getFile() . ' line ' . $e->getLine();
+            Log::error($message);
+            DB::rollBack();
+            Noti::telegramLog('Approver Request', $message);
+        }
+
+        return response()->json([
+            "status" => "failed",
+            "message" => "Không thể duyệt đơn vào lúc này !"
+        ], 442);
     }
 }

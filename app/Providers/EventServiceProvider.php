@@ -9,9 +9,10 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 use Illuminate\Support\Facades\Event;
 use App\Events\UserRegisted;
 use App\Listeners\PushDataRakingRealtime;
+use App\Listeners\PushNotificaion;
 use App\Listeners\SendEmailVerifyToken;
 use App\Listeners\WirteTimekeepLog;
-
+use App\Events\HandleCreateRequest;
 class EventServiceProvider extends ServiceProvider
 {
     /**
@@ -31,6 +32,10 @@ class EventServiceProvider extends ServiceProvider
         HandleCheckIn::class => [
             WirteTimekeepLog::class,
             PushDataRakingRealtime::class
+        ],
+
+        HandleCreateRequest::class => [
+            PushNotificaion::class,
         ]
     ];
 

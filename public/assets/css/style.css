@@ -6227,8 +6227,6 @@ table tbody .border-bottom-info td {
           margin-right: 10px;
           -ms-flex-item-align: start !important;
               align-self: flex-start !important; }
-        .header-navbar .navbar-wrapper .navbar-container .header-notification .show-notification li:hover, .header-navbar .navbar-wrapper .navbar-container .header-notification .profile-notification li:hover {
-          background-color: #f1f1f1; }
       .header-navbar .navbar-wrapper .navbar-container .header-notification .show-notification.row li:hover, .header-navbar .navbar-wrapper .navbar-container .header-notification .row.profile-notification li:hover {
         background-color: transparent; }
       .header-navbar .navbar-wrapper .navbar-container .header-notification .show-notification .notification-user, .header-navbar .navbar-wrapper .navbar-container .header-notification .profile-notification .notification-user {
