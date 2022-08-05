@@ -128,16 +128,8 @@
                                 </li>
                                 @foreach ($requestApproveHistories as $history)
                                     <li>
-                                        @if ($history->status == config('hí'))
-                                            <label for="" class="text-custom">{{ $history-> }}</label>
-                                            <span>Đã được duyệt bởi <a href="">{{ $history->employee->fullname }}</a></span>
-                                        @elseif($)
-                                            <li>
-                                                <label for="" class="text-custom">20:04:56 24/07/2022</label>
-                                                <span>Đơn đã bị từ chối</span>
-                                                <p class="text-danger">Lý do: Đơn không hợp lệ</p>
-                                            </li>
-                                        @endif
+                                        <label for="" class="text-custom"></label>
+                                        <span>Đã được duyệt bởi <a href="">{{ $history->employee->fullname }}</a></span>
                                     </li>
                                 @endforeach
                             </ul>
