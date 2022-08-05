@@ -25,7 +25,7 @@ class EmployeeLeavePermissionRepository extends BaseRepository
     {
         $employeeLeavePermission = new $this->model;
         $employeeLeavePermission->date_from = $request->requestDetail->quit_work_from_at;
-        $employeeLeavePermission->data_to = $request->requestDetail->quit_work_to_at;
+        $employeeLeavePermission->date_to = $request->requestDetail->quit_work_to_at;
         $employeeLeavePermission->employee_id = $request->employee_id;
         return $employeeLeavePermission->save();
     }

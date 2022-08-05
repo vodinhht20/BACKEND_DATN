@@ -19,6 +19,9 @@ class HandleCreateRequest
      *
      * @return void
      */
+
+    public $notifications;
+
     public function __construct($options)
     {
         $this->notifications = $options;

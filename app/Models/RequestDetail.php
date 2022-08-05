@@ -21,7 +21,8 @@ class RequestDetail extends Model
         'content',
         'quit_work_from_at',
         'quit_work_to_at',
-        'request_id'
+        'request_id',
+        'image'
     ];
 
     public function requestApproveHistories()
