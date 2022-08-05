@@ -82,7 +82,8 @@ class SingleWordController extends Controller
             $Request_detail->fill([
                 'content' => $request->lydo,
                 'quit_work_from_at' => $request->date[0],
-                'quit_work_to_at' => $request->date[1]
+                'quit_work_to_at' => $request->date[1],
+                'image' => $request->fileImage ?: null,
             ])->save();
 
             $ModelRequest->fill([
@@ -143,5 +144,45 @@ class SingleWordController extends Controller
             'data' => $dataCheckinByDay,
             'message' => 'lấy timeKeeps thành công!',
         ], 200);
+    }
+
+    public function requestsAddImage(Request $request){
+        $validator = Validator::make($request->all(), [
+            'image' => 'required|mimes:jpeg,jpg,png,gif|max:10000',
+        ],[
+            'image.required' => 'Vui lòng chọn file',
+            'image.max' => 'File của bạn vượt quá 10MB',
+            'image.mimes' => 'File bạn chọn không phải file ảnh',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $validator->messages()->first()
+            ], 403);
+        }
+
+        try {
+            $urlImage = $this->storeImage($request, 'image');
+            return response()->json([
+                'error_code' => 'success',
+                'message' => 'update thành công!',
+                'image_links' => $urlImage
+            ], 200);
+        } catch (\Exception $e) {
+            $message = '[' . date('Y-m-d H:i:s') . '] Error message \'' . $e->getMessage() . '\'' . ' in ' . $e->getFile() . ' line ' . $e->getLine();
+            \Log::error($message);
+            Noti::telegramLog('Upload singleword', $message);
+            return response()->json([
+                'error_code' => 'error',
+                'message' => 'update singleword thất bại!'
+            ], 403);
+        }
+    }
+
+    protected function storeImage(Request $request, $name = 'image')
+    {
+        $path = $request->file($name)->store('public/images');
+        return substr($path, strlen('public/'));
     }
 }
