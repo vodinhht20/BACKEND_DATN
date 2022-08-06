@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Notifications extends Model
 {
     use HasFactory;
+    protected $table = 'notifications';
+    protected $fillable = [
+        'watched',
+    ];
 
     public function getLink()
     {
