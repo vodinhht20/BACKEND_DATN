@@ -238,7 +238,7 @@ class ApplicationController extends Controller
                 if ($request->status == config('request.status.accepted')) {
                     $this->employeeLeavePermissionRepo->enforcementRequest($request);
                     $title = "Đơn của bạn đã được duyệt";
-                    $employeeIds = array($request->employee_id);
+                    $employeeIds = ["employee_ids" => array($request->employee_id)];
                     $content = $request->singleType->name . " của bạn đã được duyệt";
                     $domain = config('notification.domain.FE');
                     $type = config('notification.type.personal');
