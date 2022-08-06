@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('employee_id');
             $table->bigInteger('request_id');
-            $table->tinyInteger('status');
+            $table->tinyInteger('status')->default(1);
             $table->text('reason')->nullable();
             $table->softDeletes();
             $table->timestamps();

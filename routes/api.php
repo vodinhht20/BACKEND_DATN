@@ -73,8 +73,12 @@ Route::middleware('jwt.auth')->group(function () {
             "spin" => 'Áo thun'
         ], 200);
     });
-});
 
+    //Notification FE
+    Route::get('notification', [NotificationController::class, 'notifications']);
+    Route::post('notification-watch', [NotificationController::class, 'watchedNoti']);
+    Route::post('notification-watch-all', [NotificationController::class, 'watchedNotiAll']);
+});
 
 
 Route::post('login-google', [AuthController::class, 'googleLogin']);
