@@ -194,3 +194,7 @@
     width: 15px;
     height: 15px;
 }
+
+.mx-datepicker-popup {
+    z-index: 1000000 !important;
+}

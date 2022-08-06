@@ -48,6 +48,8 @@ Route::middleware('jwt.auth')->group(function () {
     Route::get('list-approver/{id}', [SingleWordController::class, 'GetApprover']);
 
     Route::post('requests', [SingleWordController::class, 'requestsAdd']);
+    Route::post('requests-image', [SingleWordController::class, 'requestsAddImage']);
+    Route::post('get-time-keep', [SingleWordController::class, 'getTimekeep']);
     //singleType
 
     //setting

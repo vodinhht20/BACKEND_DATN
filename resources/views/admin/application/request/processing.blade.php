@@ -1,3 +1,29 @@
+<div>
+    <form action="" class="form-filter">
+        <div class="row align-items-end">
+            <div class="col-md-3">
+                <label for="">Từ khóa</label>
+                <input type="text" name="keywork" placeholder="Nhập từ khóa..." class="form-control filter-data">
+            </div>
+            <div class="col-md-3">
+                <label for="">Loại đơn:</label>
+                <input type="text" name="type" value="" placeholder="Loại đơn..." filter="company_shift_name" class="form-control filter-data">
+            </div>
+            <div class="col-md-3">
+                <label for="">Người tạo:</label>
+                <input type="text" name="employee" value="" placeholder="Người tạo..." filter="company_shift_name" class="form-control filter-data">
+            </div>
+            <input type="hidden" :value="current_tab" name="current_tab">
+            <div class="col-md-3">
+                <a href="{{ route('schedule-calender-index') }}" class="btn btn-inverse btn-sm waves-effect waves-light" style="float: right;">Tất cả</a>
+                <button class="btn btn-primary btn-sm waves-effect waves-light mr-2" style="float: right;">Tìm kiếm</button>
+            </div>
+        </div>
+    </form>
+    <div class="mt-5 mb-2 row">
+        <div class="col-4">Có <b>3</b> lịch làm việc trong danh sách</div>
+    </div>
+</div>
 <div class="table-border-style mt-2">
     <div class="table-responsive scrollbar-custom" style="width:100%;">
         <table class="table align-middle-td">
@@ -19,7 +45,7 @@
                     <td>#@{{ record.id }}</td>
                     <td>
                         <p>Đơn nghỉ không lương</p>
-                        <label for="" class="label bg-primary">Đang xử lý</label>
+                        <label for="" class="label bg-primary" :class="record.class_status">@{{ record.getStatusStr }}</label>
                     </td>
                     <td>
                         <p><b>@{{ record.employee?.fullname }}</b></p>
@@ -54,48 +80,40 @@
                             </a>
                             <span class="tooltip-content3">Xem chi tiết</span>
                         </div>
-                        <div class="mytooltip tooltip-effect-9 ml-2">
+                        {{-- <div class="mytooltip tooltip-effect-9 ml-2">
                             <button class="btn waves-effect waves-dark btn-success btn-outline-success btn-icon">
                                 <i class="icofont icofont-check-circled"></i>
                             </button>
                             <span class="tooltip-content3">Duyệt nhanh</span>
-                        </div>
+                        </div> --}}
                     </td>
                 </tr>
-                {{-- @if (count($singleTypes) == 0)
-                    <tr>
-                        <td colspan="6" class="box_data_empty">
-                            <img src="{{asset('frontend')}}/image/empty_data.png" alt="">
-                        </td>
-                    </tr>
-                @endif --}}
+                <tr v-if="requestProcessData.total == 0">
+                    <td colspan="8" class="box_data_empty">
+                        <img src="{{asset('frontend')}}/image/empty_data.png" alt="">
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>
-    <div style="float: right;" class="pagination_cutomize">
-        <nav aria-label="Page navigation example">
-            <template>
-                <paginate
-                    :page-count="requestProcessData.last_page"
-                    v-model="requestProcessData.current_page"
-                    :initial-page="requestProcessData.current_page"
-                    :click-handler="changePageProcess"
-                    :prev-text="'‹'"
-                    :next-text="'›'"
-                    :page-link-class="'page-link'"
-                    :container-class="'pagination'"
-                    :page-class="'page-item'"
-                    :prev-link-class="'page-link'"
-                    :next-link-class="'page-link'"
-                    :prev-class="'page-item'"
-                    :next-class="'page-item'"
-                >
-                </paginate>
-            </template>
-        </div>
+    <div style="float: right;" class=""  v-if="requestProcessData.total > 0">
+        <template>
+            <paginate
+                :page-count="requestProcessData.last_page"
+                v-model="requestProcessData.current_page"
+                :initial-page="requestProcessData.current_page"
+                :click-handler="changePageProcess"
+                :prev-text="'‹'"
+                :next-text="'›'"
+                :page-link-class="'page-link'"
+                :container-class="'pagination'"
+                :page-class="'page-item'"
+                :prev-link-class="'page-link'"
+                :next-link-class="'page-link'"
+                :prev-class="'page-item'"
+                :next-class="'page-item'"
+            >
+            </paginate>
+        </template>
     </div>
-</div>
-<div class="overlay-load">
-    <img src="{{asset('frontend')}}/image/loading.gif" alt="">
-    <p style="color: #3c2525;">Vui lòng chờ ...</p>
 </div>

@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\HandleCreateRequest;
 use App\Http\Controllers\Controller;
 use App\Models\Noti;
 use App\Models\Request as ModelsRequest;
 use App\Models\RequestDetail;
+use App\Repositories\NotifycationRepository;
+use App\Repositories\RequestRepository;
 use App\Repositories\SingleTypeRepository;
+use App\Repositories\TimekeepRepository;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -14,9 +19,14 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class SingleWordController extends Controller
 {
-    public function __construct(private SingleTypeRepository $singleTypeRepo)
+    public function __construct(
+        private SingleTypeRepository $singleTypeRepo,
+        private RequestRepository $requestRepo,
+        private NotifycationRepository $notifycationRepo,
+        private TimekeepRepository $timekeepRepo,
+        )
     {
-        $this->singleTypeRepo = $singleTypeRepo;
+
     }
 
     public function getListSingleType(){
@@ -72,7 +82,8 @@ class SingleWordController extends Controller
             $Request_detail->fill([
                 'content' => $request->lydo,
                 'quit_work_from_at' => $request->date[0],
-                'quit_work_to_at' => $request->date[1]
+                'quit_work_to_at' => $request->date[1],
+                'image' => $request->fileImage ?: null,
             ])->save();
 
             $ModelRequest->fill([
@@ -80,8 +91,37 @@ class SingleWordController extends Controller
                 'single_type_id' => $request->id,
                 'request_detail_id' => $Request_detail->id,
             ])->save();
-
             DB::commit();
+
+            // Gửi thông báo cho các bộ phận duyệt
+            $requestApproves = $this->requestRepo->getApprover($ModelRequest);
+            $employeeIds = $requestApproves->pluck('id')->toArray();
+            $requestName = $ModelRequest->singleType->name;
+            $fcmTokens = $requestApproves->pluck('fcm_token')->toArray();
+            $options = [
+                "title" => "Bạn có đơn cần phê duyệt",
+                "employee_ids" => $employeeIds,
+                "content" => "Nhân viên $employee->fullname vừa tạo đơn $requestName",
+                "request_domain" => config('notification.domain.BE'),
+                "request_type" => config('notification.type.personal'),
+                "link" => "application/request-detail/$ModelRequest->id",
+                "watched" => 0,
+                "id" => "new",
+                "fcm_tokens" => $fcmTokens
+            ];
+            $result = $this->notifycationRepo->pushNotifications($options);
+            event(new HandleCreateRequest($options));
+            if (!$result) {
+                $message = "Không thể gửi noti cho người cần duyệt - mã đơn ($ModelRequest->id)";
+                \Log::error($message);
+                Noti::telegramLog('Tạo gửi noti thất bại ', $message);
+            }
+
+            return response()->json([
+                'error_code' => 'success',
+                'message' => 'gửi đơn thành công!',
+            ], 200);
+
         } catch (\Exception $e) {
             $message = '[' . date('Y-m-d H:i:s') . '] Error message \'' . $e->getMessage() . '\'' . ' in ' . $e->getFile() . ' line ' . $e->getLine();
             \Log::error($message);
@@ -92,10 +132,57 @@ class SingleWordController extends Controller
                 'message' => $e->getMessage()
             ], 442);
         }
+    }
 
+    public function getTimekeep(Request $request) {
+        $employee = JWTAuth::toUser($request->access_token);
+        $date = Carbon::createFromFormat('Y-m-d', $request->currentDate)->format('Y-m-d');
+        $dataCheckinByDay = $this->timekeepRepo->dataCheckinByDay($date, $employee->id);
+        // dd($dataCheckinByDay);
         return response()->json([
             'error_code' => 'success',
-            'message' => 'gửi đơn thành công!',
+            'data' => $dataCheckinByDay,
+            'message' => 'lấy timeKeeps thành công!',
         ], 200);
+    }
+
+    public function requestsAddImage(Request $request){
+        $validator = Validator::make($request->all(), [
+            'image' => 'required|mimes:jpeg,jpg,png,gif|max:10000',
+        ],[
+            'image.required' => 'Vui lòng chọn file',
+            'image.max' => 'File của bạn vượt quá 10MB',
+            'image.mimes' => 'File bạn chọn không phải file ảnh',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $validator->messages()->first()
+            ], 403);
+        }
+
+        try {
+            $urlImage = $this->storeImage($request, 'image');
+            return response()->json([
+                'error_code' => 'success',
+                'message' => 'update thành công!',
+                'image_links' => $urlImage
+            ], 200);
+        } catch (\Exception $e) {
+            $message = '[' . date('Y-m-d H:i:s') . '] Error message \'' . $e->getMessage() . '\'' . ' in ' . $e->getFile() . ' line ' . $e->getLine();
+            \Log::error($message);
+            Noti::telegramLog('Upload singleword', $message);
+            return response()->json([
+                'error_code' => 'error',
+                'message' => 'update singleword thất bại!'
+            ], 403);
+        }
+    }
+
+    protected function storeImage(Request $request, $name = 'image')
+    {
+        $path = $request->file($name)->store('public/images');
+        return substr($path, strlen('public/'));
     }
 }

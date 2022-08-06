@@ -111,7 +111,7 @@
                                             @endif
                                         </td>
                                         <td style="width: 200px;">
-                                            <label for="" class="label label-inverse-primary">{{ config('singletype.type.' . $singleType->type) }}</label>
+                                            <label for="" class="label label-inverse-primary">{{ config("singletype.type_info.$singleType->type.title") }}</label>
                                         </td>
                                         <td style="width: 400px;">
                                             {{ formartString($singleType->description, 100) }}

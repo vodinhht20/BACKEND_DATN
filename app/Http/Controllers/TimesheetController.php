@@ -15,6 +15,8 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
 use App\Exports\TimekeepExport;
+use App\Imports\TimekeepImport;
+use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 
 class TimesheetController extends Controller
@@ -110,6 +112,31 @@ class TimesheetController extends Controller
         $formatDates = $this->timesheetService->getDayByMonth($monthYear);
         $fileName = "timekeep_" . date('Y_m_d_H_i') . ".xlsx";
         return Excel::download(new TimekeepExport($timesheetFormats, $formatDates), $fileName);
+    }
+    public function importView(Request $request){
+        return view('admin.timesheet.index');
+    }
+
+    public function importExcel(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'date' => 'required',
+            'file' => 'required|mimes:xlsx|max:10000',
+        ], [
+            'date.required' => 'Vui lòng lựa chọn ngày',
+            'file.required' => 'Vui lòng chọn file',
+            'file.mimes' => 'Định dạng file không hợp lệ',
+            'file.max' => 'Dung lượng file không quá 10MB',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'error_code' => 'validate_failed',
+                'messages' => array($validator->messages()->first())
+            ], 442);
+        }
+        Excel::import(new TimekeepImport, $request->file('file'));
+        dd(1);
     }
 
 }

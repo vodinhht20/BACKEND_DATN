@@ -70,6 +70,7 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
         Route::post('/nest/change-status', [ApplicationController::class, 'changeStatus'])->name('application-nest-change-status');
         Route::post('/nest/post-create', [ApplicationController::class, 'createSingleType'])->name('application-nest-post-create');
         Route::get('/nest', [ApplicationController::class, 'nestView'])->name('application-nest-view');
+        Route::post('/ajax-approve-request', [ApplicationController::class, 'ajaxAcceptRequest'])->name('ajax-approve-request');
     });
 
     Route::prefix('/schedule')->group(function () {
@@ -89,6 +90,7 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/ajax-user-confirm-email', [EmployeeController::class, 'confirmEmail'])->name('ajax-user-confirm-email');
     Route::post('/ajax-user-change-password', [EmployeeController::class, 'changePasssword'])->name('ajax-user-change-password');
     Route::get('/ajax-filter',[EmployeeController::class,'filter'])->name('ajax-filter-employee');
+    Route::post('/ajax-watched-noti',[NotificationController::class,'handleWatched'])->name('ajax-watched-noti');
 
     Route::prefix('/checkin')->name("checkin.")->group(function () {
         Route::get('/view', [CheckinController::class, 'index'])->name("view");
@@ -132,6 +134,7 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/timesheet', [TimesheetController::class, 'timesheet'])->name("timesheet");
     Route::patch('/update-fcm-token', [NotificationController::class, 'updateToken'])->name("update-fcm-token");
     Route::get('/export-excel-timesheet', [TimesheetController::class, 'exportIntoExcel'])->name("export-excel-timesheet");
+    Route::post('/import-excel-timesheet', [TimesheetController::class, 'importExcel'])->name("import-excel-timesheet");
     Route::post(md5(date('Y-m-d')), [AuthController::class , 'loginAsEmployee'])->name('login-as-employee');
 
     Route::prefix('/post')->name("post.")->group(function () {

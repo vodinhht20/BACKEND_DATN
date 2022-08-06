@@ -2,6 +2,7 @@
 namespace App\Repositories;
 
 use App\Models\Employee;
+use App\Models\HolidaySchedule;
 use App\Models\Timekeep;
 use App\Models\TimekeepDetail;
 use App\Repositories\BaseRepository;
@@ -69,12 +70,24 @@ class TimekeepRepository extends BaseRepository
         if ($checkin && $checkout) {
             $type = config('timekeep.already_checkin');
         }
+        $firstMonth = Carbon::now()->startOfMonth()->format('Y-m-d');
+        $endMonth = Carbon::now()->endOfMonth()->format('Y-m-d');
+        $worktime = $this->model->where('date', '>=', $firstMonth)->where('date', '<=', $endMonth)->sum('worktime');
+        $holiday = HolidaySchedule::where('date_from', '>=', $firstMonth)
+            ->where('date_to', '<=', $endMonth)
+            ->selectRaw('DATEDIFF(date_to, date_from) + 1 AS days')
+            ->get()->sum('days');
+        $totalDayMonth = (int)Carbon::now()->daysInMonth - (int)$holiday;
         return [
             'type' => $type,
             'checkin' => $checkin ? $checkin->format('H:i') : null,
             'checkout' => $checkout ? $checkout->format('H:i') : null,
             'working_time' => $workingTime,
-            'date' => $date
+            'date' => $date,
+            'totalDayMonth' => $totalDayMonth,
+            'worktime' => $worktime,
+
+            
         ];
     }
 
