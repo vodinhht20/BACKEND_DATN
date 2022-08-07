@@ -185,4 +185,14 @@ class SingleWordController extends Controller
         $path = $request->file($name)->store('public/images');
         return substr($path, strlen('public/'));
     }
+
+    public function countOrdersPerMonth(Request $request) {
+        $employee = JWTAuth::toUser($request->access_token);
+        $data = $this->requestRepo->getOrdersPerMonth($employee->id)->count();
+        return response()->json([
+                'error_code' => 'success',
+                'orders_perMonth' => $data,
+                'message' => 'lấy tổng số đơn từ trong tháng thành công!',
+            ], 200);
+    }
 }
