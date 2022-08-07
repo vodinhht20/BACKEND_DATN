@@ -35,6 +35,10 @@ class NotifycationRepository extends BaseRepository
             $query->where("type", $options['type']);
         }
 
+        if (isset($options['types'])) {
+            $query->whereIn("type", $options['types']);
+        }
+
         if (isset($options['id'])) {
             $query->where("id", $options['id']);
         }
