@@ -66,13 +66,16 @@ class TimesheetController extends Controller
             'keywords' => $request->keywords,
             'position_ids' => $positionIds
         ];
+        if ($request->departments && count($positionIds) == 0) {
+            $options['position_ids'] = array(-9999);
+        }
+        $take = 10;
         $timekeeps = $this->timekeepRepo->query($options)->get();
         $timesheetFormats = $this->timekeepRepo->timesheetFormats($timekeeps);
         $departments = $this->departmentRepo->formatVueSelect();
-        $timesheetFormats = $this->paginate($timesheetFormats, 20)->withPath("timesheet");
+        $timesheetFormats = $this->paginate($timesheetFormats, $take)->withPath("timesheet");
         $formatDates = $this->timesheetService->getDayByMonth($monthYear);
         return view('admin.timesheet.index',compact("formatDates", "inpMonth", "timesheetFormats", "departments", "requestDepartments"));
-
     }
 
     private function paginate($items, $perPage = 5, $page = null, $options = []): LengthAwarePaginator
@@ -120,6 +123,7 @@ class TimesheetController extends Controller
         $fileName = "timekeep_" . date('Y_m_d_H_i') . ".xlsx";
         return Excel::download(new TimekeepExport($timesheetFormats, $formatDates), $fileName);
     }
+
     public function importView(Request $request){
         return view('admin.timesheet.index');
     }
@@ -229,6 +233,99 @@ class TimesheetController extends Controller
             "record_failed" => array_values($recordFailed),
             "record_susscess" => array_values($recordSusscess),
             "record_not_exist" => array_values($recordNotExist),
+        ]);
+    }
+
+    public function previewImport(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'date' => 'required',
+            'file' => 'required|mimes:xlsx|max:10000',
+        ], [
+            'date.required' => 'Vui lòng lựa chọn ngày',
+            'file.required' => 'Vui lòng chọn file',
+            'file.mimes' => 'Định dạng file không hợp lệ',
+            'file.max' => 'Dung lượng file không quá 10MB',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'error_code' => 'validate_failed',
+                'messages' => array($validator->messages()->first())
+            ], 442);
+        }
+        $import = new TimekeepImport();
+        Excel::import($import, $request->file('file'));
+        $dataImports = $import->dataImport;
+        $dataValidate = $import->validateFile;
+        if ($dataValidate) {
+            return response()->json([
+                'status' => 'failed',
+                'messages' => $dataValidate
+            ], 442);
+        }
+        $employeeCodes = Arr::pluck($dataImports, 'ma_nhan_vien');
+        $date = Carbon::createFromFormat("Y-m", $request->date);
+        try {
+            $options = [
+                "date_from" => $date->copy()->startOfMonth()->format("Y-m-d"),
+                "date_to" => $date->copy()->endOfMonth()->format("Y-m-d"),
+            ];
+        } catch (\Exception $ex) {
+            return response()->json([
+                'status' => 'failed',
+                'messages' => "Định dạng ngày tháng không hợp lệ"
+            ], 442);
+        }
+
+        // Start import data
+        $timekeeps = $this->timekeepRepo->getByEmployeeCode($employeeCodes, $options);
+        $employees = $this->employeeRepo->query(["employee_codes" => $employeeCodes])
+            ->select("id", "employee_code")
+            ->get()->keyBy("employee_code");
+        $regex = "/^ngay_+[0-9]*$/"; // định dạng phù hơp:  ngay_12052022
+        $dataFomart = [];
+        $recordNotExist = [];
+        foreach ($dataImports as $data) {
+            if (isset($employees[$data['ma_nhan_vien']])) {
+                try {
+                    foreach ($data as $key => $item) {
+                        if (preg_match($regex, $key)) {
+                            $formatDate =  ltrim($key, "ngay_");
+                            $dateFormat = Carbon::createFromFormat("dmY", $formatDate);
+                            $timekeep = $timekeeps->where("employee.employee_code", $data['ma_nhan_vien'])
+                                ->where("date", $dateFormat->format("Y-m-d"))
+                                ->first();
+                            if ($timekeep) {
+                                $dataFomart[$data['ma_nhan_vien']][$dateFormat->format("d-m-Y")] = [
+                                    "root" => $timekeep->worktime,
+                                    "new" => $item
+                                ];
+                            } else {
+                                $dataFomart[$data['ma_nhan_vien']][$dateFormat->format("d-m-Y")] = [
+                                    "root" => 0,
+                                    "new" => $item
+                                ];
+                            }
+                        }
+                    }
+                } catch (\Exception $e) {
+                    $message = '[' . date('Y-m-d H:i:s') . '] Error message \'' . $e->getMessage() . '\'' . ' in ' . $e->getFile() . ' line ' . $e->getLine();
+                    Log::error($message);
+                    return response()->json([
+                        "status" => "failed",
+                        "message" => "Không thể đọc được file vào lúc này"
+                    ]);
+                }
+            } else {
+                $recordNotExist[] = $data['ma_nhan_vien'];
+            }
+        }
+
+        return response()->json([
+            "status" => "success",
+            "data" => $dataFomart,
+            "recordNotExist" => $recordNotExist,
         ]);
     }
 
