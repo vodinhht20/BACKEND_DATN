@@ -6,7 +6,8 @@ return [
         'bussiness' => 3,
         'wfh' => 4,
         'holiday' => 5,
-        'no_salary' => 6
+        'no_salary' => 6,
+        'import' => 7,
     ],
     'status' => [
         'success' => 1,
