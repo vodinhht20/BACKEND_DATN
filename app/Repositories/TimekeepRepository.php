@@ -10,6 +10,7 @@ use App\Service\TimekeepService;
 use App\Service\TimesheetService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 
 class TimekeepRepository extends BaseRepository
 {
@@ -87,7 +88,7 @@ class TimekeepRepository extends BaseRepository
             'totalDayMonth' => $totalDayMonth,
             'worktime' => $worktime,
 
-            
+
         ];
     }
 
@@ -367,8 +368,14 @@ class TimekeepRepository extends BaseRepository
         return null;
     }
 
-    public function getWorkTime($checkin, $checkout)
+    public function getByEmployeeCode(array $employeeCode, array $options): Collection
     {
-        # code...
+        $employees = $this->query($options)->with(["employee" => function($query) {
+                $query->select("id", "employee_code", "status");
+            }])
+            ->whereHas("employee", function ($query) use ($employeeCode) {
+                $query->whereIn("employee_code", $employeeCode);
+            });
+        return $employees->get();
     }
 }

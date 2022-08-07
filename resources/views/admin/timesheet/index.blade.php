@@ -222,7 +222,7 @@
                         <div class="modal-body overflow-modal scrollbar-right-custom row">
                             <div class="form-group col-lg-6">
                                 <label for="recipient-name" class="col-form-label">Chọn file <span class="text-danger">*</span></label>
-                                <input type="file" class="form-control" accept=".xlsx, .xlsm, .xls, .xltx" v-on:change="changeFileImport">
+                                <input type="file" class="form-control" accept=".xlsx, .xlsm, .xls, .xltx" id="inpFile">
                             </div>
                             <div class="form-group col-lg-6">
                                 <label for="recipient-name" class="col-form-label">Lựa chọn tháng <span class="text-danger">*</span></label>
@@ -267,13 +267,17 @@
                     app.current_tab = tab;
                 },
                 synchronized: () => {
-                    const data = {
-                        date: app.inputMounthImport,
-                        file: app.formFileImport
-                    }
+                    var data = new FormData();
+                    data.append('file', document.getElementById('inpFile').files[0]);
+                    data.append('date', app.inputMounthImport);
+                    data.append('file', app.formFileImport);
                     axios.post("{{route('import-excel-timesheet')}}", data, {
                         headers: {
-                        'Content-Type': 'multipart/form-data'
+                            'Content-Type': 'multipart/form-data'
+                        },
+                        onUploadProgress: function(progressEvent) {
+                            console.log("percentCompleted", percentCompleted);
+                            var percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
                         }
                     })
                         .then(res => {
@@ -284,9 +288,9 @@
                         });
                 },
                 changeFileImport: ($event) => {
-                    const dataForm = $event.target.files[0];
-                    app.formFileImport = new FormData();
-                    app.formFileImport.append('file', dataForm);
+                    // const dataForm = $event.target.files[0];
+                    // app.formFileImport = new FormData();
+                    // app.formFileImport.append('file', dataForm);
                 }
             },
         });

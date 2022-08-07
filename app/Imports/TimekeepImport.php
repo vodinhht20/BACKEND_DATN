@@ -2,29 +2,42 @@
 
 namespace App\Imports;
 
-use App\Models\Timekeep;
+use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Imports\HeadingRowFormatter;
 
 class TimekeepImport implements ToModel, WithHeadingRow
 {
-    /**
-    * @param array $row
-    *
-    * @return \Illuminate\Database\Eloquent\Model|null
-    */
+    public $dataImport = [];
+    public $validateFile;
+
+    public function __construct () {
+        //
+    }
+
     public function model(array $row)
     {
-        
-        return new Timekeep([
-            'employee_id' => $row['employee_id'],
-            'date'=>$row['date'],
-            'type'=>$row['type'],
-            'worktime' => $row['worktime'],
-            'minute_late' => $row['minute_late'],
-            'minute_early' => $row['minute_early'],
-            'overtime_hour' => $row['overtime_hour'],
+        if (isset($row['ma_nhan_vien'])) {
+            $validator = Validator::make($row, [
+                'ma_nhan_vien' => 'required',
+                'ngay_*' => 'required'
 
-        ]);
+            ], [
+                'ma_nhan_vien.required' => 'Mã nhân viên đang trống',
+                'ngay_*.required' => 'Số công bị thiếu'
+            ]);
+
+            if ($validator->fails()) {
+                $this->validateFile = $validator->messages()->first();
+                return;
+            }
+            $this->dataImport[] = $row;
+        }
+    }
+
+    public function headingRow(): int
+    {
+        return 3;
     }
 }

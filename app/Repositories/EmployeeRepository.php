@@ -196,6 +196,10 @@ class EmployeeRepository extends BaseRepository
             $employee->where('gender', $options['gender']);
         }
 
+        if (isset($options['employee_codes'])) {
+            $employee->whereIn('employee_code', $options['employee_codes']);
+        }
+
         if (isset($options['branch_id']) && $options['branch_id'] != '' ) {
             $employee->where('branch_id', $options['branch_id']);
         }
