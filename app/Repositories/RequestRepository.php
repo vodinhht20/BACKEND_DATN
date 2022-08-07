@@ -231,4 +231,13 @@ class RequestRepository extends BaseRepository
 
         return $canViewApprover;
     }
+
+    public function getOrdersPerMonth($employeeId){
+        $firstMonth = Carbon::now()->startOfMonth()->format('Y-m-d');
+        $endMonth = Carbon::now()->endOfMonth()->format('Y-m-d');
+        $result = $this->model->where('created_at', '>=', $firstMonth)
+                    ->where('created_at', '<=', $endMonth)
+                    ->where('employee_id', $employeeId)->get();
+        return $result;
+    }
 }
