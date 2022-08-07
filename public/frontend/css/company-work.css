@@ -145,7 +145,7 @@
 .text-grey55{
     padding-left: 5px;
 }
-
+/*
 @media(min-width: 1200px){
     .box-section-timesheet .card .tab-pane .row{
         width: 68.1vw;
@@ -153,16 +153,16 @@
     .box-section-timesheet .card .tab-pane .task_Manager{
         width: 67.1vw;
     }
-}
+} */
 
-@media(max-width: 1200px){
+/* @media(max-width: 1200px){
     .box-section-timesheet .card .tab-pane .row{
         width: 84vw;
     }
     .box-section-timesheet .card .tab-pane .task_Manager{
         width: 84vw;
     }
-}
+} */
 
 .box-section-timesheet .table-border-style th {
     min-width: 150px;
@@ -197,4 +197,45 @@
 
 .mx-datepicker-popup {
     z-index: 1000000 !important;
+}
+
+.bg-customize-hr-1 {
+    background-color: var(--color-hr-1);
+    color: #fff;
+}
+
+.bg-customize-hr-2 {
+    background-color: var(--color-hr-2);
+    color: #fff;
+}
+
+.bg-customize-hr-3 {
+    background-color: var(--color-hr-3);
+    color: #fff;
+}
+
+.bg-customize-hr-4 {
+    background-color: var(--color-hr-4);
+    color: #fff;
+}
+
+.bg-customize-hr-5 {
+    background-color: var(--color-hr-5);
+    color: #fff;
+}
+
+.bg-customize-hr-6 {
+    background-color: var(--color-hr-6);
+    color: #fff;
+}
+
+.ps-absolute {
+    position: absolute !important;
+    z-index: 10;
+    background: #fff;
+}
+
+.ps-left {
+    padding-left: 260px !important;
+    padding-right: 55px !important;;
 }

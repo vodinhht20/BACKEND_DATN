@@ -12,7 +12,7 @@
 
 <body>
     <video class="hero hero-pc" playsinline autoplay muted loop>
-        <source src="{{ asset('frontend') }}/image/bg-login.mp4" type="video/mp4">
+        <source src="{{ asset('frontend') }}/image/bg-login-2.mp4" type="video/mp4">
     </video>
     <div class="login-page container">
         <div class="wrapper-content">

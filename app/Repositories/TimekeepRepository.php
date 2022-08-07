@@ -186,6 +186,7 @@ class TimekeepRepository extends BaseRepository
                 'id' => $timekeep->id,
                 'checkin' => $checkinFormat ?? null,
                 'checkout' => $checkoutFormat ?? null,
+                'type' => $timekeep->type,
                 'minute_late' => $timekeep->minute_late,
                 'minute_early' => $timekeep->minute_early,
                 'worktime' => $timekeep->worktime

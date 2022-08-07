@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="{{asset('frontend/css/datepicker.css')}}">
     <script src="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.4.0/dist/vue-treeselect.umd.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.4.0/dist/vue-treeselect.min.css">
-    <link rel="stylesheet" href="{{asset('frontend')}}/css/company-work.css?v1.0.3">
+    <link rel="stylesheet" href="{{asset('frontend')}}/css/company-work.css?v1.0.4">
 @endsection
 @section('header-page')
 <div class="page-header">
@@ -33,7 +33,7 @@
 @endsection
 @section('content')
     <div class="box-section-timesheet row app_vue">
-        <div class="col-md-12 col-lg-2 col-sm-12 tabs row">
+        {{-- <div class="col-md-12 col-lg-2 col-sm-12 tabs row">
             <div class="col-lg-12 col-md-3 col-sm-4 tab-item" @click="changeTab('timesheet')" :class="{ active: current_tab == 'timesheet'}">
                 <i class=" ti-clipboard"></i>
                 <p>Bảng công</p>
@@ -42,8 +42,8 @@
                 <i class=" ti-settings"></i>
                 <p>Cài đặt ngày chốt công</p>
             </div>
-        </div>
-        <div class="col-md-12 col-lg-10 col-sm-12 card">
+        </div> --}}
+        <div class="col-md-12 col-lg-12 col-sm-12 card">
             <div class="tab-pane card-header" :class="{ active: current_tab == 'timesheet'}" >
                 <div class="row align-items-center unset-width">
                     <div class="col-7">
@@ -86,19 +86,15 @@
                         </div>
                         <div class="items-center">
                             <div class="w-10 h-10 rounded-full" style="background-color: var(--color-hr-5);"></div>
-                            <span class="text-grey55">Đi muộn/ Về sớm/ Quên checkout</span>
+                            <span class="text-grey55">Đi muộn/ Về sớm</span>
+                        </div>
+                        <div class="items-center">
+                            <div class="w-10 h-10 rounded-full" style="background-color: var(--color-hr-1);"></div>
+                            <span class="text-grey55">Công bên ngoài</span>
                         </div>
                         <div class="items-center">
                             <div class="w-10 h-10 rounded-full" style="background-color: var(--color-hr-6);"></div>
                             <span class="text-grey55">Không chấm công</span>
-                        </div>
-                        <div class="items-center">
-                            <div class="w-10 h-10 rounded-full" style="background-color: var(--color-hr-1);"></div>
-                            <span class="text-grey55">Có đơn từ</span>
-                        </div>
-                        <div class="items-center">
-                        <div class="w-10 h-10 rounded-full" style="background-color: var(--color-hr-2);"></div>
-                            <span class="text-grey55">Nghỉ lễ</span>
                         </div>
                         <div class="items-center">
                             <div class="w-10 h-10 rounded-full" style="background-color: var(--color-hr-3);"></div>
@@ -109,13 +105,13 @@
                         <p>Có <b>{{ $timesheetFormats->total() }}</b> nhân viên trong danh sách</p>
                     </div>
                     <div class="table-border-style">
-                        <div class="table-responsive scrollbar-custom">
+                        <div class="table-responsive scrollbar-custom" style="width:100%;">
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
-                                        <th>Tên nhân viên</th>
+                                        <th class="ps-absolute" style="height: 65px !important;">Tên nhân viên</th>
                                         @foreach ($formatDates as $date => $dateName)
-                                            <th class="tabletimekeeps">
+                                            <th class="tabletimekeeps @if ($loop->index == 0) ps-left  @endif">
                                                 {{$date}}
                                                 <br/>
                                                 {{$dateName}}
@@ -135,29 +131,29 @@
                                 <tbody>
                                     @foreach ($timesheetFormats as $timesheet)
                                     <tr>
-                                        <td>{{ $timesheet['employee']?->fullname }}</td>
+                                        <td class="ps-absolute">{{ $timesheet['employee']?->fullname }}</td>
                                             @foreach ($formatDates as $date => $dateName)
                                                 @if (isset($timesheet['timesheet'][$date]))
-                                                    <td class="tabletimekeeps">
+                                                    @php
+                                                        $timesheetByDate = $timesheet['timesheet'][$date];
+                                                        $className = "bg-customize-hr-4";
+                                                        if ($timesheetByDate["minute_late"] > 0 || $timesheetByDate["minute_early"] >  0) {
+                                                            $className = "bg-customize-hr-5";
+                                                        } else if ($timesheetByDate["type"] == config("timekeep.type.import")) {
+                                                            $className = "bg-customize-hr-1";
+                                                        } else if (empty($timesheetByDate['worktime'])) {
+                                                            $className = "bg-customize-hr-6";
+                                                        }
+                                                    @endphp
+                                                    <td class="tabletimekeeps {{ $className }} @if ($loop->index == 0) ps-left  @endif">
                                                         <div class="flex-col">
-                                                            @php
-                                                                $timesheetByDate = $timesheet['timesheet'][$date];
-                                                            @endphp
-                                                            @if($timesheetByDate['worktime'] && ($timesheetByDate["minute_late"] || $timesheetByDate["minute_early"] || $timesheetByDate["checkout"]))
-                                                                <div class="flex justify-center flex-wrap px-10" style="background-color: var(--color-hr-5);"></div>
-                                                            @elseif($timesheetByDate['worktime'] > 0)
-                                                                <div class="flex justify-center flex-wrap px-10" style="background-color: var(--color-hr-4);"></div>
-                                                            @else
-                                                                <div class="flex justify-center flex-wrap px-10" style="background-color: var(--color-hr-6);"></div>
-                                                            @endif
                                                             <span>{{ $timesheetByDate['worktime'] }}</span>
                                                         </div>
                                                     </td>
                                                 @else
-                                                    <td class="tabletimekeeps">
+                                                    <td class="tabletimekeeps bg-customize-hr-6">
                                                         <div class="flex-col">
                                                             <span>0</span>
-                                                            <div class="flex justify-center flex-wrap px-10" style="background-color: var(--color-hr-6);"></div>
                                                         </div>
                                                     </td>
                                                 @endif
@@ -173,6 +169,15 @@
                                             <td>{{ $timesheet['sum_current_worktime'] }}</td>
                                         </tr>
                                     @endforeach
+
+                                    @if (count($timesheetFormats) == 0)
+                                        <tr>
+                                            <td class="ps-absolute" style="height: 300px !important;">...</td>
+                                            <td colspan="{{ count($formatDates) + 9 }}" class="box_data_empty"  style="height: 300px !important;">
+                                                <img src="{{asset('frontend')}}/image/empty_data.png" alt="" style="width: 220px ;">
+                                            </td>
+                                        </tr>
+                                    @endif
                                 </tbody>
                             </table>
                         </div>
@@ -230,8 +235,8 @@
                                 <date-picker v-model="inputMounthImport" type="month" value-type="YYYY-MM" format="MM-YYYY" placeholder="Select month" name="month"></date-picker>
                             </div>
                             <div class="col-12">
-                                <p>Dữ liệu bạn tải lên sẽ đồng bộ với hệ thống,
-                                <br> trường hợp trùng dữ liệu bị trùng khớp thì sẽ ưu tiên data bạn tải lên. <a href="/template/template_import_timesheet.xlsx" class="text-primary">Download file mẫu</a></p>
+                                <p>Dữ liệu bạn tải lên sẽ đồng bộ với số công của nhân viên trong tháng trong hệ thống. Trường hợp có sự chênh lệch về số công thì sẽ lấy số công cao nhất của nhân viên đấy.
+                                <br><a href="/template/template_import_timesheet.xlsx" class="text-primary">Download file mẫu</a></p>
                             </div>
                         </div>
                         <div class="modal-footer" style="display: block;">
@@ -280,11 +285,28 @@
                             var percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
                         }
                     })
-                        .then(res => {
-                            console.log(res);
+                        .then(({data}) => {
+                            Swal.fire({
+                                title: 'Thành công',
+                                html: `
+                                <div>
+                                    <p>Đã đồng bộ thàng công: </p>
+                                    <ul>
+                                        <li>Tổng số: <b>${data.total_record}</b> bản ghi</li>
+                                        <li>Thành công: <b>${data.record_susscess.length}</b> bản ghi</li>
+                                        <li>Thất bại: <b>${data.record_failed.length}</b> bản ghi</li>
+                                        <li>Nhân viên không tồn tại: <b>${data.record_not_exist.length}</b> bản ghi</li>
+                                    </ul>
+                                </div>`,
+                                icon: 'success'
+                            });
                         })
                         .catch(error => {
-                            console.log(res);
+                            Swal.fire({
+                                title: 'Thất bại',
+                                html: `Đồng bộ thất bại`,
+                                icon: 'warning'
+                            });
                         });
                 },
                 changeFileImport: ($event) => {

@@ -44,11 +44,12 @@ class TimesheetController extends Controller
         $requestDepartments = array_filter($requestDepartments, function($e) {
             return (($e != "") || ($e != null));
         });
-        foreach ($requestDepartments as $departmentId) {
-            if (strpos($departmentId, "position_") === false) {
-                $departmentIds[] = $departmentId;
+        foreach ($requestDepartments as $requestKey) {
+            $regex = "/^position_+[0-9]*$/"; // định dạng phù hơp:  position_12
+            if (preg_match($regex, $requestKey)) {
+                $positionIds[] = trim($requestKey, "position_");
             } else {
-                $positionIds[] = trim($departmentId, "position_");
+                $departmentIds[] = $requestKey;
             }
         }
         $positionIdsByDepartments = $this->positionRepo->query(["department_id" => $departmentIds])->pluck('id')->toArray();
@@ -90,11 +91,12 @@ class TimesheetController extends Controller
         $requestDepartments = array_filter($requestDepartments, function($e) {
             return (($e != "") || ($e != null));
         });
-        foreach ($requestDepartments as $departmentId) {
-            if (strpos($departmentId, "position_") === false) {
-                $departmentIds[] = $departmentId;
+        foreach ($requestDepartments as $requestKey) {
+            $regex = "/^position_+[0-9]*$/"; // định dạng phù hơp:  position_12
+            if (preg_match($regex, $requestKey)) {
+                $positionIds[] = trim($requestKey, "position_");
             } else {
-                $positionIds[] = trim($departmentId, "position_");
+                $departmentIds[] = $requestKey;
             }
         }
         $positionIdsByDepartments = $this->positionRepo->query(["department_id" => $departmentIds])->pluck('id')->toArray();
@@ -173,50 +175,60 @@ class TimesheetController extends Controller
         $totalRecord = count($dataImports);
         $recordFailed = [];
         $recordSusscess = [];
+        $recordNotExist = [];
         foreach ($dataImports as $data) {
-            DB::beginTransaction();
-            try {
-                foreach ($data as $key => $item) {
-                    if (preg_match($regex, $key)) {
-                        $formatDate =  ltrim($key, "ngay_");
-                        $dateFormat = Carbon::createFromFormat("dmY", $formatDate)->format("Y-m-d");
-                        $timekeep = $timekeeps->where("employee.employee_code", $data['ma_nhan_vien'])
-                            ->where("date", $dateFormat)
-                            ->first();
-                        if ($timekeep) {
-                            // Nếu dữ liệu nó update lớn hơn dữ liệu hiện tại thì update
-                            if ($item > $timekeep->worktime) {
-                                $timekeep->worktime = $item;
-                                $timekeep->type = config("timekeep.type.import");
-                                $timekeep->save();
+            if (isset($employees[$data['ma_nhan_vien']])) {
+                DB::beginTransaction();
+                try {
+                    foreach ($data as $key => $item) {
+                        if (preg_match($regex, $key)) {
+                            $formatDate =  ltrim($key, "ngay_");
+                            $dateFormat = Carbon::createFromFormat("dmY", $formatDate)->format("Y-m-d");
+                            $timekeep = $timekeeps->where("employee.employee_code", $data['ma_nhan_vien'])
+                                ->where("date", $dateFormat)
+                                ->first();
+                            if (!($item > 0)) {
+                                $recordSusscess[$data['ma_nhan_vien']] = $data['ma_nhan_vien'];
+                                continue;
                             }
-                        } else {
-                            if (isset($employees[$data['ma_nhan_vien']])) {
+                            if ($timekeep) {
+                                // Nếu dữ liệu nó update lớn hơn dữ liệu hiện tại thì update
+                                if ($item > $timekeep->worktime ) {
+                                    Log::info($timekeep->worktime . " -> " . $item);
+                                    $timekeep->worktime = $item;
+                                    $timekeep->type = config("timekeep.type.import");
+                                    Log::info($timekeep->save());
+                                }
+                                $recordSusscess[$data['ma_nhan_vien']] = $data['ma_nhan_vien'];
+                            } else {
                                 $newTimeSheet = new Timekeep();
-                                $newTimeSheet->worktime;
+                                $newTimeSheet->worktime = $item;
                                 $newTimeSheet->date = $dateFormat;
                                 $newTimeSheet->employee_id = $employees[$data['ma_nhan_vien']]->id;
                                 $newTimeSheet->type = config("timekeep.type.import");
                                 $newTimeSheet->save();
+                                $recordSusscess[$data['ma_nhan_vien']] = $data['ma_nhan_vien'];
                             }
                         }
                     }
+                    DB::commit();
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                    $recordFailed[] = $data['ma_nhan_vien'];
+                    $message = '[' . date('Y-m-d H:i:s') . '] Error message \'' . $e->getMessage() . '\'' . ' in ' . $e->getFile() . ' line ' . $e->getLine();
+                    Log::error($message);
                 }
-                DB::commit();
-                $recordSusscess[] = $data['ma_nhan_vien'];
-            } catch (\Exception $e) {
-                DB::rollBack();
-                $recordFailed[] = $data['ma_nhan_vien'];
-                $message = '[' . date('Y-m-d H:i:s') . '] Error message \'' . $e->getMessage() . '\'' . ' in ' . $e->getFile() . ' line ' . $e->getLine();
-                Log::error($message);
+            } else {
+                $recordNotExist[$data['ma_nhan_vien']] = $data['ma_nhan_vien'];
             }
         }
 
         return response()->json([
             "status" => "success",
-            "totalRecord" => $totalRecord,
-            "record_failed" => $recordFailed,
-            "record_susscess" => $recordSusscess
+            "total_record" => $totalRecord,
+            "record_failed" => array_values($recordFailed),
+            "record_susscess" => array_values($recordSusscess),
+            "record_not_exist" => array_values($recordNotExist),
         ]);
     }
 
