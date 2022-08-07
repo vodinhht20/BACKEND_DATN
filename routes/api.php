@@ -50,6 +50,8 @@ Route::middleware('jwt.auth')->group(function () {
     Route::post('requests', [SingleWordController::class, 'requestsAdd']);
     Route::post('requests-image', [SingleWordController::class, 'requestsAddImage']);
     Route::post('get-time-keep', [SingleWordController::class, 'getTimekeep']);
+
+    Route::get('count-of-orders-per-month', [SingleWordController::class, 'countOrdersPerMonth']);
     //singleType
 
     //setting
