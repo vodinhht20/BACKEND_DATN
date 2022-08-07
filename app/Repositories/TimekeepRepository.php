@@ -73,7 +73,8 @@ class TimekeepRepository extends BaseRepository
         }
         $firstMonth = Carbon::now()->startOfMonth()->format('Y-m-d');
         $endMonth = Carbon::now()->endOfMonth()->format('Y-m-d');
-        $worktime = $this->model->where('date', '>=', $firstMonth)->where('date', '<=', $endMonth)->sum('worktime');
+
+        $worktime = $this->model->where('date', '>=', $firstMonth)->where('date', '<=', $endMonth)->where('employee_id', $employeeId)->sum('worktime');
         $holiday = HolidaySchedule::where('date_from', '>=', $firstMonth)
             ->where('date_to', '<=', $endMonth)
             ->selectRaw('DATEDIFF(date_to, date_from) + 1 AS days')
