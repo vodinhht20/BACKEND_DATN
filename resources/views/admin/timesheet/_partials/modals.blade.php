@@ -12,7 +12,7 @@
                 <div class="modal-body overflow-modal scrollbar-right-custom row">
                     <div class="form-group col-lg-6">
                         <label for="recipient-name" class="col-form-label">Chọn file <span class="text-danger">*</span></label>
-                        <input type="file" class="form-control" accept=".xlsx, .xlsm, .xls, .xltx" id="inpFile">
+                        <input type="file" class="form-control" accept=".xlsx, .xlsm, .xls, .xltx" id="inpFile" @change="($event) => {inputFile = $event?.target.files}">
                     </div>
                     <div class="form-group col-lg-6">
                         <label for="recipient-name" class="col-form-label">Lựa chọn tháng <span class="text-danger">*</span></label>
@@ -26,8 +26,7 @@
                 </div>
                 <div class="modal-footer" style="display: block;">
                     <div class="action_form" style="display: flex; align-items: center; justify-content: flex-end;">
-                        <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#modal_preview_import" @click="previewDataImport()">Xem trước</button>
-                        <button type="button" class="btn btn-primary btn-sm ml-2" @click="synchronized()">Đồng bộ</button>
+                        <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#modal_preview_import" @click="previewDataImport()" v-if="inputFile.length > 0 && inputMounthImport">Xem trước</button>
                         <button type="button" class="btn btn-secondary btn-sm ml-2" data-dismiss="modal">Hủy bỏ</button>
                     </div>
                 </div>
@@ -49,8 +48,8 @@
                 </div>
                 <div class="modal-body overflow-modal scrollbar-right-custom">
                     <div class="table-border-style">
-                        <div class="table-responsive scrollbar-custom">
-                            <table class="table align-middle-td">
+                        <div class="table-responsive scrollbar-custom" style="width:100%;">
+                            <table class="table align-middle-td" v-if="Object.keys(dataPreview).length > 0">
                                 <thead>
                                     <tr>
                                         <th>Mã nhân viên</th>
@@ -64,18 +63,28 @@
                                     <tr v-for="(data, key) in dataPreview">
                                         <td>@{{ key }}</td>
                                         <td v-for="(worktime, day) in data">
-                                            @{{ day }} <br>
-                                            Cũ: @{{ worktime['root'] }}<br>
-                                            Mới: @{{ worktime['new'] }}
+                                            <div class="text-center">
+                                                @{{ day }}
+                                            </div>
+                                            <hr>
+                                            <div class="text-center" >
+                                                <span>@{{ worktime['root'] }}</span>
+                                                <i class="ti-arrow-right"></i>
+                                                <span>@{{ worktime['new'] }}</span>
+                                            </div>
                                          </td>
                                     </tr>
                                 </tbody>
                             </table>
+                            <div v-else>
+                                <img src="{{ asset('frontend/image/loading_crm.gif') }}" alt="" style=" width: 400px; display: block; margin: auto;">
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer" style="display: block;">
                     <div class="action_form" style="display: flex; align-items: center; justify-content: flex-end;">
+                        <button type="button" class="btn btn-primary btn-sm ml-2" @click="synchronized()" v-if="dataPreview.length > 0">Đồng bộ</button>
                         <button type="button" class="btn btn-secondary btn-sm ml-2" data-dismiss="modal">Đóng</button>
                     </div>
                 </div>

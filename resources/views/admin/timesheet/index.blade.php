@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="{{asset('frontend/css/datepicker.css')}}">
     <script src="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.4.0/dist/vue-treeselect.umd.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.4.0/dist/vue-treeselect.min.css">
-    <link rel="stylesheet" href="{{asset('frontend')}}/css/company-work.css?v1.0.4">
+    <link rel="stylesheet" href="{{asset('frontend')}}/css/company-work.css?v1.0.5">
 @endsection
 @section('header-page')
 <div class="page-header">
@@ -238,7 +238,8 @@
                 settingPicked: "",
                 inputMounthImport: "",
                 formFileImport: "",
-                dataPreview: {}
+                dataPreview: {},
+                inputFile: ""
             },
             methods: {
                 changeTab: (tab) => {
