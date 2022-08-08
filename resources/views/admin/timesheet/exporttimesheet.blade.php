@@ -13,11 +13,7 @@
             <th>Mã nhân viên</th>
             <th>Tên nhân viên</th>
             @foreach ($formatDates as $date => $dateName)
-                <th class="tabletimekeeps">
-                    {{$date}}
-                    <br/>
-                    {{$dateName}}
-                </th>
+                <th class="tabletimekeeps">{{$date}}</th>
             @endforeach
             <th class="table-align-center">Công thực tế</th>
             <th class="table-align-center">Công nghỉ phép</th>
@@ -31,7 +27,7 @@
         </tr>
         @foreach ($timesheetFormats as $timesheet)
         <tr>
-            
+
             <td>{{ $timesheet['employee']->employee_code }}</td>
             <td>{{ $timesheet['employee']->fullname }}</td>
                 @foreach ($formatDates as $date => $dateName)

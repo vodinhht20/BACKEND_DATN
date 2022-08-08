@@ -118,8 +118,8 @@ class TimesheetController extends Controller
             'position_ids' => $positionIds
         ];
         $timekeeps = $this->timekeepRepo->query($options)->get();
-        $timesheetFormats = $this->timekeepRepo->timesheetFormats($timekeeps);
-        $formatDates = $this->timesheetService->getDayByMonth($monthYear);
+        $timesheetFormats = $this->timekeepRepo->timesheetFormats($timekeeps, "d-m-Y");
+        $formatDates = $this->timesheetService->getDayByMonth($monthYear, "d-m-Y");
         $fileName = "timekeep_" . date('Y_m_d_H_i') . ".xlsx";
         return Excel::download(new TimekeepExport($timesheetFormats, $formatDates), $fileName);
     }

@@ -239,7 +239,8 @@
                 inputMounthImport: "",
                 formFileImport: "",
                 dataPreview: {},
-                inputFile: ""
+                inputFile: "",
+                recordNotExist: {}
             },
             methods: {
                 changeTab: (tab) => {
@@ -305,6 +306,8 @@
                     })
                 },
                 previewDataImport: () => {
+                    app.dataPreview = {};
+                    app.recordNotExist = {};
                     var data = new FormData();
                     data.append('file', document.getElementById('inpFile').files[0]);
                     data.append('date', app.inputMounthImport);
@@ -315,8 +318,8 @@
                         }
                     })
                     .then(({data}) => {
-                        console.log(data);
                         app.dataPreview = data.data;
+                        app.recordNotExist = data.recordNotExist;
                     })
                     .catch(error => {
                     })
