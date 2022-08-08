@@ -161,7 +161,7 @@ class TimekeepRepository extends BaseRepository
         return $query;
     }
 
-    public function timesheetFormats($timekeeps): array
+    public function timesheetFormats($timekeeps, $format = "d-m"): array
     {
         $timesheetFormats = [];
         $timesheetService = app(TimesheetService::class);
@@ -181,7 +181,7 @@ class TimekeepRepository extends BaseRepository
                 $worktimeHours = $timesheetService->getDifferentHours($checkinCarbon,$checkoutCarbon);
             }
 
-            $formatDate = Carbon::createFromFormat("Y-m-d", $timekeep->date)->format('d-m');
+            $formatDate = Carbon::createFromFormat("Y-m-d", $timekeep->date)->format($format);
             $timesheetFormats[$timekeep->employee_id]["timesheet"][$formatDate] = [
                 'id' => $timekeep->id,
                 'checkin' => $checkinFormat ?? null,

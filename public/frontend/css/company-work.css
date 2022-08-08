@@ -239,3 +239,9 @@
     padding-left: 260px !important;
     padding-right: 55px !important;;
 }
+.tabletimekeeps {
+    transition: 0.3s;
+}
+.tabletimekeeps:hover {
+    box-shadow: inset 0px 1px 7px 0px #ffff;
+}

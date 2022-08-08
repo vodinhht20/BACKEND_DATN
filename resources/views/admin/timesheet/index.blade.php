@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="{{asset('frontend/css/datepicker.css')}}">
     <script src="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.4.0/dist/vue-treeselect.umd.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.4.0/dist/vue-treeselect.min.css">
-    <link rel="stylesheet" href="{{asset('frontend')}}/css/company-work.css?v1.0.4">
+    <link rel="stylesheet" href="{{asset('frontend')}}/css/company-work.css?v1.0.5">
 @endsection
 @section('header-page')
 <div class="page-header">
@@ -238,7 +238,9 @@
                 settingPicked: "",
                 inputMounthImport: "",
                 formFileImport: "",
-                dataPreview: {}
+                dataPreview: {},
+                inputFile: "",
+                recordNotExist: {}
             },
             methods: {
                 changeTab: (tab) => {
@@ -304,6 +306,8 @@
                     })
                 },
                 previewDataImport: () => {
+                    app.dataPreview = {};
+                    app.recordNotExist = {};
                     var data = new FormData();
                     data.append('file', document.getElementById('inpFile').files[0]);
                     data.append('date', app.inputMounthImport);
@@ -314,8 +318,8 @@
                         }
                     })
                     .then(({data}) => {
-                        console.log(data);
                         app.dataPreview = data.data;
+                        app.recordNotExist = data.recordNotExist;
                     })
                     .catch(error => {
                     })
