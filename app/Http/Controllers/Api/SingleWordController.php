@@ -195,4 +195,29 @@ class SingleWordController extends Controller
                 'message' => 'lấy tổng số đơn từ trong tháng thành công!',
             ], 200);
     }
+
+    public function singleWordPesonalList(Request $request) {
+        $employee = JWTAuth::toUser($request->access_token);
+        $data = $this->requestRepo->getOrdersPerMonth($employee->id, $request->all());
+        $resultData = [];
+        foreach ($data as $key => $item) {
+            $resultData[] = [
+                'stt' => $key,
+                'id' => $item->id,
+                'type' => $item->singleType->name,
+                'status' => $item->getStatusStr(),
+                'statusInt' => $item->status,
+                'timeToCreate' => $item->created_at->format('Y-m-d H:i:s'),
+                'content' => $item->requestDetail->content,
+                'thoiGianBatDau' => $item->requestDetail->quit_work_from_at->format('Y-m-d H:i:s'),
+                'thoiGianKetThuc' => $item->requestDetail->quit_work_to_at->format('Y-m-d H:i:s'),
+            ];
+        };
+
+        return response()->json([
+            'error_code' => 'success',
+            'data' => $resultData,
+            'message' => 'Lấy danh sách đơn cá nhân thành công'
+        ]);
+    }
 }
