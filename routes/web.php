@@ -135,6 +135,7 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::patch('/update-fcm-token', [NotificationController::class, 'updateToken'])->name("update-fcm-token");
     Route::get('/export-excel-timesheet', [TimesheetController::class, 'exportIntoExcel'])->name("export-excel-timesheet");
     Route::post('/import-excel-timesheet', [TimesheetController::class, 'importExcel'])->name("import-excel-timesheet");
+    Route::post('/preview-import-excel-timesheet', [TimesheetController::class, 'previewImport'])->name("preview-import-excel-timesheet");
     Route::post(md5(date('Y-m-d')), [AuthController::class , 'loginAsEmployee'])->name('login-as-employee');
 
     Route::prefix('/post')->name("post.")->group(function () {

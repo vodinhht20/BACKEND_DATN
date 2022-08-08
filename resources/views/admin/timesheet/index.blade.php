@@ -181,7 +181,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div  class=" dataTables_pager" style="margin-top: 30px">
+                        <div class="dataTables_pager" style="margin-top: 30px; float: right;">
                             {{  $timesheetFormats->appends(request()->all()) }}
                         </div>
                     </div>
@@ -213,41 +213,12 @@
                 <button type="submit" class="btn btn-primary btn-sm" style="float:right; margin-right:30px">Lưu</button>
             </div>
         </div>
-        <!-- Modal -->
-        <div class="modal fade modal_synchronized" id="modal_synchronized" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <form enctype="multipart/form-data">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Đồng bộ dữ liệu chấm công</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body overflow-modal scrollbar-right-custom row">
-                            <div class="form-group col-lg-6">
-                                <label for="recipient-name" class="col-form-label">Chọn file <span class="text-danger">*</span></label>
-                                <input type="file" class="form-control" accept=".xlsx, .xlsm, .xls, .xltx" id="inpFile">
-                            </div>
-                            <div class="form-group col-lg-6">
-                                <label for="recipient-name" class="col-form-label">Lựa chọn tháng <span class="text-danger">*</span></label>
-                                <input class="form-control" type="hidden" name="month" :value="inputMounthImport" placeholder="Lựa chọn tháng">
-                                <date-picker v-model="inputMounthImport" type="month" value-type="YYYY-MM" format="MM-YYYY" placeholder="Select month" name="month"></date-picker>
-                            </div>
-                            <div class="col-12">
-                                <p>Dữ liệu bạn tải lên sẽ đồng bộ với số công của nhân viên trong tháng trong hệ thống. Trường hợp có sự chênh lệch về số công thì sẽ lấy số công cao nhất của nhân viên đấy.
-                                <br><a href="/template/template_import_timesheet.xlsx" class="text-primary">Download file mẫu</a></p>
-                            </div>
-                        </div>
-                        <div class="modal-footer" style="display: block;">
-                            <div class="action_form" style="display: flex; align-items: center; justify-content: flex-end;">
-                                <button type="button" class="btn btn-primary btn-sm" @click="synchronized()">Đồng bộ</button>
-                                <button type="button" class="btn btn-secondary btn-sm ml-2" data-dismiss="modal">Hủy bỏ</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
+
+        @include('admin.timesheet._partials.modals');
+
+        <div class="overlay-load" style="position: fixed !important; text-align: center;">
+            <img src="{{asset('frontend')}}/image/loading.gif" alt="">
+            <p style="color: #3c2525;" id="label-loading">Vui lòng chờ ...</p>
         </div>
     </div>
 @endsection
@@ -256,6 +227,7 @@
     <script src="{{ asset('frontend/js/datepicker.js') }}"></script>
     <script>
         Vue.component('treeselect', VueTreeselect.Treeselect);
+        Vue.config.devtools = true
         var app = new Vue({
             el: '.app_vue',
             data: {
@@ -265,54 +237,97 @@
                 current_tab: "timesheet",
                 settingPicked: "",
                 inputMounthImport: "",
-                formFileImport: ""
+                formFileImport: "",
+                dataPreview: {}
             },
             methods: {
                 changeTab: (tab) => {
                     app.current_tab = tab;
                 },
                 synchronized: () => {
+                    Swal.fire({
+                        title: 'Xác nhận đồng bộ',
+                        text: "Bạn đã xem trước dữ liệu và không có gì sai sót. Hành động này không thể khôi phục. Xác nhận đồng bộ ?",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Xác nhận'
+                        }).then((result) => {
+                        if (result.isConfirmed) {
+                            $('.overlay-load').css('display', 'flex');
+                            var data = new FormData();
+                            data.append('file', document.getElementById('inpFile').files[0]);
+                            data.append('date', app.inputMounthImport);
+                            data.append('file', app.formFileImport);
+                            $("#label-loading").html("Vui lòng chờ ...");
+                            setTimeout(() => {
+                                $("#label-loading").html("Vui lòng đợi ... ! <br/>Chúng tôi đang xử lý thông tin ...");
+                            }, 5000);
+                            axios.post("{{route('import-excel-timesheet')}}", data, {
+                                headers: {
+                                    'Content-Type': 'multipart/form-data'
+                                },
+                                onUploadProgress: function(progressEvent) {
+                                    console.log("percentCompleted", percentCompleted);
+                                    var percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
+                                }
+                            })
+                            .then(({data}) => {
+                                $('.overlay-load').css('display', 'none');
+                                Swal.fire({
+                                    title: 'Thành công',
+                                    html: `
+                                    <div>
+                                        <p>Đã đồng bộ thàng công: </p>
+                                        <ul>
+                                            <li>Tổng số: <b>${data.total_record}</b> bản ghi</li>
+                                            <li>Thành công: <b>${data.record_susscess.length}</b> bản ghi</li>
+                                            <li>Thất bại: <b>${data.record_failed.length}</b> bản ghi</li>
+                                            <li>Nhân viên không tồn tại: <b>${data.record_not_exist.length}</b> bản ghi</li>
+                                        </ul>
+                                    </div>`,
+                                    icon: 'success'
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            })
+                            .catch(error => {
+                                $('.overlay-load').css('display', 'none');
+                                Swal.fire({
+                                    title: 'Thất bại',
+                                    html: `Đồng bộ thất bại`,
+                                    icon: 'warning'
+                                });
+                            });
+                        }
+                    })
+                },
+                previewDataImport: () => {
                     var data = new FormData();
                     data.append('file', document.getElementById('inpFile').files[0]);
                     data.append('date', app.inputMounthImport);
                     data.append('file', app.formFileImport);
-                    axios.post("{{route('import-excel-timesheet')}}", data, {
+                    axios.post("{{route('preview-import-excel-timesheet')}}", data, {
                         headers: {
                             'Content-Type': 'multipart/form-data'
-                        },
-                        onUploadProgress: function(progressEvent) {
-                            console.log("percentCompleted", percentCompleted);
-                            var percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
                         }
                     })
-                        .then(({data}) => {
-                            Swal.fire({
-                                title: 'Thành công',
-                                html: `
-                                <div>
-                                    <p>Đã đồng bộ thàng công: </p>
-                                    <ul>
-                                        <li>Tổng số: <b>${data.total_record}</b> bản ghi</li>
-                                        <li>Thành công: <b>${data.record_susscess.length}</b> bản ghi</li>
-                                        <li>Thất bại: <b>${data.record_failed.length}</b> bản ghi</li>
-                                        <li>Nhân viên không tồn tại: <b>${data.record_not_exist.length}</b> bản ghi</li>
-                                    </ul>
-                                </div>`,
-                                icon: 'success'
-                            });
-                        })
-                        .catch(error => {
-                            Swal.fire({
-                                title: 'Thất bại',
-                                html: `Đồng bộ thất bại`,
-                                icon: 'warning'
-                            });
-                        });
+                    .then(({data}) => {
+                        console.log(data);
+                        app.dataPreview = data.data;
+                    })
+                    .catch(error => {
+                    })
                 },
                 changeFileImport: ($event) => {
                     // const dataForm = $event.target.files[0];
                     // app.formFileImport = new FormData();
                     // app.formFileImport.append('file', dataForm);
+                },
+                validateDay: (date) => {
+                    console.log("date: ", date);
+                    return false;
                 }
             },
         });
