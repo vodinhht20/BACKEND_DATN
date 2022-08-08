@@ -129,7 +129,7 @@ class RequestRepository extends BaseRepository
     public function getApprover(Request $request, Collection $departmentWithLeader = null): Collection
     {
         $departmentRepo = app(DepartmentRepository::class);
-        $approverInfos = $request?->singleType?->approvers?->pluck('employee') ?: collect();
+        $approverInfos = $request?->singleType?->approvers?->pluck('employee')?->keyBy('id') ?: collect();
         $requiredLeader = $request?->singleType?->required_leader;
         if ($requiredLeader) {
             $departmentId = $request?->employee?->position?->department_id;
@@ -142,6 +142,7 @@ class RequestRepository extends BaseRepository
             if ($leader) {
                 $leader->is_leader = true;
                 $approverInfos[] = $leader;
+                $approverInfos->forget($leader->id);
             }
         }
 

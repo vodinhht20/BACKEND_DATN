@@ -112,13 +112,13 @@ class NotifycationRepository extends BaseRepository
     public function pushNotifications(array $options)
     {
         $notiData = [];
-        foreach ($options['employee_ids'] as $employee_id) {
+        foreach ($options['employee_ids'] as $employeeId) {
             $notiData[] = [
                 'title' => $options['title'],
                 'content' => $options['content'],
                 'domain' => $options['request_domain'],
                 'type' => $options['request_type'],
-                'employee_id' => $employee_id,
+                'employee_id' => $employeeId,
                 'link' => $options['link'],
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
