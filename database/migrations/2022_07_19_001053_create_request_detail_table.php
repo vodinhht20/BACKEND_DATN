@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('request_detail', function (Blueprint $table) {
             $table->id();
-            $table->string('content');
+            $table->text('content');
             $table->dateTime('quit_work_from_at');
             $table->dateTime('quit_work_to_at');
             $table->softDeletes();

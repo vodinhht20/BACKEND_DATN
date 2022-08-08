@@ -6,14 +6,14 @@ use Carbon\Carbon;
 use DateTimeZone;
 
 class TimesheetService {
-    public function getDayByMonth(Carbon $date)
+    public function getDayByMonth(Carbon $date, string $format = "d-m")
     {
         $totalDayInMonth = $date->daysInMonth;
         $arrDate = [];
         for ($index = 1; $index <= $totalDayInMonth; $index++) {
             $itemDay = $index . "-" . $date->format("m-Y");
             $day = Carbon::createFromFormat("d-m-Y", $itemDay);
-            $arrDate[$day->format("d-m")] = $day->locale('vi_VN')->dayName;
+            $arrDate[$day->format($format)] = $day->locale('vi_VN')->dayName;
         }
         return $arrDate;
     }

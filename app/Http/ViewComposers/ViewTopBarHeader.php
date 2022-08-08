@@ -26,6 +26,7 @@ class ViewTopBarHeader
         // Lấy ra danh sách nhân viên có quyền admin
         $employeeOptions = [
             'status' => config('employee.status.active'),
+            'role' => 'admin',
         ];
         if (Auth::check()) {
             $employeeOptions['not_in_id'] = array(Auth::user()->id);

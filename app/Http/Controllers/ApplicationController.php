@@ -228,29 +228,41 @@ class ApplicationController extends Controller
                 "message" => "Không tìm thấy đơn này"
             ], 442);
         }
+        DB::beginTransaction();
         try {
             $data = [
                 'status' => $request->status,
                 'employee_id' => $currentAdmin->id
             ];
-            $request = $this->requestRepo->handleApprove($data, $modelRequest);
-            if ($request) {
-                if ($request->status == config('request.status.accepted')) {
-                    $this->employeeLeavePermissionRepo->enforcementRequest($request);
-                    $title = "Đơn của bạn đã được duyệt";
-                    $employeeIds = ["employee_ids" => array($request->employee_id)];
-                    $content = $request->singleType->name . " của bạn đã được duyệt";
-                    $domain = config('notification.domain.FE');
-                    $type = config('notification.type.personal');
-                    $dataNoti = json_encode(["title" => $title, "content" => $content]);
-                    $fcmTokens = array($request->employee->fcm_token ?? null);
-                    $this->notifycationRepo->pushNotifications($employeeIds, $title, $content, $domain, $type);
-                    Notification::send(null, new \App\Notifications\SendPushNotification("noti_request_done", $dataNoti, $fcmTokens));
-                    return response()->json([
-                        "status" => "success",
-                        "message" => "Đơn này đã được phê duyệt"
-                    ]);
+            $result = $this->requestRepo->handleApprove($data, $modelRequest);
+            if ($result) {
+                if ($result->status == config('request.status.accepted')) {
+                    // Lưu thông tin cho đơn nghỉ phép
+                    $this->employeeLeavePermissionRepo->enforcementRequest($result);
                 }
+
+                // Gửi thông báo
+                $content = $result->singleType->name . " của bạn đã được duyệt bởi " . $currentAdmin->fullname;
+                $options = [
+                    'title' => "Đơn của bạn đã được phê duyệt",
+                    'content' => $content,
+                    'request_domain' => config('notification.domain.FE'),
+                    'request_type' => config('notification.type.personal'),
+                    'employee_ids' => array($result->employee_id),
+                    'link' => 'don-tu-cua-ban',
+                ];
+                $this->notifycationRepo->pushNotifications($options);
+
+                // Gửi realtime
+                $fcmTokens = array($result->employee->fcm_token ?? null);
+                $dataNoti = json_encode(["title" => $options['title'], "content" => $options['content']]);
+                Notification::send(null, new \App\Notifications\SendPushNotification("noti_request_done", $dataNoti, $fcmTokens));
+
+                DB::commit();
+                return response()->json([
+                    "status" => "success",
+                    "message" => "Đã duyệt đơn thành công"
+                ]);
             }
         } catch (\Exception $e) {
             $message = '[' . date('Y-m-d H:i:s') . '] Error message \'' . $e->getMessage() . '\'' . ' in ' . $e->getFile() . ' line ' . $e->getLine();

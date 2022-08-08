@@ -209,6 +209,7 @@
                         }
                         axios.post(ACCEPT_REQUEST_URL, data)
                             .then(({data}) => {
+                                location.reload();
                                 Swal.fire(
                                     'Thành công',
                                     'Đơn của bạn đã được duyệt',
