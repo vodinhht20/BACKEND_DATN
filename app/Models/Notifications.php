@@ -15,13 +15,13 @@ class Notifications extends Model
 
     public function getLink()
     {
-        if ($this->link && trim($this->link) != '') {
-            if ($this->domain == config('notification.domain.BE')) {
-                return env('DOMAIN_BACKEND') . "/admin/$this->link";
-            } else if ($this->domain == config('notification.domain.FE')) {
-                return env('DOMAIN_FRONTEND') . $this->link;
-            }
-        }
+        // if ($this->link && trim($this->link) != '') {
+        //     if ($this->domain == config('notification.domain.BE')) {
+        //         return env('DOMAIN_BACKEND') . "/admin/$this->link";
+        //     } else if ($this->domain == config('notification.domain.FE')) {
+        //         return env('DOMAIN_FRONTEND') . $this->link;
+        //     }
+        // }
         return $this->link;
     }
 }
