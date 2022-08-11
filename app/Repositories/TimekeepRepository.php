@@ -380,4 +380,15 @@ class TimekeepRepository extends BaseRepository
             });
         return $employees->get();
     }
+
+    public function getTimeOTbyEmplyeeId($id, $options = []) {
+        $query = $this->model->query();
+        if (isset($options['date'])) {
+            $query->where('date', '>=', $options['date']['firstMonth'])
+            ->where('date', '<=', $options['date']['endMonth']);
+        };
+
+        $employeeOT = $query->where('employee_id', $id)->get()->sum('overtime_hour');
+        return $employeeOT;
+    }
 }
