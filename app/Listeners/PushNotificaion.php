@@ -34,9 +34,9 @@ class PushNotificaion
             $link = '';
             if ($notificationData['link'] && trim($notificationData['link']) != '') {
                 if ($notificationData['request_domain'] == config('notification.domain.BE')) {
-                    $link = env('DOMAIN_BACKEND') . `/admin/` . $notificationData['link'];
+                    $link = env('DOMAIN_BACKEND') . "/admin/$notificationData['link']";
                 } else if ($notificationData['request_domain'] == config('notification.domain.FE')) {
-                    $link = env('DOMAIN_FRONTEND') . $notificationData['link'];
+                    $link = $notificationData['link'];
                 }
             }
             $notificationData = [...$notificationData, 'link' => $link, 'created_at' => '1 giây trước', 'id' => "new"];

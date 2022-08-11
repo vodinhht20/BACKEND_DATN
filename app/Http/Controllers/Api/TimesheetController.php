@@ -41,10 +41,21 @@ class TimesheetController extends Controller
         ];
         $timekeeps = $this->timekeepRepo->query($options)->get();
         $timesheetFormats = $this->timekeepRepo->timesheetFormats($timekeeps);
+
+        //OT
+        $options2 = [
+            'date' => [
+                'firstMonth' => $firstMonth,
+                'endMonth' => $endMonth,
+            ]
+        ];
+
+        $timeOT = $this->timekeepRepo->getTimeOTbyEmplyeeId($user->id, $options2);
         return response()->json([
             "data" => array_values($timesheetFormats)[0] ?? [],
             "month" => $monthYear,
-            "totalDayMonth" => $totalDayMonth
+            "totalDayMonth" => $totalDayMonth,
+            "ot" => $timeOT
         ]);
     }
 }
