@@ -61,21 +61,26 @@
                             <hr>
                             <div>
                                 <div>
-                                    <label for="" class="text-info">Bắt đầu nghỉ: </label>
-                                    <b>{{ $requestDetail->quit_work_from_at->format('H:i d-m-Y') }}</b>
+                                    <label for="" class="text-info">Bắt đầu: </label>
+                                    <b>{{ $checkinOld ?: "N/A" }}</b>
+                                    <i class="ti-arrow-right icon-theme" style="font-size: 12px; padding: 5px;"></i>
+                                    <b>{{ $requestDetail->quit_work_from_at->format('H:i') }}</b>
                                 </div>
                                 <div>
-                                    <label for="" class="text-info">Kết thúc nghỉ: </label>
-                                    <b>{{ $requestDetail->quit_work_to_at->format('H:i d-m-Y') }}</b>
+                                    <label for="" class="text-info">Kết thúc: </label>
+                                    <b>{{ $checkoutOld ?: "N/A" }}</b>
+                                    <i class="ti-arrow-right icon-theme" style="font-size: 12px; padding: 5px;"></i>
+                                    <b>{{ $requestDetail->quit_work_to_at->format('H:i') }}</b>
                                 </div>
                             </div>
                             <hr>
                             <h6 class="d-flex align-items-center" style="grid-column-gap: 5px;">
                                 <i class="ti-timer text-info mt-1" style="font-size: 20px;"></i>
                                 <div class="mt-1">
-                                    <span>Tổng số ngày nghỉ: </span>
+                                    <span>Số công: </span>
                                     <strong class="" style="color: var(--ui-outline);">{{ $leaveDay }} </strong>
-                                    <span>( ngày )</span>
+                                    <i class="ti-arrow-right icon-theme" style="font-size: 12px; padding: 5px;"></i>
+                                    <strong class="" style="color: var(--ui-outline);">{{ $leaveDay }} </strong>
                                 </div>
                             </h6>
                             <hr>
@@ -119,55 +124,97 @@
                         </div>
                     </div>
                     <div class="col-lg-6 col-xs-12">
-                        <h5>
-                            Lịch sử phê duyệt
-                        </h5>
-                        <div class="mt-2">
-                            <h6>Phê duyệt</h6>
-                            @if (count($requestApproveHistories) > 0)
+                        @if ($requestDetail->image)
+                            <div>
+                                <h5>Tài liệu</h5>
+                                <p>Hình ảnh, tài liệu liên quan: </p>
+                                <div class="mt-2">
+                                    <img src="{{ $requestDetail->getImage() }}" alt="" style="vertical-align: middle;
+                                        border-style: none;
+                                        width: 100%;
+                                        height: 250px;
+                                        border-radius: 5px;
+                                        object-fit: cover;"
+                                    >
+                                </div>
+                            </div>
+                        @endif
+                        <div class="mt-3">
+                            <div>
+                                <b>Lịch sử chấm công</b>
+                            </div>
+                            <div class="mt-2">
+                                @if ($timekeep && count($timekeep->timekeepDetail) > 0)
+                                    <ul>
+                                        @foreach ($timekeep->timekeepDetail as $history)
+                                            <li>
+                                                @php
+                                                    $checkin = Carbon\Carbon::parse($history->checkin_at)->format("H:i");
+                                                @endphp
+                                                @if ($loop->index == 0)
+                                                    <span><b class="text-primary">{{ $checkin }}</b> CheckIn</span>
+                                                @else
+                                                    <span><b class="text-primary">{{ $checkin }}</b> CheckOut</span>
+                                                @endif
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                @else
+                                    <p>Không có giữ liệu chấm công</p>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <div>
+                                <b>Lịch sử phê duyệt</b>
+                            </div>
+                            <div class="mt-2">
+                                <h6>Phê duyệt</h6>
+                                @if (count($requestApproveHistories) > 0)
+                                    <ul>
+                                        @foreach ($requestApproveHistories as $history)
+                                            <li>
+                                                @if ($history->status == config('request_approve_history.status.accepted'))
+                                                    <span><b class="text-primary">{{ $history->employee->fullname }}</b> đã phê duyệt</span>
+                                                @elseif($history->status == config('request_approve_history.status.unapproved'))
+                                                    <li>
+                                                        <span><b class="text-primary">{{ $history->employee->fullname }}</b> đã từ chối</span>
+                                                        <p class="pl-2">Lý do: <span class="text-danger">{{ $history->reason }}</span></p>
+                                                    </li>
+                                                @endif
+                                            </li>
+                                        @endforeach
+                                        @if ($requestData->status == config('request.status.accepted') || $requestData->status == config('request.status.unapproved'))
+                                            <li><p class="text-primary">Hoàn tất duyệt đơn !</p></li>
+                                        @endif
+                                    </ul>
+                                @else
+                                    <p>Hiện tại chưa có thông tin phê duyệt</p>
+                                @endif
+                            </div>
+                            <hr>
+                            <div>
+                                <h6>Lịch sử cập nhật đơn</h6>
                                 <ul>
+                                    <li>
+                                        <label for="" class="text-custom">{{ $requestData->created_at->format('H:i:s d-m-Y') }}</label>
+                                        <span>Đã tạo đơn</span>
+                                    </li>
                                     @foreach ($requestApproveHistories as $history)
                                         <li>
                                             @if ($history->status == config('request_approve_history.status.accepted'))
-                                                <span><b class="text-primary">{{ $history->employee->fullname }}</b> đã phê duyệt</span>
+                                                <label for="" class="text-custom">{{ $history->created_at->format('H:i:s d-m-Y') }}</label>
+                                                <span>Đơn đã được duyệt bởi <b class="text-primary">{{ $history->employee->fullname }}</b></span>
                                             @elseif($history->status == config('request_approve_history.status.unapproved'))
                                                 <li>
-                                                    <span><b class="text-primary">{{ $history->employee->fullname }}</b> đã từ chối</span>
-                                                    <p class="pl-2">Lý do: <span class="text-danger">{{ $history->reason }}</span></p>
+                                                    <label for="" class="text-custom">{{ $history->created_at->format('H:i:s d-m-Y') }}</label>
+                                                    <span>Đơn đã bị từ chối bởi <b class="text-primary">{{ $history->employee->fullname }}</span>
                                                 </li>
                                             @endif
                                         </li>
                                     @endforeach
-                                    @if ($requestData->status == config('request.status.accepted') || $requestData->status == config('request.status.unapproved'))
-                                        <li><p class="text-primary">Hoàn tất duyệt đơn !</p></li>
-                                    @endif
                                 </ul>
-                            @else
-                                <p>Hiện tại chưa có thông tin phê duyệt</p>
-                            @endif
-                        </div>
-                        <hr>
-                        <div>
-                            <h6>Lịch sử cập nhật đơn</h6>
-                            <ul>
-                                <li>
-                                    <label for="" class="text-custom">{{ $requestData->created_at->format('H:i:s d-m-Y') }}</label>
-                                    <span>Đã tạo đơn</span>
-                                </li>
-                                @foreach ($requestApproveHistories as $history)
-                                    <li>
-                                        @if ($history->status == config('request_approve_history.status.accepted'))
-                                            <label for="" class="text-custom">{{ $history->created_at->format('H:i:s d-m-Y') }}</label>
-                                            <span>Đơn đã được duyệt bởi <b class="text-primary">{{ $history->employee->fullname }}</b></span>
-                                        @elseif($history->status == config('request_approve_history.status.unapproved'))
-                                            <li>
-                                                <label for="" class="text-custom">{{ $history->created_at->format('H:i:s d-m-Y') }}</label>
-                                                <span>Đơn đã bị từ chối bởi <b class="text-primary">{{ $history->employee->fullname }}</span>
-                                            </li>
-                                        @endif
-                                    </li>
-                                @endforeach
-                            </ul>
+                            </div>
                         </div>
                     </div>
                 </div>

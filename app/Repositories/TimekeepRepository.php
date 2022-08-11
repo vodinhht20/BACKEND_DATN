@@ -132,6 +132,10 @@ class TimekeepRepository extends BaseRepository
             $query->where("date", ">=", $options['date_from']);
         }
 
+        if (isset($options['date'])) {
+            $query->where("date", $options['date']);
+        }
+
         if (isset($options['date_to'])) {
             $query->where("date", "<=", $options['date_to']);
         }
