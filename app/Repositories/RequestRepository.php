@@ -51,9 +51,13 @@ class RequestRepository extends BaseRepository
                         $approverQuery->where('employee_id', $options['approver_employee']->id);
                     });
                 });
+
                 // Cho phép leader có thể xem
-                $query->orWhere(function ($subQuery) use($options){
-                    $subQuery->orWhereHas('employee', function($employeeQuery) use($options) {
+                $query->orWhere(function ($subQuery) use($options) {
+                    $subQuery->whereHas('singleType', function ($querySingleType) {
+                        $querySingleType->where('required_leader', 1);
+                    });
+                    $subQuery->whereHas('employee', function($employeeQuery) use($options) {
                         $employeeQuery->whereHas('position', function($positionQuery) use($options) {
                             $positionQuery->whereHas('department', function($departmentQuery) use($options) {
                                 $position = $options['approver_employee']?->position;
@@ -65,8 +69,19 @@ class RequestRepository extends BaseRepository
                             });
                         });
                     });
-                    $subQuery->whereHas('singleType.approvers');
                 });
+            });
+        }
+
+        if (isset($options['need_browser']) && isset($options['approver_employee'])) {
+            $modelRequest->whereDoesntHave('requestApproveHistories', function($query) use($options) {
+                $query->where('employee_id', $options['approver_employee']->id);
+            });
+        }
+
+        if (isset($options['accepted']) && isset($options['approver_employee'])) {
+            $modelRequest->whereHas('requestApproveHistories', function($query) use($options) {
+                $query->where('employee_id', $options['approver_employee']->id);
             });
         }
         return $modelRequest->orderBy('id', 'desc');
@@ -82,7 +97,6 @@ class RequestRepository extends BaseRepository
     {
         return $this->query($options)->paginate($take);
     }
-
 
     /**
      * Hàm format data kết hợp phân trang
@@ -102,18 +116,29 @@ class RequestRepository extends BaseRepository
 
         // Format data paginate
         $dataPaginate = $requestProcess->map(function ($item) use($departmentWithLeader) {
-                $approverInfos = $this->getApprover($item, $departmentWithLeader);
-                $getStatusStr = $item->getStatusStr();
-                $renderClassNameByStatus = $item->renderClassNameByStatus();
-                $item = collect($item);
-                if (isset($item['single_type'])) {
-                    $item->put('type', $item['single_type']['type']);
+            $approverInfos = $this->getApprover($item, $departmentWithLeader);
+            $getStatusStr = $item->getStatusStr();
+            $renderClassNameByStatus = $item->renderClassNameByStatus();
+            $item = collect($item);
+
+            if (isset($item['single_type'])) {
+                $item->put('request_type', $item['single_type']['type']);
+                $item->put('name', $item['single_type']['name']);
+            }
+
+            if (isset($item['request_detail']) && isset($item['single_type'])) {
+                if (in_array($item['single_type']['type'], [config('singletype.type.edit_work'), config('singletype.type.ot')])) {
+                    $quitWorkFromAt = Carbon::createFromFormat("H:i d-m-Y", $item['request_detail']['quit_work_from_at'])->format('H:i');
+                    $quitWorkToAt = Carbon::createFromFormat("H:i d-m-Y", $item['request_detail']['quit_work_to_at'])->format('H:i');
+                    $item->put('quit_work_from_at', $quitWorkFromAt);
+                    $item->put('quit_work_to_at', $quitWorkToAt);
                 }
-                $item->put('getStatusStr', $getStatusStr);
-                $item->put('class_status', $renderClassNameByStatus);
-                $item->put('approvers', $approverInfos);
-                $item->forget('single_type');
-                return $item;
+            }
+            $item->put('getStatusStr', $getStatusStr);
+            $item->put('class_status', $renderClassNameByStatus);
+            $item->put('approvers', $approverInfos);
+            $item->forget('single_type');
+            return $item;
         });
         $requestProcess->setCollection($dataPaginate);
         return $requestProcess;
@@ -218,6 +243,9 @@ class RequestRepository extends BaseRepository
             if ($request->singleType->required_leader) {
                 $leaderAccepted = $approvers->where('id', $employee->id)->where('is_leader', true)->first();
                 if ($leaderAccepted) $canViewApprover = true;
+            } else {
+                $employeeAccepted = $approvers->where('id', $employee->id)->first();
+                if ($employeeAccepted) $canViewApprover = true;
             }
         } else if ($request->status == config('request.status.leader_accepted')) {
             $approverIds = $approvers->pluck('id')->toArray();

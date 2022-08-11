@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Request as ModelRequest;
 use App\Repositories\EmployeeLeavePermissionRepository;
 use App\Repositories\NotifycationRepository;
+use App\Repositories\TimekeepRepository;
 use App\Service\TimesheetService;
 use Illuminate\Support\Facades\Notification;
 
@@ -30,7 +31,8 @@ class ApplicationController extends Controller
         private RequestRepository $requestRepo,
         private TimesheetService $timesheetService,
         private EmployeeLeavePermissionRepository $employeeLeavePermissionRepo,
-        private NotifycationRepository $notifycationRepo
+        private NotifycationRepository $notifycationRepo,
+        private TimekeepRepository $timekeepRepo
     )
     {
         //
@@ -40,7 +42,7 @@ class ApplicationController extends Controller
     {
         $take = 8;
         $statusPending  = array(config('request.status.processing'), config('request.status.leader_accepted'));
-        $statusAccepted = config('request.status.accepted');
+        $statusAccepted = array(config('request.status.accepted'), config('request.status.leader_accepted'));
         $statusUnapproved = config('request.status.unapproved');
         $options = [
             'with' => [
@@ -48,7 +50,7 @@ class ApplicationController extends Controller
                     $query->select('fullname', 'id', 'position_id');
                 },
                 'singleType' => function ($query) {
-                    $query->select('id', 'required_leader', 'type');
+                    $query->select('id', 'required_leader', 'type', 'name');
                 },
                 'singleType.approvers.employee' => function($query) {
                     $query->select('fullname', 'id', 'type_avatar', 'avatar');
@@ -58,14 +60,15 @@ class ApplicationController extends Controller
             ],
             'approver_employee' => Auth::user()
         ];
-        $requestProcess = $this->requestRepo->formatDataPaginate($take, [...$options, 'statues' => $statusPending]);
-        $requestAccepted = $this->requestRepo->formatDataPaginate($take, [...$options, 'status' => $statusAccepted]);
+        $requestProcess = $this->requestRepo->formatDataPaginate($take, [...$options, 'statues' => $statusPending, 'need_browser' => true]);
+        $requestAccepted = $this->requestRepo->formatDataPaginate($take, [...$options, 'statues' => $statusAccepted, 'accepted' => true]);
         $requestUnapproved = $this->requestRepo->formatDataPaginate($take, [...$options, 'status' => $statusUnapproved]);
-        return view('admin.application.request', compact('requestProcess', 'requestUnapproved', 'requestAccepted'));
+        return view('admin.application.request.request', compact('requestProcess', 'requestUnapproved', 'requestAccepted'));
     }
 
     public function responseRequestData(Request $request): JsonResponse
     {
+        $take = 8;
         $options = [
             'with' => [
                 'employee' => function($query) {
@@ -82,7 +85,7 @@ class ApplicationController extends Controller
             ],
             'approver_employee' => Auth::user()
         ];
-        $requestProcess = $this->requestRepo->formatDataPaginate(2, $options);
+        $requestProcess = $this->requestRepo->formatDataPaginate($take, $options);
         return response()->json([
             "processing" => $requestProcess
         ]);
@@ -103,7 +106,26 @@ class ApplicationController extends Controller
         $canViewApprover = $this->requestRepo->canViewApproverRequest($requestData, $currentAdmin, $approvers);
         $leaveDay = $this->timesheetService->getDifferentDay($quitWorkFromAt, $quitWorkToAt);
 
-        return view('admin.application.request.request-detail', compact('requestData', 'requestId', 'approvers', 'leaveDay', 'canViewApprover'));
+        $requestType = $requestData?->singleType?->type;
+        if ($requestType == config('singletype.type.leave_work')) {
+            return view('admin.application.request.detail-leave-work', compact('requestData', 'requestId', 'approvers', 'leaveDay', 'canViewApprover'));
+        } else if ($requestType == config('singletype.type.edit_work')) {
+            $options = [
+                "date" => $requestDetail->quit_work_to_at->format("Y-m-d"),
+                "employee_id" => $requestData->employee_id
+            ];
+            $checkinOld = null;
+            $checkoutOld = null;
+            $timekeep = $this->timekeepRepo->query($options)->first();
+            if ($timekeep) {
+                $checkinOld = Carbon::parse($timekeep->timekeepDetail()->min('checkin_at'))?->format("H:i");
+                $checkoutOld = Carbon::parse($timekeep->timekeepDetail()->min('checkin_at'))?->format("H:i");
+            }
+            return view('admin.application.request.detail-edit-work', compact('requestData', 'requestId', 'approvers', 'leaveDay', 'canViewApprover', 'timekeep', 'checkinOld', 'checkoutOld'));
+        } else if ($requestType == config('singletype.type.ot')) {
+            return view('admin.application.request.detail-ot', compact('requestData', 'requestId', 'approvers', 'leaveDay', 'canViewApprover'));
+        }
+        abort(404);
     }
 
     public function nestView()
@@ -113,7 +135,7 @@ class ApplicationController extends Controller
         ];
         $take = 10;
         $singleTypes = $this->singleTypeRepo->query($options)->paginate($take);
-        return view('admin.application.viewnest', compact('singleTypes'));
+        return view('admin.application.singleType.viewnest', compact('singleTypes'));
     }
 
     public function createSingleType(Request $request)
@@ -169,7 +191,7 @@ class ApplicationController extends Controller
         $rootDepartmentId = config('department.root.hr');
         $employees = $this->employeeRepo->getEmployeeByDepartmentIds(array($rootDepartmentId));
 
-        return view('admin.application.nestCreate', compact('employees'));
+        return view('admin.application.singleType.nestCreate', compact('employees'));
     }
 
     public function changeStatus(Request $request)
@@ -249,7 +271,7 @@ class ApplicationController extends Controller
                     'request_domain' => config('notification.domain.FE'),
                     'request_type' => config('notification.type.personal'),
                     'employee_ids' => array($result->employee_id),
-                    'link' => 'don-tu-cua-ban',
+                    'link' => '/more/don-tu-cua-ban',
                 ];
                 $this->notifycationRepo->pushNotifications($options);
 

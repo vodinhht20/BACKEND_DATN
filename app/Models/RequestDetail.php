@@ -34,4 +34,9 @@ class RequestDetail extends Model
     {
         return $this->belongsTo(Request::class, 'request_id', 'id');
     }
+
+    public function getImage()
+    {
+        return asset('storage/' . $this->image);
+    }
 }
