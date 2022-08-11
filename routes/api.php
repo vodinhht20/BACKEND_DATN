@@ -52,6 +52,8 @@ Route::middleware('jwt.auth')->group(function () {
     Route::post('get-time-keep', [SingleWordController::class, 'getTimekeep']);
 
     Route::get('count-of-orders-per-month', [SingleWordController::class, 'countOrdersPerMonth']);
+
+    Route::post('single-word-personal-list', [SingleWordController::class, 'singleWordPesonalList']);
     //singleType
 
     //setting

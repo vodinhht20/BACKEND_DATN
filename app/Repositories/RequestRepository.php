@@ -261,12 +261,33 @@ class RequestRepository extends BaseRepository
         return $canViewApprover;
     }
 
-    public function getOrdersPerMonth($employeeId){
-        $firstMonth = Carbon::now()->startOfMonth()->format('Y-m-d');
-        $endMonth = Carbon::now()->endOfMonth()->format('Y-m-d');
-        $result = $this->model->where('created_at', '>=', $firstMonth)
-                    ->where('created_at', '<=', $endMonth)
-                    ->where('employee_id', $employeeId)->get();
+    public function getOrdersPerMonth($employeeId, $options = []){
+
+        $modelRequest = $this->model->query();
+        if (isset($options['status'])) {
+            $modelRequest->where('status', $options['status']);
+        }
+
+        if (isset($options['search'])) {
+            $modelRequest->where(function($query) use ($options) {
+                $query->where('id', 'like', "%" . $options['search'] . "%")
+                    ->orWhereHas("singleType", function($querySingleType) use ($options) {
+                        $querySingleType->where('name', 'like', "%" . $options['search'] . "%");
+                    })
+                    ->orWhereHas("requestDetail", function($queryRequestDetail) use ($options) {
+                        $queryRequestDetail->where('content', 'like', "%" . $options['search'] . "%");
+                    });
+            });
+        }
+
+        if (isset($options['date'])) {
+            $firstMonth = Carbon::createFromFormat('Y-m-d',$options['date'])->startOfMonth()->format('Y-m-d');
+            $endMonth = Carbon::createFromFormat('Y-m-d', $options['date'])->endOfMonth()->format('Y-m-d');
+            $modelRequest->where('created_at', '>=', $firstMonth)->where('created_at', '<=', $endMonth);
+        }
+        
+        $result = $modelRequest->with('requestDetail:id,quit_work_from_at,quit_work_to_at,content')
+                    ->where('employee_id', $employeeId)->OrderBy('id', 'desc')->get();
         return $result;
     }
 }
