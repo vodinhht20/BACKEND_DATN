@@ -116,10 +116,21 @@ class ApplicationController extends Controller
             ];
             $checkinOld = null;
             $checkoutOld = null;
-            $timekeep = $this->timekeepRepo->query($options)->first();
+            $timekeep = $this->timekeepRepo->query($options)->orderBy('id', 'desc')->first();
             if ($timekeep) {
-                $checkinOld = Carbon::parse($timekeep->timekeepDetail()->min('checkin_at'))?->format("H:i");
-                $checkoutOld = Carbon::parse($timekeep->timekeepDetail()->min('checkin_at'))?->format("H:i");
+                $checkinOld = $timekeep->timekeepDetail()?->min('checkin_at') ?: null;
+                $checkoutOld = $timekeep->timekeepDetail()->max('checkin_at') ?: null;
+                if ($checkinOld) {
+                    $checkinOld = Carbon::parse($checkinOld)?->format("H:i");
+                }
+
+                if ($checkoutOld) {
+                    $checkoutOld = Carbon::parse($checkoutOld)?->format("H:i");
+                }
+
+                if ($checkoutOld == $checkinOld) {
+                    $checkoutOld = null;
+                }
             }
             return view('admin.application.request.detail-edit-work', compact('requestData', 'requestId', 'approvers', 'leaveDay', 'canViewApprover', 'timekeep', 'checkinOld', 'checkoutOld'));
         } else if ($requestType == config('singletype.type.ot')) {

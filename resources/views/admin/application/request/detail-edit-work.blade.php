@@ -3,9 +3,15 @@
     <title>Chi tiết đơn từ</title>
 @endsection
 @section('style-page')
+    <script src="https://cdn.jsdelivr.net/npm/@goongmaps/goong-js@1.0.9/dist/goong-js.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@goongmaps/goong-js@1.0.9/dist/goong-js.css" rel="stylesheet" />
     <style>
         .text-info {
             color: #5c5a5acc !important;
+        }
+
+        #googleMap .mapboxgl-canvas {
+            width: unset !important;
         }
     </style>
 @endsection
@@ -143,7 +149,7 @@
                             <div>
                                 <b>Lịch sử chấm công</b>
                             </div>
-                            <div class="mt-2">
+                            <div class="mt-2 scrollbar-right-custom" style="max-height: 100px;overflow-y: auto;border: 1px dashed #50b3ad;padding: 5px;border-radius: 5px;">
                                 @if ($timekeep && count($timekeep->timekeepDetail) > 0)
                                     <ul>
                                         @foreach ($timekeep->timekeepDetail as $history)
@@ -153,8 +159,10 @@
                                                 @endphp
                                                 @if ($loop->index == 0)
                                                     <span><b class="text-primary">{{ $checkin }}</b> CheckIn</span>
+                                                    <span class="ml-3 text-primary" style="cursor: pointer;" onclick="showCheckinDetail({{ json_encode($history) }})" data-toggle="modal" data-target="#modal_checkin_detail">Xem chi tiết</span>
                                                 @else
                                                     <span><b class="text-primary">{{ $checkin }}</b> CheckOut</span>
+                                                    <span class="ml-3 text-primary" style="cursor: pointer;" onclick="showCheckinDetail({{ json_encode($history) }})" data-toggle="modal" data-target="#modal_checkin_detail">Xem chi tiết</span>
                                                 @endif
                                             </li>
                                         @endforeach
@@ -232,6 +240,7 @@
             <p>Vui lòng chờ ...</p>
         </div>
     </div>
+    @include('admin.application.request.modal-checkin-detail')
 @endsection
 @section('page-script')
     <script>
@@ -274,5 +283,20 @@
                 })
             })
         });
+
+        function showCheckinDetail(data) {
+            $("#IP").text(data.ip)
+            goongjs.accessToken = '{{ env('GOONG_IO_MAP_KEY') }}';
+            var map = new goongjs.Map({
+                container: 'googleMap',
+                style: 'https://tiles.goong.io/assets/goong_map_web.json',
+                center: [105.79449389547807, 21.023262952893536],
+                zoom: 8
+            });
+
+            var marker = new goongjs.Marker()
+                .setLngLat([105.79449389547807, 21.023262952893536])
+                .addTo(map);
+        }
     </script>
 @endsection
