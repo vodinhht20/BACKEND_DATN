@@ -7,17 +7,22 @@ use Auth;
 use App\Models\Post;
 use App\Models\Branch;
 use App\Models\PostCategory;
+use App\Repositories\BranchRepository;
 use Illuminate\Support\Facades\Validator;
 
 class PostController extends Controller
 {
+    public function __construct(private BranchRepository $branchRepo)
+    {
+        //
+    }
     public function info(){
-        $posts = Post::all();
+        $posts = Post::with(['branch', 'employee'])->get();
         return view('admin.post.info', compact('posts'));
     }
 
     public function addPostForm(){
-        $branchs = Branch::all();
+        $branchs = $this->branchRepo->getAll();
         $categories = PostCategory::all();
         return view('admin.post.add', compact('categories', 'branchs'));
     }
@@ -41,7 +46,7 @@ class PostController extends Controller
             'employee_id' => Auth::user()->id,
         ];
         if ($request->hasFile('images')) {
-        $images = $request->file('images')->store('images');
+            $images = $request->file('images')->store('images');
         }
         $option['images'] = $images;
         $option['type'] = 0;

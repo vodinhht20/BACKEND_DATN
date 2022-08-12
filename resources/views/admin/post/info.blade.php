@@ -40,15 +40,12 @@
                             @foreach ($posts as $post)
                                 <tr>
                                     <td class="ellipsis"><a href="">{{$post->title}}</a></td>
-                                    <td><img class="img-banner" src="{{$post->getPost()}}" alt="$post->name"></td>
-                                    <td class="ellipsis">{{$post->content}}</td>
-                                    <td>{{$post->employee_id}}</td>
-                                    <td>{{$post->branch_id}}</td>
+                                    <td><img class="img-banner" src="{{$post->getPost()}}" alt="{{ $post->title }}"></td>
+                                    <td class="ellipsis"><label for="" class="">Nhấn vào đây để  xem</label></td>
+                                    <td>{{$post->employee->fullname}}</td>
+                                    <td>{{$post->branch->name}}</td>
                                     <td>{{$post->category_id}}</td>
                                     <td class="box-actions">
-                                        {{-- <a href="{{route('post.delete',$post->id)}}">
-                                            <i class="ti-trash icon-remove-danger"></i>
-                                        </a> --}}
                                         <a href="{{route("post.update", $post->id)}}">
                                             <i style="float: right" class="ti-pencil icon-edit-primary"></i>
                                         </a>
