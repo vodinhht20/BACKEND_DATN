@@ -29,4 +29,14 @@ class Post extends Model
         }
         return $this->images;
     }
+
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class);
+    }
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
+    }
 }
