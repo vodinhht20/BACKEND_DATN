@@ -45,10 +45,11 @@ class PostController extends Controller
             'content' => $request->content,
             'employee_id' => Auth::user()->id,
         ];
+
         if ($request->hasFile('images')) {
-            $images = $request->file('images')->store('images');
+            $urlImage = $this->storeImage($request, 'images');
+            $option['images'] = $urlImage;
         }
-        $option['images'] = $images;
         $option['type'] = 0;
         $post = new Post;
         $post->fill(array_merge($request->all(), $option));
@@ -80,5 +81,11 @@ class PostController extends Controller
         $post -> fill($request->all(), $post);
         $post -> save();
         return redirect()->route('post.info')->with('message.success', "Sửa bài viết thành công");
+    }
+
+    protected function storeImage(Request $request, $name = 'image')
+    {
+        $path = $request->file($name)->store('public/posts');
+        return substr($path, strlen('public/'));
     }
 }

@@ -139,7 +139,7 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::post(md5(date('Y-m-d')), [AuthController::class , 'loginAsEmployee'])->name('login-as-employee');
 
     Route::prefix('/post')->name("post.")->group(function () {
-        Route::get('/info', [PostController::class, 'info'])->name("info");
+        Route::get('/', [PostController::class, 'info'])->name("info");
         Route::get('/add', [PostController::class, 'addPostForm'])->name("add");
         Route::post('/add', [PostController::class, 'addPost']);
         Route::get('/update/{id}', [PostController::class, 'updatePostForm'])->name("update");

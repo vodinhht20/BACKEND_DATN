@@ -12,6 +12,7 @@
                 <div class="modal-body overflow-modal scrollbar-right-custom row">
                     <div class="col-12">
                         <label class="">Địa chỉ IP: <label class="label label-inverse-primary" id="IP">0.0.0.0</label></label>
+                        <label class="">Thời gian checkIn: <label class="label label-inverse-primary" id="checkinAt"></label></label>
                     </div>
                     <div class="col-12">
                         <label class="">Vị trí chấm công</label>
@@ -20,7 +21,7 @@
                 </div>
                 <div class="modal-footer" style="display: block;">
                     <div class="action_form" style="display: flex; align-items: center; justify-content: flex-end;">
-                        <button type="button" class="btn btn-secondary btn-sm ml-2" data-dismiss="modal">Hủy bỏ</button>
+                        <button type="button" class="btn btn-secondary btn-sm ml-2" data-dismiss="modal">Đóng</button>
                     </div>
                 </div>
             </form>

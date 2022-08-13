@@ -13,6 +13,16 @@
         #googleMap .mapboxgl-canvas {
             width: unset !important;
         }
+
+        .image-load-center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .image-load-center img {
+            width: 70px;
+        }
     </style>
 @endsection
 @section('header-page')
@@ -285,18 +295,25 @@
         });
 
         function showCheckinDetail(data) {
-            $("#IP").text(data.ip)
-            goongjs.accessToken = '{{ env('GOONG_IO_MAP_KEY') }}';
-            var map = new goongjs.Map({
-                container: 'googleMap',
-                style: 'https://tiles.goong.io/assets/goong_map_web.json',
-                center: [105.79449389547807, 21.023262952893536],
-                zoom: 8
-            });
+            $("#IP").text(data.ip);
+            $("#checkinAt").text(data.checkin_at);
+            $("#googleMap").html(`<img src="{{asset('frontend')}}/image/loading.gif" alt=""><span>Đang tải dữ liệu từ Google Map ...</span>`);
+            $("#googleMap").addClass("image-load-center");
+            setTimeout(() => {
+                $("#googleMap").html("");
+                $("#googleMap").removeClass("image-load-center");
+                goongjs.accessToken = '{{ env('GOONG_IO_MAP_KEY') }}';
+                var map = new goongjs.Map({
+                    container: 'googleMap',
+                    style: 'https://tiles.goong.io/assets/goong_map_web.json',
+                    center: [data.longitude, data.latitude],
+                    zoom: 17
+                });
 
-            var marker = new goongjs.Marker()
-                .setLngLat([105.79449389547807, 21.023262952893536])
-                .addTo(map);
+                var marker = new goongjs.Marker()
+                    .setLngLat([data.longitude, data.latitude])
+                    .addTo(map);
+            }, 2000);
         }
     </script>
 @endsection
