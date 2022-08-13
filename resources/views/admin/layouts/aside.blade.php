@@ -164,6 +164,36 @@
             </li>
         </ul>
 
+        <div class="pcoded-navigation-label" data-i18n="nav.category.forms">Tin tức</div>
+        <ul class="pcoded-item pcoded-left-item">
+            <li class="pcoded-hasmenu">
+                <a href="javascript:void(0)" class="waves-effect waves-dark">
+                    <span class="pcoded-micon"><i class="ti-announcement"></i></span>
+                    <span class="pcoded-mtext"
+                        data-i18n="nav.basic-components.main">Quản trị tin tức </span>
+                    <span class="pcoded-mcaret"></span>
+                </a>
+                <ul class="pcoded-submenu">
+                    <li class="{{ Request::routeIs('post.add') ? 'active' : '' }}">
+                        <a href="{{ route('post.add') }}" class="waves-effect waves-dark">
+                            <span class="pcoded-micon"><i class="ti-user"></i></span>
+                            <span class="pcoded-mtext"
+                                data-i18n="nav.basic-components.alert">Đăng tin</span>
+                            <span class="pcoded-mcaret"></span>
+                        </a>
+                    </li>
+                    <li class="{{ Request::routeIs('post.info') ? 'active' : '' }}">
+                        <a href="{{ route('post.info') }}" class="waves-effect waves-dark">
+                            <span class="pcoded-micon"><i class="ti-user"></i></span>
+                            <span class="pcoded-mtext"
+                                data-i18n="nav.basic-components.alert">Danh sách bài viết</span>
+                            <span class="pcoded-mcaret"></span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+
         <div class="pcoded-navigation-label" data-i18n="nav.category.forms">Cài đặt chung</div>
         <ul class="pcoded-item pcoded-left-item">
             <li class="pcoded-hasmenu {{ Request::routeIs('setting.*') ? 'active pcoded-trigger' : '' }}">
@@ -203,13 +233,6 @@
                         </a>
                     </li>
                 </ul>
-            </li>
-            <li class="{{ Request::routeIs('post.*') ? 'active' : '' }}">
-                <a href="{{ route("post.info") }}" class="waves-effect waves-dark">
-                    <span class="pcoded-micon"><i class="ti-agenda"></i><b>FC</b></span>
-                    <span class="pcoded-mtext" data-i18n="nav.form-components.main">Quản lý blog</span>
-                    <span class="pcoded-mcaret"></span>
-                </a>
             </li>
         </ul>
     </div>
