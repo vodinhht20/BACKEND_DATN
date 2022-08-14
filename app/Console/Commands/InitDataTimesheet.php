@@ -46,8 +46,7 @@ class InitDataTimesheet extends Command
         if (2021 >= $date->format("Y")) {
             return $this->error("Số năm quá cũ, vui lòng nhập số năm > 2021");
         }
-
-        if (Carbon::now()->format("Y-m") >= $date->format("Y-m")) {
+        if (Carbon::now()->format("Y-m") < $date->format("Y-m")) {
             return $this->error("Bạn chỉ có thể Fake data cho tháng này trong tương lại ^-^ !");
         }
 
