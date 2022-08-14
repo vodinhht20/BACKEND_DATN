@@ -71,18 +71,25 @@ class InitDataTimesheet extends Command
             foreach ($employees as $employee) {
                 $this->info("-.-.-.-.-.-.-.-. Đang Init dữ liệu cho Employee ID #$employee->id -.-.-.-.-.-.-.-.");
                 for ($i = 1; $i <= $totalDay; $i++) {
-                    $newDate = Carbon::parse($date->format("Y-m-$i"))->format("Y-m-d");
-                    if ($newDate > $currentDate) {
+                    $newDate = Carbon::parse($date->format("Y-m-$i"));
+                    $newDateFormat = $newDate->format("Y-m-d");
+                    if ($newDateFormat > $currentDate) {
                         break;
                     }
-                    $this->info("------ Date [$newDate] -------");
+                    if (in_array($newDate->isoFormat("d"), [0, 6])) {
+                        continue;
+                    }
+                    $this->info("------ Date [$newDateFormat] -------");
+                    $arrayRandMinute = [0, 0, 0, 0, 0, 0, 0, 5, 11, 0, 0, 0, 0];
+                    $minuteLate = $arrayRandMinute[array_rand($arrayRandMinute)];
+                    $minuteEarly = $arrayRandMinute[array_rand($arrayRandMinute)];
                     $timekeepOptions = [
-                        "date" => $newDate,
+                        "date" => $newDateFormat,
                         "employee_id" => $employee->id,
                         "type" => config('timekeep.type.checkin'),
                         "worktime" => 1,
-                        "minute_late" => rand(0,5),
-                        "minute_early" => rand(0,5),
+                        "minute_late" => $minuteLate,
+                        "minute_early" => $minuteEarly,
                         "overtime_hour" => rand(0,5)
                     ];
                     $newTimekeep = $timekeepRepo->create($timekeepOptions);
