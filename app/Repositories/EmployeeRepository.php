@@ -185,7 +185,9 @@ class EmployeeRepository extends BaseRepository
         }
 
         if (isset($options['role'])) {
-            $employee->role($options['role']);
+            $employee->whereHas("roles", function($q) use($options) {
+                $q->whereIn("name", $options['role']);
+            })->get();
         }
 
         if (isset($options['status']) && $options['status'] != '' ) {

@@ -32,7 +32,7 @@
                                 </li>
                                 <li class="nav-item">
                                     @if (Auth::check())
-                                        <a class="page-scroll" href="{{route('dashboard')}}">Xin chào: {{ @Auth::user()->fullname }}</a>
+                                        <a class="page-scroll" href="{{route('logout')}}">Đăng xuất</a>
                                     @else
                                         <a class="page-scroll" href="{{route('login')}}">Đăng nhập</a>
                                     @endif
@@ -46,14 +46,14 @@
     </div> <!-- navbar area -->
 
     <div id="home" class="header-hero bg_cover d-lg-flex align-items-center">
-        
+
         <div class="shape shape-1"></div>
         <div class="shape shape-2"></div>
         <div class="shape shape-3"></div>
         <div class="shape shape-4"></div>
         <div class="shape shape-5"></div>
         <div class="shape shape-6"></div>
-        
+
         <div class="container">
             <div class="row align-items-center justify-content-center justify-content-lg-between">
                 <div class="col-lg-6 col-md-10">

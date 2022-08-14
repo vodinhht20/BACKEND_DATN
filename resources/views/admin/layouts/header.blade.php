@@ -70,59 +70,61 @@
                 </li>
             </ul>
             <ul class="nav-right">
-                <li>
-                    <form role="search" action="{{ route('login-as-employee') }}" class="app-search m-r-10" target="_blank" id="form-login-member" method="POST">
-                        @csrf
-                        <div style="display: inline-block;">
-                            <select id="" class="form-control" name="login_key" style="
-                                height: 32px !important;
-                                padding: 0 5px;
-                                width: 230px;
-                            ">
-                                <option value="">---  None  ---</option>
-                                @foreach ($employeeData as $employee)
-                                    <option value="{{ $employee['login_key'] }}">[{{ $employee['employee_code'] }}] {{ $employee['fullname'] }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <a href="javascript:void(0)" class="btn btn-primary waves-effect waves-light" onclick="$('#form-login-member').submit()" target="blank" style="padding: 5px;">Đăng nhập</a>
-                    </form>
-                </li>
-                <li class="user-profile header-notification">
-                    <a href="#!" class="waves-effect waves-light">
-                        <img src="{{Auth::user()->getAvatar() ?? asset('frontend/image/avatar_empty.jfif')}}" class="img-radius" alt="User-Profile-Image">
-                        <span>{{Auth::user()->fullname}}</span>
-                        <i class="ti-angle-down"></i>
-                    </a>
-                    <ul class="show-notification profile-notification">
-                        {{-- <li class="waves-effect waves-light">
-                            <a href="#!">
-                                <i class="ti-settings"></i> Settings
-                            </a>
+                    @hasanyrole("admin")
+                        <li>
+                            <form role="search" action="{{ route('login-as-employee') }}" class="app-search m-r-10" target="_blank" id="form-login-member" method="POST">
+                                @csrf
+                                <div style="display: inline-block;">
+                                    <select id="" class="form-control" name="login_key" style="
+                                        height: 32px !important;
+                                        padding: 0 5px;
+                                        width: 230px;
+                                    ">
+                                        <option value="">---  None  ---</option>
+                                        @foreach ($employeeData as $employee)
+                                            <option value="{{ $employee['login_key'] }}">[{{ $employee['employee_code'] }}] {{ $employee['fullname'] }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <a href="javascript:void(0)" class="btn btn-primary waves-effect waves-light" onclick="$('#form-login-member').submit()" target="blank" style="padding: 5px;">Đăng nhập</a>
+                            </form>
                         </li>
-                        <li class="waves-effect waves-light">
-                            <a href="">
-                                <i class="ti-user"></i> Profile
-                            </a>
-                        </li>
-                        <li class="waves-effect waves-light">
-                            <a href="">
-                                <i class="ti-email"></i> My Messages
-                            </a>
-                        </li>
-                        <li class="waves-effect waves-light">
-                            <a href="">
-                                <i class="ti-lock"></i> Lock Screen
-                            </a>
-                        </li> --}}
-                        <li class="waves-effect waves-light">
-                            <a href="{{route('logout')}}">
-                                <i class="ti-layout-sidebar-left"></i> Logout
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
+                    @endhasanyrole
+                    <li class="user-profile header-notification">
+                        <a href="#!" class="waves-effect waves-light">
+                            <img src="{{Auth::user()->getAvatar() ?? asset('frontend/image/avatar_empty.jfif')}}" class="img-radius" alt="User-Profile-Image">
+                            <span>{{Auth::user()->fullname}}</span>
+                            <i class="ti-angle-down"></i>
+                        </a>
+                        <ul class="show-notification profile-notification">
+                            {{-- <li class="waves-effect waves-light">
+                                <a href="#!">
+                                    <i class="ti-settings"></i> Settings
+                                </a>
+                            </li>
+                            <li class="waves-effect waves-light">
+                                <a href="">
+                                    <i class="ti-user"></i> Profile
+                                </a>
+                            </li>
+                            <li class="waves-effect waves-light">
+                                <a href="">
+                                    <i class="ti-email"></i> My Messages
+                                </a>
+                            </li>
+                            <li class="waves-effect waves-light">
+                                <a href="">
+                                    <i class="ti-lock"></i> Lock Screen
+                                </a>
+                            </li> --}}
+                            <li class="waves-effect waves-light">
+                                <a href="{{route('logout')}}">
+                                    <i class="ti-layout-sidebar-left"></i> Logout
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
         </div>
     </div>
 </nav>
