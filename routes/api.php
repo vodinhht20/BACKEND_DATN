@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\SingleWordController;
@@ -82,6 +83,8 @@ Route::middleware('jwt.auth')->group(function () {
     Route::get('notification', [NotificationController::class, 'notifications']);
     Route::post('notification-watch', [NotificationController::class, 'watchedNoti']);
     Route::post('notification-watch-all', [NotificationController::class, 'watchedNotiAll']);
+
+    Route::get('dashboard', [DashboardController::class, 'index']);
 });
 
 
