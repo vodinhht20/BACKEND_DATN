@@ -245,12 +245,12 @@
                 current_tab: "company_tab",
                 dataWorkShiftDays: [
                     { id: 0, name: "Chủ Nhật", active: 0},
-                    { id: 2, name: "Thứ 2", active: 1},
-                    { id: 3, name: "Thứ 3", active: 1},
-                    { id: 4, name: "Thứ 4", active: 1},
-                    { id: 5, name: "Thứ 5", active: 1},
-                    { id: 6, name: "Thứ 6", active: 1},
-                    { id: 7, name: "Thứ 7", active: 0},
+                    { id: 1, name: "Thứ 2", active: 1},
+                    { id: 2, name: "Thứ 3", active: 1},
+                    { id: 3, name: "Thứ 4", active: 1},
+                    { id: 4, name: "Thứ 5", active: 1},
+                    { id: 5, name: "Thứ 6", active: 1},
+                    { id: 6, name: "Thứ 7", active: 0},
                 ],
                 arr_validate_failed: [],
                 workTimeDiff: 0

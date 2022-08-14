@@ -91,15 +91,16 @@ class TimekeepingController extends Controller
 
         // Lấy ra thời gian làm việc của nhân viên ngày hôm đấy
         $workScheduleForTheDay = $this->workScheduleRepo->workScheduleForTheDay($currentDate->format('Y-m-d'), $currentAdminId);
-        // Thời điểm checkin hợp lệ
-        $maxCheckin = Carbon::createFromFormat('H:i:s', $workScheduleForTheDay->work_from_at)
-            ->addMinutes($workScheduleForTheDay->checkin_late);
-        // Thời điểm checkout hợp lệ
-        $minCheckout = Carbon::createFromFormat('H:i:s', $workScheduleForTheDay->work_to_at)
-            ->subMinutes($workScheduleForTheDay->checkin_late);
 
         // Nếu nó có lịch làm việc vào ngày hôm nay thì mới được checkin
-        if ($workScheduleForTheDay) {
+        if ($workScheduleForTheDay && in_array($currentDate->isoFormat("d"), $workScheduleForTheDay->days)) {
+            // Thời điểm checkin hợp lệ
+            $maxCheckin = Carbon::createFromFormat('H:i:s', $workScheduleForTheDay->work_from_at)
+                ->addMinutes($workScheduleForTheDay->checkin_late);
+            // Thời điểm checkout hợp lệ
+            $minCheckout = Carbon::createFromFormat('H:i:s', $workScheduleForTheDay->work_to_at)
+                ->subMinutes($workScheduleForTheDay->checkin_late);
+
             // Lấy ra thời điểm checkin sớm nhất của ngày hôm nay
             $firstTimekeep = $this->timekeepRepo->getFirstCheckin($currentDate->format('Y-m-d'), $currentAdminId);
 
