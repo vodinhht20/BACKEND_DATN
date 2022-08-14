@@ -49,9 +49,9 @@ Route::get('xac-thuc/{token}/{id}', [AuthController::class, 'verifyTokenEmail'])
 Route::get('account/verify/{id}', [AuthController::class, 'notifyConfirmEmail'])->name('account-verify');
 Route::get('/logout', [AuthController::class, 'logout'])->name("logout");
 
-Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
+Route::prefix('/admin')->middleware(['auth', 'can:web'])->group(function () {
     Route::get('', [DashboardController::class, 'index'])->name('dashboard');
-    Route::prefix('/employee')->group(function () {
+    Route::prefix('/employee')->middleware("role:admin|human_resource")->group(function () {
         Route::get('/', [EmployeeController::class, 'index'])->name('admin-list-user');
         Route::get('/create', [EmployeeController::class, 'showFormCreate'])->name('show-form-user-create');
         Route::get('/update/{id}', [EmployeeController::class, 'showFormUpdate'])->name('show-form-update-user');
@@ -59,10 +59,10 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
         Route::post('/update/{id}', [EmployeeController::class, 'updateUser'])->name('post-update-user');
         Route::get('/black-list', [EmployeeController::class, 'blackList'])->name('user-black-list');
     });
-    Route::prefix('/role')->group(function () {
+    Route::prefix('/role')->middleware("role:admin")->group(function () {
         Route::get('/', [RoleController::class, 'index'])->name('admin-role.index');
     });
-    Route::prefix('/application')->group(function () {
+    Route::prefix('/application')->middleware("role:admin|human_resource")->group(function () {
         Route::get('/', [ApplicationController::class, 'index'])->name('application-view');
         Route::get('/request-detail/{requestId}', [ApplicationController::class, 'requestDetail'])->name('application-request-detail');
         Route::get('/get-request-data', [ApplicationController::class, 'responseRequestData'])->name('get-request-data');
@@ -73,7 +73,7 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
         Route::post('/ajax-approve-request', [ApplicationController::class, 'ajaxAcceptRequest'])->name('ajax-approve-request');
     });
 
-    Route::prefix('/schedule')->group(function () {
+    Route::prefix('/schedule')->middleware("role:admin|human_resource")->group(function () {
         Route::get('/calender', [ScheduleWorkController::class, 'calendar'])->name('schedule-calender-index');
         Route::post('/ajax-add-work-shift', [ScheduleWorkController::class, 'ajaxAddWorkShift'])->name('schedule-ajax-add-work-shift');
         Route::get('/calendar-holiday', [ScheduleWorkController::class, 'calendarHoliday'])->name('schedule-calendar-holiday');
@@ -92,7 +92,7 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/ajax-filter',[EmployeeController::class,'filter'])->name('ajax-filter-employee');
     Route::post('/ajax-watched-noti',[NotificationController::class,'handleWatched'])->name('ajax-watched-noti');
 
-    Route::prefix('/checkin')->name("checkin.")->group(function () {
+    Route::prefix('/checkin')->name("checkin.")->middleware("role:admin")->group(function () {
         Route::get('/view', [CheckinController::class, 'index'])->name("view");
         Route::post('/add-wifi', [CheckinController::class, 'addwifi'])->name("add-wifi");
         Route::post('/add-location', [CheckinController::class, 'addlocation'])->name("add-location");
@@ -100,7 +100,7 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     });
 
     Route::prefix('/setting')->name("setting.")->group(function () {
-        Route::prefix('/banner')->name("banner.")->group(function () {
+        Route::prefix('/banner')->name("banner.")->middleware("role:admin|human_resource")->group(function () {
             Route::get('/info', [BannerController::class, 'info'])->name("info");
             Route::get('/addbanner', [BannerController::class, 'addBannerForm'])->name("addbanner");
             Route::post('/addbanner', [BannerController::class, 'addBanner']);
@@ -109,13 +109,13 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
             Route::get('/delete/{id}', [BannerController::class, 'delete'])->name("delete");
         });
 
-        Route::prefix('/company')->name("company.")->group(function () {
+        Route::prefix('/company')->name("company.")->middleware("role:admin")->group(function () {
             Route::get('/info', [CompanyController::class, 'info'])->name("info");
             Route::get('/update-company/{id}', [CompanyController::class, 'updateCompanyForm'])->name("updatecompany");
             Route::post('/update-company/{id}', [CompanyController::class, 'updateCompany']);
         });
 
-        Route::prefix('/branch')->name("branch.")->group(function () {
+        Route::prefix('/branch')->name("branch.")->middleware("role:admin")->group(function () {
             Route::get('/', [CompanyController::class, 'branchs'])->name("list");
             Route::get('/add-branch', [CompanyController::class, 'addBranchForm'])->name("addbranch");
             Route::post('/add-branch', [CompanyController::class, 'addBranch']);
@@ -123,7 +123,7 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
             Route::post('/update-branch/{id}', [CompanyController::class, 'updateBranch']);
         });
 
-        Route::prefix('/structure')->name("structure.")->group(function () {
+        Route::prefix('/structure')->name("structure.")->middleware("role:admin")->group(function () {
             Route::get('/', [CompanyController::class, 'structure'])->name("show");
             Route::post('/ajax-update-department', [CompanyController::class, 'updateDepartment'])->name("update-department");
             Route::post('/ajax-create-department', [CompanyController::class, 'createDepartment'])->name("create-department");
@@ -131,14 +131,14 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
         });
     });
 
-    Route::get('/timesheet', [TimesheetController::class, 'timesheet'])->name("timesheet");
+    Route::get('/timesheet', [TimesheetController::class, 'timesheet'])->name("timesheet")->middleware(["role:admin|human_resource"]);
     Route::patch('/update-fcm-token', [NotificationController::class, 'updateToken'])->name("update-fcm-token");
     Route::get('/export-excel-timesheet', [TimesheetController::class, 'exportIntoExcel'])->name("export-excel-timesheet");
     Route::post('/import-excel-timesheet', [TimesheetController::class, 'importExcel'])->name("import-excel-timesheet");
     Route::post('/preview-import-excel-timesheet', [TimesheetController::class, 'previewImport'])->name("preview-import-excel-timesheet");
-    Route::post(md5(date('Y-m-d')), [AuthController::class , 'loginAsEmployee'])->name('login-as-employee');
+    Route::post(md5(date('Y-m-d')), [AuthController::class , 'loginAsEmployee'])->middleware("role:admin")->name('login-as-employee');
 
-    Route::prefix('/post')->name("post.")->group(function () {
+    Route::prefix('/post')->name("post.")->middleware("role:admin|human_resource")->group(function () {
         Route::get('/', [PostController::class, 'info'])->name("info");
         Route::get('/add', [PostController::class, 'addPostForm'])->name("add");
         Route::post('/add', [PostController::class, 'addPost']);

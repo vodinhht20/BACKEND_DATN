@@ -21,7 +21,7 @@ class InitDataTimesheet extends Command
      *
      * @var string
      */
-    protected $signature = 'data-fake:timesheet';
+    protected $signature = 'init:timesheet';
 
     /**
      * The console command description.
@@ -80,7 +80,7 @@ class InitDataTimesheet extends Command
                         continue;
                     }
                     $this->info("------ Date [$newDateFormat] -------");
-                    $arrayRandMinute = [0, 0, 0, 0, 0, 0, 0, 5, 11, 0, 0, 0, 0];
+                    $arrayRandMinute = [0, 0, 0, 0, 6, 0, 20, 5, 11, 0, 0, 0, 0];
                     $minuteLate = $arrayRandMinute[array_rand($arrayRandMinute)];
                     $minuteEarly = $arrayRandMinute[array_rand($arrayRandMinute)];
                     $timekeepOptions = [

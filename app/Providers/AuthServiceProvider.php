@@ -25,6 +25,11 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        // Cho phép admin có quyền truy cập
+        Gate::before(function ($employee, $ability) {
+            if ($employee->hasAnyRole('admin', 'leader', 'human_resource')) {
+                return true;
+            }
+        });
     }
 }
