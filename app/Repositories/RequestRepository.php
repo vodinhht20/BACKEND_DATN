@@ -285,7 +285,7 @@ class RequestRepository extends BaseRepository
             $endMonth = Carbon::createFromFormat('Y-m-d', $options['date'])->endOfMonth()->format('Y-m-d');
             $modelRequest->where('created_at', '>=', $firstMonth)->where('created_at', '<=', $endMonth);
         }
-        
+
         $result = $modelRequest->with('requestDetail:id,quit_work_from_at,quit_work_to_at,content')
                     ->where('employee_id', $employeeId)->OrderBy('id', 'desc')->get();
         return $result;

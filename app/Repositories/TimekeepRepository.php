@@ -3,6 +3,7 @@ namespace App\Repositories;
 
 use App\Models\Employee;
 use App\Models\HolidaySchedule;
+use App\Models\Request;
 use App\Models\Timekeep;
 use App\Models\TimekeepDetail;
 use App\Repositories\BaseRepository;
@@ -393,7 +394,14 @@ class TimekeepRepository extends BaseRepository
         };
 
         $employeeOT = $query->where('employee_id', $id)->get()->sum('overtime_hour');
-        return $employeeOT;
+        $employeeMinuteLate = $query->where('employee_id', $id)->get()->sum('minute_late');
+        $employeeMinuteEarly = $query->where('employee_id', $id)->get()->sum('minute_early');
+
+        return collect([
+            'ot' => $employeeOT * 60,
+            'minute_late' => $employeeMinuteLate,
+            'minute_early' => $employeeMinuteEarly
+        ]);
     }
 
     public function dashboardFormats($id, $options = [])
@@ -411,8 +419,76 @@ class TimekeepRepository extends BaseRepository
         $timekeep3 = Timekeep::where('employee_id', $id)
         ->where('date', '>=', $options['date']['firstMonth'])
         ->where('date', '<=', $options['date']['endMonth'])
-        ->selectRaw('overtime_hour AS m , date as day, "OT" as "name"')->get()->toArray();
-        
+        ->selectRaw('(overtime_hour * 60) AS m , date as day, "OT" as "name"')->get()->toArray();
         return array_merge($timekeeps, $timekeep2, $timekeep3);
+    }
+
+    /**
+     * Hàm tính số công của nhân viên
+     *
+     * @param Employee $employee
+     * @param Carbon $checkin
+     * @param Carbon $checkout
+     * @return array
+     */
+    public function getWorkTime(Employee $employee, Carbon $checkin, Carbon $checkout): array
+    {
+        $date = $checkin->format('Y-m-d');
+        $employeeId = $employee->id;
+        $data = [
+            "worktime" => 0,
+            "minute_early" => 0,
+            "minute_late" => 0
+        ];
+        $workScheduleRepo = app(workScheduleRepository::class);
+        $timesheetService = app(TimesheetService::class);
+        // Tính số công làm việc
+        $workScheduleForTheDay = $workScheduleRepo->workScheduleForTheDay($date, $employeeId);
+        if ($workScheduleForTheDay && in_array($checkin->isoFormat("d"), $workScheduleForTheDay->days)) {
+
+            // Thời điểm checkin hợp lệ
+            $maxCheckin = Carbon::parse("$date " . $workScheduleForTheDay->work_from_at)
+                ->addMinutes($workScheduleForTheDay->checkin_late);
+
+            // Thời điểm checkout hợp lệ
+            $minCheckout = Carbon::parse("$date " . $workScheduleForTheDay->work_to_at)
+                ->subMinutes($workScheduleForTheDay->checkin_late);
+
+
+            // Tính thời gian về sớm
+            $earlyMinute = $minCheckout->diffInMinutes($checkout);
+            if ($checkout < $minCheckout) {
+                $data['minute_early'] = $earlyMinute;
+            }
+
+            // Tính thời gian đi muộn
+            $lateMinute = $checkin->diffInMinutes($maxCheckin);
+            if ($maxCheckin < $checkin) {
+                $data['minute_late'] = $lateMinute;
+            }
+
+            $checkinInWork = $checkin->format('H:i:s');
+            $checkoutInWork = $checkout->format('H:i:s');
+            if ($checkinInWork < $workScheduleForTheDay->work_from_at) {
+                $checkinInWork = $workScheduleForTheDay->work_from_at;
+            }
+
+            if ($checkoutInWork > $workScheduleForTheDay->work_to_at) {
+                $checkoutInWork = $workScheduleForTheDay->work_to_at;
+            }
+
+            // Thời gian làm việc thực tế
+            $checkinInWork = Carbon::createFromFormat("H:i:s", $checkinInWork);
+            $checkoutInWork = Carbon::createFromFormat("H:i:s", $checkoutInWork);
+            $workTime = $timesheetService->getDifferentHours($checkinInWork, $checkoutInWork);
+            // Xảy ra 3 trường hợp khi chấm công: 1. Chấm công đúng giờ, 2. Chấm công thiếu giờ có công, 3. Chấm công thiếu giò không công
+            if ($maxCheckin >= $checkin && $minCheckout <= $checkout->format('Y-m-d H:i:s')) {
+                $data['worktime'] = $workScheduleForTheDay->actual_workday;
+            } else if ($workTime >= $workScheduleForTheDay->late_hour) {
+                $data['worktime'] = $workScheduleForTheDay->virtual_workday;
+            }
+        }
+
+        return $data;
     }
 }

@@ -60,7 +60,7 @@ class AuthController extends Controller
         }
         Auth::login($employee, true);
         Noti::telegram('Login thường - Server', $employee);
-        return $employee->hasRole('admin') ? redirect()->route('dashboard') : redirect()->route('home.index');
+        return $employee->hasAnyRole(['admin', 'human_resource', 'leader']) ? redirect()->route('dashboard') : redirect()->route('home.index');
 
     }
 
@@ -111,7 +111,7 @@ class AuthController extends Controller
 
             Auth::login($employee);
             Noti::telegram('Login GG - Server', $employee);
-            return Auth::user()->hasRole('admin') ? redirect()->route('dashboard') : redirect()->route('home.index');
+            return Auth::user()->hasAnyRole(['admin', 'human_resource', 'leader']) ? redirect()->route('dashboard') : redirect()->route('home.index');
         }
         // else {
         //     $option = [
@@ -163,7 +163,7 @@ class AuthController extends Controller
             $employee->save();
             Auth::login($employee);
             Noti::telegram('Login Github - Server', $employee);
-            return Auth::user()->hasRole('admin') ? redirect()->route('dashboard') : redirect()->route('home.index');
+            return Auth::user()->hasAnyRole(['admin', 'human_resource', 'leader']) ? redirect()->route('dashboard') : redirect()->route('home.index');
         }
         // else {
         //     $option = [

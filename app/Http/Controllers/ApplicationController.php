@@ -19,6 +19,7 @@ use App\Models\Request as ModelRequest;
 use App\Repositories\EmployeeLeavePermissionRepository;
 use App\Repositories\NotifycationRepository;
 use App\Repositories\TimekeepRepository;
+use App\Repositories\WorkScheduleRepository;
 use App\Service\TimesheetService;
 use Illuminate\Support\Facades\Notification;
 
@@ -32,7 +33,8 @@ class ApplicationController extends Controller
         private TimesheetService $timesheetService,
         private EmployeeLeavePermissionRepository $employeeLeavePermissionRepo,
         private NotifycationRepository $notifycationRepo,
-        private TimekeepRepository $timekeepRepo
+        private TimekeepRepository $timekeepRepo,
+        private WorkScheduleRepository $workScheduleRepo
     )
     {
         //
@@ -116,6 +118,7 @@ class ApplicationController extends Controller
             ];
             $checkinOld = null;
             $checkoutOld = null;
+            $newLeaveDay = 0;
             $timekeep = $this->timekeepRepo->query($options)->orderBy('id', 'desc')->first();
             if ($timekeep) {
                 $checkinOld = $timekeep->timekeepDetail()?->min('checkin_at') ?: null;
@@ -131,8 +134,10 @@ class ApplicationController extends Controller
                 if ($checkoutOld == $checkinOld) {
                     $checkoutOld = null;
                 }
+                $workTime = $this->timekeepRepo->getWorkTime($requestData->employee, $requestDetail->quit_work_from_at, $requestDetail->quit_work_to_at);
+                $newLeaveDay = $workTime['worktime'];
             }
-            return view('admin.application.request.detail-edit-work', compact('requestData', 'requestId', 'approvers', 'leaveDay', 'canViewApprover', 'timekeep', 'checkinOld', 'checkoutOld'));
+            return view('admin.application.request.detail-edit-work', compact('requestData', 'requestId', 'approvers', 'leaveDay', 'canViewApprover', 'timekeep', 'checkinOld', 'checkoutOld', 'newLeaveDay'));
         } else if ($requestType == config('singletype.type.ot')) {
             return view('admin.application.request.detail-ot', compact('requestData', 'requestId', 'approvers', 'leaveDay', 'canViewApprover'));
         }
@@ -253,6 +258,15 @@ class ApplicationController extends Controller
             ], 442);
         }
 
+        if ($request->status == config('request_approve_history.status.unapproved')){
+            if (empty($request->reason)) {
+                return response()->json([
+                    "status" => "validate_failed",
+                    "message" => "Lý do không được để trống !"
+                ], 442);
+            }
+        }
+
         $modelRequest = $this->requestRepo->find($request->id);
         $currentAdmin = Auth::user();
         if (!$modelRequest) {
@@ -267,11 +281,38 @@ class ApplicationController extends Controller
                 'status' => $request->status,
                 'employee_id' => $currentAdmin->id
             ];
+            if ($request->status == config('request_approve_history.status.unapproved')) {
+                $data['reason'] = $request->reason;
+            }
+
             $result = $this->requestRepo->handleApprove($data, $modelRequest);
             if ($result) {
                 if ($result->status == config('request.status.accepted')) {
                     // Lưu thông tin cho đơn nghỉ phép
-                    $this->employeeLeavePermissionRepo->enforcementRequest($result);
+                    if ($result->singleType->type == config("singletype.type.leave_work")) {
+                        $this->employeeLeavePermissionRepo->enforcementRequest($result);
+                    } else if ($result->singleType->type == config("singletype.type.edit_work")) {
+                        $requestDetail = $result->requestDetail;
+                        $workTime = $this->timekeepRepo->getWorkTime($result->employee, $requestDetail->quit_work_from_at, $requestDetail->quit_work_to_at);
+                        $options = [
+                            "date" => $requestDetail->quit_work_to_at->format("Y-m-d"),
+                            "employee_id" => $result->employee_id
+                        ];
+                        $timekeep = $this->timekeepRepo->query($options)->orderBy('id', 'desc')->first();
+
+                        $minTimekeepDetail = $timekeep->timekeepDetail()->orderBy('checkin_at', "asc")->first();
+                        $minTimekeepDetail->checkin_at = $requestDetail->quit_work_from_at;
+                        $minTimekeepDetail->save();
+
+                        $maxTimekeepDetail = $timekeep->timekeepDetail()->orderBy('checkin_at', "desc")->first();
+                        $maxTimekeepDetail->checkin_at = $requestDetail->quit_work_to_at;
+                        $maxTimekeepDetail->save();
+
+                        $timekeep->worktime = $workTime['worktime'];
+                        $timekeep->minute_late = $workTime['minute_early'];
+                        $timekeep->minute_early = $workTime['minute_late'];
+                        $timekeep->save();
+                    }
                 }
 
                 // Gửi thông báo
