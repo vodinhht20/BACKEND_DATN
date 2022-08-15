@@ -28,3 +28,29 @@
         </div>
     </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade modal_unapproved" id="modal_unapproved" tabindex="1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Từ chối đơn từ !</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body overflow-modal">
+                <div class="form-group">
+                    <label for="">Nhập lý do từ chối đơn này: </label>
+                    <textarea name="reason" cols="20" rows="5" class="form-control" id="text_reason" placeholder="Nhập lý do từ chối ..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: block;">
+                <div class="action_form" style="display: flex; align-items: center; justify-content: flex-end;">
+                    <button type="button" class="btn btn-primary btn-sm ml-2" id="submit_unapproved">Xác nhận</button>
+                    <button type="button" class="btn btn-secondary btn-sm ml-2" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

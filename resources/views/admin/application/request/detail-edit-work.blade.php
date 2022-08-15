@@ -77,6 +77,9 @@
                             <hr>
                             <div>
                                 <div>
+                                    <label for="" class="text-info">Ngày sửa công: </label><b> {{  $requestDetail->quit_work_from_at->format("d-m-Y") }}</b>
+                                </div>
+                                <div>
                                     <label for="" class="text-info">Bắt đầu: </label>
                                     <b>{{ $checkinOld ?: "N/A" }}</b>
                                     <i class="ti-arrow-right icon-theme" style="font-size: 12px; padding: 5px;"></i>
@@ -96,7 +99,7 @@
                                     <span>Số công: </span>
                                     <strong class="" style="color: var(--ui-outline);">{{ $leaveDay }} </strong>
                                     <i class="ti-arrow-right icon-theme" style="font-size: 12px; padding: 5px;"></i>
-                                    <strong class="" style="color: var(--ui-outline);">{{ $leaveDay }} </strong>
+                                    <strong class="" style="color: var(--ui-outline);">{{ $newLeaveDay }} </strong>
                                 </div>
                             </h6>
                             <hr>
@@ -239,7 +242,7 @@
                 <div class="mt-3 d-flex justify-content-center align-items-center" style="grid-column-gap: 10px;">
                     @if ($canViewApprover)
                         <button class="btn btn-primary btn-round waves-effect waves-light" id="approve">Phê duyệt</button>
-                        <button class="btn btn-danger btn-round waves-effect waves-light">Từ chối</button>
+                        <button class="btn btn-danger btn-round waves-effect waves-light" data-toggle="modal" data-target="#modal_unapproved">Từ chối</button>
                     @endif
                     <a href="{{ url()->previous() }}" class="btn btn-inverse btn-round waves-effect waves-light" style="color: #fff; !important">Quay lại</a>
                 </div>
@@ -286,6 +289,43 @@
                                 Swal.fire(
                                     'Lỗi ',
                                     'Không thể duyệt đơn vào lúc này',
+                                    'error'
+                                )
+                            })
+                    }
+                })
+            })
+
+            $("#submit_unapproved").on('click', function() {
+                Swal.fire({
+                    title: 'Xác nhận',
+                    text: "Bạn chắc chắn muốn từ chối đơn này !",
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Đồng ý'
+                })
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        let data = {
+                            id: REQUEST_ID,
+                            status: {{ config('request_approve_history.status.unapproved') }},
+                            reason: $("#text_reason").val()
+                        }
+                        axios.post(ACCEPT_REQUEST_URL, data)
+                            .then(({data}) => {
+                                location.reload();
+                                Swal.fire(
+                                    'Thành công',
+                                    'Bạn đã từ chối đơn này !',
+                                    'success'
+                                )
+                            })
+                            .catch(({response}) => {
+                                Swal.fire(
+                                    'Lỗi ',
+                                    data.message || 'Không thể từ chối đơn này',
                                     'error'
                                 )
                             })
