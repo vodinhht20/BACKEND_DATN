@@ -31,12 +31,12 @@ class DashboardController extends Controller
         ];
 
         $timesheetFormats = $this->timekeepRepo->dashboardFormats($user->id, $options);
-        $timeOT = $this->timekeepRepo->getTimeOTbyEmplyeeId($user->id, $options);
+        $sumTime = $this->timekeepRepo->getTimeOTbyEmplyeeId($user->id, $options);
 
         return response()->json([
             "status" => "success",
             "data" => $timesheetFormats,
-            'ot' => $timeOT,
+            'sumTime' => $sumTime,
             "message" => "Dashboard successfully"
         ]);
     }

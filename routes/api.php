@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\SingleWordController;
 use App\Http\Controllers\Api\TimekeepingController;
 use App\Http\Controllers\Api\TimesheetController;
@@ -85,6 +86,8 @@ Route::middleware('jwt.auth')->group(function () {
     Route::post('notification-watch-all', [NotificationController::class, 'watchedNotiAll']);
 
     Route::get('dashboard', [DashboardController::class, 'index']);
+    Route::get('blog', [PostController::class, 'index']);
+    Route::get('blog/{slug}', [PostController::class, 'post']);
 });
 
 
