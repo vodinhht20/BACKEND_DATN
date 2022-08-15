@@ -393,7 +393,14 @@ class TimekeepRepository extends BaseRepository
         };
 
         $employeeOT = $query->where('employee_id', $id)->get()->sum('overtime_hour');
-        return $employeeOT;
+        $employeeMinuteLate = $query->where('employee_id', $id)->get()->sum('minute_late');
+        $employeeMinuteEarly = $query->where('employee_id', $id)->get()->sum('minute_early');
+
+        return collect([
+            'ot' => $employeeOT * 60,
+            'minute_late' => $employeeMinuteLate,
+            'minute_early' => $employeeMinuteEarly
+        ]);
     }
 
     public function dashboardFormats($id, $options = [])
@@ -411,7 +418,7 @@ class TimekeepRepository extends BaseRepository
         $timekeep3 = Timekeep::where('employee_id', $id)
         ->where('date', '>=', $options['date']['firstMonth'])
         ->where('date', '<=', $options['date']['endMonth'])
-        ->selectRaw('overtime_hour AS m , date as day, "OT" as "name"')->get()->toArray();
+        ->selectRaw('(overtime_hour * 60) AS m , date as day, "OT" as "name"')->get()->toArray();
         
         return array_merge($timekeeps, $timekeep2, $timekeep3);
     }
