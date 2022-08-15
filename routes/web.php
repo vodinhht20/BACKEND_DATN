@@ -39,12 +39,12 @@ use Stevebauman\Location\Facades\Location;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('php-info', function() { return phpinfo(); })->middleware('auth');
+Route::get('php-info', function() { return phpinfo(); })->middleware(['auth', 'role:admin']);
 Route::get('', function (){ return view('index'); })->name("home.index");
 Route::get('/login', [AuthController::class, 'showFormLogin'])->name("login");
 Route::post('/login', [AuthController::class, 'login'])->name("post-login");
 Route::get('/register', [AuthController::class, 'showFromRegister'])->name("show-form-register");
-Route::post('register', [AuthController::class, 'register'])->name('register');
+Route::post('register',  [AuthController::class, 'register'])->name('register');
 Route::get('xac-thuc/{token}/{id}', [AuthController::class, 'verifyTokenEmail'])->name('verify-email-token');
 Route::get('account/verify/{id}', [AuthController::class, 'notifyConfirmEmail'])->name('account-verify');
 Route::get('/logout', [AuthController::class, 'logout'])->name("logout");
@@ -62,15 +62,15 @@ Route::prefix('/admin')->middleware(['auth', 'can:web'])->group(function () {
     Route::prefix('/role')->middleware("role:admin")->group(function () {
         Route::get('/', [RoleController::class, 'index'])->name('admin-role.index');
     });
-    Route::prefix('/application')->middleware("role:admin|human_resource")->group(function () {
+    Route::prefix('/application')->middleware("role:admin|human_resource|leader")->group(function () {
         Route::get('/', [ApplicationController::class, 'index'])->name('application-view');
         Route::get('/request-detail/{requestId}', [ApplicationController::class, 'requestDetail'])->name('application-request-detail');
         Route::get('/get-request-data', [ApplicationController::class, 'responseRequestData'])->name('get-request-data');
-        Route::get('/nest/create', [ApplicationController::class, 'showFormCreateSingleType'])->name('application-nest-create');
-        Route::post('/nest/change-status', [ApplicationController::class, 'changeStatus'])->name('application-nest-change-status');
-        Route::post('/nest/post-create', [ApplicationController::class, 'createSingleType'])->name('application-nest-post-create');
-        Route::get('/nest', [ApplicationController::class, 'nestView'])->name('application-nest-view');
         Route::post('/ajax-approve-request', [ApplicationController::class, 'ajaxAcceptRequest'])->name('ajax-approve-request');
+        Route::get('/nest/create', [ApplicationController::class, 'showFormCreateSingleType'])->middleware("role:admin|human_resource")->name('application-nest-create');
+        Route::post('/nest/change-status', [ApplicationController::class, 'changeStatus'])->middleware("role:admin|human_resource")->name('application-nest-change-status');
+        Route::post('/nest/post-create', [ApplicationController::class, 'createSingleType'])->middleware("role:admin|human_resource")->name('application-nest-post-create');
+        Route::get('/nest', [ApplicationController::class, 'nestView'])->middleware("role:admin|human_resource")->name('application-nest-view');
     });
 
     Route::prefix('/schedule')->middleware("role:admin|human_resource")->group(function () {
@@ -133,9 +133,9 @@ Route::prefix('/admin')->middleware(['auth', 'can:web'])->group(function () {
 
     Route::get('/timesheet', [TimesheetController::class, 'timesheet'])->name("timesheet")->middleware(["role:admin|human_resource"]);
     Route::patch('/update-fcm-token', [NotificationController::class, 'updateToken'])->name("update-fcm-token");
-    Route::get('/export-excel-timesheet', [TimesheetController::class, 'exportIntoExcel'])->name("export-excel-timesheet");
-    Route::post('/import-excel-timesheet', [TimesheetController::class, 'importExcel'])->name("import-excel-timesheet");
-    Route::post('/preview-import-excel-timesheet', [TimesheetController::class, 'previewImport'])->name("preview-import-excel-timesheet");
+    Route::get('/export-excel-timesheet', [TimesheetController::class, 'exportIntoExcel'])->middleware("role:admin|human_resource")->name("export-excel-timesheet");
+    Route::post('/import-excel-timesheet', [TimesheetController::class, 'importExcel'])->middleware("role:admin|human_resource")->name("import-excel-timesheet");
+    Route::post('/preview-import-excel-timesheet', [TimesheetController::class, 'previewImport'])->middleware("role:admin|human_resource")->name("preview-import-excel-timesheet");
     Route::post(md5(date('Y-m-d')), [AuthController::class , 'loginAsEmployee'])->middleware("role:admin")->name('login-as-employee');
 
     Route::prefix('/post')->name("post.")->middleware("role:admin|human_resource")->group(function () {
