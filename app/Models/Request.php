@@ -68,10 +68,10 @@ class Request extends Model
     {
         $status = $this->status;
         if ($status == config('request.status.accepted')) {
-            return "text-success";
+            return "badge-success";
         } else if ($status == config('request.status.unapproved')) {
-            return "text-danger";
+            return "bg-danger";
         }
-        return  "text-primary";
+        return  "badge-primary";
     }
 }

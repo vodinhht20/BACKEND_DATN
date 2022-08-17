@@ -84,6 +84,35 @@ class RequestRepository extends BaseRepository
                 $query->where('employee_id', $options['approver_employee']->id);
             });
         }
+
+        if (isset($options['keyword'])) {
+            $modelRequest->where(function($query) use ($options) {
+                $query->whereHas('requestDetail', function($queryRequestDetail) use ($options) {
+                    $queryRequestDetail->where('content' , 'like', "%" . $options['keyword'] . "%");
+                });
+                $query->orWhereHas('singleType', function($querySingleType) use ($options) {
+                    $querySingleType->where('name', 'like', "%" . $options['keyword'] . "%");
+                });
+                $query->orWhereHas('employee', function($employeeQuery) use ($options) {
+                    $employeeQuery->where('fullname', 'like', "%" . $options['keyword']);
+                });
+            });
+        }
+
+        if (isset($options['request_id'])) {
+            $modelRequest->where('id', $options['request_id']);
+        }
+
+        if (isset($options['employee_id'])) {
+            $modelRequest->where('employee_id', $options['employee_id']);
+        }
+
+        if (isset($options['type'])) {
+            $modelRequest->orWhereHas('singleType', function($querySingleType) use ($options) {
+                $querySingleType->where('name', 'like', "%" . $options['keyword'] . "%");
+            });
+        }
+
         return $modelRequest->orderBy('id', 'desc');
     }
 
@@ -95,7 +124,8 @@ class RequestRepository extends BaseRepository
      */
     public function paginate(int $take = 10, array $options = []): LengthAwarePaginator
     {
-        return $this->query($options)->paginate($take);
+        $pageName = $options['page_name'] ?? 'page';
+        return $this->query($options)->paginate($take, ['*'], $pageName);
     }
 
     /**

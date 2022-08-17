@@ -1,25 +1,4 @@
 <div>
-    <form action="" class="form-filter">
-        <div class="row align-items-end">
-            <div class="col-md-3">
-                <label for="">Từ khóa</label>
-                <input type="text" name="keywork" placeholder="Nhập từ khóa..." class="form-control filter-data">
-            </div>
-            <div class="col-md-3">
-                <label for="">Loại đơn:</label>
-                <input type="text" name="type" value="" placeholder="Loại đơn..." filter="company_shift_name" class="form-control filter-data">
-            </div>
-            <div class="col-md-3">
-                <label for="">Người tạo:</label>
-                <input type="text" name="employee" value="" placeholder="Người tạo..." filter="company_shift_name" class="form-control filter-data">
-            </div>
-            <input type="hidden" :value="current_tab" name="current_tab">
-            <div class="col-md-3">
-                <a href="{{ route('schedule-calender-index') }}" class="btn btn-inverse btn-sm waves-effect waves-light" style="float: right;">Tất cả</a>
-                <button class="btn btn-primary btn-sm waves-effect waves-light mr-2" style="float: right;">Tìm kiếm</button>
-            </div>
-        </div>
-    </form>
     <div class="mt-5 mb-2 row">
         <div class="col-4">Có <b>@{{ requestAcceptedData.total }}</b> lịch làm việc trong danh sách</div>
     </div>
@@ -104,20 +83,20 @@
                     </td>
                 </tr>
                 <tr v-if="requestAcceptedData.total == 0">
-                    <td colspan="6" class="box_data_empty">
+                    <td colspan="8" class="box_data_empty">
                         <img src="{{asset('frontend')}}/image/empty_data.png" alt="">
                     </td>
                 </tr>
             </tbody>
         </table>
     </div>
-    <div style="float: right;" class="pagination_cutomize" v-if="requestAcceptedData.total > 0">
+    <div style="float: right;" class=""  v-if="requestAcceptedData.total > 0">
         <template>
             <paginate
                 :page-count="requestAcceptedData.last_page"
                 v-model="requestAcceptedData.current_page"
                 :initial-page="requestAcceptedData.current_page"
-                :click-handler="changePageProcess"
+                :click-handler="changePageAccep"
                 :prev-text="'‹'"
                 :next-text="'›'"
                 :page-link-class="'page-link'"

@@ -67,21 +67,21 @@
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs md-tabs unset-boder" role="tablist" style="border: unset;">
                         <li class="nav-item" @click="() => app.current_tab = 'process'">
-                            <a class="nav-link box-position" :class="{ active: current_tab == 'process'}" data-toggle="tab" href="#process_tab" role="tab" >
+                            <a class="nav-link box-position" :class="{ active: current_tab == 'process'}">
                                 Đơn cần phê duyệt
                             </a>
                             <div class="slide"></div>
                             <label for="" class="badge badge-primary badge-top-right">@{{ requestProcessData.total }}</label>
                         </li>
                         <li class="nav-item" @click="() => app.current_tab = 'accepted'">
-                            <a class="nav-link box-position" :class="{ active: current_tab == 'accepted'}" data-toggle="tab" href="#accepted_tab" role="tab" >
+                            <a class="nav-link box-position" :class="{ active: current_tab == 'accepted'}">
                                 Đơn đã được duyệt
                             </a>
                             <div class="slide"></div>
                             <label for="" class="badge badge-success badge-top-right">@{{ requestAcceptedData.total }}</label>
                         </li>
                         <li class="nav-item" @click="() => app.current_tab = 'unapproved'">
-                            <a class="nav-link box-position" :class="{ active: current_tab == 'unapproved'}" data-toggle="tab" href="#unapproved_tab" role="tab" >
+                            <a class="nav-link box-position" :class="{ active: current_tab == 'unapproved'}">
                                 Đơn đã từ chối
                             </a>
                             <div class="slide"></div>
@@ -92,6 +92,33 @@
             </div>
             <!-- Tab panes -->
             <div class="card-block">
+                <div>
+                    <form action="" class="form-filter">
+                        <div class="row align-items-end justify-content-end">
+                            <div class="col-md-3">
+                                <label for="">Từ khóa:</label>
+                                <input type="text" name="keyword" v-model="keyword" placeholder="Nhập tên đơn, nội dung đơn từ, ..." class="form-control filter-data">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="">Mã đơn:</label>
+                                <input type="text" name="request_id" v-model="request_id" placeholder="Nhập mã đơn" class="form-control filter-data">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="">Mã nhân viên:</label>
+                                <input type="text" name="employee_id" v-model="employee_id" value="" placeholder="Nhập mã người tạo ..." filter="company_shift_name" class="form-control filter-data">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="">Loại đơn:</label>
+                                <input type="text" name="type" value="" v-model="type" placeholder="Nhập tên loại đơn" filter="company_shift_name" class="form-control filter-data">
+                            </div>
+                            <input type="hidden" :value="current_tab" name="current_tab">
+                            <div class="col-md-3 mt-3">
+                                <button type="button" class="btn btn-inverse btn-sm waves-effect waves-light" style="float: right;" @click="handleSearch('all')">Tất cả</button>
+                                <button type="button" class="btn btn-primary btn-sm waves-effect waves-light mr-2" @click="handleSearch()" style="float: right;">Tìm kiếm</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
                 <div class="tab-contents">
                     <div class="" v-if="current_tab == 'process'" id="process_tab" role="tabpanel">
                         @include('admin.application.request.processing')
@@ -122,24 +149,81 @@
                 requestProcessData: {!! json_encode($requestProcess) !!},
                 requestAcceptedData: {!! json_encode($requestAccepted) !!},
                 requestUnapprovedData: {!! json_encode($requestUnapproved) !!},
-                current_tab: 'process'
+                current_tab: 'process',
+                keyword: '{{ request()->keyword ?? '' }}',
+                request_id: '{{ request()->request_id ?? '' }}',
+                employee_id: '{{ request()->employee_id ?? '' }}',
+                type: '{{ request()->type ?? '' }}',
+
             },
             methods: {
                 changePageProcess: (page) => {
                     // change param url
                     var urlParam = new URL(window.location);
-                    urlParam.searchParams.set('page', page);
+                    urlParam.searchParams.set('process_page', page);
                     window.history.pushState({}, '', urlParam);
                     // call api
                     $('.overlay-load').css('display', 'flex');
-                    axios.get(`{{route('get-request-data')}}?page=${page}`).then(({data}) => {
-                        app.requestProcessData = data.processing;
+                    let params = location.search;
+                    axios.get(`{{route('get-request-data')}}${params}`).then(({data}) => {
+                        app.requestProcessData = data.process;
+                        $('.overlay-load').css('display', 'none');
+                    })
+                },
+                changePageAccep: (page) => {
+                    // change param url
+                    var urlParam = new URL(window.location);
+                    urlParam.searchParams.set('accep_page', page);
+                    window.history.pushState({}, '', urlParam);
+                    // call api
+                    $('.overlay-load').css('display', 'flex');
+                    let params = location.search;
+                    axios.get(`{{route('get-request-data')}}${params}`).then(({ data }) => {
+                        app.requestAcceptedData = data.accepted;
+                        $('.overlay-load').css('display', 'none');
+                    })
+                },
+                changePageUnapp: (page) => {
+                    // change param url
+                    var urlParam = new URL(window.location);
+                    urlParam.searchParams.set('unapp_page', page);
+                    window.history.pushState({}, '', urlParam);
+                    // call api
+                    $('.overlay-load').css('display', 'flex');
+                    let params = location.search;
+                    axios.get(`{{route('get-request-data')}}${params}`).then(({data}) => {
+                        app.requestUnapprovedData = data.unapproved;
                         $('.overlay-load').css('display', 'none');
                     })
                 },
                 linkRequestDetail: (requestId) => {
                     let linkRoot = `{{ route('application-request-detail', ['requestId' => '????']) }}`
                     return linkRoot.replace("????", requestId);
+                },
+                handleSearch: (typeSearch) => {
+                    if (typeSearch == 'all') {
+                        var urlParam = new URL(`${window.location.origin}${window.location.pathname}`);
+                        app.keyword = '';
+                        app.request_id = '';
+                        app.employee_id = '';
+                        app.type = '';
+                    } else {
+                        var urlParam = new URL(window.location);
+                        urlParam.searchParams.set('keyword', app.keyword);
+                        urlParam.searchParams.set('request_id', app.request_id);
+                        urlParam.searchParams.set('employee_id', app.employee_id);
+                        urlParam.searchParams.set('type', app.type);
+                    }
+                    window.history.pushState({}, '', urlParam);
+
+                    let params = location.search;
+                    $('.overlay-load').css('display', 'flex');
+                    axios.get(`{{route('get-request-data')}}${ params }`).then(({data}) => {
+                        app.requestProcessData = data.process;
+                        app.requestAcceptedData = data.accepted
+                        app.requestUnapprovedData = data.unapproved
+                        $('.overlay-load').css('display', 'none');
+                    })
                 }
             }
         })

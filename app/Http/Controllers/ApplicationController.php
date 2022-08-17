@@ -42,7 +42,7 @@ class ApplicationController extends Controller
 
     public function index(Request $request)
     {
-        $take = 8;
+        $take = 1;
         $statusPending  = array(config('request.status.processing'), config('request.status.leader_accepted'));
         $statusAccepted = array(config('request.status.accepted'), config('request.status.leader_accepted'));
         $statusUnapproved = config('request.status.unapproved');
@@ -60,24 +60,31 @@ class ApplicationController extends Controller
                 'employee.position.department',
                 'requestDetail',
             ],
-            'approver_employee' => Auth::user()
+            'approver_employee' => Auth::user(),
+            'keyword' => $request->keyword,
+            'request_id' => $request->request_id,
+            'employee_id' => $request->employee_id,
+            'type' => $request->type
         ];
-        $requestProcess = $this->requestRepo->formatDataPaginate($take, [...$options, 'statues' => $statusPending, 'need_browser' => true]);
-        $requestAccepted = $this->requestRepo->formatDataPaginate($take, [...$options, 'statues' => $statusAccepted, 'accepted' => true]);
-        $requestUnapproved = $this->requestRepo->formatDataPaginate($take, [...$options, 'status' => $statusUnapproved]);
+        $requestProcess = $this->requestRepo->formatDataPaginate($take, [...$options, 'statues' => $statusPending, 'need_browser' => true, 'page_name' => 'process_page']);
+        $requestAccepted = $this->requestRepo->formatDataPaginate($take, [...$options, 'statues' => $statusAccepted, 'accepted' => true, 'page_name' => 'accep_page']);
+        $requestUnapproved = $this->requestRepo->formatDataPaginate($take, [...$options, 'status' => $statusUnapproved, 'page_name' => 'unapp_page']);
         return view('admin.application.request.request', compact('requestProcess', 'requestUnapproved', 'requestAccepted'));
     }
 
     public function responseRequestData(Request $request): JsonResponse
     {
-        $take = 8;
+        $take = 1;
+        $statusPending  = array(config('request.status.processing'), config('request.status.leader_accepted'));
+        $statusAccepted = array(config('request.status.accepted'), config('request.status.leader_accepted'));
+        $statusUnapproved = config('request.status.unapproved');
         $options = [
             'with' => [
                 'employee' => function($query) {
                     $query->select('fullname', 'id', 'position_id');
                 },
                 'singleType' => function ($query) {
-                    $query->select('id', 'required_leader', 'type');
+                    $query->select('id', 'required_leader', 'type', 'name');
                 },
                 'singleType.approvers.employee' => function($query) {
                     $query->select('fullname', 'id', 'type_avatar', 'avatar');
@@ -85,11 +92,19 @@ class ApplicationController extends Controller
                 'employee.position.department',
                 'requestDetail',
             ],
-            'approver_employee' => Auth::user()
+            'approver_employee' => Auth::user(),
+            'keyword' => $request->keyword,
+            'request_id' => $request->request_id,
+            'employee_id' => $request->employee_id,
+            'type' => $request->type
         ];
-        $requestProcess = $this->requestRepo->formatDataPaginate($take, $options);
+        $requestProcess = $this->requestRepo->formatDataPaginate($take, [...$options, 'statues' => $statusPending, 'need_browser' => true, 'page_name' => 'process_page']);
+        $requestAccepted = $this->requestRepo->formatDataPaginate($take, [...$options, 'statues' => $statusAccepted, 'accepted' => true, 'page_name' => 'accep_page']);
+        $requestUnapproved = $this->requestRepo->formatDataPaginate($take, [...$options, 'status' => $statusUnapproved, 'page_name' => 'unapp_page']);
         return response()->json([
-            "processing" => $requestProcess
+            "process" => $requestProcess,
+            "accepted" => $requestAccepted,
+            "unapproved" => $requestUnapproved,
         ]);
     }
 
