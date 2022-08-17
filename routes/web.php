@@ -116,7 +116,7 @@ Route::prefix('/admin')->middleware(['auth', 'can:web'])->group(function () {
         });
 
         Route::prefix('/branch')->name("branch.")->middleware("role:admin")->group(function () {
-            Route::get('/', [CompanyController::class, 'branchs'])->name("list");
+            Route::get('/', [CompanyController::class, 'index'])->name("list");
             Route::get('/add-branch', [CompanyController::class, 'addBranchForm'])->name("addbranch");
             Route::post('/add-branch', [CompanyController::class, 'addBranch']);
             Route::get('/update-branch/{id}', [CompanyController::class, 'updateBranchForm'])->name("updatebranch");

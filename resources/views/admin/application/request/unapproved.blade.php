@@ -1,3 +1,8 @@
+<div>
+    <div class="mt-5 mb-2 row">
+        <div class="col-4">Có <b>@{{ requestUnapprovedData.total }}</b> lịch làm việc trong danh sách</div>
+    </div>
+</div>
 <div class="table-border-style mt-2">
     <div class="table-responsive scrollbar-custom" style="width:100%;">
         <table class="table align-middle-td">
@@ -7,37 +12,49 @@
                     <th>Mã đơn</th>
                     <th>Loại đơn</th>
                     <th>Người tạo</th>
-                    <th>Thời gian tạo</th>
-                    <th>Thời gian áp dụng</th>
+                    <th>Nội dung</th>
                     <th>Người duyệt đơn</th>
+                    <th>Thời gian tạo</th>
                     <th>Hành động</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="(record, index) in requestUnapprovedData.data">
                     <td>@{{ index+1 }}</td>
-                    <td>#@{{ record.id }}</td>
+                    <td><label for="" class="label label-inverse-primary">#@{{ record.id }}</label></td>
                     <td>
-                        <p>Đơn nghỉ không lương</p>
-                        <label for="" class="label bg-primary">Đang xử lý</label>
+                        <p>@{{ record.name }}</p>
+                        <label for="" class="label bg-primary" :class="record.class_status">@{{ record.getStatusStr }}</label>
                     </td>
                     <td>
                         <p><b>@{{ record.employee?.fullname }}</b></p>
-                        <p>@{{ record.employee?.position?.department?.name || "Chưa thiết lập phòng ban" }}</p>
-                        <label for="" class="label label-inverse-info-border">@{{ record.employee?.position?.name || "Chưa thiết lập vị trí" }}</label>
+                        <p>Phòng ban: <label for="" class="label label-info">@{{ record.employee?.position?.department?.name || "Chưa thiết lập phòng ban" }}</label></p>
+                        <p>Vị trí: <label for="" class="label label-info">@{{ record.employee?.position?.name || "Chưa thiết lập vị trí" }}</label></p>
                     </td>
                     <td>
-                        <b>@{{ record.created_at }}</b>
-                    </td>
-                    <td>
-                        <div>
-                            <label for="">Bắt đầu nghỉ</label>
-                            <p><b>@{{ record.request_detail.quit_work_from_at }}</b></p>
+                        <div v-if="record.request_type == {{ config('singletype.type.leave_work') }}">
+                            <div>
+                                <label for="">Bắt đầu nghỉ</label>
+                                <p><label class="label label-inverse-danger">@{{ record.request_detail.quit_work_from_at }}</label></p>
+                            </div>
+                            <div>
+                                <label for="">Kết thúc nghỉ</label>
+                                <p><label class="label label-inverse-danger">@{{ record.request_detail.quit_work_to_at }}</label></p>
+                            </div>
                         </div>
-                        <div>
-                            <label for="">Kết thúc nghỉ</label>
-                            <p><b>@{{ record.request_detail.quit_work_to_at }}</b></p>
+                        <div v-else-if="record.request_type == {{ config('singletype.type.edit_work') }}">
+                            <p>Giờ vào - Giờ ra</p>
+                            <label class="label label-inverse-info">@{{ record.quit_work_from_at }}</label>
+                            <span class="mr-1">-</span>
+                            <label class="label label-inverse-info ml-2">@{{ record.quit_work_to_at }}</label>
                         </div>
+                        <div v-else-if="record.request_type == {{ config('singletype.type.ot') }}">
+                                <p>Khoảng thời gian OT:</p>
+                                <label class="label label-inverse-primary">@{{ record.quit_work_from_at }}</label>
+                                <span class="mr-1">-</span>
+                                <label class="label label-inverse-primary">@{{ record.quit_work_to_at }}</label>
+                        </div>
+                        <div v-else>N/A</div>
                     </td>
                     <td style="max-width: 150px; white-space: unset;">
                         <span class="mytooltip tooltip-effect-5 pt-2 pl-2" style="display: inline-block;" v-for="approver in record.approvers">
@@ -48,35 +65,38 @@
                         </span>
                     </td>
                     <td>
+                        <b>@{{ record.created_at }}</b>
+                    </td>
+                    <td>
                         <div class="mytooltip tooltip-effect-9">
                             <a :href="linkRequestDetail(record.id)" class="btn waves-effect waves-dark btn-primary btn-outline-primary btn-icon">
                                 <i class="icofont icofont-eye-alt"></i>
                             </a>
                             <span class="tooltip-content3">Xem chi tiết</span>
                         </div>
-                        <div class="mytooltip tooltip-effect-9 ml-2">
+                        {{-- <div class="mytooltip tooltip-effect-9 ml-2">
                             <button class="btn waves-effect waves-dark btn-success btn-outline-success btn-icon">
                                 <i class="icofont icofont-check-circled"></i>
                             </button>
                             <span class="tooltip-content3">Duyệt nhanh</span>
-                        </div>
+                        </div> --}}
                     </td>
                 </tr>
                 <tr v-if="requestUnapprovedData.total == 0">
-                    <td colspan="6" class="box_data_empty">
+                    <td colspan="8" class="box_data_empty">
                         <img src="{{asset('frontend')}}/image/empty_data.png" alt="">
                     </td>
                 </tr>
             </tbody>
         </table>
     </div>
-    <div style="float: right;" class="pagination_cutomize" v-if="requestUnapprovedData.total > 0">
+    <div style="float: right;" class=""  v-if="requestUnapprovedData.total > 0">
         <template>
             <paginate
                 :page-count="requestUnapprovedData.last_page"
                 v-model="requestUnapprovedData.current_page"
                 :initial-page="requestUnapprovedData.current_page"
-                :click-handler="changePageProcess"
+                :click-handler="changePageUnapp"
                 :prev-text="'‹'"
                 :next-text="'›'"
                 :page-link-class="'page-link'"

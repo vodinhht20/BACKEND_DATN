@@ -139,7 +139,7 @@
 @section('page-script')
     <script src="{{ asset('frontend/js/select2.min.js') }}"></script>
     <script src="{{ asset('frontend/js/datepicker.js') }}"></script>
-    <script  type="text/javascript">
+    <script type="text/javascript">
         $(document).ready(function () {
             $('#select_approvers').select2({
                 placeholder: "Lựa chọn người duyệt đơn ..."

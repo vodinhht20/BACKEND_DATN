@@ -1,6 +1,6 @@
 @extends('admin.layouts.main')
 @section('title')
-    <title>Sản Phẩm | Thêm Mới</title>
+    <title>Chi nhánh Camel</title>
 @endsection
 @section('style-page')
     <!-- datepicker.css -->
@@ -56,21 +56,21 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($bran as $b)
+                            @foreach ($branch as $branchItem)
                             <tr>
                                 <td>
-                                    <label for="" class="label label-primary">code: {{$b->code_branch}}</label> <p class="ellipsis">{{$b->name}}</p>
+                                    <label for="" class="label label-primary">code: {{$branchItem->branch_code}}</label> <p class="ellipsis">{{$branchItem->name}}</p>
                                 </td>
-                                <td><p class="ellipsis">{{$b->address}}</p></td>
+                                <td><p class="ellipsis">{{$branchItem->address}}</p></td>
                                 <td>
-                                    Kinh độ: <label for="" class="label label-inverse-success">{{$b->longtitude}}</label>
+                                    Kinh độ: <label for="" class="label label-inverse-success">{{$branchItem->longitude}}</label>
                                     <br>
-                                    Vĩ độ: <label for="" class="label label-inverse-success ml-3">{{$b->latitude}}</label>
+                                    Vĩ độ: <label for="" class="label label-inverse-success ml-3">{{$branchItem->latitude}}</label>
                                 </td>
-                                <td>{{$b->hotline}}</td>
-                                <td><label for="" class="label label-inverse-info">{{$b->radius}} Meter</label></td>
+                                <td>{{$branchItem->hotline}}</td>
+                                <td><label for="" class="label label-inverse-info">{{$branchItem->radius}} Meter</label></td>
                                 <td class="text-center">
-                                    <a href="{{route("setting.branch.updatebranch", $b->id)}}" title="Chỉnh sửa">
+                                    <a href="{{route("setting.branch.updatebranch", $branchItem->id)}}" title="Chỉnh sửa">
                                         <i class="ti-pencil icon-edit-primary"></i>
                                     </a>
                                 </td>
@@ -80,7 +80,7 @@
                     </table>
                 </div>
                 <div style="float: right;" class="pagination_cutomize">
-                    {{$bran->links()}}
+                    {{$branch->links()}}
                 </div>
             </div>
         </div>
