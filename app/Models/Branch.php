@@ -11,6 +11,15 @@ class Branch extends Model
     use HasFactory, SoftDeletes;
     protected $guarded = [];
     protected $table = 'branches';
+    protected $fillable = [
+        'name',
+        'branch_code',
+        'address',
+        'hotline',
+        'latitude',
+        'longitude',
+        'radius'
+    ];
 
     public function network()
     {

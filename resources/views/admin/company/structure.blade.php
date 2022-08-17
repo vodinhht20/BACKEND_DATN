@@ -1,6 +1,6 @@
 @extends('admin.layouts.main')
 @section('title')
-    <title>Sản Phẩm | Thêm Mới</title>
+    <title>Thiết lập phòng ban</title>
 @endsection
 @section('style-page')
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
