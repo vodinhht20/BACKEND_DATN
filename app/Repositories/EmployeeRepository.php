@@ -86,11 +86,6 @@ class EmployeeRepository extends BaseRepository
         return false;
     }
 
-    public function getAllUserByPublic($options = [], $take = 10)
-    {
-        return $this->query($options)->paginate($take);
-    }
-
     public function confirmEmail($id)
     {
         $employee = $this->model->find($id);
@@ -175,6 +170,10 @@ class EmployeeRepository extends BaseRepository
     public function query($options = [])
     {
         $employee = $this->model->query();
+
+        if (isset($options['with'])) {
+            $employee->with($options['with']);
+        }
 
         if (isset($options['id'])) {
             $employee->where('id', $options['employee_id']);

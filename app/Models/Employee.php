@@ -15,11 +15,6 @@ use Spatie\Permission\Traits\HasRoles;
 
 class Employee extends Authenticatable implements JWTSubject
 {
-    const status = [
-        'active' => 1,
-        'deactive' => 2,
-        'banned' => 3
-    ];
     use HasApiTokens, HasFactory, Notifiable, HasRoles, SoftDeletes;
 
     protected $table = 'employees';
@@ -104,11 +99,6 @@ class Employee extends Authenticatable implements JWTSubject
         return $this->hasMany(Timekeep::class, 'employee_id','id');
     }
 
-    // public function positions()
-    // {
-    //     return $this->belongsToMany(Position::class, 'employee_positions', 'employee_id', 'position_id');
-    // }
-
     public function position()
     {
         return $this->belongsTo(Position::class, 'position_id', 'id');
@@ -139,5 +129,10 @@ class Employee extends Authenticatable implements JWTSubject
             })->first();
         }
         return null;
+    }
+
+    public function getStatusStr()
+    {
+        return config('employee.status_str.' . $this->status, "N/A");
     }
 }

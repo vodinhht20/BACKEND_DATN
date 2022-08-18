@@ -10,51 +10,43 @@ use App\Repositories\EmployeeRepository;
 use Illuminate\Http\Request;
 use \Illuminate\Support\Str;
 use App\Models\Position;
+use App\Repositories\DepartmentRepository;
 use Google\Service\ServiceControl\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class EmployeeController extends Controller
 {
-    public function __construct(private EmployeeRepository $employeeRepo)
+    public function __construct(
+        private EmployeeRepository $employeeRepo,
+        private DepartmentRepository $departmentRepo
+    )
     {
         //
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $employees = $this->employeeRepo->getAllUserByPublic();
+        $take = 2;
+        $options = [...$request->all(),
+            "with" => ['position.department']
+        ];
+        $employees = $this->employeeRepo->paginate($options, $take)->appends($request->query());
         $branchs = Branch::all();
-        $positions = Position::all();
-        return view('admin.user.list', compact('employees', 'branchs', 'positions'));
-    }
-
-    public function getAllUser(){
-        $employees = $this->employeeRepo->getAllUserByPublic();
-        $pages = ceil($employees->total()/10);
-        $outPut = view('admin.user._partials.base_table', compact('employees','pages'))->render();
-        return response()->json(["data" => $outPut]);
+        $departments = $this->departmentRepo->formatVueSelect();
+        return view('admin.user.list', compact('employees', 'branchs', 'departments'));
     }
 
     public function filter(Request $request)
     {
-        $employees = Employee::where('status', 'like', '%' . $request->status . '%')
-            ->where('position_id', 'like', '%' . $request->position . '%')
-            ->where('gender', 'like', '%' . $request->gender . '%')
-            ->where('branch_id', 'like', '%' . $request->branch . '%')
-            ->where(function($query) use ($request){
-                $query->where('fullname', 'LIKE', '%'.$request->keyword.'%')
-                      ->orWhere('email', 'LIKE', '%'.$request->keyword.'%');
-            })
-            ->orderBy('updated_at', 'desc')
-            ->paginate(10,['*'],'page',$request->page);
-
-        $pages = ceil($employees->total()/10);
-        if (sizeof($employees) == 0) {
-            $outPut = "Không có nhân sự nào có các trạng thái trên";
-        } else {
-            $outPut = view('admin.user._partials.base_table', compact('employees','pages'))->render();
-        }
-        return response()->json(["data" => $outPut]);
+        $take = 2;
+        $components = parse_url($request->params);
+        parse_str($components['query'], $results);
+        $options = [...$results,
+            "with" => ['position.department']
+        ];
+        $employees = $this->employeeRepo->paginate($options, $take)->withPath('/admin/employee')->appends($results);
+        $dataView = view('admin.user._partials.base_table', compact('employees'))->render();
+        return response()->json(["data" => $dataView]);
     }
 
     public function confirmEmail(Request $request)

@@ -2,21 +2,29 @@
     <table class="table table-hover">
         <thead>
             <tr>
-                <th class="text-center">STT</th>
-                <th class="text-center">Tên</th>
-                <th>Thông tin liên lạc</th>
-                <th>Địa chỉ</th>
-                <th>Trạng thái</th>
-                <th>Hành động</th>
+                <th class="text-center" style="vertical-align: middle;">STT</th>
+                <th class="text-center" style="vertical-align: middle;">Thông tin</th>
+                <th class="text-center" style="vertical-align: middle;">Vị trí <hr> Phòng ban</th>
+                <th class="text-center" style="vertical-align: middle;">Thông tin liên lạc</th>
+                <th class="text-center" style="vertical-align: middle;">Địa chỉ</th>
+                <th class="text-center" style="vertical-align: middle;">Hành động</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($employees as $employee)
                 <tr>
                     <td class="text-center">{{ $loop->index+1 }}</td>
-                    <td class="text-center">{{$employee->fullname}}</td>
-                    <td>
+                    <td class="text-center">
                         <img src="{{ $employee->getAvatar() ?: asset('frontend/image/avatar_empty.jfif') }}" alt="" class="avatar_list"> {{-- {{ $employee->getAvatar() ?: asset('frontend/image/avatar_empty.jfif') }} --}}
+                        <br>
+                        {{$employee->fullname}}
+                        <br>
+                        <label class="label label-success">{{ $employee->getStatusStr()}}</label>
+                    </td>
+                    <td>
+                        <label for="" class="badge badge-primary">{{ $employee?->position?->name ?: "N/A" }}</label>
+                        <hr>
+                        <label for="" class="badge badge-info">{{ $employee?->position?->department?->name ?: "N/A" }}</label>
                     </td>
                     <td>
                         <p>SĐT: {{ $employee->phone ?: "Chưa cập nhật" }}</p>
@@ -29,13 +37,7 @@
 
                     </td>
                     <td>
-                        @if ($employee->status == 1)
-                        <label class="label label-success">{{ getStatusName($employee->status)}}</label>
-                        @elseif($employee->status == 1)
-                        <label class="label label-warning">{{ getStatusName($employee->status)}}</label>
-                        @else
-                        <label class="label label-danger">{{ getStatusName($employee->status)}}</label>
-                        @endif
+                        {{ $employee->address ?: "Chưa thiết lập địa chỉ !" }}
                     </td>
                     <td>
                         <div class="dropdown">
@@ -69,7 +71,7 @@
     </table>
 </div>
 <div class="paginate row justify-content-center">
-    {{ $employees->links() }}
+    {{ $employees->appends(request()->all()) }}
 </div>
 <div class="overlay-load">
     <img src="{{asset('frontend')}}/image/loading.gif" alt="">

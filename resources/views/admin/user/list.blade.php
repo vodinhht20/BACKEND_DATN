@@ -1,6 +1,19 @@
 @extends('admin.layouts.main')
 @section('title')
     <title>Thành viên | Danh sách</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.4.0/dist/vue-treeselect.min.css">
+    <style>
+        .vue-treeselect__value-container {
+            height: 36px;
+        }
+        .vue-treeselect__placeholder {
+            line-height: 40px;
+        }
+        .vue-treeselect__control {
+            border-radius: 2px;
+            border: 1px solid #cccccc !important;
+        }
+    </style>
 @endsection
 @section('header-page')
 <div class="page-header">
@@ -39,12 +52,12 @@
             </a>
         </div>
         <div class="row mb-3" style="margin: unset;">
-            <div class="col-sm-3">
-                <label for="">Từ khóa</label>
+            <div class="form-group col-md-3 col-sx-6 col-lg-3">
+                <label for="">Từ khóa: </label>
                 <input class="form-control action_filter" type="text" name="keyword" placeholder="Tìm kiếm bằng tên, email,..." data-filter="keyword">
             </div>
-            <div class="col-sm-3">
-                <label for="">Trạng thái nhân sự</label>
+            <div class="form-group col-md-3 col-sx-6 col-lg-3">
+                <label for="">Trạng thái nhân sự: </label>
                 <select name="status" class="form-control action_filter" data-filter="status">
                     <option value="">-- Tất cả --</option>
                     <option value="1">Đang hoạt động</option>
@@ -52,17 +65,13 @@
                     <option value="3">Bị chặn</option>
                 </select>
             </div>
-            <div class="col-sm-3">
-                <label for="">Vị trí</label>
-                <select name="position_id" class="form-control action_filter" data-filter="position_id">
-                    <option value="">-- Tất cả --</option>
-                    @foreach ($positions as $position)
-                        <option value="{{$position->id}}">{{$position->name}}</option>
-                    @endforeach
-                </select>
+            <div class="form-group col-md-3 col-sx-6 col-lg-3 app_vue">
+                <label for="">Vị trí phòng ban: </label>
+                <input type="hidden" name="departments" :value="departmentValue">
+                <treeselect v-model="departmentValue" :multiple="true" :options="departments" />
             </div>
-            <div class="col-sm-3">
-                <label for="">Chi nhánh</label>
+            <div class="form-group col-md-3 col-sx-6 col-lg-3">
+                <label for="">Chi nhánh: </label>
                 <select name="branch_id" class="form-control action_filter" data-filter="branch_id">
                     <option value="">-- Tất cả --</option>
                     @foreach ($branchs as $branch)
@@ -79,7 +88,18 @@
 @endsection
 
 @section('page-script')
+<script src="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.4.0/dist/vue-treeselect.umd.min.js"></script>
 <script>
+    Vue.component('treeselect', VueTreeselect.Treeselect);
+    Vue.config.devtools = true
+    var app = new Vue({
+        el: '.app_vue',
+        data: {
+            departmentValue: null,
+            departments: {!! json_encode($departments) !!}
+        }
+    });
+
     (function callBack() {
         $('.change-pass').on('click', async function (e) {
             const { value: password } = await Swal.fire({
