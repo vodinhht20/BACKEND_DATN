@@ -68,7 +68,7 @@
             <div class="form-group col-md-3 col-sx-6 col-lg-3 app_vue">
                 <label for="">Vị trí phòng ban: </label>
                 <input type="hidden" name="departments" :value="departmentValue">
-                <treeselect v-model="departmentValue" :multiple="true" :options="departments" />
+                <treeselect v-model="departmentValue" :multiple="true" :options="departments" @input="changePosition()"/>
             </div>
             <div class="form-group col-md-3 col-sx-6 col-lg-3">
                 <label for="">Chi nhánh: </label>
@@ -95,8 +95,26 @@
     var app = new Vue({
         el: '.app_vue',
         data: {
-            departmentValue: null,
+            departmentValue: {!! json_encode($requestDepartments) !!},
             departments: {!! json_encode($departments) !!}
+        },
+        methods: {
+            changePosition: () => {
+                var urlParam = new URL(window.location);
+                urlParam.searchParams.set('departments', app.departmentValue);
+                window.history.pushState({}, '', urlParam);
+
+                var paramsUrl = window.location.search;
+                let params = {
+                    params: paramsUrl
+                };
+                $('.overlay-load').css('display', 'flex');
+                axios.get("{{route('ajax-filter-employee')}}", { params }).then((response)=>{
+                    $('#data-table').html(response.data.data);
+                    $('.overlay-load').css('display', 'none');
+                    callApi();
+                });
+            }
         }
     });
 

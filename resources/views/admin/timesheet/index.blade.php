@@ -49,7 +49,7 @@
                     <div class="col-7">
                         <h4>Quản lí bảng công</h4>
                     </div>
-                    <div class="col-5 d-flex">
+                    <div class="col-5 d-flex justify-content-end">
                         <a href="javascript:void(0)" class="btn btn-outline-primary btn-round waves-effect waves-light mr-2" data-toggle="modal" data-target="#modal_synchronized">
                             <i class="ti-reload"></i>
                             Đồng bộ dữ liệu

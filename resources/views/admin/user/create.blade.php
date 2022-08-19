@@ -51,107 +51,67 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row mt-3">
-                            <div class="col-sm-2">
-                                <div class="form-group">
-                                    <label class="col-form-label">Trạng thái</label>
-                                    <div class="">
-                                        <select name="status" id="" class="form-control data-input border">
-                                            @foreach (config('global.employeeStatus') as $key => $statusName)
-                                                <option value="{{$statusName}}">{{$key}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-2">
-                                <div class="form-group">
-                                    <label class="col-form-label">Giới tính</span></label>
-                                    <div class="">
-                                        <select name="gender" id="" class="form-control data-input border">
-                                            @foreach (config('global.gender') as $key => $gender)
-                                                <option value="{{$gender}}">{{$key}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-2">
-                                <div class="form-group">
-                                    <label class="col-form-label">Chi nhánh</label>
-                                    <div class="">
-                                        <select name="branch" id="" class="form-control data-input border">
-                                           @foreach ($branchs as $branch)
-                                           <option value="{{$branch->id}}">{{$branch->name}}</option>
-                                           @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-2">
-                                <div class="form-group">
-                                    <label class="col-form-label">Vị trí</label>
-                                    <div class="">
-                                        <select name="position" id="" class="form-control data-input border">
-                                            @foreach ($positions as $position)
-                                            <option value="{{$position->id}}">{{$position->name}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-2">
-                                <div class="form-group">
-                                    <label class="col-form-label">Trạng thái điểm danh</label>
-                                    <div class="">
-                                        <select name="is_checked" id="" class="form-control data-input border">
-                                            <option value="1">Được phép điểm danh</option>
-                                            <option value="2">Không được phép điểm danh</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label class="col-form-label">Họ & Tên<span class="text-danger">*</span></label>
-                                    <div class="">
-                                        <input type="text" class="form-control data-input" value="{{ old('fullname') }}" name="fullname" placeholder="Nhập họ và tên thành viên">
-                                    </div>
+                                    <label class="col-form-label">Trạng thái</label>
+                                    <select name="status" id="" class="form-control data-input">
+                                        @foreach (config('global.employeeStatus') as $key => $statusName)
+                                            <option value="{{$statusName}}">{{$key}}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-form-label">Ngày sinh<span class="text-danger">*</span></label>
-                                    <div class="">
-                                        <input type="date" class="form-control data-input" value="{{ old('birth_day') }}" name="birth_day" placeholder="Nhập ngày sinh">
-                                    </div>
-                                </div>
+                            <div class="col-sm-6 form-group">
+                                <label class="col-form-label">Giới tính</span></label>
+                                <select name="gender" id="" class="form-control data-input">
+                                    @foreach (config('global.gender') as $key => $gender)
+                                        <option value="{{$gender}}">{{$key}}</option>
+                                    @endforeach
+                                </select>
                             </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-form-label">Số điện thoại</label>
-                                    <div class="">
-                                        <input type="text" class="form-control data-input" value="{{ old('phone') }}" name="phone" placeholder="+84 329766459">
-                                    </div>
-                                </div>
+                            <div class="col-sm-6 form-group">
+                                <label class="col-form-label">Chi nhánh</label>
+                                <select name="branch" id="" class="form-control data-input">
+                                    @foreach ($branchs as $branch)
+                                    <option value="{{$branch->id}}">{{$branch->name}}</option>
+                                    @endforeach
+                                </select>
                             </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-form-label">Email công ty<span class="text-danger">*</span></label>
-                                    <div class="">
-                                        <input type="text" class="form-control data-input" value="{{ old('email') }}" name="email" placeholder="Nhập email công ty">
-                                    </div>
-                                </div>
+                            <div class="col-sm-6 form-group">
+                                <label class="col-form-label">Vị trí</label>
+                                <select name="position" id="" class="form-control data-input">
+                                    @foreach ($positions as $position)
+                                    <option value="{{$position->id}}">{{$position->name}}</option>
+                                    @endforeach
+                                </select>
                             </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-form-label">Email cá nhân</label>
-                                    <div class="">
-                                        <input type="text" class="form-control data-input" value="{{ old('email') }}" name="personal_email" placeholder="Nhập email cá nhân">
-                                    </div>
-                                </div>
+                            <div class="col-sm-6 form-group">
+                                <label class="col-form-label">Trạng thái điểm danh</label>
+                                <select name="is_checked" id="" class="form-control data-input">
+                                    <option value="1">Được phép điểm danh</option>
+                                    <option value="2">Không được phép điểm danh</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-6 form-group">
+                                <label class="col-form-label">Họ & Tên<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control data-input" value="{{ old('fullname') }}" name="fullname" placeholder="Nhập họ và tên thành viên">
+                            </div>
+                            <div class="col-sm-6 form-group">
+                                <label class="col-form-label">Ngày sinh<span class="text-danger">*</span></label>
+                                <input type="date" class="form-control data-input" value="{{ old('birth_day') }}" name="birth_day" placeholder="Nhập ngày sinh">
+                            </div>
+                            <div class="col-sm-6 form-group">
+                                <label class="col-form-label">Số điện thoại</label>
+                                <input type="text" class="form-control data-input" value="{{ old('phone') }}" name="phone" placeholder="+84 329766459">
+                            </div>
+                            <div class="col-sm-6 form-group">
+                                <label class="col-form-label">Email công ty<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control data-input" value="{{ old('email') }}" name="email" placeholder="Nhập email công ty">
+                            </div>
+                            <div class="col-sm-6 form-group">
+                                <label class="col-form-label">Email cá nhân</label>
+                                <input type="text" class="form-control data-input" value="{{ old('email') }}" name="personal_email" placeholder="Nhập email cá nhân">
                             </div>
                         </div>
                         <div class="row mt-3">
@@ -162,9 +122,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label class="col-form-label">{{$attribute->name}}</label>
-                                    <div class="">
-                                        <input name="{{$attribute->name}}" type="{{getDataType($attribute->data_type)}}" class="form-control data-input" placeholder="{{$attribute->name}}">
-                                    </div>
+                                    <input name="{{$attribute->name}}" type="{{getDataType($attribute->data_type)}}" class="form-control data-input" placeholder="{{$attribute->name}}">
                                 </div>
                             </div>
                             @endforeach
