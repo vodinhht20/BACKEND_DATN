@@ -27,7 +27,7 @@
                 <div class="" style="margin-left: 10px"><small>Camel không khuyến khích sử dụng loại hình chấm công này</small></div>
             </div>
         </div>
-        <div class="form-group d-flex justify-center">
+        {{-- <div class="form-group d-flex justify-center">
             <input type="checkbox" v-model="attendance_setting" :disabled="attendance_setting.includes('4')" class="checkbox_custom mr-2" value="3">
             <div>
                 <label for="" style="font-size: 15px">
@@ -36,7 +36,7 @@
                 </label>
                 <div class="" style="margin-left: 10px"><small>Mã QR sẽ thay đổi mỗi 30s 1 lần để đảm bảo tính xác thực</small></div>
             </div>
-        </div>
+        </div> --}}
         <div class="form-group d-flex justify-center">
             <input type="checkbox" v-model="attendance_setting" class="checkbox_custom mr-2" value="4" @click="() => { attendance_setting = ['4'] }">
             <div>

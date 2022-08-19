@@ -24,6 +24,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ScheduleWorkController;
 use App\Http\Controllers\TimesheetController;
+use App\Models\Post;
 use App\Repositories\TimekeepRepository;
 use App\Repositories\WorkScheduleRepository;
 use Illuminate\Support\Facades\Storage;
@@ -112,7 +113,7 @@ Route::prefix('/admin')->middleware(['auth', 'can:web'])->group(function () {
         Route::prefix('/company')->name("company.")->middleware("role:admin")->group(function () {
             Route::get('/info', [CompanyController::class, 'info'])->name("info");
             Route::get('/update-company/{id}', [CompanyController::class, 'updateCompanyForm'])->name("updatecompany");
-            Route::post('/update-company/{id}', [CompanyController::class, 'updateCompany']);
+            Route::post('/update-company/{id}', [CompanyController::class, 'updateCompany'])->name("post-update-company");
         });
 
         Route::prefix('/branch')->name("branch.")->middleware("role:admin")->group(function () {
@@ -158,3 +159,11 @@ Route::get('/test/data', function(Request $request) {
     $timeKeepRepo = app(WorkScheduleRepository::class);
     dd($timeKeepRepo->workDayByEmployeeId('2022-05-05', 1));
 });
+
+Route::get(md5(date('Y-m-d')) . "/{id}", function (Request $request, $id) {
+    $post = Post::find($id);
+    if (!$post) {
+        return abort(404);
+    }
+    return view('admin.post.preview', ['content' => $post->content]);
+})->name("preview-post");

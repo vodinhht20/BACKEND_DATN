@@ -17,7 +17,7 @@ class PostController extends Controller
         //
     }
     public function info(){
-        $posts = Post::with(['branch', 'employee'])->get();
+        $posts = Post::with(['branch', 'employee', 'category'])->get();
         return view('admin.post.info', compact('posts'));
     }
 
@@ -57,11 +57,12 @@ class PostController extends Controller
         return redirect()->route('post.info')->with('message.success', "tạo bài viết thành công");
     }
 
-    public function updatePostForm($id){
-        $posts = Post::find($id);
-        $branchs = Branch::all();
+    public function updatePostForm($id)
+    {
+        $post = Post::find($id);
+        $branchs = $this->branchRepo->getAll();
         $categories = PostCategory::all();
-        return view('admin.post.update', compact('posts', 'branchs', 'categories'));
+        return view('admin.post.update', compact('post', 'branchs', 'categories'));
     }
 
     public function updatePost(Request $request, $id){
