@@ -94,7 +94,7 @@ class RequestRepository extends BaseRepository
                     $querySingleType->where('name', 'like', "%" . $options['keyword'] . "%");
                 });
                 $query->orWhereHas('employee', function($employeeQuery) use ($options) {
-                    $employeeQuery->where('fullname', 'like', "%" . $options['keyword']);
+                    $employeeQuery->where('fullname', 'like', "%" . $options['keyword'] . "%");
                 });
             });
         }
