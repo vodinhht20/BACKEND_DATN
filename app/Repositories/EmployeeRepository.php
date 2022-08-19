@@ -197,6 +197,11 @@ class EmployeeRepository extends BaseRepository
             $employee->where('position_id', $options['position_id']);
         }
 
+        if (isset($options['position_ids']) && is_array($options['position_ids']) && count($options['position_ids']) > 0) {
+            \Log::info($options['position_ids']);
+            $employee->whereIn('position_id', $options['position_ids']);
+        }
+
         if (isset($options['gender']) && $options['gender'] != '' ) {
             $employee->where('gender', $options['gender']);
         }

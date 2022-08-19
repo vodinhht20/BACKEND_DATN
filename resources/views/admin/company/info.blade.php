@@ -44,6 +44,7 @@
                 </ul>
             </div>
         </div>
+        @include('admin.layouts.messages')
         <div class="card-block table-border-style">
             <div class="table-responsive scrollbar-custom">
                 <table class="table table-hover">

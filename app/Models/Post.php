@@ -39,4 +39,9 @@ class Post extends Model
     {
         return $this->belongsTo(Branch::class);
     }
+
+    public function category()
+    {
+        return $this->belongsTo(PostCategory::class, 'category_id', 'id');
+    }
 }

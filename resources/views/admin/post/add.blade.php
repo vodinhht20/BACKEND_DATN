@@ -5,6 +5,12 @@
 @section('style-page')
     <!-- datepicker.css -->
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend') }}/css/addbanner.css">
+    <style>
+        .error {
+            color: rgb(245, 61, 61);
+            font-size: 13px;
+        }
+    </style>
 @endsection
 @section('content')
     <div class="">
@@ -14,7 +20,7 @@
             </div>
             @include('admin.layouts.messages')
             <div class="card-block">
-                <form method="POST" enctype="multipart/form-data" class="row">
+                <form method="POST" enctype="multipart/form-data" class="row" id="fom-create-post">
                     @csrf
                     <div class="form-group col-sm-12 col-md-6 col-lg-6">
                         <label>Tiêu đề</label>
@@ -42,7 +48,7 @@
                     </div>
                     <div class="form-group col-12">
                         <label>Nội dung</label>
-                        <textarea id="mytextarea" name="content">Hello, World!</textarea>
+                        <textarea id="mytextarea" name="content"></textarea>
                     </div>
                     <div class="form-group col-lg-12 text-center">
                         <button type="submit" class="btn btn-info waves-effect waves-light">Thêm post</button>
@@ -64,7 +70,21 @@
         ],
         toolbar: 'undo redo | formatpainter casechange blocks | bold italic backcolor | ' +
           'alignleft aligncenter alignright alignjustify | ' +
-          'bullist numlist checklist outdent indent | removeformat | a11ycheck code table help'
+          'bullist numlist checklist outdent indent | removeformat | a11ycheck code table help',
+        placeholder: 'Nhập nội dung ...'
       });
+
+    const objData = {
+        rules: {
+            title: "required",
+            category_id: "required",
+            branch_id: "required",
+        },
+        messages: {
+            name: `<span class="text-validate">Vui lòng nhập tiêu đề !</span>`,
+            regulation: `<span class="text-validate">Vui lòng chọn loại đơn !</span>`,
+        }
+    }
+    validateForm("#fom-create-post", objData);
 </script>
 @endsection

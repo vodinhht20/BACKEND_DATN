@@ -50,7 +50,7 @@
             @include('admin.checkin.checkinlist')
         </div>
         <div class="tab-pane card-block" :class="{ active: current_tab == 'timesheetPhone_tab'}">
-            @include('admin.checkin.mobilecheck')
+            @include('admin.checkin.wifilist')
         </div>
     </div>
     <div class="overlay-load" style="position: fixed;">

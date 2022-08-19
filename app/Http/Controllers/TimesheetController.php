@@ -52,7 +52,7 @@ class TimesheetController extends Controller
                 $departmentIds[] = $requestKey;
             }
         }
-        $positionIdsByDepartments = $this->positionRepo->query(["department_id" => $departmentIds])->pluck('id')->toArray();
+        $positionIdsByDepartments = $this->positionRepo->query(["department_ids" => $departmentIds])->pluck('id')->toArray();
         $positionIds = array_merge($positionIdsByDepartments, $positionIds);
         $inpMonth = $request->input('month', Carbon::now()->format("Y-m")) ?: Carbon::now()->format("Y-m");
         $monthYear = Carbon::createFromFormat("Y-m", $inpMonth);
@@ -84,7 +84,6 @@ class TimesheetController extends Controller
         $items = $items instanceof Collection ? $items : Collection::make($items);
         return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
     }
-
 
     public function exportIntoExcel(Request $request)
     {

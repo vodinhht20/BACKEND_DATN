@@ -198,7 +198,7 @@ class CompanyController extends Controller
         $company = Company::find($id);
         $company -> fill($request->all());
         $company -> save();
-        return redirect('company/info');
+        return redirect()->route('setting.company.info')->with("message.success", "Cập nhật thông tin công ty thành công !");
     }
 
     public function addBranchForm(){

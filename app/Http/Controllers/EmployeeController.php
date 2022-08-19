@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use \Illuminate\Support\Str;
 use App\Models\Position;
 use App\Repositories\DepartmentRepository;
+use App\Repositories\PositionRepository;
 use Google\Service\ServiceControl\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -18,7 +19,8 @@ class EmployeeController extends Controller
 {
     public function __construct(
         private EmployeeRepository $employeeRepo,
-        private DepartmentRepository $departmentRepo
+        private DepartmentRepository $departmentRepo,
+        private PositionRepository $positionRepo
     )
     {
         //
@@ -26,24 +28,65 @@ class EmployeeController extends Controller
 
     public function index(Request $request)
     {
-        $take = 2;
+        $take = 10;
+        $requestDepartments = explode(",", $request->departments);
+        $departmentIds = [];
+        $positionIds = [];
+        $requestDepartments = array_filter($requestDepartments, function($e) {
+            return (($e != "") || ($e != null));
+        });
+        foreach ($requestDepartments as $requestKey) {
+            $regex = "/^position_+[0-9]*$/"; // định dạng phù hơp:  position_12
+            if (preg_match($regex, $requestKey)) {
+                $positionIds[] = trim($requestKey, "position_");
+            } else {
+                $departmentIds[] = $requestKey;
+            }
+        }
+        $positionIdsByDepartments = $this->positionRepo->query(["department_ids" => $departmentIds])->pluck('id')->toArray();
+        $positionIds = array_merge($positionIdsByDepartments, $positionIds);
         $options = [...$request->all(),
-            "with" => ['position.department']
+            "with" => ['position.department'],
+            "position_ids" => $positionIds
         ];
+        if ($request->departments && count($positionIds) == 0) {
+            $options['position_ids'] = array(-9999);
+        }
         $employees = $this->employeeRepo->paginate($options, $take)->appends($request->query());
         $branchs = Branch::all();
         $departments = $this->departmentRepo->formatVueSelect();
-        return view('admin.user.list', compact('employees', 'branchs', 'departments'));
+        return view('admin.user.list', compact('employees', 'branchs', 'departments', 'requestDepartments'));
     }
 
     public function filter(Request $request)
     {
-        $take = 2;
+        $take = 10;
         $components = parse_url($request->params);
         parse_str($components['query'], $results);
+
+        $requestDepartments = explode(",", $results['departments']);
+        $departmentIds = [];
+        $positionIds = [];
+        $requestDepartments = array_filter($requestDepartments, function($e) {
+            return (($e != "") || ($e != null));
+        });
+        foreach ($requestDepartments as $requestKey) {
+            $regex = "/^position_+[0-9]*$/"; // định dạng phù hơp:  position_12
+            if (preg_match($regex, $requestKey)) {
+                $positionIds[] = trim($requestKey, "position_");
+            } else {
+                $departmentIds[] = $requestKey;
+            }
+        }
+        $positionIdsByDepartments = $this->positionRepo->query(["department_ids" => $departmentIds])->pluck('id')->toArray();
+        $positionIds = array_merge($positionIdsByDepartments, $positionIds);
         $options = [...$results,
-            "with" => ['position.department']
+            "with" => ['position.department'],
+            "position_ids" => $positionIds
         ];
+        if ($results['departments'] && count($positionIds) == 0) {
+            $options['position_ids'] = array(-9999);
+        }
         $employees = $this->employeeRepo->paginate($options, $take)->withPath('/admin/employee')->appends($results);
         $dataView = view('admin.user._partials.base_table', compact('employees'))->render();
         return response()->json(["data" => $dataView]);
