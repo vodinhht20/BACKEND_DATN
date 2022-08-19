@@ -64,7 +64,7 @@ class EmployeeController extends Controller
         $components = parse_url($request->params);
         parse_str($components['query'], $results);
 
-        $requestDepartments = explode(",", $results['departments']);
+        $requestDepartments = explode(",", $results['departments'] ?? '');
         $departmentIds = [];
         $positionIds = [];
         $requestDepartments = array_filter($requestDepartments, function($e) {
@@ -84,7 +84,7 @@ class EmployeeController extends Controller
             "with" => ['position.department'],
             "position_ids" => $positionIds
         ];
-        if ($results['departments'] && count($positionIds) == 0) {
+        if (isset($results['departments']) && count($positionIds) == 0) {
             $options['position_ids'] = array(-9999);
         }
         $employees = $this->employeeRepo->paginate($options, $take)->withPath('/admin/employee')->appends($results);
