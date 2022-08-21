@@ -35,9 +35,11 @@ class TimekeepingController extends Controller
         $validator = Validator::make($request->all(), [
             'latitude' => 'required',
             'longitude' => 'required',
+            'device_id' => 'required',
         ], [
-            'latitude.required' => 'Vĩ độ không được để trống',
-            'longitude.required' => 'Kinh độ không được để trống',
+            'latitude.required' => 'Không thể xác định được vị trí, Vui lòng thử lại !',
+            'longitude.required' => 'Không thể xác định được vị trí, Vui lòng thử lại !',
+            'device_id.required' => 'Không thể xác định được mã máy. Vui lòng thử lại !',
         ]);
 
         if ($validator->fails()) {
@@ -59,7 +61,8 @@ class TimekeepingController extends Controller
             'date' => $currentDate->format('Y-m-d'),
             'employee_id' => $currentAdminId,
             'checkin_at' => $currentDate,
-            'source' => $request->header('User-Agent')
+            'source' => $request->header('User-Agent'),
+            'device_id' => $request->device_id
         ];
 
         $attendanceSetting = json_decode(Redis::get('attendance_setting') ?? '[]');

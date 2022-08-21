@@ -60,7 +60,10 @@ Route::middleware('jwt.auth')->group(function () {
 
     //setting
     Route::get('banner', [HomeController::class, 'banner']);
-    Route::get('timekeep-ranking', [HomeController::class, 'ranking']);
+
+    Route::get('notable-news', [HomeController::class, 'notableNews']);
+
+    Route::get('birth-day', [HomeController::class, 'birthDay']);
     //setting
 
     Route::prefix('checkin')->group(function () {

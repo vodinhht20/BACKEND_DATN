@@ -3,8 +3,10 @@
 namespace App\Repositories;
 
 use App\Models\Branch;
+use App\Models\Employee;
 use App\Models\Request;
 use App\Repositories\BaseRepository;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -268,5 +270,54 @@ class EmployeeRepository extends BaseRepository
             });
         })->get();
         return $employees;
+    }
+
+    /**
+     * Hàm lấy ra danh sách nhân viên mới trong tháng
+     *
+     * @param Employee $employee
+     * @return void
+     */
+    public function getMemberOnboard(Employee $employee)
+    {
+        $startOfMonth = Carbon::now()->startOfMonth();
+        $employees = $this->model
+            ->select('id', 'avatar', 'fullname', 'position_id', 'type_avatar')
+            ->where("branch_id", $employee->branch_id)
+            ->with(["position" => function($query) {
+                $query->select('id', 'name');
+            }])
+            ->where("status", config('employee.status.active'))
+            ->where("created_at", ">=", $startOfMonth)
+            ->get();
+
+        $employees->map(function ($employee) {
+            $employee->avatar = $employee->getAvatar();
+            return $employee;
+        });
+        return $employees->toArray();
+    }
+
+    public function getHappyBirthDay(Employee $employee)
+    {
+        $currentDate = Carbon::now()->format("m-d");
+        $currentDateTime = Carbon::now()->endOfDay();
+        $employees = $this->model
+            ->select('id', 'avatar', 'fullname', 'position_id', 'type_avatar', 'birth_day')
+            ->where("branch_id", $employee->branch_id)
+            ->with(["position" => function($query) {
+                $query->select('id', 'name');
+            }])
+            ->where("status", config('employee.status.active'))
+            ->whereRaw('DATE_FORMAT(birth_day, "%m-%d") = "' . $currentDate . '"')
+            ->get();
+
+        $employees->map(function ($employee) use ($currentDateTime) {
+            $birthDay = Carbon::createFromFormat("Y-m-d", $employee->birth_day)->startOfDay();
+            $employee->age = $birthDay->diffInYears($currentDateTime);
+            $employee->avatar = $employee->getAvatar();
+            return $employee;
+        });
+        return $employees->toArray();
     }
 }

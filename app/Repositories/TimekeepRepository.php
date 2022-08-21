@@ -346,6 +346,42 @@ class TimekeepRepository extends BaseRepository
     }
 
     /**
+     * Hàm xếp hạng danh sách chuyên cần trong tháng
+     *
+     * @param Employee $employee
+     * @return array
+     */
+    public function rankDiligenceByEmployee(Employee $employee, $take = 10): array
+    {
+        $startOfMonth = Carbon::now()->startOfMonth()->format('Y-m-d');
+        $employeeIds = Employee::where('branch_id', $employee->branch_id)->pluck('id')->toArray();
+        $timekeepRank = $this->model
+            ->selectRaw('employee_id, SUM( worktime ) as "sum_worktime", SUM(minute_late + minute_early) as "sum_minute", ROW_NUMBER() OVER(ORDER BY SUM( worktime ) desc, SUM(minute_late + minute_early) asc) as "rank"')
+            ->with([
+                'employee' => function ($query) {
+                    $query->select('id', 'avatar', 'fullname', 'position_id', 'type_avatar');
+                },
+                'employee.position' => function ($query) {
+                    $query->select('id', 'name');
+                }
+            ])
+            ->whereIn('employee_id', $employeeIds)
+            ->where("date", ">=", $startOfMonth)
+            ->take($take)
+            ->groupBy('employee_id')
+            ->get();
+
+            $employees = $timekeepRank->map(function ($timekeep, $index) {
+            if ($timekeep->employee) {
+                $timekeep->employee->rank = $index + 1;
+                $timekeep->employee->avatar = $timekeep->employee->getAvatar();
+            }
+            return $timekeep->employee;
+        });
+        return $employees->toArray();
+    }
+
+    /**
      * Hàm kiểm tra xem ngày hôm đấy đã checkin hay Chưa
      *
      * @param string $date ('Y-m-d')
