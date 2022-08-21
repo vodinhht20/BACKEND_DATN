@@ -7,7 +7,6 @@
     <title>Preview</title>
 </head>
 <body>
-    <h3>Xin chao các bạn</h3>
     {!! $content !!}
 </body>
 </html>

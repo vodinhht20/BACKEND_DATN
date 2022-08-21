@@ -41,6 +41,7 @@
                     <div class="form-group col-sm-12 col-md-6 col-lg-6">
                         <label>Áp dụng cho chi nhánh</label>
                         <select class="form-control" name="branch_id" id="">
+                            <option value="">-- Tất cả --</option>
                             @foreach($branchs as $branch)
                                 <option value="{{ $branch->id }}" @if(old('branch_id', $post->branch_id)) selected="selected" @endif>{{ $branch->name }}</option>
                             @endforeach
@@ -51,7 +52,7 @@
                         <textarea id="mytextarea" name="content">{{ old('content', $post->content) }}</textarea>
                     </div>
                     <div class="form-group col-lg-12 text-center">
-                        <button type="submit" class="btn btn-info waves-effect waves-light">Thêm post</button>
+                        <button type="submit" class="btn btn-primary waves-effect">Cập nhật</button>
                     </div>
                 </form>
             </div>
@@ -74,14 +75,19 @@
         placeholder: 'Nhập nội dung ...'
       });
 
-    const objData = {
+      const objData = {
         rules: {
-            title: "required",
-            category_id: "required",
-            branch_id: "required",
+            title: {
+                required: true,
+                maxlength: 255
+            },
+            category_id: "required"
         },
         messages: {
-            name: `<span class="text-validate">Vui lòng nhập tiêu đề !</span>`,
+            title: {
+                required: `<span class="text-validate">Vui lòng nhập tiêu đề !</span>`,
+                maxlength: `<span class="text-validate">Tiêu đề không quá 255 ký tự !</span>`
+            },
             regulation: `<span class="text-validate">Vui lòng chọn loại đơn !</span>`,
         }
     }

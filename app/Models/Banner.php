@@ -27,14 +27,6 @@ class Banner extends Model
         return $this->image;
     }
 
-    public function checkLink()
-    {
-        if ($this->type == 0) {
-            return 'Link Storage';
-        }
-        return 'Link Online';
-    }
-
     public function status()
     {
         if ($this->from_at > date('Y-m-d')) {

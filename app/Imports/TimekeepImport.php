@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
@@ -18,21 +19,29 @@ class TimekeepImport implements ToModel, WithHeadingRow
 
     public function model(array $row)
     {
+
         if (isset($row['ma_nhan_vien'])) {
             $validator = Validator::make($row, [
                 'ma_nhan_vien' => 'required',
-                'ngay_*' => 'required'
-
             ], [
                 'ma_nhan_vien.required' => 'Mã nhân viên đang trống',
-                'ngay_*.required' => 'Số công bị thiếu'
             ]);
 
             if ($validator->fails()) {
                 $this->validateFile = $validator->messages()->first();
                 return;
             }
-            $this->dataImport[] = $row;
+            $newRow = [];
+            foreach ($row as $key => $rowItem) {
+                if ($key == 'ma_nhan_vien') {
+                    $newRow[$key] = $rowItem;
+                    continue;
+                }
+                $keyRoot = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($key);
+                $keyFormat = Carbon::instance($keyRoot)->format("Y-m-d");
+                $newRow[$keyFormat] = $rowItem;
+            }
+            $this->dataImport[] = $newRow;
         }
     }
 

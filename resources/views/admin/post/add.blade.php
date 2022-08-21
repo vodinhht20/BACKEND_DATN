@@ -28,7 +28,7 @@
                     </div>
                     <div class="form-group col-sm-12 col-md-6 col-lg-6">
                         <label>Hình ảnh</label>
-                        <input type="file" name="images" class="form-control">
+                        <input type="file" name="images" class="form-control" accept=".jpg, .jpeg, .png">
                     </div>
                     <div class="form-group col-sm-12 col-md-6 col-lg-6">
                         <label>Danh mục bài viết</label>
@@ -41,6 +41,7 @@
                     <div class="form-group col-sm-12 col-md-6 col-lg-6">
                         <label>Áp dụng cho chi nhánh</label>
                         <select class="form-control" name="branch_id" id="">
+                            <option value="">-- Tất cả --</option>
                             @foreach($branchs as $branch)
                                 <option value="{{ $branch->id }}">{{ $branch->name }}</option>
                             @endforeach
@@ -76,12 +77,17 @@
 
     const objData = {
         rules: {
-            title: "required",
-            category_id: "required",
-            branch_id: "required",
+            title: {
+                required: true,
+                maxlength: 255
+            },
+            category_id: "required"
         },
         messages: {
-            name: `<span class="text-validate">Vui lòng nhập tiêu đề !</span>`,
+            title: {
+                required: `<span class="text-validate">Vui lòng nhập tiêu đề !</span>`,
+                maxlength: `<span class="text-validate">Tiêu đề không quá 255 ký tự !</span>`
+            },
             regulation: `<span class="text-validate">Vui lòng chọn loại đơn !</span>`,
         }
     }

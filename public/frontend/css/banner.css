@@ -1,7 +1,8 @@
 .img-banner{
-    max-width: 300px;
+    max-width: 200px;
     height: 100px;
     object-fit: cover;
+    border-radius: 10px;
 }
 @media(min-width: 1200px){
     .banner-info .card{
