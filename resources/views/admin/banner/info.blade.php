@@ -11,7 +11,7 @@
     <div class="banner-info">
         <div class="card">
             <div class="card-header">
-                <h5>Banner</h5>
+                <h5>Danh sách banner</h5>
                 <div class="card-header-right">
                     <ul class="list-unstyled card-option">
                         <li>

@@ -411,11 +411,3 @@ class EmployeeController extends Controller
         return substr($path, strlen('public/'));
     }
 }
-
-
-// Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($birthday))
-//                 ->toDateString();
-
-//         return Carbon::parse($birthday)->format('y-m-d');
-
-//         slide 5 - 7p

@@ -174,7 +174,6 @@ class TimesheetController extends Controller
         $employees = $this->employeeRepo->query(["employee_codes" => $employeeCodes])
             ->select("id", "employee_code")
             ->get()->keyBy("employee_code");
-        $regex = "/^ngay_+[0-9]*$/"; // định dạng phù hơp:  ngay_12052022
         $totalRecord = count($dataImports);
         $recordFailed = [];
         $recordSusscess = [];
@@ -184,34 +183,35 @@ class TimesheetController extends Controller
                 DB::beginTransaction();
                 try {
                     foreach ($data as $key => $item) {
-                        if (preg_match($regex, $key)) {
-                            $formatDate =  ltrim($key, "ngay_");
-                            $dateFormat = Carbon::createFromFormat("dmY", $formatDate)->format("Y-m-d");
-                            $timekeep = $timekeeps->where("employee.employee_code", $data['ma_nhan_vien'])
-                                ->where("date", $dateFormat)
-                                ->first();
-                            if (!($item > 0)) {
-                                $recordSusscess[$data['ma_nhan_vien']] = $data['ma_nhan_vien'];
-                                continue;
+                        try {
+                            $dateFormat = Carbon::createFromFormat("Y-m-d", $key);
+                        } catch (\Exception $ex) {
+                            continue;
+                        }
+                        $timekeep = $timekeeps->where("employee.employee_code", $data['ma_nhan_vien'])
+                            ->where("date", $dateFormat)
+                            ->first();
+                        if (!($item > 0)) {
+                            $recordSusscess[$data['ma_nhan_vien']] = $data['ma_nhan_vien'];
+                            continue;
+                        }
+                        if ($timekeep) {
+                            // Nếu dữ liệu nó update lớn hơn dữ liệu hiện tại thì update
+                            if ($item > $timekeep->worktime ) {
+                                Log::info($timekeep->worktime . " -> " . $item);
+                                $timekeep->worktime = $item;
+                                $timekeep->type = config("timekeep.type.import");
+                                Log::info($timekeep->save());
                             }
-                            if ($timekeep) {
-                                // Nếu dữ liệu nó update lớn hơn dữ liệu hiện tại thì update
-                                if ($item > $timekeep->worktime ) {
-                                    Log::info($timekeep->worktime . " -> " . $item);
-                                    $timekeep->worktime = $item;
-                                    $timekeep->type = config("timekeep.type.import");
-                                    Log::info($timekeep->save());
-                                }
-                                $recordSusscess[$data['ma_nhan_vien']] = $data['ma_nhan_vien'];
-                            } else {
-                                $newTimeSheet = new Timekeep();
-                                $newTimeSheet->worktime = $item;
-                                $newTimeSheet->date = $dateFormat;
-                                $newTimeSheet->employee_id = $employees[$data['ma_nhan_vien']]->id;
-                                $newTimeSheet->type = config("timekeep.type.import");
-                                $newTimeSheet->save();
-                                $recordSusscess[$data['ma_nhan_vien']] = $data['ma_nhan_vien'];
-                            }
+                            $recordSusscess[$data['ma_nhan_vien']] = $data['ma_nhan_vien'];
+                        } else {
+                            $newTimeSheet = new Timekeep();
+                            $newTimeSheet->worktime = $item;
+                            $newTimeSheet->date = $dateFormat;
+                            $newTimeSheet->employee_id = $employees[$data['ma_nhan_vien']]->id;
+                            $newTimeSheet->type = config("timekeep.type.import");
+                            $newTimeSheet->save();
+                            $recordSusscess[$data['ma_nhan_vien']] = $data['ma_nhan_vien'];
                         }
                     }
                     DB::commit();
@@ -282,30 +282,30 @@ class TimesheetController extends Controller
         $employees = $this->employeeRepo->query(["employee_codes" => $employeeCodes])
             ->select("id", "employee_code")
             ->get()->keyBy("employee_code");
-        $regex = "/^ngay_+[0-9]*$/"; // định dạng phù hơp:  ngay_12052022
         $dataFomart = [];
         $recordNotExist = [];
         foreach ($dataImports as $data) {
             if (isset($employees[$data['ma_nhan_vien']])) {
                 try {
                     foreach ($data as $key => $item) {
-                        if (preg_match($regex, $key)) {
-                            $formatDate =  ltrim($key, "ngay_");
-                            $dateFormat = Carbon::createFromFormat("dmY", $formatDate);
-                            $timekeep = $timekeeps->where("employee.employee_code", $data['ma_nhan_vien'])
-                                ->where("date", $dateFormat->format("Y-m-d"))
-                                ->first();
-                            if ($timekeep) {
-                                $dataFomart[$data['ma_nhan_vien']][$dateFormat->format("d-m-Y")] = [
-                                    "root" => $timekeep->worktime,
-                                    "new" => $item
-                                ];
-                            } else {
-                                $dataFomart[$data['ma_nhan_vien']][$dateFormat->format("d-m-Y")] = [
-                                    "root" => 0,
-                                    "new" => $item
-                                ];
-                            }
+                        try {
+                            $dateFormat = Carbon::createFromFormat("Y-m-d", $key);
+                        } catch (\Exception $ex) {
+                            continue;
+                        }
+                        $timekeep = $timekeeps->where("employee.employee_code", $data['ma_nhan_vien'])
+                            ->where("date", $dateFormat->format("Y-m-d"))
+                            ->first();
+                        if ($timekeep) {
+                            $dataFomart[$data['ma_nhan_vien']][$dateFormat->format("d-m-Y")] = [
+                                "root" => $timekeep->worktime,
+                                "new" => $item
+                            ];
+                        } else {
+                            $dataFomart[$data['ma_nhan_vien']][$dateFormat->format("d-m-Y")] = [
+                                "root" => 0,
+                                "new" => $item
+                            ];
                         }
                     }
                 } catch (\Exception $e) {
