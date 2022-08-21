@@ -27,7 +27,7 @@ class AuthController extends Controller
     public function login(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'g-recaptcha-response' => ['required', new ReCaptcha],
+            // 'g-recaptcha-response' => ['required', new ReCaptcha],
             'email' => 'required',
             'password' => 'required',
         ], [

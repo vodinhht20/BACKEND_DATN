@@ -13,6 +13,8 @@ use App\Listeners\PushNotificaion;
 use App\Listeners\SendEmailVerifyToken;
 use App\Listeners\WirteTimekeepLog;
 use App\Events\HandleCreateRequest;
+use App\Listeners\CheckHackCheckin;
+
 class EventServiceProvider extends ServiceProvider
 {
     /**
@@ -31,7 +33,8 @@ class EventServiceProvider extends ServiceProvider
 
         HandleCheckIn::class => [
             WirteTimekeepLog::class,
-            PushDataRakingRealtime::class
+            PushDataRakingRealtime::class,
+            CheckHackCheckin::class
         ],
 
         HandleCreateRequest::class => [
