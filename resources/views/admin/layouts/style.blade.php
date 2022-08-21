@@ -22,3 +22,9 @@
 <!-- style custom -->
 <link rel="stylesheet" type="text/css" href="{{asset('frontend')}}/css/admin.css?v1.0.2">
 <link rel="stylesheet" type="text/css" href="{{asset('frontend')}}/css/loader.css">
+<style>
+#chartdiv {
+    width: 100%;
+    height: 500px;
+}
+</style>

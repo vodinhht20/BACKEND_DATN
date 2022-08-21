@@ -9,4 +9,8 @@ class BranchRepository extends BaseRepository
     {
         return \App\Models\Branch::class;
     }
+
+    public function getEmployeeOfBranch(){
+        return $this->model->withCount('employee')->get();
+    }
 }
