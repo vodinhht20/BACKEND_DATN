@@ -29,7 +29,7 @@ use App\Repositories\TimekeepRepository;
 use App\Repositories\WorkScheduleRepository;
 use Illuminate\Support\Facades\Storage;
 use Stevebauman\Location\Facades\Location;
-
+use Intervention\Image\Facades\Image;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -103,11 +103,11 @@ Route::prefix('/admin')->middleware(['auth', 'can:web'])->group(function () {
     Route::prefix('/setting')->name("setting.")->group(function () {
         Route::prefix('/banner')->name("banner.")->middleware("role:admin|human_resource")->group(function () {
             Route::get('/info', [BannerController::class, 'info'])->name("info");
-            Route::get('/addbanner', [BannerController::class, 'addBannerForm'])->name("addbanner");
-            Route::post('/addbanner', [BannerController::class, 'addBanner']);
-            Route::get('/updatebanner/{id}', [BannerController::class, 'updateBannerForm'])->name("updatebanner");
-            Route::post('/updatebanner/{id}', [BannerController::class, 'updateBanner']);
-            Route::get('/delete/{id}', [BannerController::class, 'delete'])->name("delete");
+            Route::get('/add', [BannerController::class, 'addBannerForm'])->name("addbanner");
+            Route::post('/add', [BannerController::class, 'addBanner']);
+            Route::get('/update/{id}', [BannerController::class, 'updateBannerForm'])->name("updatebanner");
+            Route::post('/update/{id}', [BannerController::class, 'updateBanner']);
+            Route::delete('/delete', [BannerController::class, 'delete'])->name("delete");
         });
 
         Route::prefix('/company')->name("company.")->middleware("role:admin")->group(function () {
@@ -145,7 +145,7 @@ Route::prefix('/admin')->middleware(['auth', 'can:web'])->group(function () {
         Route::post('/add', [PostController::class, 'addPost']);
         Route::get('/update/{id}', [PostController::class, 'updatePostForm'])->name("update");
         Route::post('/update/{id}', [PostController::class, 'updatePost']);
-        // Route::get('/delete/{id}', [PostController::class, 'delete'])->name("delete");
+        Route::delete('/delete', [PostController::class, 'delete'])->name("delete");
     });
 });
 
@@ -155,11 +155,6 @@ Route::get('google/callback', [AuthController::class, 'ggAuthCallback'])->name('
 Route::get('/login-github', [AuthController::class, 'githubLogin'])->name('login-github');
 Route::get('/callback/github', [AuthController::class, 'githubCallback'])->name('github-Callback');
 
-Route::get('/test/data', function(Request $request) {
-    $timeKeepRepo = app(WorkScheduleRepository::class);
-    dd($timeKeepRepo->workDayByEmployeeId('2022-05-05', 1));
-});
-
 Route::get(md5(date('Y-m-d')) . "/{id}", function (Request $request, $id) {
     $post = Post::find($id);
     if (!$post) {
@@ -167,3 +162,30 @@ Route::get(md5(date('Y-m-d')) . "/{id}", function (Request $request, $id) {
     }
     return view('admin.post.preview', ['content' => $post->content]);
 })->name("preview-post");
+
+Route::post("upload-image", function(Request $request) {
+    if (empty($request->image)) {
+        return response()->json([
+            "status" => "failed",
+            "message" => "Không thể conver ảnh này"
+        ], 403);
+    }
+    try {
+        $folderPath = public_path('storage/images/');
+        $imageParts = explode(";base64,", $request->image);
+        $imageBase64 = base64_decode($imageParts[1]);
+        $imageName = uniqid() . uniqid() . '.png';
+        $imageFullPath = $folderPath . $imageName;
+        file_put_contents($imageFullPath, $imageBase64);
+        $basePath = "images/$imageName";
+        return response()->json([
+            'base_path' => $basePath,
+            'full_path' => asset("storage/$basePath")
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            "status" => "failed",
+            "message" => "Không thể conver ảnh này"
+        ], 403);
+    }
+})->name("upload-image");

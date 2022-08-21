@@ -16,6 +16,7 @@ class Post extends Model
         'category_id',
         'branch_id',
         'employee_id',
+        'slug'
     ];
 
     public function postCategory(){

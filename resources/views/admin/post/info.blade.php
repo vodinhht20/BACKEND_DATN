@@ -4,7 +4,7 @@
 @endsection
 @section('style-page')
     <!-- datepicker.css -->
-    <link rel="stylesheet" type="text/css" href="{{ asset('frontend') }}/css/banner.css">
+    <link rel="stylesheet" type="text/css" href="{{ asset('frontend') }}/css/banner.css?v=1.0.0">
 @endsection
 
 @section('content')
@@ -12,6 +12,7 @@
         <div class="card">
             <div class="card-header">
                 <h5>Blog</h5>
+                <p>Danh sách bài viết</p>
                 <div class="card-header-right">
                     <ul class="list-unstyled card-option">
                         <li>
@@ -31,7 +32,7 @@
                                 <th>Image</th>
                                 <th>Tin tức</th>
                                 <th>Người viết</th>
-                                <th>Chi nhánh</th>
+                                <th>Chi nhánh áp dụng</th>
                                 <th>Chức năng</th>
                             </tr>
                         </thead>
@@ -47,17 +48,21 @@
                                     <td class="ellipsis">
                                         <label for="" class="label label-primary" onclick="preview({{ $post->id }})" style="cursor: pointer;">Nhấn vào đây để xem</label>
                                     </td>
-                                    <td>{{$post->employee->fullname ?? "N/A"}}</td>
-                                    <td>{{$post->branch->name ?? "N/A"}}</td>
+                                    <td> <label for="" class="label label-inverse-primary">{{$post->employee->fullname ?? "N/A"}}</label></td>
+                                    <td>{{$post?->branch?->name ?: "Áp dụng cho tất cả"}}</td>
                                     <td class="box-actions">
                                         <a href="{{route("post.update", $post->id)}}">
                                             <i style="float: right" class="ti-pencil icon-edit-primary"></i>
                                         </a>
+                                        <div style="cursor: pointer;" class="handle-remove" data-id="{{ $post->id }}"><i class="ti-trash icon-remove-danger"></i></div>
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
+                </div>
+                <div style="float: right;" class="pagination_cutomize">
+                    {{ $posts->links() }}
                 </div>
             </div>
         </div>
@@ -93,5 +98,47 @@
             $('#content-modal').attr('src', linkPreview);
             $('#modal-preview-post').modal('show');
         }
+
+        $(".handle-remove").on('click', function () {
+            Swal.fire({
+                    title: 'Hành động nguy hiểm !',
+                    text: "Bạn có chắc chắn chắn muốn xóa tin này không !",
+                    icon: 'warning',
+                    heightAuto: true,
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Xác nhận'
+                })
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        let data = {
+                            id: $(this).attr("data-id")
+                        }
+                        $('.overlay-load').css('display', 'flex');
+                        axios.delete("{{route('post.delete')}}", { data })
+                            .then(({data}) => {
+                                $('.overlay-load').css('display', 'none');
+                                Swal.fire(
+                                    'Thành công',
+                                    'Nhân viên này đã được xóa',
+                                    'success'
+                                ). then(() => {
+                                    $('.overlay-load').css('display', 'flex');
+                                    location.reload();
+                                })
+
+                            })
+                            .catch((error) => {
+                                    $('.overlay-load').css('display', 'none');
+                                    Swal.fire(
+                                    'Thất bại',
+                                    error.response.data.message,
+                                    'error'
+                                )
+                            })
+                    }
+                })
+        })
     </script>
 @endsection
