@@ -8,8 +8,7 @@
         <div class="row align-items-center">
             <div class="col-md-8">
                 <div class="page-header-title">
-                    <h5 class="m-b-10">Dashboard</h5>
-                    <p class="m-b-0">Welcome to Mega Able</p>
+                    <h5 class="m-b-10">Thống kê</h5>
                 </div>
             </div>
             <div class="col-md-4">
@@ -27,24 +26,25 @@
 @endsection
 @section('content')
 <div class="row">
+    @hasanyrole("admin|human_resource")
     <!-- task, page, download counter  start -->
-    <div class="col-xl-3 col-md-6">
+    <div class="col-xl-4 col-md-6">
         <div class="card">
             <div class="card-block">
                 <div class="row align-items-center">
                     <div class="col-8">
-                        <h4 class="text-c-purple">00</h4>
-                        <h6 class="text-muted m-b-0">Sản phẩm</h6>
+                        <h4 class="text-c-purple">{{@$countEmployee}}</h4>
+                        <h6 class="text-muted m-b-0">Nhân sự</h6>
                     </div>
                     <div class="col-4 text-right">
-                        <i class="fa fa-bar-chart f-28"></i>
+                        <i class="fa fa-user f-28"></i>
                     </div>
                 </div>
             </div>
             <div class="card-footer bg-c-purple">
                 <div class="row align-items-center">
                     <div class="col-9">
-                        <p class="text-white m-b-0">Tổng số lượng sản phẩm</p>
+                        <p class="text-white m-b-0">Tổng số nhân sự</p>
                     </div>
                     <div class="col-3 text-right">
                         <i class="fa fa-line-chart text-white f-16"></i>
@@ -54,13 +54,13 @@
             </div>
         </div>
     </div>
-    <div class="col-xl-3 col-md-6">
+    <div class="col-xl-4 col-md-6">
         <div class="card">
             <div class="card-block">
                 <div class="row align-items-center">
                     <div class="col-8">
-                        <h4 class="text-c-green">00</h4>
-                        <h6 class="text-muted m-b-0">Sản phẩm đang bán</h6>
+                        <h4 class="text-c-green">{{@$countBranch}}</h4>
+                        <h6 class="text-muted m-b-0">Chi nhánh</h6>
                     </div>
                     <div class="col-4 text-right">
                         <i class="fa fa-file-text-o f-28"></i>
@@ -70,7 +70,7 @@
             <div class="card-footer bg-c-green">
                 <div class="row align-items-center">
                     <div class="col-9">
-                        <p class="text-white m-b-0">Tổng số mặt hàng đang được bán</p>
+                        <p class="text-white m-b-0">Tổng số chi nhánh</p>
                     </div>
                     <div class="col-3 text-right">
                         <i class="fa fa-line-chart text-white f-16"></i>
@@ -79,13 +79,13 @@
             </div>
         </div>
     </div>
-    <div class="col-xl-3 col-md-6">
+    <div class="col-xl-4 col-md-6">
         <div class="card">
             <div class="card-block">
                 <div class="row align-items-center">
                     <div class="col-8">
-                        <h4 class="text-c-red">00</h4>
-                        <h6 class="text-muted m-b-0">Thùng rác</h6>
+                        <h4 class="text-c-red">{{@$countDepartment}}</h4>
+                        <h6 class="text-muted m-b-0">Phòng ban</h6>
                     </div>
                     <div class="col-4 text-right">
                         <i class="fa fa-calendar-check-o f-28"></i>
@@ -95,32 +95,7 @@
             <div class="card-footer bg-c-red">
                 <div class="row align-items-center">
                     <div class="col-9">
-                        <p class="text-white m-b-0">Các sản phẩm đã xóa</p>
-                    </div>
-                    <div class="col-3 text-right">
-                        <i class="fa fa-line-chart text-white f-16"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-3 col-md-6">
-        <div class="card">
-            <div class="card-block">
-                <div class="row align-items-center">
-                    <div class="col-8">
-                        <h4 class="text-c-blue">00</h4>
-                        <h6 class="text-muted m-b-0">Thành viên</h6>
-                    </div>
-                    <div class="col-4 text-right">
-                        <i class="fa fa-hand-o-down f-28"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="card-footer bg-c-blue">
-                <div class="row align-items-center">
-                    <div class="col-9">
-                        <p class="text-white m-b-0">Tổng số thành viên</p>
+                        <p class="text-white m-b-0">Số lượng phòng ban</p>
                     </div>
                     <div class="col-3 text-right">
                         <i class="fa fa-line-chart text-white f-16"></i>
@@ -132,317 +107,228 @@
     <!-- task, page, download counter  end -->
 
     <!--  sale analytics start -->
-    <div class="col-xl-8 col-md-12">
+    <div class="col-xl-12 col-md-12">
         <div class="card">
             <div class="card-header">
-                <h5>Sales Analytics</h5>
-                <span class="text-muted">Get 15% Off on <a
-                        href="https://www.amcharts.com/"
-                        target="_blank">amCharts</a> licences. Use code
-                    "codedthemes" and get the discount.</span>
-                <div class="card-header-right">
-                    <ul class="list-unstyled card-option">
-                        <li><i class="fa fa fa-wrench open-card-option"></i>
-                        </li>
-                        <li><i class="fa fa-window-maximize full-card"></i></li>
-                        <li><i class="fa fa-minus minimize-card"></i></li>
-                        <li><i class="fa fa-refresh reload-card"></i></li>
-                        <li><i class="fa fa-trash close-card"></i></li>
-                    </ul>
-                </div>
+                <h5>Thống kê nhân sự theo chi nhánh</h5>
             </div>
             <div class="card-block">
-                <div id="sales-analytics" style="height: 400px;"></div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-4 col-md-12">
-        <div class="card">
-            <div class="card-block">
-                <div class="row">
-                    <div class="col">
-                        <h4>$256.23</h4>
-                        <p class="text-muted">This Month</p>
-                    </div>
-                    <div class="col-auto">
-                        <label class="label label-success">+20%</label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-8">
-                        <canvas id="this-month" style="height: 150px;"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="card quater-card">
-            <div class="card-block">
-                <h6 class="text-muted m-b-15">This Quarter</h6>
-                <h4>$3,9452.50</h4>
-                <p class="text-muted">$3,9452.50</p>
-                <h5>87</h5>
-                <p class="text-muted">Online Revenue<span
-                        class="f-right">80%</span></p>
-                <div class="progress">
-                    <div class="progress-bar bg-c-blue" style="width: 80%">
-                    </div>
-                </div>
-                <h5 class="m-t-15">68</h5>
-                <p class="text-muted">Offline Revenue<span
-                        class="f-right">50%</span></p>
-                <div class="progress">
-                    <div class="progress-bar bg-c-green" style="width: 50%">
-                    </div>
-                </div>
+                <div id="chartdiv"></div>
             </div>
         </div>
     </div>
     <!--  sale analytics end -->
-
-    <!--  project and team member start -->
-    <div class="col-xl-8 col-md-12">
-        <div class="card table-card">
-            <div class="card-header">
-                <h5>Projects</h5>
-                <div class="card-header-right">
-                    <ul class="list-unstyled card-option">
-                        <li><i class="fa fa fa-wrench open-card-option"></i>
-                        </li>
-                        <li><i class="fa fa-window-maximize full-card"></i></li>
-                        <li><i class="fa fa-minus minimize-card"></i></li>
-                        <li><i class="fa fa-refresh reload-card"></i></li>
-                        <li><i class="fa fa-trash close-card"></i></li>
-                    </ul>
-                </div>
-            </div>
+    @else
+    <div class="col-xl-12 col-md-12">
+        <div class="card">
             <div class="card-block">
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>
-                                    <div class="chk-option">
-                                        <div
-                                            class="checkbox-fade fade-in-primary">
-                                            <label class="check-task">
-                                                <input type="checkbox" value="">
-                                                <span class="cr">
-                                                    <i
-                                                        class="cr-icon fa fa-check txt-default"></i>
-                                                </span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    Assigned
-                                </th>
-                                <th>Name</th>
-                                <th>Due Date</th>
-                                <th class="text-right">Priority</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <div class="chk-option">
-                                        <div
-                                            class="checkbox-fade fade-in-primary">
-                                            <label class="check-task">
-                                                <input type="checkbox" value="">
-                                                <span class="cr">
-                                                    <i
-                                                        class="cr-icon fa fa-check txt-default"></i>
-                                                </span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="d-inline-block align-middle">
-                                        <img src="{{asset('assets')}}/images/avatar-4.jpg"
-                                            alt="user image"
-                                            class="img-radius img-40 align-top m-r-15">
-                                        <div class="d-inline-block">
-                                            <h6>John Deo</h6>
-                                            <p class="text-muted m-b-0">Graphics
-                                                Designer</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>Able Pro</td>
-                                <td>Jun, 26</td>
-                                <td class="text-right"><label
-                                        class="label label-danger">Low</label>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="chk-option">
-                                        <div
-                                            class="checkbox-fade fade-in-primary">
-                                            <label class="check-task">
-                                                <input type="checkbox" value="">
-                                                <span class="cr">
-                                                    <i
-                                                        class="cr-icon fa fa-check txt-default"></i>
-                                                </span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="d-inline-block align-middle">
-                                        <img src="{{asset('assets')}}/images/avatar-5.jpg"
-                                            alt="user image"
-                                            class="img-radius img-40 align-top m-r-15">
-                                        <div class="d-inline-block">
-                                            <h6>Jenifer Vintage</h6>
-                                            <p class="text-muted m-b-0">Web
-                                                Designer</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>Mashable</td>
-                                <td>March, 31</td>
-                                <td class="text-right"><label
-                                        class="label label-primary">high</label>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="chk-option">
-                                        <div
-                                            class="checkbox-fade fade-in-primary">
-                                            <label class="check-task">
-                                                <input type="checkbox" value="">
-                                                <span class="cr">
-                                                    <i
-                                                        class="cr-icon fa fa-check txt-default"></i>
-                                                </span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="d-inline-block align-middle">
-                                        <img src="{{asset('assets')}}/images/avatar-3.jpg"
-                                            alt="user image"
-                                            class="img-radius img-40 align-top m-r-15">
-                                        <div class="d-inline-block">
-                                            <h6>William Jem</h6>
-                                            <p class="text-muted m-b-0">
-                                                Developer</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>Flatable</td>
-                                <td>Aug, 02</td>
-                                <td class="text-right"><label
-                                        class="label label-success">medium</label>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="chk-option">
-                                        <div
-                                            class="checkbox-fade fade-in-primary">
-                                            <label class="check-task">
-                                                <input type="checkbox" value="">
-                                                <span class="cr">
-                                                    <i
-                                                        class="cr-icon fa fa-check txt-default"></i>
-                                                </span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="d-inline-block align-middle">
-                                        <img src="{{asset('assets')}}/images/avatar-2.jpg"
-                                            alt="user image"
-                                            class="img-radius img-40 align-top m-r-15">
-                                        <div class="d-inline-block">
-                                            <h6>David Jones</h6>
-                                            <p class="text-muted m-b-0">
-                                                Developer</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>Guruable</td>
-                                <td>Sep, 22</td>
-                                <td class="text-right"><label
-                                        class="label label-primary">high</label>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="text-right m-r-20">
-                        <a href="#!" class=" b-b-primary text-primary">View all
-                            Projects</a>
-                    </div>
+                <div class="align-items-center">
+                    <h6 class="text-muted m-b-0 text-center" style="font-size: 32px; padding: 20px;">
+                        Xin chào {{Auth::user()->fullname}} , chúc bạn một ngày làm việc hiệu quả! 😉</h6>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-xl-4 col-md-12">
-        <div class="card ">
-            <div class="card-header">
-                <h5>Team Members</h5>
-                <div class="card-header-right">
-                    <ul class="list-unstyled card-option">
-                        <li><i class="fa fa fa-wrench open-card-option"></i>
-                        </li>
-                        <li><i class="fa fa-window-maximize full-card"></i></li>
-                        <li><i class="fa fa-minus minimize-card"></i></li>
-                        <li><i class="fa fa-refresh reload-card"></i></li>
-                        <li><i class="fa fa-trash close-card"></i></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="card-block">
-                <div class="align-middle m-b-30">
-                    <img src="{{asset('assets')}}/images/avatar-2.jpg" alt="user image"
-                        class="img-radius img-40 align-top m-r-15">
-                    <div class="d-inline-block">
-                        <h6>David Jones</h6>
-                        <p class="text-muted m-b-0">Developer</p>
-                    </div>
-                </div>
-                <div class="align-middle m-b-30">
-                    <img src="{{asset('assets')}}/images/avatar-1.jpg" alt="user image"
-                        class="img-radius img-40 align-top m-r-15">
-                    <div class="d-inline-block">
-                        <h6>David Jones</h6>
-                        <p class="text-muted m-b-0">Developer</p>
-                    </div>
-                </div>
-                <div class="align-middle m-b-30">
-                    <img src="{{asset('assets')}}/images/avatar-3.jpg" alt="user image"
-                        class="img-radius img-40 align-top m-r-15">
-                    <div class="d-inline-block">
-                        <h6>David Jones</h6>
-                        <p class="text-muted m-b-0">Developer</p>
-                    </div>
-                </div>
-                <div class="align-middle m-b-30">
-                    <img src="{{asset('assets')}}/images/avatar-4.jpg" alt="user image"
-                        class="img-radius img-40 align-top m-r-15">
-                    <div class="d-inline-block">
-                        <h6>David Jones</h6>
-                        <p class="text-muted m-b-0">Developer</p>
-                    </div>
-                </div>
-                <div class="align-middle m-b-10">
-                    <img src="{{asset('assets')}}/images/avatar-5.jpg" alt="user image"
-                        class="img-radius img-40 align-top m-r-15">
-                    <div class="d-inline-block">
-                        <h6>David Jones</h6>
-                        <p class="text-muted m-b-0">Developer</p>
-                    </div>
-                </div>
-                <div class="text-center">
-                    <a href="#!" class="b-b-primary text-primary">View all
-                        Projects</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!--  project and team member end -->
+    @endhasanyrole
 </div>
 @endsection
 
 @section('page-script')
 <script type="text/javascript" src="{{asset('assets')}}/pages/dashboard/custom-dashboard.js"></script>
-
+<script>
+    am5.ready(function() {
+    var root = am5.Root.new("chartdiv");
+    root.setThemes([
+      am5themes_Animated.new(root)
+    ]);
+    
+    var data = {!! @json_encode($chartEmployeesBranch) !!};
+    console.log(data);
+    
+    // Create chart
+    // https://www.amcharts.com/docs/v5/charts/xy-chart/
+    var chart = root.container.children.push(
+      am5xy.XYChart.new(root, {
+        panX: false,
+        panY: false,
+        wheelX: "none",
+        wheelY: "none",
+        paddingBottom: 50,
+        paddingTop: 40
+      })
+    );
+    
+    // Create axes
+    // https://www.amcharts.com/docs/v5/charts/xy-chart/axes/
+    
+    var xRenderer = am5xy.AxisRendererX.new(root, {});
+    xRenderer.grid.template.set("visible", false);
+    
+    var xAxis = chart.xAxes.push(
+      am5xy.CategoryAxis.new(root, {
+        paddingTop:40,
+        categoryField: "name",
+        renderer: xRenderer
+      })
+    );
+    
+    
+    var yRenderer = am5xy.AxisRendererY.new(root, {});
+    yRenderer.grid.template.set("strokeDasharray", [3]);
+    
+    var yAxis = chart.yAxes.push(
+      am5xy.ValueAxis.new(root, {
+        min: 0,
+        renderer: yRenderer
+      })
+    );
+    
+    // Add series
+    // https://www.amcharts.com/docs/v5/charts/xy-chart/series/
+    var series = chart.series.push(
+      am5xy.ColumnSeries.new(root, {
+        name: "Income",
+        xAxis: xAxis,
+        yAxis: yAxis,
+        valueYField: "steps",
+        categoryXField: "name",
+        sequencedInterpolation: true,
+        calculateAggregates: true,
+        maskBullets: false,
+        tooltip: am5.Tooltip.new(root, {
+          dy: -30,
+          pointerOrientation: "vertical",
+          labelText: "{valueY}"
+        })
+      })
+    );
+    
+    series.columns.template.setAll({
+      strokeOpacity: 0,
+      cornerRadiusBR: 10,
+      cornerRadiusTR: 10,
+      cornerRadiusBL: 10,
+      cornerRadiusTL: 10,
+      maxWidth: 50,
+      fillOpacity: 0.8
+    });
+    
+    var currentlyHovered;
+    
+    series.columns.template.events.on("pointerover", function (e) {
+      handleHover(e.target.dataItem);
+    });
+    
+    series.columns.template.events.on("pointerout", function (e) {
+      handleOut();
+    });
+    
+    function handleHover(dataItem) {
+      if (dataItem && currentlyHovered != dataItem) {
+        handleOut();
+        currentlyHovered = dataItem;
+        var bullet = dataItem.bullets[0];
+        bullet.animate({
+          key: "locationY",
+          to: 1,
+          duration: 600,
+          easing: am5.ease.out(am5.ease.cubic)
+        });
+      }
+    }
+    
+    function handleOut() {
+      if (currentlyHovered) {
+        var bullet = currentlyHovered.bullets[0];
+        bullet.animate({
+          key: "locationY",
+          to: 0,
+          duration: 600,
+          easing: am5.ease.out(am5.ease.cubic)
+        });
+      }
+    }
+    
+    var circleTemplate = am5.Template.new({});
+    
+    series.bullets.push(function (root, series, dataItem) {
+      var bulletContainer = am5.Container.new(root, {});
+      var circle = bulletContainer.children.push(
+        am5.Circle.new(
+          root,
+          {
+            radius: 34
+          },
+          circleTemplate
+        )
+      );
+    
+      var maskCircle = bulletContainer.children.push(
+        am5.Circle.new(root, { radius: 27 })
+      );
+    
+      // only containers can be masked, so we add image to another container
+      var imageContainer = bulletContainer.children.push(
+        am5.Container.new(root, {
+          mask: maskCircle
+        })
+      );
+    
+      var image = imageContainer.children.push(
+        am5.Picture.new(root, {
+          templateField: "pictureSettings",
+          centerX: am5.p50,
+          centerY: am5.p50,
+          width: 60,
+          height: 60
+        })
+      );
+    
+      return am5.Bullet.new(root, {
+        locationY: 0,
+        sprite: bulletContainer
+      });
+    });
+    
+    // heatrule
+    series.set("heatRules", [
+      {
+        dataField: "valueY",
+        min: am5.color(0xe5dc36),
+        max: am5.color(0x5faa46),
+        target: series.columns.template,
+        key: "fill"
+      },
+      {
+        dataField: "valueY",
+        min: am5.color(0xe5dc36),
+        max: am5.color(0x5faa46),
+        target: circleTemplate,
+        key: "fill"
+      }
+    ]);
+    
+    series.data.setAll(data);
+    xAxis.data.setAll(data);
+    
+    var cursor = chart.set("cursor", am5xy.XYCursor.new(root, {}));
+    cursor.lineX.set("visible", false);
+    cursor.lineY.set("visible", false);
+    
+    cursor.events.on("cursormoved", function () {
+      var dataItem = series.get("tooltip").dataItem;
+      if (dataItem) {
+        handleHover(dataItem);
+      } else {
+        handleOut();
+      }
+    });
+    
+    // Make stuff animate on load
+    // https://www.amcharts.com/docs/v5/concepts/animations/
+    series.appear();
+    chart.appear(1000, 100);
+    
+    }); // end am5.ready()
+    </script>
 @endsection

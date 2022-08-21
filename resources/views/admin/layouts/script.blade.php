@@ -42,3 +42,7 @@
 <script type="text/javascript" src="{{asset('frontend')}}/js/validateForm.js"></script>
 <!-- vue js -->
 <script src="{{ asset('frontend/js/vue.js') }}" type="text/javascript" ></script>
+<!-- Resources -->
+<script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
