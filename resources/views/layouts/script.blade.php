@@ -17,3 +17,6 @@
 
 <!--====== Main js ======-->
 <script src="{{asset('frontend/index')}}/assets/js/main.js"></script>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3698372082258329"
+     crossorigin="anonymous"></script>
