@@ -28,7 +28,7 @@ class EmployeeController extends Controller
 
     public function index(Request $request)
     {
-        $take = 10;
+        $take = 5;
         $requestDepartments = explode(",", $request->departments);
         $departmentIds = [];
         $positionIds = [];
@@ -61,13 +61,10 @@ class EmployeeController extends Controller
         return view('admin.user.list', compact('employees', 'branchs', 'departments', 'requestDepartments'));
     }
 
-    public function filter(Request $request)
+    public function dataReponse(Request $request)
     {
-        $take = 10;
-        $components = parse_url($request->params);
-        parse_str($components['query'], $results);
-
-        $requestDepartments = explode(",", $results['departments'] ?? '');
+        $take = 5;
+        $requestDepartments = explode(",", $request->departments);
         $departmentIds = [];
         $positionIds = [];
         $requestDepartments = array_filter($requestDepartments, function($e) {
@@ -83,16 +80,21 @@ class EmployeeController extends Controller
         }
         $positionIdsByDepartments = $this->positionRepo->query(["department_ids" => $departmentIds])->pluck('id')->toArray();
         $positionIds = array_merge($positionIdsByDepartments, $positionIds);
-        $options = [...$results,
+        $options = [...$request->all(),
             "with" => ['position.department'],
             "position_ids" => $positionIds
         ];
-        if (isset($results['departments']) && count($positionIds) == 0) {
+        if ($request->departments && count($positionIds) == 0) {
             $options['position_ids'] = array(-9999);
         }
-        $employees = $this->employeeRepo->paginate($options, $take)->withPath('/admin/employee')->appends($results);
-        $dataView = view('admin.user._partials.base_table', compact('employees'))->render();
-        return response()->json(["data" => $dataView]);
+        $employees = $this->employeeRepo
+            ->paginate($options, $take)
+            ->appends($request->query());
+        $this->formatData($employees);
+
+        return response()->json([
+            'data' => $employees
+        ]);
     }
 
     public function confirmEmail(Request $request)

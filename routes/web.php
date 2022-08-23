@@ -90,7 +90,7 @@ Route::prefix('/admin')->middleware(['auth', 'can:web'])->group(function () {
     Route::post('/ajax-un-block-user', [EmployeeController::class, 'ajaxUnBlock'])->name('ajax-un-block-user');
     Route::post('/ajax-user-confirm-email', [EmployeeController::class, 'confirmEmail'])->name('ajax-user-confirm-email');
     Route::post('/ajax-user-change-password', [EmployeeController::class, 'changePasssword'])->name('ajax-user-change-password');
-    Route::get('/ajax-filter',[EmployeeController::class,'filter'])->name('ajax-filter-employee');
+    Route::get('/ajax-get-employee',[EmployeeController::class,'dataReponse'])->name('ajax-get-employee');
     Route::post('/ajax-watched-noti',[NotificationController::class,'handleWatched'])->name('ajax-watched-noti');
 
     Route::prefix('/checkin')->name("checkin.")->middleware("role:admin")->group(function () {
