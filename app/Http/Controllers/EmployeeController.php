@@ -52,7 +52,10 @@ class EmployeeController extends Controller
         if ($request->departments && count($positionIds) == 0) {
             $options['position_ids'] = array(-9999);
         }
-        $employees = $this->employeeRepo->paginate($options, $take)->appends($request->query());
+        $employees = $this->employeeRepo
+            ->paginate($options, $take)
+            ->appends($request->query());
+        $this->formatData($employees);
         $branchs = Branch::all();
         $departments = $this->departmentRepo->formatVueSelect();
         return view('admin.user.list', compact('employees', 'branchs', 'departments', 'requestDepartments'));
@@ -409,5 +412,15 @@ class EmployeeController extends Controller
     {
         $path = $request->file($name)->store('public/avatars');
         return substr($path, strlen('public/'));
+    }
+
+    private function formatData(&$employees)
+    {
+        $dataFormat = $employees->map(function($employee) {
+            $employee->avatar = $employee->getAvatar();
+            $employee->status = $employee->getStatusStr();
+            return $employee;
+        });
+        $employees->setCollection($dataFormat);
     }
 }

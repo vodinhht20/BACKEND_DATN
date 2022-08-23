@@ -39,7 +39,7 @@
 </div>
 @endsection
 @section('content')
-    <div class="card">
+    <div class="card app_vue">
         <div class="card-header" style="box-shadow: none;">
             <h5 style="font-size: 17px;">Danh sách nhân sự</h5>
             <a href="{{route('user-black-list')}}" class="btn btn-outline-dark btn-round waves-effect waves-light" style="float: right">
@@ -65,7 +65,7 @@
                     <option value="3">Bị chặn</option>
                 </select>
             </div>
-            <div class="form-group col-md-3 col-sx-6 col-lg-3 app_vue">
+            <div class="form-group col-md-3 col-sx-6 col-lg-3">
                 <label for="">Vị trí phòng ban: </label>
                 <input type="hidden" name="departments" :value="departmentValue">
                 <treeselect v-model="departmentValue" :multiple="true" :options="departments" @input="changePosition()"/>
@@ -82,7 +82,80 @@
         </div>
         @include('admin.layouts.messages')
         <div class="card-block table-border-style" id="data-table">
-            @include('admin.user._partials.base_table')
+            <div class="table-responsive" style="width: 100%;">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th class="text-center" style="vertical-align: middle;">STT</th>
+                            <th class="text-center" style="vertical-align: middle;">Thông tin</th>
+                            <th class="text-center" style="vertical-align: middle;">Vị trí <hr> Phòng ban</th>
+                            <th class="text-center" style="vertical-align: middle;">Thông tin liên lạc</th>
+                            <th class="text-center" style="vertical-align: middle;">Địa chỉ</th>
+                            <th class="text-center" style="vertical-align: middle;">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(employee, index) in employees">
+                            <td class="text-center">@{{ index + 1 }}</td>
+                            <td class="text-center">
+                                <img src="" alt="" class="avatar_list">
+                                <br>
+                                @{{employee.fullname}}
+                                <br>
+                                <label class="label label-success">@{{ employee.status }}</label>
+                            </td>
+                            <td class="text-center">
+                                <label for="" class="badge badge-primary">@{{ employee?.position?.name || "N/A" }}</label>
+                                <hr>
+                                <label for="" class="badge badge-info">@{{ employee?.position?.department?.name || "N/A" }}</label>
+                            </td>
+                            <td class="text-center">
+                                <p>SĐT: @{{ employee.phone || "Chưa cập nhật" }}</p>
+                                <p>@{{ employee.email }}</p>
+                                <label for="" v-if="employee?.email_verified_at" class="label label-success">Đã xác thực email</label>
+                                <label for="" v-else class="label label-danger">Chưa xác thực email</label>
+                            </td>
+                            <td class="text-center">
+                                @{{ employee?.address || "Chưa thiết lập địa chỉ !" }}
+                            </td>
+                            <td class="text-center">
+                                <label for="" class="label label-primary">Định đang bảo trì ^_^</label>
+
+                                {{-- <div class="dropdown">
+                                    <button class="btn btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fa fa-ellipsis-h"></i>
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item" href="{{ route('show-info-user', ['id' => $employee->id]) }}">Xem chi tiết</a>
+                                        @if (!$employee->email_verified_at)
+                                            <a class="dropdown-item confirm-email" data-id="{{ $employee->id }}" data-email="{{ $employee->email }}">Xác thực email</a>
+                                        @endif
+                                        <a class="dropdown-item change-pass" data-id="{{ $employee->id }}" data-name="{{ $employee->fullname }}">Thay đổi mật khẩu</a>
+                                        <a class="dropdown-item" href="{{ route('show-form-update-user', ['id' => $employee->id]) }}">Chỉnh sửa thông tin</a>
+                                        @if ($employee->id != Auth::user()->id)
+                                            <a class="dropdown-item btn-block-user" data-id="{{ $employee->id }}">Đưa vào danh sách chặn</a>
+                                            <a class="dropdown-item btn-remove-user" data-id="{{ $employee->id }}">Xóa bỏ</a>
+                                        @endif
+                                    </div>
+                                </div> --}}
+                            </td>
+                        </tr>
+                        @if (count($employees) == 0)
+                            <tr>
+                                <td colspan="6" class="box_data_empty">
+                                    <img src="{{asset('frontend')}}/image/empty_data.png" alt="">
+                                </td>
+                            </tr>
+                        @endif
+                    </tbody>
+                </table>
+            </div>
+            <div class="paginate row justify-content-end">
+                {{ $employees->appends(request()->all()) }}
+            </div>
+            <div class="overlay-load">
+                <img src="{{asset('frontend')}}/image/loading.gif" alt="">
+            </div>
         </div>
     </div>
 @endsection
@@ -96,7 +169,8 @@
         el: '.app_vue',
         data: {
             departmentValue: {!! json_encode($requestDepartments) !!},
-            departments: {!! json_encode($departments) !!}
+            departments: {!! json_encode($departments) !!},
+            employees: {!! json_encode($employees->items()) !!}
         },
         methods: {
             changePosition: () => {
@@ -121,23 +195,25 @@
     (function callBack() {
         $('.change-pass').on('click', async function (e) {
             const { value: password } = await Swal.fire({
-                    title: 'Thay đổi mật khẩu',
+                    title: '<h3 style="margin-top: 10px;">Thay đổi mật khẩu</h3>',
                     html:
                         `
-                        <p>Thay đổi mật khẩu user <b>`+ $(this).attr("data-name") +`</b></p>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">Mật khẩu mới</label>
-                            <div class="col-sm-8">
-                                <input type="password" class="form-control" id="password" name="password" placeholder="Password">
-                            </div>
-                        </div>` +
-                        `<div class="form-group row">
-                            <label class="col-sm-4 col-form-label">Nhập lại mật khẩu</label>
-                            <div class="col-sm-8">
-                                <input type="password" class="form-control" id="rePassword" name="rePassword" placeholder="Re password">
-                            </div>
-                        </div>` +
-                        `<p class="text-validate"></p>`
+                        <div style="width: 90%;">
+                            <p>Thay đổi mật khẩu user <b>`+ $(this).attr("data-name") +`</b></p>
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Mật khẩu mới</label>
+                                <div class="col-sm-8">
+                                    <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                                </div>
+                            </div>` +
+                            `<div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Nhập lại mật khẩu</label>
+                                <div class="col-sm-8">
+                                    <input type="password" class="form-control" id="rePassword" name="rePassword" placeholder="Re password">
+                                </div>
+                            </div>` +
+                            `<p class="text-validate"></p>
+                        </div>`
                         ,
                     focusConfirm: false,
                     confirmButtonText: "Thay đổi",
