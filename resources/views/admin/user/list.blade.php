@@ -95,7 +95,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(employee, index) in employees">
+                        <tr v-for="(employee, index) in employees.data">
                             <td class="text-center">@{{ index + 1 }}</td>
                             <td class="text-center">
                                 <img src="" alt="" class="avatar_list">
@@ -112,32 +112,20 @@
                             <td class="text-center">
                                 <p>SĐT: @{{ employee.phone || "Chưa cập nhật" }}</p>
                                 <p>@{{ employee.email }}</p>
-                                <label for="" v-if="employee?.email_verified_at" class="label label-success">Đã xác thực email</label>
-                                <label for="" v-else class="label label-danger">Chưa xác thực email</label>
                             </td>
                             <td class="text-center">
                                 @{{ employee?.address || "Chưa thiết lập địa chỉ !" }}
                             </td>
                             <td class="text-center">
-                                <label for="" class="label label-primary">Định đang bảo trì ^_^</label>
-
-                                {{-- <div class="dropdown">
+                                <div class="dropdown">
                                     <button class="btn btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <i class="fa fa-ellipsis-h"></i>
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item" href="{{ route('show-info-user', ['id' => $employee->id]) }}">Xem chi tiết</a>
-                                        @if (!$employee->email_verified_at)
-                                            <a class="dropdown-item confirm-email" data-id="{{ $employee->id }}" data-email="{{ $employee->email }}">Xác thực email</a>
-                                        @endif
-                                        <a class="dropdown-item change-pass" data-id="{{ $employee->id }}" data-name="{{ $employee->fullname }}">Thay đổi mật khẩu</a>
-                                        <a class="dropdown-item" href="{{ route('show-form-update-user', ['id' => $employee->id]) }}">Chỉnh sửa thông tin</a>
-                                        @if ($employee->id != Auth::user()->id)
-                                            <a class="dropdown-item btn-block-user" data-id="{{ $employee->id }}">Đưa vào danh sách chặn</a>
-                                            <a class="dropdown-item btn-remove-user" data-id="{{ $employee->id }}">Xóa bỏ</a>
-                                        @endif
+                                        <a class="dropdown-item" :href="getLinkDetail(employee.id)">Xem chi tiết</a>
+                                        <a class="dropdown-item change-pass" @click="changePass(employee.id, employee.fullname)">Thay đổi mật khẩu</a>
                                     </div>
-                                </div> --}}
+                                </div>
                             </td>
                         </tr>
                         @if (count($employees) == 0)
@@ -150,8 +138,25 @@
                     </tbody>
                 </table>
             </div>
-            <div class="paginate row justify-content-end">
-                {{ $employees->appends(request()->all()) }}
+            <div style="float: right;" class=""  v-if="employees.total > 0">
+                <template>
+                    <paginate
+                        :page-count="employees.last_page"
+                        v-model="employees.current_page"
+                        :initial-page="employees.current_page"
+                        :click-handler="changePage"
+                        :prev-text="'‹'"
+                        :next-text="'›'"
+                        :page-link-class="'page-link'"
+                        :container-class="'pagination'"
+                        :page-class="'page-item'"
+                        :prev-link-class="'page-link'"
+                        :next-link-class="'page-link'"
+                        :prev-class="'page-item'"
+                        :next-class="'page-item'"
+                    >
+                    </paginate>
+                </template>
             </div>
             <div class="overlay-load">
                 <img src="{{asset('frontend')}}/image/loading.gif" alt="">
@@ -162,44 +167,48 @@
 
 @section('page-script')
 <script src="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.4.0/dist/vue-treeselect.umd.min.js"></script>
+<script src="{{ asset('frontend/js/vue-paginate.js') }}"></script>
 <script>
     Vue.component('treeselect', VueTreeselect.Treeselect);
+    Vue.component('paginate', VuejsPaginate)
     Vue.config.devtools = true
     var app = new Vue({
         el: '.app_vue',
         data: {
             departmentValue: {!! json_encode($requestDepartments) !!},
             departments: {!! json_encode($departments) !!},
-            employees: {!! json_encode($employees->items()) !!}
+            employees: {!! json_encode($employees) !!}
         },
         methods: {
             changePosition: () => {
                 var urlParam = new URL(window.location);
                 urlParam.searchParams.set('departments', app.departmentValue);
                 window.history.pushState({}, '', urlParam);
-
-                var paramsUrl = window.location.search;
-                let params = {
-                    params: paramsUrl
-                };
+                app.getData();
+            },
+            changePage: (page) => {
+                // change param url
+                var urlParam = new URL(window.location);
+                urlParam.searchParams.set('page', page);
+                window.history.pushState({}, '', urlParam);
+                app.getData();
+            },
+            getData: () => {
+                // call api
                 $('.overlay-load').css('display', 'flex');
-                axios.get("{{route('ajax-filter-employee')}}", { params }).then((response)=>{
-                    $('#data-table').html(response.data.data);
+                let params = location.search;
+                axios.get(`{{ route('ajax-get-employee') }}${params}`).then(({ data }) => {
+                    app.employees = data.data;
                     $('.overlay-load').css('display', 'none');
-                    callApi();
-                });
-            }
-        }
-    });
-
-    (function callBack() {
-        $('.change-pass').on('click', async function (e) {
-            const { value: password } = await Swal.fire({
+                })
+            },
+            changePass: async (id, fullname) => {
+                const { value: password } = await Swal.fire({
                     title: '<h3 style="margin-top: 10px;">Thay đổi mật khẩu</h3>',
                     html:
                         `
                         <div style="width: 90%;">
-                            <p>Thay đổi mật khẩu user <b>`+ $(this).attr("data-name") +`</b></p>
+                            <p>Thay đổi mật khẩu user <b>${fullname}</b></p>
                             <div class="form-group row">
                                 <label class="col-sm-4 col-form-label">Mật khẩu mới</label>
                                 <div class="col-sm-8">
@@ -242,9 +251,8 @@
                 })
                 if (password) {
                     let option = {
-                        _token: '{{ csrf_token() }}',
-                        id: $(this).attr("data-id"),
-                        password: password
+                        id,
+                        password
                     }
                     $('.overlay-load').css('display', 'flex');
                     const response = await axios.post("{{route('ajax-user-change-password')}}", option)
@@ -257,9 +265,9 @@
                         )
                     }
                 }
-        });
-        $('.btn-remove-user').on('click', async function (e) {
-            Swal.fire({
+            },
+            removeUser: () => {
+                Swal.fire({
                     title: 'Hành động nguy hiểm !!',
                     text: "Bạn có muốn xóa nhân viên này không, hành động này không thể khôi phục.",
                     icon: 'warning',
@@ -297,25 +305,20 @@
                             })
                     }
                 })
-        });
-    })();
+            },
+            getLinkDetail: (employeeId) => {
+                let linkRoot = `{{ route('show-info-user', ['id' => '????']) }}`
+                return linkRoot.replace("????", employeeId);
+            }
+        }
+    });
 
     $('.action_filter').on('input', function(e){
         var keyFilter = e.target.getAttribute("data-filter");
         var urlParam = new URL(window.location);
         urlParam.searchParams.set(keyFilter, $(this).val());
         window.history.pushState({}, '', urlParam);
-
-        var paramsUrl = window.location.search;
-        let params = {
-            params: paramsUrl
-        };
-        $('.overlay-load').css('display', 'flex');
-        axios.get("{{route('ajax-filter-employee')}}", { params }).then((response)=>{
-            $('#data-table').html(response.data.data);
-            $('.overlay-load').css('display', 'none');
-            callApi();
-        });
+        app.getData();
     });
     $('.action_filter').map((index, element) => {
         let keyFilter = element.getAttribute('data-filter');
