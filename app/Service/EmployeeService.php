@@ -14,7 +14,7 @@ class EmployeeService {
     public function makeEmployeeCode(): string
     {
         $employeeRepo = $this->employeeRepo->getMaxId() + 1;
-        return "CM-$employeeRepo";
+        return "CM$employeeRepo";
     }
 
 }

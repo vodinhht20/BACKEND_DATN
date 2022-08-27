@@ -2,15 +2,23 @@
 
 return [
     'status' => [
-        'retired' => 0,
-        'upcoming' => 1,
-        'active' => 2,
-        'pause' => 3
+        'block' => 0,
+        'retired' => 1,
+        'upcoming' => 2,
+        'active' => 3,
+        'pause' => 4
     ],
     'status_str' => [
-        0 => "Đã nghi việc",
-        1 => "Sắp đi làm",
-        2 => "Đang làm việc",
-        3 => "Đang tạm nghỉ việc"
+        0 => "Tài khoản đã bị Block",
+        1 => "Đã nghi việc",
+        2 => "Sắp đi làm",
+        3 => "Đang làm việc",
+        4 => "Đang tạm nghỉ việc"
+    ],
+    'status_active' => [
+        1 => "Đã nghi việc",
+        2 => "Sắp đi làm",
+        3 => "Đang làm việc",
+        4 => "Đang tạm nghỉ việc"
     ]
 ];

@@ -6,21 +6,28 @@ use App\Models\AttribuiteEmployee;
 use App\Models\Branch;
 use App\Models\Attribute;
 use App\Models\Employee;
+use App\Models\Noti;
 use App\Repositories\EmployeeRepository;
 use Illuminate\Http\Request;
 use \Illuminate\Support\Str;
 use App\Models\Position;
 use App\Repositories\DepartmentRepository;
 use App\Repositories\PositionRepository;
+use App\Service\EmployeeService;
 use Google\Service\ServiceControl\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class EmployeeController extends Controller
 {
+    const TAKE = 10;
+
     public function __construct(
         private EmployeeRepository $employeeRepo,
         private DepartmentRepository $departmentRepo,
-        private PositionRepository $positionRepo
+        private PositionRepository $positionRepo,
+        private EmployeeService $employeeService
     )
     {
         //
@@ -28,7 +35,6 @@ class EmployeeController extends Controller
 
     public function index(Request $request)
     {
-        $take = 5;
         $requestDepartments = explode(",", $request->departments);
         $departmentIds = [];
         $positionIds = [];
@@ -45,15 +51,18 @@ class EmployeeController extends Controller
         }
         $positionIdsByDepartments = $this->positionRepo->query(["department_ids" => $departmentIds])->pluck('id')->toArray();
         $positionIds = array_merge($positionIdsByDepartments, $positionIds);
+        $status = config('employee.status');
+        unset($status['block']);
         $options = [...$request->all(),
             "with" => ['position.department'],
-            "position_ids" => $positionIds
+            "position_ids" => $positionIds,
+            "status" => $status
         ];
         if ($request->departments && count($positionIds) == 0) {
             $options['position_ids'] = array(-9999);
         }
         $employees = $this->employeeRepo
-            ->paginate($options, $take)
+            ->paginate($options, self::TAKE)
             ->appends($request->query());
         $this->formatData($employees);
         $branchs = Branch::all();
@@ -63,7 +72,6 @@ class EmployeeController extends Controller
 
     public function dataReponse(Request $request)
     {
-        $take = 5;
         $requestDepartments = explode(",", $request->departments);
         $departmentIds = [];
         $positionIds = [];
@@ -80,15 +88,18 @@ class EmployeeController extends Controller
         }
         $positionIdsByDepartments = $this->positionRepo->query(["department_ids" => $departmentIds])->pluck('id')->toArray();
         $positionIds = array_merge($positionIdsByDepartments, $positionIds);
+        $status = config('employee.status');
+        unset($status['block']);
         $options = [...$request->all(),
             "with" => ['position.department'],
-            "position_ids" => $positionIds
+            "position_ids" => $positionIds,
+            "status" => $status
         ];
         if ($request->departments && count($positionIds) == 0) {
             $options['position_ids'] = array(-9999);
         }
         $employees = $this->employeeRepo
-            ->paginate($options, $take)
+            ->paginate($options, self::TAKE)
             ->appends($request->query());
         $this->formatData($employees);
 
@@ -142,23 +153,31 @@ class EmployeeController extends Controller
         $branchs = Branch::all();
         $positions = Position::all();
         $attributes = Attribute::all();
-        return view('admin.user.create', compact('branchs','positions','attributes'));
+        $departments = $this->departmentRepo->formatVueSelect();
+        return view('admin.user.create', compact('branchs', 'positions', 'attributes', 'departments'));
     }
 
     public function addUser(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'fullname' => 'required|max:255',
-            'email' => 'required|email|unique:users',
             'birth_day' => 'required|date',
+            'phone' => 'required',
+            'is_checked' => 'required',
+            'branch_id' => 'required',
+            'address' => 'required',
+            'atribute' => 'required|array',
         ], [
             'fullname.required' => 'Họ và Tên không được để trống',
             'fullname.max' => 'Họ và Tên không được quá 255 ký tự',
-            'email.required' => 'Email không được để trống',
-            'email.unique' => 'Email này đã tồn tại, vui lòng nhập mail khác hoặc đăng nhập',
-            'email.email' => 'Email không đúng định dạng',
             'personal_email.required' => "Email này đã tồn tại, vui lòng nhập mail khác hoặc đăng nhập",
             'personal_email.email' => 'Email không đúng định dạng',
+            'phone.required' => 'Số điện thoại không được để trống',
+            'is_checked.required' => 'Trạng thái điểm danh không được trống',
+            'branch_id.required' => 'Chi nhánh không được để trống',
+            'address.required' => 'Địa chỉ hiện tại không được để trống',
+            'atribute.required' => 'Thông tin thêm bị thiếu',
+            'atribute.array' => 'Thông tin thêm không đúng kiểu dữ liệu',
         ]);
 
         if ($validator->fails()) {
@@ -171,15 +190,14 @@ class EmployeeController extends Controller
         $passWord = Str::random(12);
         $option = [
             'fullname' => $request->fullname,
-            'email' => $request->email,
             'personal_email' => $request->personal_email,
-            'employee_code' => $request->branch.'-'.Str::slug($request->fullname),
             'password' => $passWord,
-            'status' => $request->status,
+            'status' => config('employee.status.upcoming'),
             'gender' => $request->gender,
-            'branch_id' => $request->branch,
-            'position_id' => $request->position,
+            'branch_id' => $request->branch_id,
+            'position_id' => ltrim($request->position, 'position_'),
             'is_checked' => $request->is_checked,
+            'address' => $request->address,
             'email_verified_at' => now(),
         ];
 
@@ -201,45 +219,52 @@ class EmployeeController extends Controller
             $option['type_avatar'] = 1;
         }
 
-        $employee = $this->employeeRepo->register($option);
+        // make email
+        $employeeCode = $this->employeeService->makeEmployeeCode();
+        $prefix = "$employeeCode@camel.vn";
+        $email = makeEmail($request->fullname, $prefix);
+        $option['email'] = $email;
+        $option['employee_code'] = $employeeCode;
 
-
-        $attributes = Attribute::all();
-        foreach($attributes as $attribute){
-            $attriName = $attribute->name;
-            if($request->$attriName != ''){
-                $exitAttribute = AttribuiteEmployee::where('attribute_id','=',$attribute->id)
-                ->where('employee_id','=', $employee->id)
-                ->where('data','=',$request->$attriName)->get();
-                if(sizeof($exitAttribute) == 0){
-                    var_dump('abc');
-                    $dataAtribute = [];
-                    $dataAtribute['attribute_id'] = $attribute->id;
-                    $dataAtribute['employee_id'] = $employee->id;
-                    $dataAtribute['data'] = $request->$attriName;
-                    $dataAtribute['raw_data'] = 'awdbayw awydagwd';
-                    $newAttribute = AttribuiteEmployee::create($dataAtribute);
+        DB::beginTransaction();
+        try {
+            $employee = $this->employeeRepo->register($option);
+            $requestAttributes = $request->atribute;
+            $attributes = Attribute::whereIn('name', array_keys($requestAttributes))->get()->keyBy('name');
+            foreach ($requestAttributes as $attribute => $value) {
+                if (isset($attributes[$attribute])) {
+                    $attribute = $attributes[$attribute];
+                    $dataAtribute = [
+                        'attribute_id' => $attribute->id,
+                        'employee_id' => $employee->id,
+                        'data' => $value,
+                        'raw_data' => $value
+                    ];
+                    AttribuiteEmployee::create($dataAtribute);
                 }
+            }
 
-              }
+            if ($employee) {
+                DB::commit();
+                return response()->json([
+                    'success' => true,
+                    'data' => [
+                        'email' => $employee->email,
+                        'password' => $passWord
+                    ]
+                ], 200);
+            }
+        } catch (\Exception $e) {
+            $message = '[' . date('Y-m-d H:i:s') . '] Error message \'' . $e->getMessage() . '\'' . ' in ' . $e->getFile() . ' line ' . $e->getLine();
+            Log::error($message);
+            Noti::telegramLog('Create Employee', $message);
         }
-        die;
-        if ($employee) {
-            return response()->json([
-                'success' => true,
-                'data' => [
-                    'email' => $request->email,
-                    'password' => $passWord
-                ]
-            ], 200);
-        }
-
-
+        DB::rollBack();
 
         return response()->json([
             'success' => false,
             'message' => "Không thể tạo mới thành viên"
-        ], 440);
+        ], 422);
     }
 
     public function showFormUpdate($id)
@@ -247,12 +272,13 @@ class EmployeeController extends Controller
         $employee = Employee::with('branch', 'position', 'attributes')->find($id);
         $branchs = Branch::all();
         $positions = Position::all();
-        $attributes = Attribute::all();
+        $departments = $this->departmentRepo->formatVueSelect();
+        $attributeEmployees = AttribuiteEmployee::with('attribute')->where('employee_id', $id)->get();
         if (!$employee) {
             return abort(404);
         }
 
-        return view('admin.user.update', compact('employee', 'branchs', 'positions','attributes'));
+        return view('admin.user.update', compact('employee', 'branchs', 'positions', 'attributeEmployees', 'departments'));
     }
 
 
@@ -261,45 +287,103 @@ class EmployeeController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'fullname' => 'required|max:255',
-            'email' => 'required|email|unique:users,email',
+            'birth_day' => 'required|date',
+            'phone' => 'required',
+            'is_checked' => 'required',
+            'branch_id' => 'required',
+            'address' => 'required',
+            'atribute' => 'required|array',
         ], [
             'fullname.required' => 'Họ và Tên không được để trống',
             'fullname.max' => 'Họ và Tên không được quá 255 ký tự',
-            'email.required' => 'Email không được để trống',
-            'email.unique:users,email' => 'Email này đã tồn tại, vui lòng nhập mail khác hoặc đăng nhập',
-            'email.email' => 'Email không đúng định dạng',
             'personal_email.required' => "Email này đã tồn tại, vui lòng nhập mail khác hoặc đăng nhập",
             'personal_email.email' => 'Email không đúng định dạng',
+            'phone.required' => 'Số điện thoại không được để trống',
+            'is_checked.required' => 'Trạng thái điểm danh không được trống',
+            'branch_id.required' => 'Chi nhánh không được để trống',
+            'address.required' => 'Địa chỉ hiện tại không được để trống',
+            'atribute.required' => 'Thông tin thêm bị thiếu',
+            'atribute.array' => 'Thông tin thêm không đúng kiểu dữ liệu',
         ]);
 
         if ($validator->fails()) {
-            return redirect()->back()->with('message.error', $validator->messages()->first())->withInput();
+            return response()->json([
+                'success' => false,
+                'message' => $validator->messages()->first()
+            ], 404);
         }
-        $employee = Employee::find($id);
 
-        $employee->fullname = $request->fullname;
-        $employee->email = $request->email;
-        $employee->birth_day = $request->birth_day;
-        $employee->phone = $request->phone;
-        $employee->status = $request->status;
-        $employee->position_id = $request->position;
-        $employee->gender = $request->gender;
-        $employee->branch_id = $request->branch;
-        $employee->is_checked = $request->is_checked;
+        $employee = Employee::find($id);
+        if (!$employee) {
+            return abort(404);
+        }
+
+        $passWord = Str::random(12);
+        $option = [
+            'fullname' => $request->fullname,
+            'personal_email' => $request->personal_email,
+            'password' => $passWord,
+            'gender' => $request->gender,
+            'branch_id' => $request->branch_id,
+            'position_id' => ltrim($request->position, 'position_'),
+            'is_checked' => $request->is_checked,
+            'address' => $request->address
+        ];
+        if (isset($request->birth_day)) {
+            $option['birth_day'] = $request->birth_day;
+        }
+
+        if (isset($request->phone)) {
+            $option['phone'] = $request->phone;
+        }
+
+        if (isset($request->note)) {
+            $option['note'] = $request->note;
+        }
 
         if ($request->hasFile('avatar')) {
             $urlImage = $this->storeImage($request, 'avatar');
-            $employee->avatar = $urlImage;
-            $employee->type_avatar = 1;
+            $option['avatar'] = $urlImage;
+            $option['type_avatar'] = 1;
         }
 
-        $employee->update();
-        return redirect()->route('admin-list-user')->with('message.success', 'Cập nhật thông tin thành viên thành công !');
+        DB::beginTransaction();
+        try {
+            $employee->update($option);
+            $requestAttributes = $request->atribute;
+            $attributes = Attribute::whereIn('name', array_keys($requestAttributes))->get()->keyBy('name');
+            foreach ($requestAttributes as $attribute => $value) {
+                if (isset($attributes[$attribute])) {
+                    $attribute = $attributes[$attribute];
+                    $attributeEmployee = AttribuiteEmployee::where('employee_id', $employee->id)
+                        ->where('attribute_id', $attribute->id)
+                        ->first();
+                    $dataAtribute = [
+                        'attribute_id' => $attribute->id,
+                        'employee_id' => $employee->id,
+                        'data' => $value,
+                        'raw_data' => $value
+                    ];
+                    if ($attributeEmployee) {
+                        $attributeEmployee->update($dataAtribute);
+                    } else {
+                        AttribuiteEmployee::create($dataAtribute);
+                    }
+                }
+            }
 
-        // if ($employee) {
-        //     return redirect()->route('admin-list-user')->with('message.success', 'Cập nhật thông tin thành viên thành công !');
-        // }
-        // return redirect()->back()->with('message.error', 'Cập nhật thông tin thành viên thất bại')->withInput();
+            if ($employee) {
+                DB::commit();
+                return redirect()->route('admin-list-user')->with('message.success', 'Cập nhật thông tin thành viên thành công !');
+            }
+        } catch (\Exception $e) {
+            $message = '[' . date('Y-m-d H:i:s') . '] Error message \'' . $e->getMessage() . '\'' . ' in ' . $e->getFile() . ' line ' . $e->getLine();
+            Log::error($message);
+            Noti::telegramLog('Create Employee', $message);
+        }
+        DB::rollBack();
+
+        return redirect()->back()->with('message.error', 'Cập nhật thông tin thành viên thất bại')->withInput();
     }
 
     public function showInfoUser($id)
@@ -346,9 +430,9 @@ class EmployeeController extends Controller
     public function ajaxBlock(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'id' => 'required',
+            'employee_id' => 'required',
         ], [
-            'id.required' => 'Không tìm được thành viên cần chặn vì thiếu ID',
+            'employee_id.required' => 'Không tìm được thành viên cần chặn vì thiếu ID',
         ]);
 
         if ($validator->fails()) {
@@ -357,16 +441,9 @@ class EmployeeController extends Controller
                 'message' => $validator->messages()->first()
             ], 404);
         }
-
-        $result = $this->employeeRepo->blockUser($request->id);
+        $result = $this->employeeRepo->blockUser($request->employee_id);
         if ($result) {
-            $employees = $this->employeeRepo->getAllUserByPublic();
-            $pages = $employees->total()/10;
-            $viewData = view('admin.user._partials.base_table', compact('employees','pages'))->render();
-            return response()->json([
-                'data' => $viewData,
-                'success' => true
-            ]);
+            return $this->dataReponse($request);
         }
         return response()->json([
             'success' => false,
@@ -374,6 +451,44 @@ class EmployeeController extends Controller
         ], 404);
     }
 
+    public function ajaxChangeStatus(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'employee_id' => 'required',
+            'status' => 'required',
+        ], [
+            'employee_id.required' => 'Không tìm được thành viên cần chặn vì thiếu ID',
+            'status.required' => 'Không tìm thấy trạng thái này',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->messages()->first()
+            ], 422);
+        }
+
+        $result = $this->employeeRepo->changeStatus($request->status, $request->employee_id);
+        if ($result) {
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'id' => $result->id,
+                    'status' => $result->status,
+                    'status_str' => $result->getStatusStr()
+                ]
+            ], 200);
+        }
+        return response()->json([
+            'success' => false,
+            'message' => "Không thể thay đổi trạng thái vào lúc này"
+        ], 422);
+    }
+
+    public function handleImport(Request $request)
+    {
+        dd($request->all());
+    }
     public function blackList()
     {
         $employees = $this->employeeRepo->getUserBlock();
@@ -420,7 +535,7 @@ class EmployeeController extends Controller
     {
         $dataFormat = $employees->map(function($employee) {
             $employee->avatar = $employee->getAvatar();
-            $employee->status = $employee->getStatusStr();
+            $employee->status_str = $employee->getStatusStr();
             return $employee;
         });
         $employees->setCollection($dataFormat);

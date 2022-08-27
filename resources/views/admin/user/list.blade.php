@@ -42,13 +42,17 @@
     <div class="card app_vue">
         <div class="card-header" style="box-shadow: none;">
             <h5 style="font-size: 17px;">Danh sách nhân sự</h5>
-            <a href="{{route('user-black-list')}}" class="btn btn-outline-dark btn-round waves-effect waves-light" style="float: right">
+            <a href="{{route('user-black-list')}}" class="btn btn-outline-dark btn-round waves-effect" style="float: right; padding: 10px 15px !important;">
                 <i class="ti-lock"></i>
                 Danh sách chặn
             </a>
-            <a href="{{route('show-form-user-create')}}" class="btn btn-outline-primary btn-round waves-effect waves-light mr-3" style="float: right">
+            <a href="{{route('show-form-user-create')}}" class="btn btn-outline-primary btn-round waves-effect mr-3" style="float: right; padding: 10px 15px !important;">
                 <i class="ti-plus"></i>
                 Thêm nhân sự
+            </a>
+            <a href="javascript:void(0)" class="btn btn-outline-primary btn-round waves-effect mr-3" data-toggle="modal" data-target="#modal_import" style="float: right; padding: 10px 15px !important;">
+                <i class="ti-plus"></i>
+                Import Excel
             </a>
         </div>
         <div class="row mb-3" style="margin: unset;">
@@ -98,11 +102,12 @@
                         <tr v-for="(employee, index) in employees.data">
                             <td class="text-center">@{{ index + 1 }}</td>
                             <td class="text-center">
-                                <img src="" alt="" class="avatar_list">
+                                <img :src="employee.avatar" alt="" class="avatar_list">
                                 <br>
                                 @{{employee.fullname}}
                                 <br>
-                                <label class="label label-success">@{{ employee.status }}</label>
+                                <label class="label label-danger" v-if="employee.status == {{ config('employee.status.retired') }}">@{{ employee.status_str }}</label>
+                                <label class="label label-success" v-else>@{{ employee.status_str }}</label>
                             </td>
                             <td class="text-center">
                                 <label for="" class="badge badge-primary">@{{ employee?.position?.name || "N/A" }}</label>
@@ -113,7 +118,7 @@
                                 <p>SĐT: @{{ employee.phone || "Chưa cập nhật" }}</p>
                                 <p>@{{ employee.email }}</p>
                             </td>
-                            <td class="text-center">
+                            <td class="text-center ellipsis">
                                 @{{ employee?.address || "Chưa thiết lập địa chỉ !" }}
                             </td>
                             <td class="text-center">
@@ -124,6 +129,8 @@
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         <a class="dropdown-item" :href="getLinkDetail(employee.id)">Xem chi tiết</a>
                                         <a class="dropdown-item change-pass" @click="changePass(employee.id, employee.fullname)">Thay đổi mật khẩu</a>
+                                        <a class="dropdown-item change-pass" @click="changeStatus(employee)">Thay đổi trạng thái</a>
+                                        <a class="dropdown-item change-pass" @click="blockEmployee(employee.id)">Chặn thành viên</a>
                                     </div>
                                 </div>
                             </td>
@@ -162,6 +169,38 @@
                 <img src="{{asset('frontend')}}/image/loading.gif" alt="">
             </div>
         </div>
+        <!-- Modal -->
+        <div class="modal fade" id="modal_import" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form enctype="multipart/form-data">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Import dữ liệu nhân viên</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body overflow-modal scrollbar-right-custom row">
+                            <div class="form-group col-lg-12">
+                                <label for="recipient-name" class="col-form-label">Chọn file <span class="text-danger">*</span></label>
+                                <input type="file" class="form-control" accept=".xlsx, .xlsm, .xls, .xltx" id="inpFile">
+                            </div>
+                            <div class="col-12">
+                                <p> Thêm nhiều nhân viên bằng cách import thông tin từ file Excel. Lưu ý mọi thông tin phải hợp lệ như file mẫu.
+                                <br><a href="/template/template_import_timesheet.xlsx" class="text-primary">Download file mẫu</a></p>
+                            </div>
+                        </div>
+                        <div class="modal-footer" style="display: block;">
+                            <div class="action_form" style="display: flex; align-items: center; justify-content: flex-end;">
+                                <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#modal_preview_import" @click="handleImport()">Xác nhận</button>
+                                <button type="button" class="btn btn-secondary btn-sm ml-2" data-dismiss="modal">Hủy bỏ</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
     </div>
 @endsection
 
@@ -266,10 +305,10 @@
                     }
                 }
             },
-            removeUser: () => {
+            blockEmployee: (employee_id) => {
                 Swal.fire({
                     title: 'Hành động nguy hiểm !!',
-                    text: "Bạn có muốn xóa nhân viên này không, hành động này không thể khôi phục.",
+                    text: "Bạn có muốn chặn thành viên này không.",
                     icon: 'warning',
                     heightAuto: true,
                     showCancelButton: true,
@@ -279,19 +318,15 @@
                 })
                 .then((result) => {
                     if (result.isConfirmed) {
-                        let option = {
-                            _token: '{{ csrf_token() }}',
-                            id: $(this).attr("data-id")
-                        }
                         $('.overlay-load').css('display', 'flex');
-                        axios.post("{{route('ajax-remove-user')}}", option)
+                        let params = location.search;
+                        axios.post("{{route('ajax-block-employee')}}" + params, { employee_id })
                             .then(({data}) => {
-                                $('#data-table').html(data.data);
-                                callBack();
+                                app.employees = data.data;
                                 $('.overlay-load').css('display', 'none');
                                 Swal.fire(
                                     'Thành công',
-                                    'Nhân viên này đã được xóa',
+                                    'Thành viên này sẽ không có quyền truy cập vào hệ thống',
                                     'success'
                                 )
                             })
@@ -306,10 +341,89 @@
                     }
                 })
             },
+            changeStatus: async (employee) => {
+                const { value } = await Swal.fire({
+                    title: '<h3 style="margin-top: 10px;">Thay đổi trạng thái</h3>',
+                    html: `
+                        <div class="row" style="width: 90%; margin: 0 auto !important; text-align: start;">
+                            <div class="col-sm-12 form-group">
+                                <label class="col-form-label">Lựa chọn trạng thái</label>
+                                <select name="status" id="statusOption" class="form-control">
+                                    @foreach (config('employee.status_active') as $id => $name)
+                                        <option value="{{$id}}">{{ $name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    `,
+                    focusConfirm: false,
+                    confirmButtonText: "Thay đổi",
+                    showCancelButton: true,
+                    preConfirm: () => {
+                        let status = $('#statusOption').val();
+                        return status;
+                    },
+                    didOpen: () => {
+                        $("#statusOption").val(employee.status).change();
+                    }
+                })
+                if (value) {
+                    let option = {
+                        employee_id: employee.id,
+                        status: value
+                    }
+                    $('.overlay-load').css('display', 'flex');
+                    const response = axios.post("{{route('ajax-change-status-employee')}}", option)
+                    .then(({ data }) => {
+                        let dataFormat = data.data;
+                        $('.overlay-load').css('display', 'none');
+                        console.log("data", dataFormat);
+                        Swal.fire(
+                            'Thành công',
+                            'Trạng thái đã được thay đổi',
+                            'success'
+                        );
+                        app.employees.data = app.employees.data.map((item) => {
+                            if (item.id == dataFormat.id) {
+                                item.status = dataFormat.status;
+                                item.status_str = dataFormat.status_str;
+                            }
+                            return item;
+                        });
+                    })
+                    .catch((error) => {
+                        $('.overlay-load').css('display', 'none');
+                        Swal.fire(
+                            'Thất bại',
+                            error?.response?.data?.message || 'Đã có lỗi xảy ra',
+                            'error'
+                        )
+                    })
+                }
+            },
             getLinkDetail: (employeeId) => {
                 let linkRoot = `{{ route('show-info-user', ['id' => '????']) }}`
                 return linkRoot.replace("????", employeeId);
+            },
+            handleImport: () => {
+                alert("Tính năng đang phát triển");
+                // var data = new FormData();
+                // data.append('file', document.getElementById('inpFile').files[0]);
+                // data.append('date', app.inputMounthImport);
+                // data.append('file', app.formFileImport);
+                // axios.post("{{route('ajax-import-employee')}}", data, {
+                //     headers: {
+                //         'Content-Type': 'multipart/form-data'
+                //     }
+                // })
+                // .then(({data}) => {
+                //     app.dataPreview = data.data;
+                //     app.recordNotExist = data.recordNotExist;
+                // })
+                // .catch(error => {
+                // })
             }
+
         }
     });
 

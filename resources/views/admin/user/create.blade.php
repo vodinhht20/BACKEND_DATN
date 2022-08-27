@@ -1,6 +1,19 @@
 @extends('admin.layouts.main')
 @section('title')
     <title>Thành viên | Thêm Mới</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.4.0/dist/vue-treeselect.min.css">
+    <style>
+        .vue-treeselect__value-container {
+            height: 36px;
+        }
+        .vue-treeselect__placeholder {
+            line-height: 40px;
+        }
+        .vue-treeselect__control {
+            border-radius: 2px;
+            border: 1px solid #cccccc !important;
+        }
+    </style>
 @endsection
 @section('header-page')
 <div class="page-header">
@@ -25,7 +38,7 @@
 </div>
 @endsection
 @section('content')
-    <div class="row">
+    <div class="row" id="app">
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-header">
@@ -37,33 +50,31 @@
                     <form action="" method="POST" id="form-create"  enctype="multipart/form-data">
                         @csrf
                         <div class="row">
-                            <div class="col-sm-3">
-                                <div class="form-group">
-                                    <label class="col-form-label">Ảnh đại diện</label>
-                                    <div class="ellipsis" style="max-width: none !important;margin: 5px 0;">
-                                        <input type="file" name="avatar" id="avatar" onchange="loadFile(event)">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-2">
-                                <div class="col-sm-5" style="height: auto; min-height: 100px">
-                                    <img id="preview_image" src="{{ asset('frontend/image/avatar_empty.jfif') }}"/>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="col-form-label">Trạng thái</label>
-                                    <select name="status" id="" class="form-control data-input">
-                                        @foreach (config('global.employeeStatus') as $key => $statusName)
-                                            <option value="{{$statusName}}">{{$key}}</option>
-                                        @endforeach
-                                    </select>
+                            <div class="col-sm-12 form-group mb-2">
+                                <label class="col-form-label">Ảnh đại diện</label>
+                                <div style="width: 300px;margin: auto;text-align: center;">
+                                    <img id="preview_image" src="{{ asset('frontend/image/avatar_empty.jfif') }}"  class="mb-2"/>
+                                    <input type="file" name="avatar" id="avatar" onchange="loadFile(event)">
                                 </div>
                             </div>
                             <div class="col-sm-6 form-group">
-                                <label class="col-form-label">Giới tính</span></label>
+                                <label class="col-form-label">Họ & Tên <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control data-input" value="{{ old('fullname') }}" name="fullname" placeholder="Nhập họ và tên thành viên">
+                            </div>
+                            <div class="col-sm-6 form-group">
+                                <label class="col-form-label">Ngày sinh <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control data-input" value="{{ old('birth_day') }}" name="birth_day" placeholder="Nhập ngày sinh">
+                            </div>
+                            <div class="col-sm-6 form-group">
+                                <label class="col-form-label">Số điện thoại <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control data-input" value="{{ old('phone') }}" name="phone" placeholder="0912345678">
+                            </div>
+                            <div class="col-sm-6 form-group">
+                                <label class="col-form-label">Email cá nhân</label>
+                                <input type="text" class="form-control data-input" value="{{ old('email') }}" name="personal_email" placeholder="Nhập email cá nhân">
+                            </div>
+                            <div class="col-sm-6 form-group">
+                                <label class="col-form-label">Giới tính <span class="text-danger">*</span></label>
                                 <select name="gender" id="" class="form-control data-input">
                                     @foreach (config('global.gender') as $key => $gender)
                                         <option value="{{$gender}}">{{$key}}</option>
@@ -71,47 +82,28 @@
                                 </select>
                             </div>
                             <div class="col-sm-6 form-group">
-                                <label class="col-form-label">Chi nhánh</label>
-                                <select name="branch" id="" class="form-control data-input">
+                                <label for="" class="col-form-label">Vị trí phòng ban <span class="text-danger">*</span></label>
+                                <input type="hidden" name="position" :value="departmentValue">
+                                <treeselect v-model="departmentValue" :options="departments" :disable-branch-nodes="true"/>
+                            </div>
+                            <div class="col-sm-6 form-group">
+                                <label class="col-form-label">Chi nhánh <span class="text-danger">*</span></label>
+                                <select name="branch_id" id="" class="form-control data-input">
                                     @foreach ($branchs as $branch)
                                     <option value="{{$branch->id}}">{{$branch->name}}</option>
                                     @endforeach
                                 </select>
                             </div>
                             <div class="col-sm-6 form-group">
-                                <label class="col-form-label">Vị trí</label>
-                                <select name="position" id="" class="form-control data-input">
-                                    @foreach ($positions as $position)
-                                    <option value="{{$position->id}}">{{$position->name}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col-sm-6 form-group">
-                                <label class="col-form-label">Trạng thái điểm danh</label>
+                                <label class="col-form-label">Trạng thái điểm danh <span class="text-danger">*</span></label>
                                 <select name="is_checked" id="" class="form-control data-input">
                                     <option value="1">Được phép điểm danh</option>
-                                    <option value="2">Không được phép điểm danh</option>
+                                    <option value="0">Không được phép điểm danh</option>
                                 </select>
                             </div>
-                            <div class="col-sm-6 form-group">
-                                <label class="col-form-label">Họ & Tên<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control data-input" value="{{ old('fullname') }}" name="fullname" placeholder="Nhập họ và tên thành viên">
-                            </div>
-                            <div class="col-sm-6 form-group">
-                                <label class="col-form-label">Ngày sinh<span class="text-danger">*</span></label>
-                                <input type="date" class="form-control data-input" value="{{ old('birth_day') }}" name="birth_day" placeholder="Nhập ngày sinh">
-                            </div>
-                            <div class="col-sm-6 form-group">
-                                <label class="col-form-label">Số điện thoại</label>
-                                <input type="text" class="form-control data-input" value="{{ old('phone') }}" name="phone" placeholder="+84 329766459">
-                            </div>
-                            <div class="col-sm-6 form-group">
-                                <label class="col-form-label">Email công ty<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control data-input" value="{{ old('email') }}" name="email" placeholder="Nhập email công ty">
-                            </div>
-                            <div class="col-sm-6 form-group">
-                                <label class="col-form-label">Email cá nhân</label>
-                                <input type="text" class="form-control data-input" value="{{ old('email') }}" name="personal_email" placeholder="Nhập email cá nhân">
+                            <div class="col-sm-12 form-group">
+                                <label class="col-form-label">Địa chỉ <span class="text-danger">*</span></label>
+                                <textarea class="form-control data-input" cols="30" rows="1" name="address" placeholder="Nhập địa chỉ hiện tại ...">{{ old('address') }}</textarea>
                             </div>
                         </div>
                         <div class="row mt-3">
@@ -119,13 +111,23 @@
                                 <p class="text-primary"><strong>Thông tin thêm</strong></p>
                             </div>
                             @foreach ($attributes as $attribute)
-                            <div class="col-sm-6">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="col-form-label">{{ $attribute->description }}</label>
+                                        <input name="atribute[{{ $attribute->name }}]" type="{{getDataType($attribute->data_type)}}" class="form-control data-input" placeholder="Vui lòng nhập thông tin ...">
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <p class="text-primary"><strong>Giới thiệu bản thân</strong></p>
+                            </div>
+                            <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label class="col-form-label">{{$attribute->name}}</label>
-                                    <input name="{{$attribute->name}}" type="{{getDataType($attribute->data_type)}}" class="form-control data-input" placeholder="{{$attribute->name}}">
+                                    <textarea name="note" class="form-control data-input" cols="30" rows="5" placeholder="Giới thiệu bản thân ..."></textarea>
                                 </div>
                             </div>
-                            @endforeach
                         </div>
                         <div class="form-group row justify-content-center">
                             <button class="btn btn-primary btn-round waves-effect waves-light ">Tạo mới</button>
@@ -141,7 +143,19 @@
 @endsection
 
 @section('page-script')
+<script src="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.4.0/dist/vue-treeselect.umd.min.js"></script>
 <script>
+    Vue.component('treeselect', VueTreeselect.Treeselect);
+    var app = new Vue({
+        el: '#app',
+        data: {
+            departmentValue: null,
+            departments: {!! json_encode($departments) !!},
+        },
+        methods: {
+
+        }
+    });
     var loadFile = function(event) {
         var reader = new FileReader();
         reader.onload = function(){
@@ -154,44 +168,46 @@
     const objData = {
       rules: {
         fullname: "required",
-        email: {
-            required: true,
+        phone: "required",
+        personal_email: {
             email: true
         },
-        phone: {
-            phoneVN: true
-        },
-        personal_email:{
-            email:true
-        },
-        birth_day:{
+        birth_day: {
             required:true,
             date: true
-        }
+        },
+        gender: "required",
+        branch_id: "required",
+        address: "required",
       },
       messages: {
         fullname: `<span class="text-validate">Vui lòng nhập họ và tên</span>`,
-        email: {
-            required: `<span class="text-validate">Vui lòng nhập email</span>`,
-            email: `<span class="text-validate">Vui lòng nhập đúng định dạng email</span>`
-        },
         personal_email: {
             email: `<span class="text-validate">Vui lòng nhập đúng định dạng email</span>`
         },
         phone: {
-            phoneVN: `<span class="text-validate">Vui lòng nhập đúng số điện thoại</span>`
+            required: `<span class="text-validate">Vui lòng nhập số điện thoại</span>`
         },
         birth_day:{
             required: `<span class="text-validate">Vui lòng nhập ngày sinh</span>`,
             date: `<span class="text-validate">Vui lòng nhập đúng định dạng ngày tháng</span>`
-        }
+        },
+        gender: `<span class="text-validate">Vui lòng chọn trạng thái</span>`,
+        is_checked: `<span class="text-validate">Trạng thái điểm danh không được để trống</span>`,
+        branch_id: `<span class="text-validate">Vui lòng chọn chi nhánh</span>`,
+        address: `<span class="text-validate">Vui lòng nhập địa chỉ hiện tại</span>`,
       }
     }
     const funcAjax = () => {
+        if ((!app.departmentValue) || app.departmentValue == '') {
+            alert('Vui lòng lựa chọn vị trí phòng ban');
+            return;
+        }
         $('.overlay-load').css('display', 'flex');
         var file_data = $('#avatar').prop('files')[0];
         var form_data = new FormData();
         form_data.append('_token', '{{ csrf_token() }}');
+        form_data.append('position', app.departmentValue);
         if (file_data) {
             form_data.append('avatar', file_data);
         }

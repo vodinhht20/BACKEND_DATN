@@ -18,23 +18,7 @@ class Employee extends Authenticatable implements JWTSubject
     use HasApiTokens, HasFactory, Notifiable, HasRoles, SoftDeletes;
 
     protected $table = 'employees';
-    protected $fillable = [
-        'fullname',
-        'password',
-        'email',
-        'personal_email',
-        'avatar',
-        'phone',
-        'branch_id',
-        'position_id',
-        'is_checked',
-        'type_avatar',
-        'birth_day',
-        'employee_code',
-        'note',
-        'gender',
-        'fcm_token',
-    ];
+    protected $guarded  = [];
 
     /**
      * The attributes that should be hidden for serialization.

@@ -1,4 +1,4 @@
-<div class="table-responsive">
+<div class="table-responsive" style="width: 100%;">
     <table class="table table-hover">
         <thead>
             <tr>
@@ -22,7 +22,7 @@
                         <p class="ellipsis" width="200">{{ $employee->email }}</p>
                     </td>
                     <td>{{ $employee->phone ?: "Chưa có" }}</td>
-                    <td>{{ $employee->birth_day ?: "Chưa có" }}</td>
+                    <td>{{ $employee->position->name ?: "N/A" }}</td>
                     <td>
                         <button class="btn btn-primary btn-round waves-effect waves-light unlock-user" data-id="{{ $employee->id }}"><i class="ti-key"></i> Bỏ chặn</button>
                     </td>

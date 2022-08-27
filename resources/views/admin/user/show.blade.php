@@ -1,6 +1,12 @@
 @extends('admin.layouts.main')
 @section('title')
     <title>Thành viên | {{$employee->fullname}}</title>
+    <style>
+        .icon-theme {
+            font-size: 17px !important;
+            padding: 7px !important;
+        }
+    </style>
 @endsection
 @section('header-page')
 <div class="page-header">
@@ -34,154 +40,136 @@
                 </div>
                 @include('admin.layouts.messages')
                 <div class="card-block">
-                        <div class="row">
-                            <div class="col-sm-10 row">
-                                <div class="col-sm-2" style="height: auto; min-height: 100px;">
-                                    <img src="{{ $employee->getAvatar() ?: asset('frontend/image/avatar_empty.jfif') }}" height="100px" style="border-radius: 50%"/>
-                                </div>
-                                <div class="col-sm-8 row">
-                                    <div class="col-sm-12 pt-3">
-                                        <p><strong>{{ $employee->fullname }}</strong></p>
-                                    </div>
-                                    <div class="col-sm-12">
-                                        <p>{{$employee->employee_code}}</p>
-                                    </div>
-                                </div>
-                            </div> 
-                            <div class="col-sm-2">
-                                <a href="{{ route('show-form-update-user', ['id' => $employee->id]) }}" class="btn btn-warning" style="border-radius:5px; color:black">
-                                    Chỉnh sửa
-                                </a>
+                    <div class="row">
+                        <div class="col-sm-10 row">
+                            <div class="col-sm-2" style="height: auto; min-height: 100px;">
+                                <img src="{{ $employee->getAvatar() ?: asset('frontend/image/avatar_empty.jfif') }}" height="100px" style="border-radius: 50%;height: 100px;width: 100px;object-fit: cover;"/>
                             </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col-sm-12">
-                                <h6> <i class="fa fa-archive" aria-hidden="true"></i> Thông tin công việc </h6>
-                            </div>
-                            <div class="col-sm-12 row">
-                                <div class="col-sm-6 mt-3 row">
-                                    <div class="col-sm-6"><p>Mã nhân viên</p></div>
-                                    <div class="col-sm-6">
-                                        <p><strong>{{$employee->employee_code}}</strong></p>
-                                    </div>
+                            <div class="col-sm-8 row">
+                                <div class="col-sm-12 pt-3">
+                                    <p><strong>{{ $employee->fullname }}</strong></p>
                                 </div>
-                                <div class="col-sm-6 mt-3 row">
-                                    <div class="col-sm-6"><p>Vị trí công việc </p></div>
-                                    <div class="col-sm-6">
-                                        <p> <strong>{{$employee->position->name}}</strong></p>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6 mt-3 row">
-                                    <div class="col-sm-6"><p>Phòng ban</p></div>
-                                    <div class="col-sm-6">
-                                        <p><strong>{{$employee->branch? $employee->branch->name: 'Chưa cập nhật'}}</strong></p>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6 mt-3 row">
-                                    <div class="col-sm-6"><p>Quản lý trực tiếp</p></div>
-                                    <div class="col-sm-6">
-                                        <p><strong>Hoàng Văn A</strong></p>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6 mt-3 row">
-                                    <div class="col-sm-6"><p>Loại hình nhân sự</p></div>
-                                    <div class="col-sm-6">
-                                        <p><strong>Chưa cập nhật</strong></p>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6 mt-3 row">
-                                    <div class="col-sm-6"><p>Trạng thái nhân sự</p></div>
-                                    <div class="col-sm-6">
-                                        <p class="text-success"><strong>Đang làm việc</strong></p>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6 mt-3 row">
-                                    <div class="col-sm-6"><p>Trạng thái sử dụng</p></div>
-                                    <div class="col-sm-6">
-                                        @if ($employee->status == 1)
-                                        <label class="label label-success">{{ getStatusName($employee->status)}}</label>
-                                        @elseif($employee->status == 1)
-                                        <label class="label label-warning">{{ getStatusName($employee->status)}}</label>
-                                        @else
-                                        <label class="label label-danger">{{ getStatusName($employee->status)}}</label>
-                                        @endif
-                                    </div>
-                                </div>
-                                <div class="col-sm-6 mt-3 row">
-                                    <div class="col-sm-6">Ngày bắt đầu đi làm</div>
-                                    <div class="col-sm-6"><p><strong>12/2/2020</strong></p></div>
-                                </div>
-                                <div class="col-sm-6 mt-3 row">
-                                    <div class="col-sm-6">Ngày bắt đầu chính thức</div>
-                                    <div class="col-sm-6"><p><strong>12/2/2020</strong></p></div>
-                                </div>
-                                <div class="col-sm-6 mt-3 row">
-                                    <div class="col-sm-6">Ngày nghỉ việc</div>
-                                    <div class="col-sm-6"><p><strong>12/2/2020</strong></p></div>
-                                </div>
-                                <div class="col-sm-6 mt-3 row">
-                                    <div class="col-sm-6">Số phép năm nay</div>
-                                    <div class="col-sm-6"><p><strong>10</strong></p></div>
-                                </div>
-                                <div class="col-sm-6 mt-3 row">
-                                    <div class="col-sm-6">Số phép năm trước</div>
-                                    <div class="col-sm-6"><p><strong>0</strong></p></div>
-                                </div>
-                            </div>
-                            <div class="col-sm-12 mt-3">
-                                <h6> <i class="fa fa-archive" aria-hidden="true"></i> Thông tin cá nhân </h6>
-                            </div>
-                            <div class="col-sm-12 row">
-                                <div class="col-sm-6 mt-3 row">
-                                    <div class="col-sm-6"><p>Giới tính </p></div>
-                                    <div class="col-sm-6">
-                                        <p><strong>{{getGender($employee->gender)}}</strong></p>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6 mt-3 row">
-                                    <div class="col-sm-6"><p>Số điện thoại </p></div>
-                                    <div class="col-sm-6">
-                                        <p><strong>{{$employee->phone ? $employee->phone : "Chưa cập nhật"}}</strong></p>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6 mt-3 row">
-                                    <div class="col-sm-6"><p>Ngày sinh </p></div>
-                                    <div class="col-sm-6">
-                                        <p><strong>{{$employee->birth_day ? $employee->birth_day : "Chưa cập nhật"}}</strong></p>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6 mt-3 row">
-                                    <div class="col-sm-6"><p>Email cá nhân </p></div>
-                                    <div class="col-sm-6">
-                                        <p><strong>{{$employee->personal_email ? $employee->personal_email : "Chưa cập nhật"}}</strong></p>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6 mt-3 row">
-                                    <div class="col-sm-6"><p>Email làm việc </p></div>
-                                    <div class="col-sm-6">
-                                        <p><strong>{{$employee->email}}</strong></p>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6 mt-3 row">
-                                    <div class="col-sm-6"><p>Địa chỉ tạm chú </p></div>
-                                    <div class="col-sm-6">
-                                        <p><strong>{{$employee->address ? $employee->address : "Chưa cập nhật"}}</strong></p>
-                                    </div>
-                                </div>
-                                @foreach ($attributes as $attribute)
-                                    <div class="col-sm-6 mt-3 row">
-                                        <div class="col-sm-6"><p>{{$attribute->attribute->name}}</p></div>
-                                        <div class="col-sm-6">
-                                            <p><strong>{{$attribute->data}}</strong></p>
-                                        </div>
-                                    </div>
-                                @endforeach
                                 <div class="col-sm-12">
-                                    <h6> <i class="fa fa-archive" aria-hidden="true"></i> Ghi chú </h6>
+                                    <p>{{$employee->employee_code}}</p>
                                 </div>
                             </div>
                         </div>
-                       
+                        <div class="col-sm-2">
+                            <a href="{{ route('show-form-update-user', ['id' => $employee->id]) }}" class="btn btn-warning" style="border-radius:5px; color:black;background-color: #ff9d3629;color: var(--ui-outline);border: none;font-weight: 500;">
+                                Chỉnh sửa
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-sm-12">
+                            <h6> <i class="fa fa-archive icon-theme" aria-hidden="true"></i> Thông tin công việc </h6>
+                        </div>
+                        <div class="col-sm-12 row">
+                            <div class="col-sm-6 mt-3 row">
+                                <div class="col-sm-4"><p>Mã nhân viên</p></div>
+                                <div class="col-sm-8">
+                                    <p><strong>{{$employee->employee_code}}</strong></p>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 mt-3 row">
+                                <div class="col-sm-4"><p>Vị trí công việc </p></div>
+                                <div class="col-sm-8">
+                                    <p> <strong>{{$employee->position->name}}</strong></p>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 mt-3 row">
+                                <div class="col-sm-4"><p>Phòng ban</p></div>
+                                <div class="col-sm-8">
+                                    <p><strong>{{ $employee?->position?->department?->name ?: 'Chưa cập nhật' }}</strong></p>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 mt-3 row">
+                                <div class="col-sm-4"><p>Quản lý trực tiếp</p></div>
+                                <div class="col-sm-8">
+                                    <p><strong>{{ $employee->getLeader() ? "[" . $employee->getLeader()->employee_code . "] " . $employee->getLeader()->fullname : "N/A" }}</strong></p>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 mt-3 row">
+                                <div class="col-sm-4"><p>Trạng thái nhân sự</p></div>
+                                <div class="col-sm-8">
+                                    @if ($employee->status == config('employee.status.block') || $employee->status == config('employee.status.retired'))
+                                        <label class="label label-warning">{{ config('employee.status_str.' . $employee->status) }}</label>
+                                    @else
+                                        <label class="label label-success">{{ config('employee.status_str.' . $employee->status) }}</label>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-sm-6 mt-3 row">
+                                <div class="col-sm-4"><p>Trạng thái điểm danh</p></div>
+                                <div class="col-sm-8">
+                                    @if ($employee->is_checked)
+                                        <label class="label label-success">Cho phép điếm danh</label>
+                                    @elseif($employee->status == 1)
+                                        <label class="label label-warning">Không có quyền</label>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mt-3">
+                            <h6><i class="fa fa-archive icon-theme" aria-hidden="true"></i> Thông tin cá nhân </h6>
+                        </div>
+                        <div class="col-sm-12 row">
+                            <div class="col-sm-6 mt-3 row">
+                                <div class="col-sm-4"><p>Giới tính </p></div>
+                                <div class="col-sm-8">
+                                    <p><strong>{{ getGender($employee->gender) }}</strong></p>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 mt-3 row">
+                                <div class="col-sm-4"><p>Số điện thoại </p></div>
+                                <div class="col-sm-8">
+                                    <p><strong>{{$employee->phone ? $employee->phone : "Chưa cập nhật"}}</strong></p>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 mt-3 row">
+                                <div class="col-sm-4"><p>Ngày sinh </p></div>
+                                <div class="col-sm-8">
+                                    <p><strong>{{$employee->birth_day ? $employee->birth_day : "Chưa cập nhật"}}</strong></p>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 mt-3 row">
+                                <div class="col-sm-4"><p>Email cá nhân </p></div>
+                                <div class="col-sm-8">
+                                    <p><strong>{{$employee->personal_email ? $employee->personal_email : "Chưa cập nhật"}}</strong></p>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 mt-3 row">
+                                <div class="col-sm-4"><p>Email làm việc </p></div>
+                                <div class="col-sm-8">
+                                    <p><strong>{{$employee->email}}</strong></p>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 mt-3 row">
+                                <div class="col-sm-4"><p>Địa chỉ tạm chú </p></div>
+                                <div class="col-sm-8">
+                                    <p><strong>{{$employee->address ? $employee->address : "Chưa cập nhật"}}</strong></p>
+                                </div>
+                            </div>
+                            @foreach ($attributes as $attribute)
+                                <div class="col-sm-6 mt-3 row">
+                                    <div class="col-sm-4"><p>{{$attribute->attribute->description}}</p></div>
+                                    <div class="col-sm-8">
+                                        <p><strong>{{$attribute->data}}</strong></p>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                        <div class="col-sm-12">
+                            <h6><i class="fa fa-archive icon-theme" aria-hidden="true"></i> Ghi chú </h6>
+                        </div>
+                        <div class="col-sm-12 row">
+                            <div class="col-sm-12 mt-3 row">
+                                <div class="col-sm-8">
+                                    <p>{{ $employee->note }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

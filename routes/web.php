@@ -86,11 +86,13 @@ Route::prefix('/admin')->middleware(['auth', 'can:web'])->group(function () {
     Route::post('/ajax-get-role-user', [RoleController::class, 'getRole'])->name('ajax-get-role-user');
     Route::post('/ajax-create-user', [EmployeeController::class, 'addUser'])->name('ajax-create-user');
     Route::post('/ajax-remove-user', [EmployeeController::class, 'ajaxRemove'])->name('ajax-remove-user');
-    Route::post('/ajax-block-user', [EmployeeController::class, 'ajaxBlock'])->name('ajax-block-user');
+    Route::post('/ajax-block-employee', [EmployeeController::class, 'ajaxBlock'])->name('ajax-block-employee');
+    Route::post('/ajax-change-status-employee', [EmployeeController::class, 'ajaxChangeStatus'])->name('ajax-change-status-employee');
     Route::post('/ajax-un-block-user', [EmployeeController::class, 'ajaxUnBlock'])->name('ajax-un-block-user');
     Route::post('/ajax-user-confirm-email', [EmployeeController::class, 'confirmEmail'])->name('ajax-user-confirm-email');
     Route::post('/ajax-user-change-password', [EmployeeController::class, 'changePasssword'])->name('ajax-user-change-password');
     Route::get('/ajax-get-employee',[EmployeeController::class,'dataReponse'])->name('ajax-get-employee');
+    Route::post('/ajax-import-employee',[EmployeeController::class,'handleImport'])->name('ajax-import-employee');
     Route::post('/ajax-watched-noti',[NotificationController::class,'handleWatched'])->name('ajax-watched-noti');
 
     Route::prefix('/checkin')->name("checkin.")->middleware("role:admin")->group(function () {
