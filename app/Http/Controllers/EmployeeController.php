@@ -485,6 +485,10 @@ class EmployeeController extends Controller
         ], 422);
     }
 
+    public function handleImport(Request $request)
+    {
+        dd($request->all());
+    }
     public function blackList()
     {
         $employees = $this->employeeRepo->getUserBlock();

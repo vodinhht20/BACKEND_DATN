@@ -42,13 +42,17 @@
     <div class="card app_vue">
         <div class="card-header" style="box-shadow: none;">
             <h5 style="font-size: 17px;">Danh sách nhân sự</h5>
-            <a href="{{route('user-black-list')}}" class="btn btn-outline-dark btn-round waves-effect waves-light" style="float: right">
+            <a href="{{route('user-black-list')}}" class="btn btn-outline-dark btn-round waves-effect" style="float: right; padding: 10px 15px !important;">
                 <i class="ti-lock"></i>
                 Danh sách chặn
             </a>
-            <a href="{{route('show-form-user-create')}}" class="btn btn-outline-primary btn-round waves-effect waves-light mr-3" style="float: right">
+            <a href="{{route('show-form-user-create')}}" class="btn btn-outline-primary btn-round waves-effect mr-3" style="float: right; padding: 10px 15px !important;">
                 <i class="ti-plus"></i>
                 Thêm nhân sự
+            </a>
+            <a href="javascript:void(0)" class="btn btn-outline-primary btn-round waves-effect mr-3" data-toggle="modal" data-target="#modal_import" style="float: right; padding: 10px 15px !important;">
+                <i class="ti-plus"></i>
+                Import Excel
             </a>
         </div>
         <div class="row mb-3" style="margin: unset;">
@@ -165,6 +169,38 @@
                 <img src="{{asset('frontend')}}/image/loading.gif" alt="">
             </div>
         </div>
+        <!-- Modal -->
+        <div class="modal fade" id="modal_import" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form enctype="multipart/form-data">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Import dữ liệu nhân viên</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body overflow-modal scrollbar-right-custom row">
+                            <div class="form-group col-lg-12">
+                                <label for="recipient-name" class="col-form-label">Chọn file <span class="text-danger">*</span></label>
+                                <input type="file" class="form-control" accept=".xlsx, .xlsm, .xls, .xltx" id="inpFile">
+                            </div>
+                            <div class="col-12">
+                                <p> Thêm nhiều nhân viên bằng cách import thông tin từ file Excel. Lưu ý mọi thông tin phải hợp lệ như file mẫu.
+                                <br><a href="/template/template_import_timesheet.xlsx" class="text-primary">Download file mẫu</a></p>
+                            </div>
+                        </div>
+                        <div class="modal-footer" style="display: block;">
+                            <div class="action_form" style="display: flex; align-items: center; justify-content: flex-end;">
+                                <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#modal_preview_import" @click="handleImport()">Xác nhận</button>
+                                <button type="button" class="btn btn-secondary btn-sm ml-2" data-dismiss="modal">Hủy bỏ</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
     </div>
 @endsection
 
@@ -368,7 +404,26 @@
             getLinkDetail: (employeeId) => {
                 let linkRoot = `{{ route('show-info-user', ['id' => '????']) }}`
                 return linkRoot.replace("????", employeeId);
+            },
+            handleImport: () => {
+                alert("Tính năng đang phát triển");
+                // var data = new FormData();
+                // data.append('file', document.getElementById('inpFile').files[0]);
+                // data.append('date', app.inputMounthImport);
+                // data.append('file', app.formFileImport);
+                // axios.post("{{route('ajax-import-employee')}}", data, {
+                //     headers: {
+                //         'Content-Type': 'multipart/form-data'
+                //     }
+                // })
+                // .then(({data}) => {
+                //     app.dataPreview = data.data;
+                //     app.recordNotExist = data.recordNotExist;
+                // })
+                // .catch(error => {
+                // })
             }
+
         }
     });
 
