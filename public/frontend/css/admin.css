@@ -18,13 +18,12 @@
 }
 
 #preview_image {
-  width: 90px;
-  height: 90px;
+  width: 150px;
+  height: 150px;
   object-fit: cover;
-  position: absolute;
   border-radius: 5px;
   border: 1px solid #19974e;
-  z-index: 2;
+  border-radius: 50%;
 }
 
 #data-table {

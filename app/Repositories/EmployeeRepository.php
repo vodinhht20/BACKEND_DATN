@@ -40,6 +40,8 @@ class EmployeeRepository extends BaseRepository
         $employee->employee_code = $arrData['employee_code'];
         $employee->branch_id = $arrData['branch_id'];
         $employee->position_id = $arrData['position_id'];
+        $employee->personal_email = $arrData['personal_email'];
+        $employee->address = $arrData['address'];
         $employee->gender = $arrData['gender'];
 
         if (isset($arrData['avatar'])) {
@@ -57,19 +59,17 @@ class EmployeeRepository extends BaseRepository
         if (isset($arrData['type_avatar'])) {
             $employee->type_avatar = $arrData['type_avatar'];
         }
+        if (isset($arrData['status'])) {
+            $employee->status = $arrData['status'];
+        }
+        if (isset($arrData['is_checked'])) {
+            $employee->is_checked = $arrData['is_checked'];
+        }
         if (isset($arrData['note'])) {
             $employee->note = $arrData['note'];
         }
         $employee->save();
         return $employee;
-    }
-
-    public function update($id, $arrData = [])
-    {
-        $employee = $this->model->find($id);
-
-        $employee->update($arrData);
-
     }
 
     public function updateTokenVerifyEmail($arrData = [])
@@ -110,11 +110,22 @@ class EmployeeRepository extends BaseRepository
         return false;
     }
 
+    public function changeStatus($status, $id)
+    {
+        $employee = $this->model->find($id);
+        if ($employee) {
+            $employee->status = $status;
+            $employee->save();
+            return $employee;
+        }
+        return false;
+    }
+
     public function blockUser($id)
     {
         $employee = $this->model->find($id);
         if ($employee) {
-            $employee->status = 0;
+            $employee->status = config('employee.status.block');
             $employee->save();
             return $employee;
         }
@@ -124,7 +135,7 @@ class EmployeeRepository extends BaseRepository
     {
         $employee = $this->model->find($id);
         if ($employee) {
-            $employee->status = 1;
+            $employee->status = config('employee.status.active');
             $employee->save();
             return $employee;
         }
@@ -132,7 +143,11 @@ class EmployeeRepository extends BaseRepository
 
     public function getUserBlock($take = 10)
     {
-        return $this->model->where('status', 0)->orderBy('updated_at', 'desc')->paginate($take);
+        return $this->model
+            ->where('status', config('employee.status.block'))
+            ->orderBy('updated_at', 'desc')
+            ->with('position')
+            ->paginate($take);
     }
 
     public function getRoleByUser($id)
@@ -191,8 +206,12 @@ class EmployeeRepository extends BaseRepository
             })->get();
         }
 
-        if (isset($options['status']) && $options['status'] != '' ) {
+        if (isset($options['status']) && $options['status'] != '' && !is_array($options['status'])) {
             $employee->where('status', $options['status']);
+        }
+
+        if (isset($options['status']) && is_array($options['status'])) {
+            $employee->whereIn('status', $options['status']);
         }
 
         if (isset($options['position_id']) && $options['position_id'] != '' ) {

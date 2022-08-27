@@ -98,11 +98,12 @@
                         <tr v-for="(employee, index) in employees.data">
                             <td class="text-center">@{{ index + 1 }}</td>
                             <td class="text-center">
-                                <img src="" alt="" class="avatar_list">
+                                <img :src="employee.avatar" alt="" class="avatar_list">
                                 <br>
                                 @{{employee.fullname}}
                                 <br>
-                                <label class="label label-success">@{{ employee.status }}</label>
+                                <label class="label label-danger" v-if="employee.status == {{ config('employee.status.retired') }}">@{{ employee.status_str }}</label>
+                                <label class="label label-success" v-else>@{{ employee.status_str }}</label>
                             </td>
                             <td class="text-center">
                                 <label for="" class="badge badge-primary">@{{ employee?.position?.name || "N/A" }}</label>
@@ -113,7 +114,7 @@
                                 <p>SĐT: @{{ employee.phone || "Chưa cập nhật" }}</p>
                                 <p>@{{ employee.email }}</p>
                             </td>
-                            <td class="text-center">
+                            <td class="text-center ellipsis">
                                 @{{ employee?.address || "Chưa thiết lập địa chỉ !" }}
                             </td>
                             <td class="text-center">
@@ -124,6 +125,8 @@
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         <a class="dropdown-item" :href="getLinkDetail(employee.id)">Xem chi tiết</a>
                                         <a class="dropdown-item change-pass" @click="changePass(employee.id, employee.fullname)">Thay đổi mật khẩu</a>
+                                        <a class="dropdown-item change-pass" @click="changeStatus(employee)">Thay đổi trạng thái</a>
+                                        <a class="dropdown-item change-pass" @click="blockEmployee(employee.id)">Chặn thành viên</a>
                                     </div>
                                 </div>
                             </td>
@@ -266,10 +269,10 @@
                     }
                 }
             },
-            removeUser: () => {
+            blockEmployee: (employee_id) => {
                 Swal.fire({
                     title: 'Hành động nguy hiểm !!',
-                    text: "Bạn có muốn xóa nhân viên này không, hành động này không thể khôi phục.",
+                    text: "Bạn có muốn chặn thành viên này không.",
                     icon: 'warning',
                     heightAuto: true,
                     showCancelButton: true,
@@ -279,19 +282,15 @@
                 })
                 .then((result) => {
                     if (result.isConfirmed) {
-                        let option = {
-                            _token: '{{ csrf_token() }}',
-                            id: $(this).attr("data-id")
-                        }
                         $('.overlay-load').css('display', 'flex');
-                        axios.post("{{route('ajax-remove-user')}}", option)
+                        let params = location.search;
+                        axios.post("{{route('ajax-block-employee')}}" + params, { employee_id })
                             .then(({data}) => {
-                                $('#data-table').html(data.data);
-                                callBack();
+                                app.employees = data.data;
                                 $('.overlay-load').css('display', 'none');
                                 Swal.fire(
                                     'Thành công',
-                                    'Nhân viên này đã được xóa',
+                                    'Thành viên này sẽ không có quyền truy cập vào hệ thống',
                                     'success'
                                 )
                             })
@@ -305,6 +304,66 @@
                             })
                     }
                 })
+            },
+            changeStatus: async (employee) => {
+                const { value } = await Swal.fire({
+                    title: '<h3 style="margin-top: 10px;">Thay đổi trạng thái</h3>',
+                    html: `
+                        <div class="row" style="width: 90%; margin: 0 auto !important; text-align: start;">
+                            <div class="col-sm-12 form-group">
+                                <label class="col-form-label">Lựa chọn trạng thái</label>
+                                <select name="status" id="statusOption" class="form-control">
+                                    @foreach (config('employee.status_active') as $id => $name)
+                                        <option value="{{$id}}">{{ $name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    `,
+                    focusConfirm: false,
+                    confirmButtonText: "Thay đổi",
+                    showCancelButton: true,
+                    preConfirm: () => {
+                        let status = $('#statusOption').val();
+                        return status;
+                    },
+                    didOpen: () => {
+                        $("#statusOption").val(employee.status).change();
+                    }
+                })
+                if (value) {
+                    let option = {
+                        employee_id: employee.id,
+                        status: value
+                    }
+                    $('.overlay-load').css('display', 'flex');
+                    const response = axios.post("{{route('ajax-change-status-employee')}}", option)
+                    .then(({ data }) => {
+                        let dataFormat = data.data;
+                        $('.overlay-load').css('display', 'none');
+                        console.log("data", dataFormat);
+                        Swal.fire(
+                            'Thành công',
+                            'Trạng thái đã được thay đổi',
+                            'success'
+                        );
+                        app.employees.data = app.employees.data.map((item) => {
+                            if (item.id == dataFormat.id) {
+                                item.status = dataFormat.status;
+                                item.status_str = dataFormat.status_str;
+                            }
+                            return item;
+                        });
+                    })
+                    .catch((error) => {
+                        $('.overlay-load').css('display', 'none');
+                        Swal.fire(
+                            'Thất bại',
+                            error?.response?.data?.message || 'Đã có lỗi xảy ra',
+                            'error'
+                        )
+                    })
+                }
             },
             getLinkDetail: (employeeId) => {
                 let linkRoot = `{{ route('show-info-user', ['id' => '????']) }}`

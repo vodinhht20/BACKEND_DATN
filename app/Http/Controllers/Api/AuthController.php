@@ -27,7 +27,7 @@ class AuthController extends Controller
     public function login(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            // 'g-recaptcha-response' => ['required', new ReCaptcha],
+            'g-recaptcha-response' => ['required', new ReCaptcha],
             'email' => 'required',
             'password' => 'required',
         ], [
@@ -90,7 +90,7 @@ class AuthController extends Controller
         }
 
         $tokenId = $request->input('token_id');
-        $idToken =  config('services.google.client_id');
+        $idToken = config('services.google.client_id');
         $client = new \Google_Client(['client_id' => $idToken]);
         $payload = $client->verifyIdToken($tokenId);
 
@@ -98,6 +98,12 @@ class AuthController extends Controller
             $email = $payload['email'];
             $employee = $this->employeeRepo->getUserByEmail($email);
             if ($employee) {
+                if ($employee->status == config("employee.status.retired")) {
+                    return response()->json([
+                        "error_code" => "ACCOUNT_BLOCKED",
+                        "message" => "Nhân viên đã bị khóa tài khoản"
+                    ]);
+                }
                 $token = JWTAuth::fromUser($employee);
                 Noti::telegram('Login GG - Client', $payload);
                 return $this->responseToken($token);

@@ -49,8 +49,8 @@ class AuthController extends Controller
         }
         $employee = $this->employeeRepo->checkPassword($request->email, $request->password);
         if ($employee) {
-            if (!$employee->email_verified_at) {
-                return redirect()->back()->with('message.error', 'Tài khoản chưa được xác thực email, vui lòng xác thực để đăng nhập !')->withInput();
+            if ($employee->status == config('employee.status.block')) {
+                return redirect()->back()->with('message.error', 'Tài khoản đã bị khóa vui lòng liên hệ quản trị viên để được hỗ trợ !')->withInput();
             }
             if (!$employee->role == 0) {
                 return redirect()->back()->with('message.error', 'Tài khoản của bạn không có quyền truy cập, vui lòng liên hệ quản trị viên để được hỗ trợ !')->withInput();
