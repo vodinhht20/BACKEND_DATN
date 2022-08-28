@@ -24,7 +24,10 @@ class PostRepository extends BaseRepository
     public function getPost($slug, $branch_id)
     {
         $post = $this->model->where('slug', $slug)
-        ->where('branch_id', $branch_id)
+        ->where(function($q) use ($branch_id) {
+            $q->where('branch_id', $branch_id)
+            ->orWhere('branch_id', null);
+        })
         ->with('employee:id,fullname,avatar')
         ->with('category:id,name')
         ->first();
