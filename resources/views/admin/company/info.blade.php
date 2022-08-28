@@ -51,7 +51,7 @@
                     <tbody>
                         @foreach ($company as $com)
                         <tr>
-                            <td><i class="ti-agenda icon-theme mr-2" style="font-size: 16px; padding: 10px;"></i> Tên công ty: {{$com->name_company}}</td>
+                            <td style="width: 50%;"><i class="ti-agenda icon-theme mr-2" style="font-size: 16px; padding: 10px;"></i> Tên công ty: {{$com->name_company}}</td>
                             <td><i class="ti-google icon-theme mr-2" style="font-size: 16px; padding: 10px;"></i> Website: {{$com->website}}</td>
                         </tr>
                         <tr>

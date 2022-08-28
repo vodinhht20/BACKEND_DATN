@@ -1,4 +1,4 @@
-<p style="font-weight: 600; font-size: 25px">Hình Thức Chấm Công</p>
+<p style="font-weight: 600; font-size: 23px; margin-top: 10px;">Hình Thức Chấm Công</p>
 <hr>
 <div class="form-froup row">
     <div class="col-sm-12">

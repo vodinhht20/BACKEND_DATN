@@ -219,7 +219,7 @@
 
         axios.post("{{route('ajax-create-user')}}", form_data)
             .then(({data}) => {
-                console.log("data", data);
+                $('.overlay-load').css('display', 'none');
                 Swal.fire({
                     title: 'Thành công !',
                     html: `
@@ -235,6 +235,7 @@
                         </div>`,
                     icon: 'success',
                 }).then((result) => {
+                    $('.overlay-load').css('display', 'flex');
                     window.location.href = '{{ route("admin-list-user") }}';
                 })
             })

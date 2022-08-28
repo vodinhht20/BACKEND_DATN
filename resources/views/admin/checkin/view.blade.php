@@ -1,6 +1,6 @@
 @extends('admin.layouts.main')
 @section('title')
-    <title>Loại Sản Phẩm | Danh sách</title>
+    <title>Cài đặt chấm công</title>
 @endsection
 @section('header-page')
 <div class="page-header">
@@ -16,8 +16,8 @@
         <div class="row align-items-center">
             <div class="col-md-8">
                 <div class="page-header-title">
-                    <h5 class="m-b-10">Quản Lý Đơn Từ</h5>
-                    <p class="m-b-0">Danh sách tất cả các loại đơn từ của bạn</p>
+                    <h5 class="m-b-10">Cài đặt chấm công</h5>
+                    <p class="m-b-0">Thiết lập chấm công bằng các phương thức</p>
                 </div>
             </div>
             <div class="col-md-4">
@@ -62,6 +62,11 @@
 
 @section('style-page')
     <link rel="stylesheet" href="{{asset('frontend')}}/css/company-work.css?v1.0.1">
+    <style>
+        .table th, .table td {
+            border-right: unset !important;
+        }
+    </style>
 @endsection
 @section('page-script')
 <script>

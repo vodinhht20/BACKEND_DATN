@@ -143,10 +143,10 @@
                                     <v-icon style="color: #4494eb;">mdi-circle-edit-outline</v-icon>
                                     Chỉnh sửa
                                 </div>
-                                <div class="btn_icon_remove" title="Xóa phòng ban" @click="handleRemove(item)">
+                                {{-- <div class="btn_icon_remove" title="Xóa phòng ban" @click="handleRemove(item)">
                                     <v-icon style="color: #eb4444;">mdi-trash-can</v-icon>
                                     Xóa bỏ
-                                </div>
+                                </div> --}}
                             </div>
                             <div class="mytooltip tooltip-effect-5" v-else>
                                 <span class="tooltip-content clearfix">
