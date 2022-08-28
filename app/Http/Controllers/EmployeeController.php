@@ -273,12 +273,13 @@ class EmployeeController extends Controller
         $branchs = Branch::all();
         $positions = Position::all();
         $departments = $this->departmentRepo->formatVueSelect();
-        $attributeEmployees = AttribuiteEmployee::with('attribute')->where('employee_id', $id)->get();
+        $attributes = Attribute::all();
+        $attributeEmployees = AttribuiteEmployee::with('attribute')->where('employee_id', $id)->get()->keyBy('attribute_id');
         if (!$employee) {
             return abort(404);
         }
 
-        return view('admin.user.update', compact('employee', 'branchs', 'positions', 'attributeEmployees', 'departments'));
+        return view('admin.user.update', compact('employee', 'branchs', 'positions', 'attributeEmployees', 'departments', 'attributes'));
     }
 
 
@@ -307,10 +308,7 @@ class EmployeeController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => $validator->messages()->first()
-            ], 404);
+            return redirect()->back()->with('message.error', $validator->messages()->first())->withInput();
         }
 
         $employee = Employee::find($id);

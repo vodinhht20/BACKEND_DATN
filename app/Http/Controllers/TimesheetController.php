@@ -179,6 +179,12 @@ class TimesheetController extends Controller
                     foreach ($data as $key => $item) {
                         try {
                             $dateFormat = Carbon::createFromFormat("Y-m-d", $key);
+                            if ($dateFormat->format("Y-m") != $date->format("Y-m")) {
+                                return response()->json([
+                                    'error_code' => 'validate_failed',
+                                    'messages' => array("Tháng lựa chọn không trùng với dữ liệu tháng trong excel")
+                                ], 442);
+                            }
                         } catch (\Exception $ex) {
                             continue;
                         }
@@ -284,6 +290,12 @@ class TimesheetController extends Controller
                     foreach ($data as $key => $item) {
                         try {
                             $dateFormat = Carbon::createFromFormat("Y-m-d", $key);
+                            if ($dateFormat->format("Y-m") != $date->format("Y-m")) {
+                                return response()->json([
+                                    'error_code' => 'validate_failed',
+                                    'messages' => array("Tháng lựa chọn không trùng với dữ liệu tháng trong excel")
+                                ], 442);
+                            }
                         } catch (\Exception $ex) {
                             continue;
                         }

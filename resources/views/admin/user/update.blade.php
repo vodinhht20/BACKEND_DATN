@@ -106,15 +106,20 @@
                             <div class="col-md-12">
                                 <p class="text-primary"><strong>Thông tin thêm</strong></p>
                             </div>
-                            @foreach ($attributeEmployees as $attributeEmployee)
-                                @if ($attributeEmployee->attribute)
-                                    <div class="col-sm-6">
-                                        <div class="form-group">
-                                            <label class="col-form-label">{{ $attributeEmployee->attribute->description }}</label>
-                                            <input name="atribute[{{ $attributeEmployee->attribute->name }}]" type="{{ getDataType($attributeEmployee->attribute->data_type) }}" class="form-control data-input" value="{{ $attributeEmployee->data }}" placeholder="Vui lòng nhập thông tin ...">
-                                        </div>
+
+                            @foreach ($attributes as $attribute)
+                                @php
+                                    $attributeValue = '';
+                                    if (isset($attributeEmployees[$attribute->id])) {
+                                        $attributeValue = $attributeEmployees[$attribute->id]?->data ?: '';
+                                    }
+                                @endphp
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="col-form-label">{{ $attribute->description }}</label>
+                                        <input name="atribute[{{ $attribute->name }}]" value="{{ $attributeValue }}" type="{{getDataType($attribute->data_type)}}" class="form-control data-input" placeholder="Vui lòng nhập thông tin ...">
                                     </div>
-                                @endif
+                                </div>
                             @endforeach
                         </div>
                         <div class="row mt-3">
