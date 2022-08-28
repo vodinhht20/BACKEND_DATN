@@ -15,6 +15,7 @@ class PostRepository extends BaseRepository
     {
         $posts = $this->model->OrderBy('id', 'desc')
         ->where('branch_id', $branch_id)
+        ->orWhere('branch_id', null)
         ->limit(10)
         ->get();
         return $posts;
