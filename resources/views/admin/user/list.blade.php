@@ -201,8 +201,9 @@
                 </div>
             </div>
         </div>
-        <div class="overlay-load-employee">
-            <img src="{{asset('frontend')}}/image/loading.gif" alt="">
+        <div class="overlay-load-employee" style="position: fixed; z-index: 99999;">
+            <img src="{{asset('frontend')}}/image/loading.gif" alt="" style="width: 74px;">
+            <p>Vui lòng chờ ...</p>
         </div>
     </div>
 @endsection
@@ -435,7 +436,7 @@
                     });
                 })
                 .catch(error => {
-                    $('.overlay-load').css('display', 'none');
+                    $('.overlay-load-employee').css('display', 'none');
                     Swal.fire(
                         'Thất bại',
                         error.response?.data?.messages || "Đã có lỗi xảy ra",
