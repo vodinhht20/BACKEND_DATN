@@ -25,6 +25,7 @@ class PostRepository extends BaseRepository
     {
         $post = $this->model->where('slug', $slug)
         ->where('branch_id', $branch_id)
+        ->orWhere('branch_id', null)
         ->with('employee:id,fullname,avatar')
         ->with('category:id,name')
         ->first();
