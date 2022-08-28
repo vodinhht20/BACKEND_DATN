@@ -340,6 +340,11 @@ class ApplicationController extends Controller
                     'employee_ids' => array($result->employee_id),
                     'link' => '/more/don-tu-cua-ban',
                 ];
+
+                if ($result->status == config('request.status.unapproved')) {
+                    $options['title'] = "Đơn của bạn đã bị từ chối";
+                    $options['content'] = $result->singleType->name . " của bạn đã bị từ chối bởi " . $currentAdmin->fullname;
+                }
                 $this->notifycationRepo->pushNotifications($options);
 
                 // Gửi realtime

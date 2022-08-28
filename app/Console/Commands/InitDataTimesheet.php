@@ -97,9 +97,9 @@ class InitDataTimesheet extends Command
                     $timekeepDetailOptions = [
                         "timekeep_id" => $newTimekeep->id,
                         "checkin_at" => $date->format("Y-m-$i 08:00:00"),
-                        "ip" => "113.185.46.228",
-                        "latitude" => "21.0277644",
-                        "longitude" => "105.8341598",
+                        "ip" => "113.185.44.245",
+                        "latitude" => "21.038019",
+                        "longitude" => "105.746544",
                         "source" => "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36"
                     ];
                     $timekeepDetailRepo->create($timekeepDetailOptions);
