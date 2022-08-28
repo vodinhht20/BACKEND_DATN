@@ -72,7 +72,7 @@
             <div class="form-group col-md-3 col-sx-6 col-lg-3">
                 <label for="">Vị trí phòng ban: </label>
                 <input type="hidden" name="departments" :value="departmentValue">
-                <treeselect v-model="departmentValue" :multiple="true" :options="departments" @input="changePosition()"/>
+                <treeselect v-model="departmentValue" :multiple="true" :options="departments" @input="changePosition()" :disable-branch-nodes="true"/>
             </div>
             <div class="form-group col-md-3 col-sx-6 col-lg-3">
                 <label for="">Chi nhánh: </label>
@@ -187,7 +187,7 @@
                             </div>
                             <div class="col-12">
                                 <p> Thêm nhiều nhân viên bằng cách import thông tin từ file Excel. Lưu ý mọi thông tin phải hợp lệ như file mẫu.
-                                <br><a href="/template/template_import_timesheet.xlsx" class="text-primary">Download file mẫu</a></p>
+                                <br><a href="/template/template_import_employee.xlsx" class="text-primary">Download file mẫu</a></p>
                             </div>
                         </div>
                         <div class="modal-footer" style="display: block;">
@@ -200,7 +200,9 @@
                 </div>
             </div>
         </div>
-
+        <div class="overlay-load-employee">
+            <img src="{{asset('frontend')}}/image/loading.gif" alt="">
+        </div>
     </div>
 @endsection
 
@@ -406,22 +408,35 @@
                 return linkRoot.replace("????", employeeId);
             },
             handleImport: () => {
-                alert("Tính năng đang phát triển");
-                // var data = new FormData();
-                // data.append('file', document.getElementById('inpFile').files[0]);
-                // data.append('date', app.inputMounthImport);
-                // data.append('file', app.formFileImport);
-                // axios.post("{{route('ajax-import-employee')}}", data, {
-                //     headers: {
-                //         'Content-Type': 'multipart/form-data'
-                //     }
-                // })
-                // .then(({data}) => {
-                //     app.dataPreview = data.data;
-                //     app.recordNotExist = data.recordNotExist;
-                // })
-                // .catch(error => {
-                // })
+                $('.overlay-load-employee').css('display', 'flex');
+                var data = new FormData();
+                data.append('file', document.getElementById('inpFile').files[0]);
+                data.append('date', app.inputMounthImport);
+                data.append('file', app.formFileImport);
+                axios.post("{{route('ajax-import-employee')}}", data, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                .then(({data}) => {
+                    $('.overlay-load-employee').css('display', 'none');
+                    Swal.fire(
+                        'Thành công',
+                        'Import dữ liệu thành công',
+                        'success'
+                    ).then(() => {
+                        $('.overlay-load-employee').css('display', 'flex');
+                        location.reload();
+                    });
+                })
+                .catch(error => {
+                    $('.overlay-load').css('display', 'none');
+                    Swal.fire(
+                        'Thất bại',
+                        error.response?.data?.messages || "Đã có lỗi xảy ra",
+                        'error'
+                    )
+                })
             }
 
         }

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\EmployeeImport;
+use App\Imports\TimekeepImport;
 use App\Models\AttribuiteEmployee;
 use App\Models\Branch;
 use App\Models\Attribute;
@@ -18,6 +20,7 @@ use Google\Service\ServiceControl\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
 
 class EmployeeController extends Controller
 {
@@ -45,12 +48,9 @@ class EmployeeController extends Controller
             $regex = "/^position_+[0-9]*$/"; // định dạng phù hơp:  position_12
             if (preg_match($regex, $requestKey)) {
                 $positionIds[] = trim($requestKey, "position_");
-            } else {
-                $departmentIds[] = $requestKey;
             }
         }
-        $positionIdsByDepartments = $this->positionRepo->query(["department_ids" => $departmentIds])->pluck('id')->toArray();
-        $positionIds = array_merge($positionIdsByDepartments, $positionIds);
+
         $status = config('employee.status');
         unset($status['block']);
         $options = [...$request->all(),
@@ -58,9 +58,7 @@ class EmployeeController extends Controller
             "position_ids" => $positionIds,
             "status" => $status
         ];
-        if ($request->departments && count($positionIds) == 0) {
-            $options['position_ids'] = array(-9999);
-        }
+
         $employees = $this->employeeRepo
             ->paginate($options, self::TAKE)
             ->appends($request->query());
@@ -73,21 +71,14 @@ class EmployeeController extends Controller
     public function dataReponse(Request $request)
     {
         $requestDepartments = explode(",", $request->departments);
-        $departmentIds = [];
         $positionIds = [];
-        $requestDepartments = array_filter($requestDepartments, function($e) {
-            return (($e != "") || ($e != null));
-        });
         foreach ($requestDepartments as $requestKey) {
             $regex = "/^position_+[0-9]*$/"; // định dạng phù hơp:  position_12
             if (preg_match($regex, $requestKey)) {
                 $positionIds[] = trim($requestKey, "position_");
-            } else {
-                $departmentIds[] = $requestKey;
             }
         }
-        $positionIdsByDepartments = $this->positionRepo->query(["department_ids" => $departmentIds])->pluck('id')->toArray();
-        $positionIds = array_merge($positionIdsByDepartments, $positionIds);
+
         $status = config('employee.status');
         unset($status['block']);
         $options = [...$request->all(),
@@ -95,9 +86,7 @@ class EmployeeController extends Controller
             "position_ids" => $positionIds,
             "status" => $status
         ];
-        if ($request->departments && count($positionIds) == 0) {
-            $options['position_ids'] = array(-9999);
-        }
+
         $employees = $this->employeeRepo
             ->paginate($options, self::TAKE)
             ->appends($request->query());
@@ -487,7 +476,50 @@ class EmployeeController extends Controller
 
     public function handleImport(Request $request)
     {
-        dd($request->all());
+        $validator = Validator::make($request->all(), [
+            'date' => 'required',
+            'file' => 'required|mimes:xlsx|max:10000',
+        ], [
+            'date.required' => 'Vui lòng lựa chọn ngày',
+            'file.required' => 'Vui lòng chọn file',
+            'file.mimes' => 'Định dạng file không hợp lệ',
+            'file.max' => 'Dung lượng file không quá 10MB',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'error_code' => 'validate_failed',
+                'messages' => array($validator->messages()->first())
+            ], 422);
+        }
+        DB::beginTransaction();
+        try {
+            $import = new EmployeeImport();
+            Excel::import($import, $request->file('file'));
+            $dataImports = $import->dataImport;
+            $dataValidate = $import->validateFile;
+            if ($dataValidate) {
+                return response()->json([
+                    'status' => 'failed',
+                    'messages' => $dataValidate
+                ], 422);
+            }
+            $this->employeeRepo->insertMutiple($dataImports);
+            DB::commit();
+            return response()->json([
+                "status" => "success",
+                "message" => "Import data thành công !"
+            ]);
+        } catch (\Exception $e) {
+            $message = '[' . date('Y-m-d H:i:s') . '] Error message \'' . $e->getMessage() . '\'' . ' in ' . $e->getFile() . ' line ' . $e->getLine();
+            Log::error($message);
+            DB::rollBack();
+            Noti::telegramLog('Import Employee', $message);
+            return response()->json([
+                'error_code' => 'exception_error',
+                'message' => $e->getMessage()
+            ], 442);
+        }
     }
     public function blackList()
     {

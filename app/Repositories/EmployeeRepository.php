@@ -219,7 +219,6 @@ class EmployeeRepository extends BaseRepository
         }
 
         if (isset($options['position_ids']) && is_array($options['position_ids']) && count($options['position_ids']) > 0) {
-            \Log::info($options['position_ids']);
             $employee->whereIn('position_id', $options['position_ids']);
         }
 
@@ -338,5 +337,15 @@ class EmployeeRepository extends BaseRepository
             return $employee;
         });
         return $employees->toArray();
+    }
+
+    /**
+     *
+     * @param array $data
+     * @return int
+     */
+    public function insertMutiple(array $data)
+    {
+        return $this->model->insert($data);
     }
 }

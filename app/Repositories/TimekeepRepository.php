@@ -157,9 +157,7 @@ class TimekeepRepository extends BaseRepository
 
         if (isset($options['position_ids']) && count($options['position_ids']) > 0) {
             $query->whereHas("employee", function ($employeeQuery) use ($options) {
-                $employeeQuery->whereHas("position", function ($positionsQuery) use ($options) {
-                    $positionsQuery->whereIn("id", $options['position_ids']);
-                });
+                $employeeQuery->whereIn('position_id', $options['position_ids']);
             });
         }
 

@@ -31,7 +31,7 @@
   z-index: 1;
 }
 
-.overlay-load {
+.overlay-load, .overlay-load-employee {
   justify-content: center;
   align-items: center;
   background-color: #cdcbcb29;
@@ -46,7 +46,7 @@
   z-index: 999999999999;
 }
 
-.overlay-load img {
+.overlay-load img , .overlay-load-employee .img {
   width: 60px;
 }
 

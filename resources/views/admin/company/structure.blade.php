@@ -298,6 +298,7 @@
                     $('#modal-update-department').modal('show');
                 },
                 handleRemove: (item) => {
+                    console.log("handleRemove", item);
                     Swal.fire({
                         title: 'Hành động nguy hiểm ?',
                         text: `Xác nhận xóa ${item.name} !`,
