@@ -64,9 +64,9 @@
                 <label for="">Trạng thái nhân sự: </label>
                 <select name="status" class="form-control action_filter" data-filter="status">
                     <option value="">-- Tất cả --</option>
-                    <option value="1">Đang hoạt động</option>
-                    <option value="2">Chưa kích hoạt</option>
-                    <option value="3">Bị chặn</option>
+                    @foreach (config('employee.status_active') as $key => $status)
+                        <option value="{{ $key }}">{{ $status }}</option>
+                    @endforeach
                 </select>
             </div>
             <div class="form-group col-md-3 col-sx-6 col-lg-3">
@@ -127,6 +127,7 @@
                                         <i class="fa fa-ellipsis-h"></i>
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item" :href="getLinkEdit(employee.id)">Chỉnh sửa</a>
                                         <a class="dropdown-item" :href="getLinkDetail(employee.id)">Xem chi tiết</a>
                                         <a class="dropdown-item change-pass" @click="changePass(employee.id, employee.fullname)">Thay đổi mật khẩu</a>
                                         <a class="dropdown-item change-pass" @click="changeStatus(employee)">Thay đổi trạng thái</a>
@@ -405,6 +406,10 @@
             },
             getLinkDetail: (employeeId) => {
                 let linkRoot = `{{ route('show-info-user', ['id' => '????']) }}`
+                return linkRoot.replace("????", employeeId);
+            },
+            getLinkEdit: (employeeId) => {
+                let linkRoot = `{{ route('show-form-update-user', ['id' => '????']) }}`
                 return linkRoot.replace("????", employeeId);
             },
             handleImport: () => {

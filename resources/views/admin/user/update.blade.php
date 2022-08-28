@@ -128,7 +128,7 @@
                             </div>
                         </div>
                         <div class="form-group row justify-content-center">
-                            <button class="btn btn-primary btn-round waves-effect waves-light ">Tạo mới</button>
+                            <button class="btn btn-primary btn-round waves-effect waves-light ">Cập nhật</button>
                         </div>
                     </form>
                     <div class="overlay-load">
