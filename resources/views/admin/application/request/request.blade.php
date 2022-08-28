@@ -42,7 +42,7 @@
         <div class="row align-items-center">
             <div class="col-md-8">
                 <div class="page-header-title">
-                    <h5 class="m-b-10">Quản Lý ĐƠn Từ</h5>
+                    <h5 class="m-b-10">Quản Lý Đơn Từ</h5>
                     <p class="m-b-0">Danh sách tất cả các đơn từ của bạn</p>
                 </div>
             </div>

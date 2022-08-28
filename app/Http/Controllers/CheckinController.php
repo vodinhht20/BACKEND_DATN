@@ -14,15 +14,24 @@ class CheckinController extends Controller
         $searchValue = $request->search_value;
         $searchValue2 = $request->search_value_2;
         $searchValue3 = $request->search_value_3;
-        $branchs = Branch::where('name', 'like', "%$searchValue3%")->paginate(3);
-        $wifi = Network::where('name', 'like', "%$searchValue%")->where('status', 'like', "%$searchValue2%")->paginate(10);
-        $wifi->appends($request->except('_token'));
-        $branchs->appends($request->except('_token'));
+        $wifi = Network::query();
+        if ($searchValue) {
+            $wifi = $wifi->where('name', 'like',"%$searchValue%");
+        }
+
+        if ($searchValue2 == -1 || $searchValue2 == 1) {
+            if ($searchValue2 == -1) {
+                $wifi = $wifi->where('status', 0);
+            } else {
+                $wifi = $wifi->where('status', $searchValue2);
+            }
+        }
+        $wifi = $wifi->paginate(10)->appends($request->all());
         $branch = Branch::all();
         $count_branch = count($branch);
         $current_ip = request()->ip();
         $attendanceSetting = Redis::get('attendance_setting') ?: '[]';
-        return view('admin.checkin.view', compact('branch', 'wifi', 'current_ip', 'count_branch', 'branchs', 'attendanceSetting'));
+        return view('admin.checkin.view', compact('branch', 'wifi', 'current_ip', 'count_branch', 'attendanceSetting'));
     }
 
     public function UpdateAttendanceSetting(Request $request)

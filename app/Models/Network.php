@@ -11,4 +11,9 @@ class Network extends Model
     use HasFactory, SoftDeletes;
     protected $guarded = [];
     protected $table = 'networks';
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
+    }
 }

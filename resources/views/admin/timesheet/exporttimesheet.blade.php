@@ -28,8 +28,8 @@
         @foreach ($timesheetFormats as $timesheet)
         <tr>
 
-            <td>{{ $timesheet['employee']->employee_code }}</td>
-            <td>{{ $timesheet['employee']->fullname }}</td>
+            <td>{{ $timesheet['employee']?->employee_code }}</td>
+            <td>{{ $timesheet['employee']?->fullname }}</td>
                 @foreach ($formatDates as $date => $dateName)
                     @if (isset($timesheet['timesheet'][$date]))
                         <td class="tabletimekeeps">

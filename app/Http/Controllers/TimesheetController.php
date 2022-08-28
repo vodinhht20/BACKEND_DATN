@@ -39,7 +39,6 @@ class TimesheetController extends Controller
     public function timesheet(Request $request)
     {
         $requestDepartments = explode(",", $request->departments);
-        $departmentIds = [];
         $positionIds = [];
         $requestDepartments = array_filter($requestDepartments, function($e) {
             return (($e != "") || ($e != null));
@@ -48,12 +47,9 @@ class TimesheetController extends Controller
             $regex = "/^position_+[0-9]*$/"; // định dạng phù hơp:  position_12
             if (preg_match($regex, $requestKey)) {
                 $positionIds[] = trim($requestKey, "position_");
-            } else {
-                $departmentIds[] = $requestKey;
             }
         }
-        $positionIdsByDepartments = $this->positionRepo->query(["department_ids" => $departmentIds])->pluck('id')->toArray();
-        $positionIds = array_merge($positionIdsByDepartments, $positionIds);
+
         $inpMonth = $request->input('month', Carbon::now()->format("Y-m")) ?: Carbon::now()->format("Y-m");
         $monthYear = Carbon::createFromFormat("Y-m", $inpMonth);
         $options = [
@@ -66,9 +62,7 @@ class TimesheetController extends Controller
             'keywords' => $request->keywords,
             'position_ids' => $positionIds
         ];
-        if ($request->departments && count($positionIds) == 0) {
-            $options['position_ids'] = array(-9999);
-        }
+
         $take = 10;
         $timekeeps = $this->timekeepRepo->query($options)->get();
         $timesheetFormats = $this->timekeepRepo->timesheetFormats($timekeeps);

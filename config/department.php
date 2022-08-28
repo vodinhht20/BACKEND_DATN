@@ -1,6 +1,6 @@
 <?php
 return [
     'root' => [
-        'hr' => 5,
+        'hr' => 6,
     ]
 ];

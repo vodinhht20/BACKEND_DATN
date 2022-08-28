@@ -71,7 +71,7 @@
                         </div>
                         <div class="form-group col-lg-4">
                             <input type="hidden" name="departments" :value="departmentValue">
-                            <treeselect v-model="departmentValue" :multiple="true" :options="departments" />
+                            <treeselect v-model="departmentValue" :multiple="true" :options="departments" :disable-branch-nodes="true"/>
                         </div>
                         <div class="form-group col-lg-4">
                             <button class="btn btn-primary btn-sm">Tìm Kiếm</button>
