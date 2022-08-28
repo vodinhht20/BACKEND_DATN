@@ -21,7 +21,7 @@
                     </div>
                     <div class="col-12">
                         <p>Dữ liệu bạn tải lên sẽ đồng bộ với số công của nhân viên trong tháng trong hệ thống. Trường hợp có sự chênh lệch về số công thì sẽ lấy số công cao nhất của nhân viên đấy.
-                        <br><a href="/template/template_import_timesheet.xlsx" class="text-primary">Download file mẫu</a></p>
+                        <br><a href="/template/template_import_timesheet.xlsx?v=1.0.1" class="text-primary">Download file mẫu</a></p>
                     </div>
                 </div>
                 <div class="modal-footer" style="display: block;">

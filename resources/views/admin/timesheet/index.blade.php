@@ -321,7 +321,13 @@
                         app.dataPreview = data.data;
                         app.recordNotExist = data.recordNotExist;
                     })
-                    .catch(error => {
+                    .catch((error) => {
+                        $('#modal_preview_import').modal('hide');
+                        Swal.fire({
+                            title: 'Thất bại',
+                            html: error?.response?.data?.messages || "Đã có lỗi xảy ra",
+                            icon: 'warning'
+                        });
                     })
                 },
                 changeFileImport: ($event) => {
