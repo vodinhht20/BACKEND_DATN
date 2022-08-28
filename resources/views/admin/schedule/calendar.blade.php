@@ -276,12 +276,7 @@
                         return;
                     }
 
-                    const days = app.dataWorkShiftDays.map(item => {
-                            if (item.active == 1) {
-                                return item.id;
-                            }
-                        })
-                        .filter(item => item);
+                    const days = app.dataWorkShiftDays.filter(item => item.active == 1).map((item) => item.id);
                     const data = {
                         work_shift_name: app.workShiftName,
                         subject_type: app.subject_type,

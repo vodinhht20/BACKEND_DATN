@@ -29,7 +29,7 @@ class ScheduleWorkController extends Controller
 
     public function calendar(Request $request)
     {
-        $take = 2;
+        $take = 10;
         $options = [
             'with' => ['employee', 'department', 'position'],
         ];

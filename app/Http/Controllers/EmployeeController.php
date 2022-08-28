@@ -50,9 +50,13 @@ class EmployeeController extends Controller
                 $positionIds[] = trim($requestKey, "position_");
             }
         }
+        if ($request->status) {
+            $status = $request->status;
+        } else {
+            $status = config('employee.status');
+            unset($status['block']);
+        }
 
-        $status = config('employee.status');
-        unset($status['block']);
         $options = [...$request->all(),
             "with" => ['position.department'],
             "position_ids" => $positionIds,
@@ -78,9 +82,12 @@ class EmployeeController extends Controller
                 $positionIds[] = trim($requestKey, "position_");
             }
         }
-
-        $status = config('employee.status');
-        unset($status['block']);
+        if ($request->status) {
+            $status = $request->status;
+        } else {
+            $status = config('employee.status');
+            unset($status['block']);
+        }
         $options = [...$request->all(),
             "with" => ['position.department'],
             "position_ids" => $positionIds,
@@ -221,6 +228,10 @@ class EmployeeController extends Controller
             $requestAttributes = $request->atribute;
             $attributes = Attribute::whereIn('name', array_keys($requestAttributes))->get()->keyBy('name');
             foreach ($requestAttributes as $attribute => $value) {
+                if (empty($value)) {
+                    continue;
+                }
+
                 if (isset($attributes[$attribute])) {
                     $attribute = $attributes[$attribute];
                     $dataAtribute = [
@@ -307,11 +318,9 @@ class EmployeeController extends Controller
             return abort(404);
         }
 
-        $passWord = Str::random(12);
         $option = [
             'fullname' => $request->fullname,
             'personal_email' => $request->personal_email,
-            'password' => $passWord,
             'gender' => $request->gender,
             'branch_id' => $request->branch_id,
             'position_id' => ltrim($request->position, 'position_'),
@@ -342,6 +351,9 @@ class EmployeeController extends Controller
             $requestAttributes = $request->atribute;
             $attributes = Attribute::whereIn('name', array_keys($requestAttributes))->get()->keyBy('name');
             foreach ($requestAttributes as $attribute => $value) {
+                if (empty($value)) {
+                    continue;
+                }
                 if (isset($attributes[$attribute])) {
                     $attribute = $attributes[$attribute];
                     $attributeEmployee = AttribuiteEmployee::where('employee_id', $employee->id)
@@ -368,7 +380,7 @@ class EmployeeController extends Controller
         } catch (\Exception $e) {
             $message = '[' . date('Y-m-d H:i:s') . '] Error message \'' . $e->getMessage() . '\'' . ' in ' . $e->getFile() . ' line ' . $e->getLine();
             Log::error($message);
-            Noti::telegramLog('Create Employee', $message);
+            Noti::telegramLog('Update Employee', $message);
         }
         DB::rollBack();
 
